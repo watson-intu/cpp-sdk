@@ -1,0 +1,72 @@
+/**
+* Copyright 2015 IBM Corp. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
+
+#ifndef WDC_ALCHEMY_H
+#define WDC_ALCHEMY_H
+
+#include "utils/Delegate.h"
+#include "utils/DataCache.h"
+#include "services/IService.h"
+#include "WDCLib.h"		// include last always
+
+class WDC_API Alchemy : public IService
+{
+public:
+	RTTI_DECL(Alchemy, IService);
+
+	//! Types
+	typedef Delegate<const Json::Value &>	OnClassifyImage;
+	typedef Delegate<const Json::Value &>	OnDetectFaces;
+
+	//! Construction 
+	Alchemy();
+
+	//! ISerializable
+	virtual void Serialize(Json::Value & json);
+	virtual void Deserialize(const Json::Value & json);
+
+	//! IService interface
+	virtual bool Start();
+	virtual void GetServiceStatus(ServiceStatusCallback a_Callback);
+
+	//! Classify the given image and returns image tags for the image data.
+	void ClassifyImage(const std::string & a_ImageData,
+		OnClassifyImage a_Callback,
+		bool a_bKnowledgeGraph = false );
+	//! Detect faces in the provided image 
+	void DetectFaces(const std::string & a_ImageData,
+		OnDetectFaces a_Callback, 
+		bool a_bKnowledgeGraph = false );
+
+private:
+	//! Types
+	class ServiceStatusChecker
+	{
+	public:
+		ServiceStatusChecker(Alchemy * a_pService,
+			ServiceStatusCallback a_Callback);
+
+	private:
+		Alchemy *						m_pService;
+		IService::ServiceStatusCallback m_Callback;
+
+		void OnCheckService(const Json::Value &);
+	};
+
+};
+
+#endif
