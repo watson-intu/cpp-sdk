@@ -30,6 +30,7 @@ qi_create_lib(wdc SHARED
     utils/ISerializable.cpp
     utils/Library.cpp
     utils/Log.cpp
+	utils/Logic.cpp
     utils/Sound.cpp
     utils/StringUtil.cpp
     utils/ThreadPool.cpp
