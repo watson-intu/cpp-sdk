@@ -42,6 +42,9 @@ public:
 	class Request;
 	struct ServiceStatus;
 
+	//! Data
+	static boost::atomic<int> sm_Timeouts;
+
 	//! Types
 	typedef boost::shared_ptr<IService>		SP;
 	typedef boost::weak_ptr<IService>		WP;

@@ -24,6 +24,8 @@
 #undef MAX
 #define MAX(a,b)		((a) > (b) ? (a) : (b))
 
+boost::atomic<int>      IService::sm_Timeouts;
+
 IService::Request::Request(const std::string & a_URL,
 	const std::string & a_RequestType,		// type of request GET, POST, DELETE
 	const Headers & a_Headers,				// additional headers to add to the request
@@ -201,6 +203,7 @@ void IService::Request::OnTimeout()
 {
 	Log::Error( "Request", "REST request %s timed out.", m_pClient->GetURL().GetURL().c_str() );
 
+	sm_Timeouts += 1;
 	m_Complete = true;
 	m_Error = true;
 	m_spTimeoutTimer.reset();
