@@ -33,6 +33,18 @@
 #define _stricmp strcasecmp
 #endif
 
+void StringUtil::ToLower( std::string & a_String )
+{
+	for(size_t i=0;i<a_String.size();++i)
+		a_String[i] = tolower( a_String[i] );
+}
+
+void StringUtil::ToUpper( std::string & a_String )
+{
+	for(size_t i=0;i<a_String.size();++i)
+		a_String[i] = toupper( a_String[i] );
+}
+
 int StringUtil::Compare( const std::string & a_Subject, const std::string & a_Target, bool a_bInsenstive /*= false */)
 {
 	if (! a_bInsenstive )

@@ -27,21 +27,32 @@
 class WDC_API StringUtil
 {
 public:
+	static void ToLower( std::string & a_String );
+	static void ToUpper( std::string & a_String );
 	//! Compares two strings, returns 0 if they are equal.
-	static int Compare( const std::string & a_Subject, const std::string & a_Target, bool a_bInsenstive = false );
+	static int Compare( const std::string & a_Subject, 
+		const std::string & a_Target,
+		bool a_bInsenstive = false );
 	//! Check if a string ends with the target string
-	static bool EndsWith( const std::string & a_Subject, const std::string & a_Ending, bool a_bInsenstive = false );
+	static bool EndsWith( const std::string & a_Subject,
+		const std::string & a_Ending,
+		bool a_bInsenstive = false );
 	//! Check if a string begins with the target string.
-	static bool StartsWith( const std::string & a_Subject, const std::string & a_Start, bool a_bInsenstive = false );
+	static bool StartsWith( const std::string & a_Subject, 
+		const std::string & a_Start, 
+		bool a_bInsenstive = false );
 	//! Find a string in a the subject string, returns the offset of the found string
-	static size_t Find( const std::string & a_Subject, const std::string & a_Search, 
-		size_t a_Offset = 0, bool a_bInsenstive = false );
+	static size_t Find( const std::string & a_Subject, 
+		const std::string & a_Search, 
+		size_t a_Offset = 0, 
+		bool a_bInsenstive = false );
 	//! Replace all occurrences of "search" with "replace" in the subject string, returns the number replaced.
 	static int Replace(std::string & a_Subject, 
 		const std::string & a_Search, 
 		const std::string & a_Replace,
 		bool a_bInsenstive = false );
-	static void ConvertToTime( const std::string & a_String, std::string & a_Time);
+	static void ConvertToTime( const std::string & a_String,
+		std::string & a_Time);
 	//! Format a string using sprintf into a std::string buffer.
 	static std::string Format( const char * a_pFormat, ... );
 	//! Returns true if any special characters are all escaped.
@@ -56,17 +67,22 @@ public:
 		const std::string & a_Seperators,					//! a string containing any number of separators
 		std::vector< std::string > & a_Split );				//! the split strings
 	//! Trim a string of characters
-	static std::string RightTrim( const std::string & a_String, const std::string & a_Trim = " " );
-	static std::string LeftTrim( const std::string & a_String, const std::string & a_Trim = " " );
-	static std::string Trim( const std::string & a_String, const std::string & a_Trim = " " );
+	static std::string RightTrim( const std::string & a_String, 
+		const std::string & a_Trim = " " );
+	static std::string LeftTrim( const std::string & a_String,
+		const std::string & a_Trim = " " );
+	static std::string Trim( const std::string & a_String, 
+		const std::string & a_Trim = " " );
 	//! base64 encode/decode functions
 	static std::string EncodeBase64( const std::string & a_Input );
 	static std::string DecodeBase64( const std::string & a_Input );
     //! Returns the substring after the last slash if found, returns whole string is no slash found
     static std::string GetFilename( const std::string & a_Path );
 	//! Match a wildcard string (e.g. match*.???) to a given string.
-	static bool WildMatch(const std::string & a_Pattern, const std::string & a_Search);
-	static bool WildMatch(const char * pat, const char * str );
+	static bool WildMatch(const std::string & a_Pattern, 
+		const std::string & a_Search);
+	static bool WildMatch(const char * pat, 
+		const char * str );
 
 	// case-independent (ci) compare_less binary function
 	template<typename charT>
