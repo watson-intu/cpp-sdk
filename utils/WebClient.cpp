@@ -86,7 +86,12 @@ WebClient::~WebClient()
 
 void WebClient::SetFrameReceiver( Delegate<FrameSP> a_Receiver )
 {
-	m_FrameReceiver = a_Receiver;
+	m_OnFrame = a_Receiver;
+}
+
+void WebClient::SetErrorHandler( VoidDelegate a_Handler)
+{
+	m_OnError = a_Handler;
 }
 
 void WebClient::SendBinary(const std::string & a_BinaryData)
@@ -761,7 +766,6 @@ void WebClient::WS_Sent( const boost::system::error_code& error, size_t bytes_tr
 		// because we may have many outstanding sends at any one time. 
 		if (! m_SendError )
 			m_SendError = true;
-
 		// once we number of outstanding sends is 0, then let the main thread know we've been disconnected.
 		if ( m_SendError && m_SendCount == 0 )
 			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE(WebClient, OnDisconnected, this) );
@@ -799,8 +803,8 @@ void WebClient::OnResponse(RequestData * a_pData)
 void WebClient::OnWebSocketFrame( IWebSocket::Frame * a_pFrame )
 {
 	FrameSP spFrame( a_pFrame );
-	if ( m_FrameReceiver.IsValid() )
-		m_FrameReceiver( spFrame );
+	if ( m_OnFrame.IsValid() )
+		m_OnFrame( spFrame );
 }
 
 void WebClient::OnClose()

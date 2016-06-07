@@ -92,6 +92,10 @@ public:
 		{
 			m_OnFrame = a_Receiver;
 		}
+		virtual void SetErrorHandler( VoidDelegate a_Handler)
+		{
+			m_OnError = a_Handler;
+		}
 
 		virtual void SendBinary(const std::string & a_Binary)
 		{
@@ -168,7 +172,6 @@ public:
 			catch (const std::exception & ex)
 			{
 				Log::Error("Connection", "SendAsync Exception: %s", ex.what());
-				Close();
 			}
 		}
 
@@ -242,6 +245,7 @@ public:
 		FrameList		m_Frames;
 		Delegate<FrameSP>
 						m_OnFrame;
+		VoidDelegate	m_OnError;
 
 		WebServerT *	m_pServer;
 		socket_type *	m_pSocket;
@@ -310,11 +314,28 @@ public:
 						a_ReadCallback(content);
 				}
 			}
+			else
+			{
+				Log::Error("Connection", "OnRead() error: %s", error.message().c_str());
+				OnError();
+			}
 		}
 		void OnSent(SP a_spConnection, const boost::system::error_code & ec)
 		{
 			if (ec)
-				Log::Error("Connection", "Send Error: %s", ec.message().c_str());
+			{
+				Log::Error("Connection", "OnSent() error: %s", ec.message().c_str());
+				OnError();
+			}
+		}
+
+		void OnError()
+		{
+			if (m_OnError.IsValid())
+			{
+				ThreadPool::Instance()->InvokeOnMain(m_OnError);
+				m_OnError.Reset();		// reset so we only queue an error once
+			}
 		}
 
 		void OnTimeout()

@@ -51,6 +51,7 @@ public:
 
 	//! IWebSocket interface
 	virtual void SetFrameReceiver( Delegate<FrameSP> a_Receiver );
+	virtual void SetErrorHandler( VoidDelegate a_Handler);
 	virtual void SendBinary(const std::string & a_Binary);
 	virtual void SendText(const std::string & a_Text);
 	virtual void SendPong(const std::string & a_PingData);
@@ -130,7 +131,8 @@ private:
 	Delegate<RequestData *>
 					m_DataReceiver;
 	Delegate<FrameSP>
-					m_FrameReceiver;
+					m_OnFrame;
+	VoidDelegate	m_OnError;
 
 	boost::asio::ip::tcp::socket *
 					m_pSocket;
