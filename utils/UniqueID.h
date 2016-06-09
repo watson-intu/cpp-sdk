@@ -18,11 +18,7 @@
 #ifndef WDC_GUID_H
 #define WDC_GUID_H
 
-#include <string>
-
-#include "boost/uuid/uuid.hpp"
-#include "boost/uuid/uuid_io.hpp"
-#include "boost/uuid/uuid_generators.hpp"
+#include "crossguid/crossguid.h"
 #include "WDCLib.h"
 
 class WDC_API UniqueID 
@@ -44,7 +40,7 @@ public:
 	//! Generate a new ID, returns a const reference to the ID contained by this object.
 	const std::string & Generate()
 	{
-		m_GUID = boost::uuids::to_string( GetGenerator()() );
+		GetGenerator().newGuid().GetString( m_GUID );
 		return m_GUID;
 	}
 
@@ -52,7 +48,7 @@ private:
 	//! Data
 	std::string		m_GUID;
 
-	static boost::uuids::random_generator & GetGenerator();
+	static GuidGenerator & GetGenerator();
 };
 
 #endif
