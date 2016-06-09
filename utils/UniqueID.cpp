@@ -17,9 +17,10 @@
 
 #include "UniqueID.h"
 
-GuidGenerator & UniqueID::GetGenerator()
+boost::uuids::random_generator & UniqueID::GetGenerator()
 {
-	static GuidGenerator generator;
-	return generator;
+	static boost::uuids::random_generator gen;
+	return gen;
 }
+
 
