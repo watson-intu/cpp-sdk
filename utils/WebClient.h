@@ -54,6 +54,7 @@ public:
 	virtual void SetErrorHandler( VoidDelegate a_Handler);
 	virtual void SendBinary(const std::string & a_Binary);
 	virtual void SendText(const std::string & a_Text);
+	virtual void SendPing(const std::string & a_PingData);
 	virtual void SendPong(const std::string & a_PingData);
 	virtual void SendClose(const std::string & a_Reason);
 

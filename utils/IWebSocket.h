@@ -58,6 +58,7 @@ public:
 	virtual void SetErrorHandler( VoidDelegate a_Handler ) = 0;
 	virtual void SendBinary(const std::string & a_Binary) = 0;
 	virtual void SendText(const std::string & a_Text) = 0;
+	virtual void SendPing(const std::string & a_PingData) = 0;
 	virtual void SendPong(const std::string & a_PingData) = 0;
 	virtual void SendClose(const std::string & a_Reason) = 0;
 };

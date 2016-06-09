@@ -116,6 +116,16 @@ void WebClient::SendText(const std::string & a_TextData)
 		WS_Send(TEXT_FRAME, a_TextData );
 }
 
+void WebClient::SendPing(const std::string & a_PingData)
+{
+	if (m_eState != CONNECTED && m_eState != CONNECTING)
+		Log::Error( "WebClient", "SendBinary() called with WebClient in wrong state." );
+	else if (! m_WebSocket )
+		Log::Error( "WebClient", "SendBinary() invoked for non-WebSocket." );
+	else
+		WS_Send(PING, a_PingData );
+}
+
 void WebClient::SendPong(const std::string & a_PingData)
 {
 	if (m_eState != CONNECTED && m_eState != CONNECTING)

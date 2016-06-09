@@ -111,6 +111,13 @@ public:
 			SendAsync(frame);
 		}
 
+		virtual void SendPing(const std::string & a_PingData) 
+		{
+			std::string frame;
+			WebSocketFramer::CreateFrame(frame, IWebSocket::PING, a_PingData, false);
+			SendAsync(frame);
+		}
+
 		virtual void SendPong(const std::string & a_PingData)
 		{
 			std::string frame;

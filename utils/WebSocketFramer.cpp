@@ -50,7 +50,12 @@ IWebSocket::Frame * WebSocketFramer::ParseFrame(std::string & a_Input)
 	hsize += 2;
 
 	size_t payload_len = 0;
-	if (pHeader->opcode == IWebSocket::TEXT_FRAME || pHeader->opcode == IWebSocket::BINARY_FRAME || pHeader->opcode == IWebSocket::CONTINUATION)
+	if (pHeader->opcode == IWebSocket::TEXT_FRAME 
+		|| pHeader->opcode == IWebSocket::BINARY_FRAME 
+		|| pHeader->opcode == IWebSocket::CONTINUATION
+		|| pHeader->opcode == IWebSocket::PING 
+		|| pHeader->opcode == IWebSocket::PONG
+		|| pHeader->opcode == IWebSocket::CLOSE )
 	{
 		if (pHeader->payload_len == 126)
 		{
