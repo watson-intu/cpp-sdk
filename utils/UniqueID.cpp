@@ -16,10 +16,12 @@
 */
 
 #include "UniqueID.h"
+#include "crossguid/crossguid.h"
 
-GuidGenerator & UniqueID::GetGenerator()
+const std::string & UniqueID::Generate()
 {
 	static GuidGenerator generator;
-	return generator;
+	generator.newGuid().GetString(m_GUID);
+	return m_GUID;
 }
 

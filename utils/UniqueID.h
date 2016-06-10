@@ -18,7 +18,7 @@
 #ifndef WDC_GUID_H
 #define WDC_GUID_H
 
-#include "crossguid/crossguid.h"
+#include <string>
 #include "WDCLib.h"
 
 class WDC_API UniqueID 
@@ -38,17 +38,11 @@ public:
 	}
 
 	//! Generate a new ID, returns a const reference to the ID contained by this object.
-	const std::string & Generate()
-	{
-		GetGenerator().newGuid().GetString( m_GUID );
-		return m_GUID;
-	}
+	const std::string & Generate();
 
 private:
 	//! Data
 	std::string		m_GUID;
-
-	static GuidGenerator & GetGenerator();
 };
 
 #endif
