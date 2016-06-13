@@ -18,6 +18,7 @@
 #include "GetMac.h"
 #include "StringUtil.h"
 #include "Log.h"
+#include <boost/asio.hpp>
 
 #ifdef _WIN32
 #include <winsock2.h> 
@@ -135,4 +136,25 @@ std::string GetMac::GetMyAddress(const std::list<std::string> & a_Patterns)
 #endif
 	return mac;
 }
+
+std::string GetMac::GetIpAddress()
+{
+	std::string ip("127.0.0.1");
+	boost::asio::io_service io_service;
+	boost::asio::ip::tcp::resolver resolver(io_service);
+	boost::asio::ip::tcp::resolver::query query(boost::asio::ip::host_name(), "");
+	boost::asio::ip::tcp::resolver::iterator iter = resolver.resolve(query);
+	boost::asio::ip::tcp::resolver::iterator end; // End marker.
+	while (iter != end)
+	{
+		boost::asio::ip::tcp::endpoint ep = *iter++;
+		std::stringstream buffer;
+		std::streambuf * old = std::cout.rdbuf(buffer.rdbuf());
+		std::cout << ep << std::endl;
+		ip = buffer.str();
+	}
+	StringUtil::Trim(ip, ":");
+	return ip;
+}
+
 
