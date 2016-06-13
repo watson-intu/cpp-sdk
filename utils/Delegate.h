@@ -118,7 +118,7 @@ private:
 	static bool method_stub(void* object_ptr, const boost::any & weak_ptr, ARG a1)
 	{
 		if (! weak_ptr.empty() )
-			object_ptr = boost::any_cast<boost::weak_ptr<T>>( weak_ptr ).lock().get();
+			object_ptr = boost::any_cast< boost::weak_ptr<T> >( weak_ptr ).lock().get();
 		if ( object_ptr == 0 )
 			return false;
 
@@ -224,7 +224,7 @@ private:
 	static bool method_stub(void* object_ptr, const boost::any & weak_ptr )
 	{
 		if (! weak_ptr.empty() )
-			object_ptr = boost::any_cast<boost::weak_ptr<T>>( weak_ptr ).lock().get();
+			object_ptr = boost::any_cast< boost::weak_ptr<T> >( weak_ptr ).lock().get();
 		if ( object_ptr == 0 )
 			return false;
 
