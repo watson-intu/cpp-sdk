@@ -27,6 +27,7 @@ class WDC_API GetMac
 public:
 	static std::string GetMyAddress();
 	static std::string GetMyAddress(const std::list<std::string> & a_Patterns);
+	static std::string GetIpAddress();
 };
 
 #endif
