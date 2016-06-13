@@ -240,7 +240,7 @@ bool SpeechToText::CreateListenConnector()
 {
 	if (m_ListenSocket == NULL)
 	{
-		std::string url = GetConfig()->m_URL + "/v1/recognize?model=" + StringUtil::UrlEscape( m_RecognizeModel );
+		std::string url = GetConfig()->m_URL + "/v1/recognize?x-watson-learning-opt-out=1&model=" + StringUtil::UrlEscape( m_RecognizeModel );
 		StringUtil::Replace(url, "https://", "wss://", true );
 		StringUtil::Replace(url, "http://", "ws://", true );
 
