@@ -15,12 +15,32 @@
 *
 */
 
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+
 #include "UnitTest.h"
 #include "utils/Delegate.h"
 
 class TestDelegate : UnitTest
 {
 public:
+
+	struct TestObject : public boost::enable_shared_from_this<TestObject>
+	{
+		typedef boost::shared_ptr<TestObject>		SP;
+		typedef boost::weak_ptr<TestObject>			WP;
+
+		TestObject() : m_InvokeCount( 0 )
+		{}
+
+		void TestFunction()
+		{
+			m_InvokeCount += 1;
+		}
+
+		int m_InvokeCount;
+	};
+
 	//! Construction
 	TestDelegate() : m_DelegateInvoked( false ), UnitTest( "TestDelegate" )
 	{}
@@ -33,7 +53,14 @@ public:
 		Test( m_DelegateInvoked );
 
 		Delegate<int> nullDelegate = Delegate<int>();
-		nullDelegate( 42 );		// NOP
+		Test( nullDelegate( 42 ) );		// NOP
+
+		TestObject::SP spObject( new TestObject() );
+		VoidDelegate voidDelegate = VOID_DELEGATE( TestObject, TestFunction, spObject );
+		Test( voidDelegate() );
+		Test( spObject->m_InvokeCount == 1 );
+		spObject.reset();
+		Test(! voidDelegate() );			// test that we failed..
 	}
 
 	void Test( int a )

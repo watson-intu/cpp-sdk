@@ -18,6 +18,9 @@
 #ifndef WDC_DELEGATE_H
 #define WDC_DELEGATE_H
 
+#include <boost/shared_ptr.hpp>
+#include <boost/any.hpp>
+
 #include "WDCLib.h"
 
 //! This delegate class allows you to store a function call to object. This is useful for passing a callback
@@ -32,9 +35,7 @@ template<typename ARG>
 class Delegate
 {
 public:
-	Delegate()
-		: object_ptr(0)
-		, stub_ptr(0)
+	Delegate() : m_pObject(0), m_pStub(0)
 	{}
 
 	template <class T, void (T::*TMethod)(ARG)>
@@ -47,8 +48,29 @@ public:
 		Delegate d;
 		if ( object_ptr != 0 )
 		{
-			d.object_ptr = object_ptr;
-			d.stub_ptr = &method_stub<T, TMethod>; // #1
+			d.m_pObject = object_ptr;
+			d.m_pStub = &method_stub<T, TMethod>; // #1
+#ifdef _DEBUG
+			d.m_pFile = a_pFile;
+			d.m_nLine = a_nLine;
+#endif
+		}
+		return d;
+	}
+
+	template <class T, void (T::*TMethod)(ARG)>
+#ifndef _DEBUG
+	static Delegate Create( boost::shared_ptr<T> object_ptr )
+#else
+	static Delegate Create( boost::shared_ptr<T> object_ptr, const char * a_pFile, int a_nLine )
+#endif
+	{
+		Delegate d;
+		if ( object_ptr != 0 )
+		{
+			d.m_pObject = object_ptr.get();
+			d.m_WeakPtr = boost::weak_ptr<T>( object_ptr );
+			d.m_pStub = &method_stub<T, TMethod>; // #1
 #ifdef _DEBUG
 			d.m_pFile = a_pFile;
 			d.m_nLine = a_nLine;
@@ -59,45 +81,50 @@ public:
 
 	bool operator()(ARG a1) const
 	{
-		if (object_ptr != 0) {
-			(*stub_ptr)(object_ptr, a1);
-			return true;
-		}
-
+		if (m_pStub != 0) 
+			return (*m_pStub)(m_pObject, m_WeakPtr, a1);
 		return false;
 	}
 
 	void Reset()
 	{
-		object_ptr = 0;
-		stub_ptr = 0;
+		m_pObject = 0;
+		m_WeakPtr.clear();
+		m_pStub = 0;
 	}
 
 	bool IsValid() const
 	{
-		return object_ptr != 0 && stub_ptr != 0;
+		return m_pObject != 0 && m_pStub != 0;
 	}
 
 	bool IsObject(void * obj) const
 	{
-		return obj == object_ptr;
+		return obj == m_pObject;
 	}
 
 private:
-	typedef void (*stub_type)(void* object_ptr, ARG);
+	typedef bool (*stub_type)(void* object_ptr, const boost::any & weak_ptr, ARG);
 
-	void* object_ptr;
-	stub_type stub_ptr;
+	void *			m_pObject;
+	boost::any		m_WeakPtr;
+	stub_type		m_pStub;
 #ifdef _DEBUG
-	const char * m_pFile;
-	int m_nLine;
+	const char *	m_pFile;
+	int				m_nLine;
 #endif
 
 	template <class T, void (T::*TMethod)(ARG)>
-	static void method_stub(void* object_ptr, ARG a1)
+	static bool method_stub(void* object_ptr, const boost::any & weak_ptr, ARG a1)
 	{
-		T* p = static_cast<T*>(object_ptr);
-		return (p->*TMethod)(a1); // #2
+		if (! weak_ptr.empty() )
+			object_ptr = boost::any_cast<boost::weak_ptr<T>>( weak_ptr ).lock().get();
+		if ( object_ptr == 0 )
+			return false;
+
+		T* p = reinterpret_cast<T*>(object_ptr);
+		(p->*TMethod)(a1); // #2
+		return true;
 	}
 };
 
@@ -113,9 +140,8 @@ private:
 class VoidDelegate
 {
 public:
-	VoidDelegate()
-		: object_ptr(0)
-		, stub_ptr(0)
+	VoidDelegate() : m_pObject(0),
+		m_pStub(0)
 	{}
 
 	template <class T, void (T::*TMethod)()>
@@ -128,8 +154,29 @@ public:
 		VoidDelegate d;
 		if ( object_ptr != 0 )
 		{
-			d.object_ptr = object_ptr;
-			d.stub_ptr = &method_stub<T, TMethod>; // #1
+			d.m_pObject = object_ptr;
+			d.m_pStub = &method_stub<T, TMethod>; // #1
+#ifdef _DEBUG
+			d.m_pFile = a_pFile;
+			d.m_nLine = a_nLine;
+#endif
+		}
+		return d;
+	}
+
+	template <class T, void (T::*TMethod)()>
+#ifndef _DEBUG
+	static VoidDelegate Create(boost::shared_ptr<T> object_ptr)
+#else
+	static VoidDelegate Create(boost::shared_ptr<T> object_ptr, const char * a_pFile, int a_nLine)
+#endif
+	{
+		VoidDelegate d;
+		if ( object_ptr != 0 )
+		{
+			d.m_pObject = object_ptr.get();
+			d.m_WeakPtr = boost::weak_ptr<T>( object_ptr );
+			d.m_pStub = &method_stub<T, TMethod>; // #1
 #ifdef _DEBUG
 			d.m_pFile = a_pFile;
 			d.m_nLine = a_nLine;
@@ -140,46 +187,50 @@ public:
 
 	bool operator()() const
 	{
-		if ( object_ptr != 0 )
-		{
-			(*stub_ptr)(object_ptr);
-			return true;
-		}
-
+		if ( m_pStub != 0 )
+			return (*m_pStub)(m_pObject, m_WeakPtr);
 		return false;
 	}
 
 	void Reset()
 	{
-		object_ptr = 0;
-		stub_ptr = 0;
+		m_pObject = 0;
+		m_WeakPtr.clear();
+		m_pStub = 0;
 	}
 
 	bool IsValid() const
 	{
-		return object_ptr != 0 && stub_ptr != 0;
+		return m_pObject != 0 && m_pStub != 0;
 	}
 
 	bool IsObject(void * obj) const
 	{
-		return obj == object_ptr;
+		return obj == m_pObject;
 	}
 
 private:
-	typedef void (*stub_type)(void* object_ptr);
+	typedef bool (*stub_type)(void* object_ptr, const boost::any & );
 
-	void* object_ptr;
-	stub_type stub_ptr;
+	void*		m_pObject;
+	boost::any	m_WeakPtr;
+	stub_type	m_pStub;
 #ifdef _DEBUG
 	const char * m_pFile;
-	int m_nLine;
+	int			m_nLine;
 #endif
 
 	template <class T, void (T::*TMethod)()>
-	static void method_stub(void* object_ptr)
+	static bool method_stub(void* object_ptr, const boost::any & weak_ptr )
 	{
-		T* p = static_cast<T*>(object_ptr);
-		return (p->*TMethod)(); // #2
+		if (! weak_ptr.empty() )
+			object_ptr = boost::any_cast<boost::weak_ptr<T>>( weak_ptr ).lock().get();
+		if ( object_ptr == 0 )
+			return false;
+
+		T * p = reinterpret_cast<T*>(object_ptr);
+		(p->*TMethod)(); // #2
+		return true;
 	}
 };
 
