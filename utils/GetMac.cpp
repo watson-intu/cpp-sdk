@@ -39,6 +39,8 @@
 #include <ifaddrs.h> 
 #endif
 
+#pragma warning(disable:4996)
+
 std::string GetMac::GetMyAddress()
 {
 	std::list<std::string> emptyPatternList;
@@ -57,28 +59,35 @@ std::string GetMac::GetMyAddress(const std::list<std::string> & a_Patterns)
 	if(bufLen) 
 	{ 
 		buf.resize(bufLen, 0); 
-		IP_ADAPTER_ADDRESSES * ptr = 
-			reinterpret_cast<IP_ADAPTER_ADDRESSES*>(&buf[0]); 
-		DWORD err = GetAdaptersAddresses(0, 0, 0, ptr, &bufLen); 
-		if(err == NO_ERROR) 
-		{ 
-			while(ptr) 
+		for (std::list<std::string>::const_iterator patternIter = a_Patterns.begin(); patternIter != a_Patterns.end();
+			++patternIter)
+		{
+			IP_ADAPTER_ADDRESSES * ptr = reinterpret_cast<IP_ADAPTER_ADDRESSES*>(&buf[0]); 
+			DWORD err = GetAdaptersAddresses(0, 0, 0, ptr, &bufLen); 
+			if(err == NO_ERROR) 
 			{ 
-				if( ptr->OperStatus == IfOperStatusUp
-					&& ptr->PhysicalAddressLength == 6) 
+				while(ptr) 
 				{ 
-					mac = StringUtil::Format( "%02X:%02X:%02X:%02X:%02X:%02X",
-						ptr->PhysicalAddress[0],
-						ptr->PhysicalAddress[1],
-						ptr->PhysicalAddress[2],
-						ptr->PhysicalAddress[3],
-						ptr->PhysicalAddress[4],
-						ptr->PhysicalAddress[5] );
-					break;
+					std::string friendlyName( StringUtil::Format("%S", ptr->FriendlyName) );
+					bool interfaceMatch = StringUtil::WildMatch((*patternIter), friendlyName.c_str() );
+
+					if( interfaceMatch
+						&& ptr->OperStatus == IfOperStatusUp
+						&& ptr->PhysicalAddressLength == 6) 
+					{ 
+						mac = StringUtil::Format( "%02X:%02X:%02X:%02X:%02X:%02X",
+							ptr->PhysicalAddress[0],
+							ptr->PhysicalAddress[1],
+							ptr->PhysicalAddress[2],
+							ptr->PhysicalAddress[3],
+							ptr->PhysicalAddress[4],
+							ptr->PhysicalAddress[5] );
+						break;
+					} 
+					ptr = ptr->Next; 
 				} 
-				ptr = ptr->Next; 
 			} 
-		} 
+		}
 	} 
 #else
 	ifaddrs * ifap = 0; 
@@ -139,7 +148,6 @@ std::string GetMac::GetMyAddress(const std::list<std::string> & a_Patterns)
 
 std::string GetMac::GetIpAddress()
 {
-	std::string ip("127.0.0.1");
 	boost::asio::io_service io_service;
 	boost::asio::ip::tcp::resolver resolver(io_service);
 	boost::asio::ip::tcp::resolver::query query(boost::asio::ip::host_name(), "");
@@ -148,13 +156,18 @@ std::string GetMac::GetIpAddress()
 	while (iter != end)
 	{
 		boost::asio::ip::tcp::endpoint ep = *iter++;
-		std::stringstream buffer;
-		std::streambuf * old = std::cout.rdbuf(buffer.rdbuf());
-		std::cout << ep << std::endl;
-		ip = buffer.str();
+		std::string ip = ep.address().to_string();
+		if ( ip == "127.0.0.1" )
+			continue;
+
+		int a,b,c,d;
+		if ( sscanf( ip.c_str(), "%d.%d.%d.%d", &a, &b, &c,&d) != 4 )
+			continue;
+
+		return ip;
 	}
-	StringUtil::Trim(ip, ":");
-	return ip;
+
+	return "127.0.0.1";
 }
 
 

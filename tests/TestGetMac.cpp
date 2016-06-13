@@ -43,6 +43,10 @@ public:
 		mac = GetMac::GetMyAddress(patternsToo);
 		Log::Debug( "TestGetMac", "Mac: %s", mac.c_str() );
 		Test( mac == m_ZeroMac );
+
+
+		std::string ip = GetMac::GetIpAddress();
+		Test( ip != "127.0.0.1" );
 	}
 
 private:
