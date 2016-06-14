@@ -148,23 +148,29 @@ std::string GetMac::GetMyAddress(const std::list<std::string> & a_Patterns)
 
 std::string GetMac::GetIpAddress()
 {
-	boost::asio::io_service io_service;
-	boost::asio::ip::tcp::resolver resolver(io_service);
-	boost::asio::ip::tcp::resolver::query query(boost::asio::ip::host_name(), "");
-	boost::asio::ip::tcp::resolver::iterator iter = resolver.resolve(query);
-	boost::asio::ip::tcp::resolver::iterator end; // End marker.
-	while (iter != end)
+	try {
+		boost::asio::io_service io_service;
+		boost::asio::ip::tcp::resolver resolver(io_service);
+		boost::asio::ip::tcp::resolver::query query(boost::asio::ip::host_name(), "");
+		boost::asio::ip::tcp::resolver::iterator iter = resolver.resolve(query);
+		boost::asio::ip::tcp::resolver::iterator end; // End marker.
+		while (iter != end)
+		{
+			boost::asio::ip::tcp::endpoint ep = *iter++;
+			std::string ip = ep.address().to_string();
+			if ( ip == "127.0.0.1" )
+				continue;
+
+			int a,b,c,d;
+			if ( sscanf( ip.c_str(), "%d.%d.%d.%d", &a, &b, &c,&d) != 4 )
+				continue;
+
+			return ip;
+		}
+	}
+	catch( const std::exception & ex )
 	{
-		boost::asio::ip::tcp::endpoint ep = *iter++;
-		std::string ip = ep.address().to_string();
-		if ( ip == "127.0.0.1" )
-			continue;
-
-		int a,b,c,d;
-		if ( sscanf( ip.c_str(), "%d.%d.%d.%d", &a, &b, &c,&d) != 4 )
-			continue;
-
-		return ip;
+		Log::Error("GetMac", "Caught Exception: %s", ex.what() );
 	}
 
 	return "127.0.0.1";
