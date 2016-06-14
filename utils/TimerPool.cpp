@@ -25,7 +25,7 @@ const double MIN_INTERVAL_TIME = 0.01;		// the minimum amount of time for a recu
 TimerPool * TimerPool::sm_pInstance = NULL;
 
 TimerPool::TimerPool()
-	: m_bShutdown( false ), m_pTimerThread( NULL )
+	: m_bShutdown( false ), m_pTimerThread( NULL ), m_MaxNextSignalEpochTime(0)
 {
 	if ( sm_pInstance != NULL )
 		Log::Error( "TimerPool", "Multiple instances of TimerPool created." );
@@ -74,7 +74,6 @@ void TimerPool::StopAllTimers()
 
 void TimerPool::InsertTimer( ITimer::SP a_pTimer, bool a_bNewTimer )
 {
-	Log::Debug("TimerPool", "Start of insert timer function...");
 	if (a_bNewTimer)
 		m_TimerQueueLock.lock();
 
@@ -82,7 +81,8 @@ void TimerPool::InsertTimer( ITimer::SP a_pTimer, bool a_bNewTimer )
 	bool bInserted = false;
 
 	double start_time = Time().GetEpochTime();
-/*
+
+	/*
 	for( TimerList::iterator iTimer = m_TimerQueue.begin(); iTimer != m_TimerQueue.end(); ++iTimer )
 	{
 		ITimer::SP spTimer = (*iTimer).lock();
@@ -97,20 +97,47 @@ void TimerPool::InsertTimer( ITimer::SP a_pTimer, bool a_bNewTimer )
 		}
 
 		bNewFirstTimer = false;
+	*/
+
+	// Binary Search insertion with skip term
+	if ( a_pTimer->m_NextSignal.GetEpochTime() > m_MaxNextSignalEpochTime )
+	{
+		Log::Debug("TimerPool", "Skipped straight to back");
+		m_TimerQueue.push_back( a_pTimer );
+		m_MaxNextSignalEpochTime = a_pTimer->m_NextSignal.GetEpochTime();
 	}
-*/
-	// Binary Search insertion
-	if ( m_TimerQueue.size() )
+	else if ( m_TimerQueue.size() )
 	{
 		size_t index_inserted = BinaryInsert( a_pTimer, m_TimerQueue.begin(), true, 0, m_TimerQueue.size() - 1 );
 		bNewFirstTimer = index_inserted == 0;
 		Log::Debug("TimerPool", "Insert timer to position %d / %d --- took %.5f", index_inserted, m_TimerQueue.size(), Time().GetEpochTime() - start_time);
 	}
 	else
-	/////////////////
 	{
 		m_TimerQueue.push_back( a_pTimer );
 	}
+
+	// Verify in order...
+	/*
+	double last_time = 0;
+	bool in_order = true;
+	for( TimerList::iterator iTimer = m_TimerQueue.begin(); iTimer != m_TimerQueue.end(); ++iTimer )
+	{
+		ITimer::SP spTimer = (*iTimer).lock();
+		if (!spTimer)
+			continue;
+		if (iTimer == m_TimerQueue.begin())
+		{
+			last_time = spTimer->m_NextSignal.GetEpochTime();
+		}
+		else if (spTimer->m_NextSignal.GetEpochTime() < last_time)
+		{
+			in_order = false;
+		}
+	}
+	if (in_order)
+		Log::Debug("TimerPool", "Confirmed in order");
+	*/
 
 	// new timer inserted, so wake our timer thread..
 	if ( bNewFirstTimer && a_bNewTimer )
@@ -163,7 +190,9 @@ size_t TimerPool::BinaryInsert( ITimer::SP a_pTimer, TimerList::iterator iTimer,
 			TimerList::iterator it_temp = m_TimerQueue.erase(iTimer);
 			if (m_TimerQueue.size())
 			{
-				return BinaryInsert(a_pTimer, m_TimerQueue.begin(), true, 0, m_TimerQueue.size() - 1);
+				// Back one iteration and restart with element removed
+				std::advance( it_temp, -increment);
+				return BinaryInsert(a_pTimer, it_temp, a_bAtLower, a_Lower, a_Upper - 1);
 			}
 			else
 			{

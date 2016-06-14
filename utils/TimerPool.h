@@ -147,6 +147,7 @@ private:
 	TimerList			m_TimerQueue;
 	boost::condition_variable
 						m_WakeTimer;
+	double				m_MaxNextSignalEpochTime;
 	static TimerPool *	sm_pInstance;
 };
 
