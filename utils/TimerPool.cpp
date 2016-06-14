@@ -80,7 +80,7 @@ void TimerPool::InsertTimer( ITimer::SP a_pTimer, bool a_bNewTimer )
 	bool bNewFirstTimer = true;
 	bool bInserted = false;
 
-	double start_time = Time().GetEpochTime();
+	//double start_time = Time().GetEpochTime();
 
 	// Binary Search insertion with skip term
 	if ( a_pTimer->m_NextSignal.GetEpochTime() > m_MaxNextSignalEpochTime )
