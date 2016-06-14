@@ -74,7 +74,23 @@ Json::Value ISerializable::SerializeObject(ISerializable * a_pObject, bool a_bWr
 	if ( a_pObject != NULL )
 	{
 		if ( a_bWriteType )
-			json["Type_"] = a_pObject->GetRTTI().GetName();
+		{
+			// look to see if this type overridden a base type, if we find one, then use the overridden type name
+			const RTTI * pType = &a_pObject->GetRTTI();
+			const RTTI * pBaseType = pType;
+			while( pBaseType != NULL )
+			{
+				if ( GetSerializableFactory().IsOverride( pBaseType->GetName() ) )
+				{
+					pType = pBaseType;
+					break;
+				}
+				pBaseType = pBaseType->GetBaseClass();
+			}
+
+			if ( pType != NULL )
+				json["Type_"] = pType->GetName();
+		}
 
 		a_pObject->Serialize(json);
 	}

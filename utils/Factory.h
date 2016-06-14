@@ -26,8 +26,17 @@
 class ICreator
 {
 public:
+	ICreator( bool a_bOverride ) : m_bOverride( a_bOverride )
+	{}
 	virtual void * Create() = 0;
 	virtual ~ICreator() {}
+
+	bool IsOverride() const
+	{
+		return m_bOverride;
+	}
+private:
+	bool m_bOverride;
 };
 typedef std::map<std::string, ICreator *>		CreatorMap;
 
@@ -37,11 +46,11 @@ public:
 	//! Register a specific class type with this factory, it should inherit from the BASE class.
 	//! If a_bOverride is true, then we will replace any previously registered class by the same
 	//! name. If false, then we will return false if any class is already registered with the same ID.
-	bool Register(const std::string & a_ID, ICreator * a_pCreator, bool a_bOverride = false)
+	bool Register(const std::string & a_ID, ICreator * a_pCreator)
 	{
 		if (m_CreatorMapping.find(a_ID) != m_CreatorMapping.end())
 		{
-			if (!a_bOverride)
+			if (! a_pCreator->IsOverride() )
 				return false;
 		}
 
@@ -67,6 +76,23 @@ public:
 			}
 		}
 
+		return false;
+	}
+
+	ICreator * FindCreator( const std::string & a_ID )
+	{
+		CreatorMap::iterator iMapping = m_CreatorMapping.find(a_ID);
+		if (iMapping != m_CreatorMapping.end())
+			return iMapping->second;
+
+		return NULL;
+	}
+
+	bool IsOverride( const std::string & a_ID )
+	{
+		ICreator * pCreator = FindCreator( a_ID );
+		if ( pCreator != NULL )
+			return pCreator->IsOverride();
 		return false;
 	}
 
@@ -117,6 +143,9 @@ public:
 	class Creator : public ICreator
 	{
 	public:
+		Creator( bool a_bOverride ) : ICreator( a_bOverride )
+		{}
+
 		virtual void * Create()
 		{
 			// must static case to BASE * before returning void *, so pointer math works correctly, do not change this..
@@ -126,9 +155,9 @@ public:
 
 	template< typename BASE >
 	RegisterWithFactory( const std::string & a_ID, Factory< BASE > & a_Factory, bool a_bOverride = false ) 
-		: m_ID( a_ID ), m_pFactory( &a_Factory ), m_pCreator( new Creator<BASE, T>() )
+		: m_ID( a_ID ), m_pFactory( &a_Factory ), m_pCreator( new Creator<BASE, T>( a_bOverride ) )
 	{
-		a_Factory.Register(m_ID, m_pCreator, a_bOverride );
+		a_Factory.Register(m_ID, m_pCreator );
 	}
 
 	~RegisterWithFactory()

@@ -51,7 +51,7 @@ struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared
 		json["m_User"] = m_User;
 		json["m_Password"] = m_Password;
 
-		SerializeMap("m_CustomMap", m_CustomMap, json);
+		//SerializeMap("m_CustomMap", m_CustomMap, json);
 	}
 
 	virtual void Deserialize(const Json::Value & json)
@@ -61,7 +61,7 @@ struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared
 		m_User = json["m_User"].asString();
 		m_Password = json["m_Password"].asString();
 
-		DeserializeMap("m_CustomMap", json, m_CustomMap);
+		//DeserializeMap("m_CustomMap", json, m_CustomMap);
 	}
 
 	bool operator==( const ServiceConfig & a_Compare ) const
