@@ -135,6 +135,7 @@ private:
 	};
 
 	void InsertTimer( ITimer::SP a_pTimer, bool newTimer );
+	size_t BinaryInsert( ITimer:: SP a_pTimer, TimerList::iterator iTimer, bool a_bAtLower, int a_Lower, int a_Upper);
 	void InvokeTimer(ITimer::WP a_wpTimer);
 
 	static void TimerThread( void * arg );
