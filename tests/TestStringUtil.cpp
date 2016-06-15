@@ -36,4 +36,4 @@ public:
 
 };
 
-TestStringUtil TEST_URL;
+TestStringUtil TEST_STRING_UTIL;

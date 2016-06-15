@@ -43,7 +43,7 @@ public:
 
 		Test(re.Start());
 		Test(re.Parse( "Wave to the crowd", 
-			DELEGATE(TestRelationshipExtraction, OnParse, const Json::Value &, this)) != NULL);
+			DELEGATE(TestRelationshipExtraction, OnParse, const Json::Value &, this)));
 
 		Time start;
 		while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_bParseTested)
@@ -62,4 +62,4 @@ public:
 	}
 };
 
-TestRelationshipExtraction TEST_DIALOG;
+TestRelationshipExtraction TEST_RE;

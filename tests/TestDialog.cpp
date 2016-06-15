@@ -64,7 +64,7 @@ public:
 		Dialog dialog;
 		Test(dialog.Start());
 		Test(dialog.UploadDialog(m_DialogName, "./etc/tests/pizza_sample.xml",
-			DELEGATE(TestDialog, OnUploadDialog, const Json::Value &, this)) != NULL);
+			DELEGATE(TestDialog, OnUploadDialog, const Json::Value &, this)));
 		Time start;
 		while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_UploadTested)
 		{

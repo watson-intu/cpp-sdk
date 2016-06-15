@@ -91,4 +91,4 @@ public:
 
 };
 
-TestAlchemy TEST_DIALOG;
+TestAlchemy TEST_ALCHEMY;
