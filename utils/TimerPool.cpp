@@ -25,7 +25,7 @@ const double MIN_INTERVAL_TIME = 0.01;		// the minimum amount of time for a recu
 TimerPool * TimerPool::sm_pInstance = NULL;
 
 TimerPool::TimerPool()
-	: m_bShutdown( false ), m_pTimerThread( NULL ), m_MaxNextSignalEpochTime(0)
+	: m_bShutdown( false ), m_pTimerThread( NULL )
 {
 	if ( sm_pInstance != NULL )
 		Log::Error( "TimerPool", "Multiple instances of TimerPool created." );
@@ -54,11 +54,12 @@ bool TimerPool::StopTimer( ITimer::SP a_spTimer )
 	if ( !a_spTimer )
 		return false;
 
-	for( TimerList::iterator iTimer = m_TimerQueue.begin(); iTimer != m_TimerQueue.end(); ++iTimer )
+	// Cannot use built in erase(key_value)... would remove all timers with same next signal time
+	for( TimerMultiSet::iterator iTimerStruct = m_TimerQueue.begin(); iTimerStruct != m_TimerQueue.end(); ++iTimerStruct )
 	{
-		if ( (*iTimer).lock() == a_spTimer)
+		if ( (iTimerStruct->m_pTimer).lock() == a_spTimer)
 		{
-			m_TimerQueue.erase( iTimer );
+			m_TimerQueue.erase( iTimerStruct );
 			return true;
 		}
 	}
@@ -77,28 +78,11 @@ void TimerPool::InsertTimer( ITimer::SP a_pTimer, bool a_bNewTimer )
 	if (a_bNewTimer)
 		m_TimerQueueLock.lock();
 
-	bool bNewFirstTimer = true;
-	bool bInserted = false;
+	double start_time = Time().GetEpochTime();
 
-	//double start_time = Time().GetEpochTime();
-
-	// Binary Search insertion with skip term
-	if ( a_pTimer->m_NextSignal.GetEpochTime() > m_MaxNextSignalEpochTime )
-	{
-		//Log::Debug("TimerPool", "Skipped straight to back");
-		m_TimerQueue.push_back( a_pTimer );
-		m_MaxNextSignalEpochTime = a_pTimer->m_NextSignal.GetEpochTime();
-	}
-	else if ( m_TimerQueue.size() )
-	{
-		size_t index_inserted = BinaryInsert( a_pTimer, m_TimerQueue.begin(), true, 0, m_TimerQueue.size() - 1 );
-		bNewFirstTimer = index_inserted == 0;
-		//Log::Debug("TimerPool", "Insert timer to position %d / %d --- took %.5f", index_inserted, m_TimerQueue.size(), Time().GetEpochTime() - start_time);
-	}
-	else
-	{
-		m_TimerQueue.push_back( a_pTimer );
-	}
+	// Insert new timer struct
+	TimerMultiSet::iterator itInserted = m_TimerQueue.insert( TimerMultiSetStruct(a_pTimer) );
+	bool bNewFirstTimer = itInserted == m_TimerQueue.begin();
 
 	// new timer inserted, so wake our timer thread..
 	if ( bNewFirstTimer && a_bNewTimer )
@@ -107,80 +91,6 @@ void TimerPool::InsertTimer( ITimer::SP a_pTimer, bool a_bNewTimer )
 		m_TimerQueueLock.unlock();
 }
 
-size_t TimerPool::BinaryInsert( ITimer::SP a_pTimer, TimerList::iterator iTimer, bool a_bAtLower, int a_Lower, int a_Upper)
-{
-	if (a_Lower == a_Upper)
-	{
-		ITimer::SP spTimer = (*iTimer).lock();
-		if (! spTimer)
-		{
-			// Log::Debug("TimerPool", "In BinaryInsert, cleaning up expired..");
-			TimerList::iterator it_temp = m_TimerQueue.erase(iTimer);
-			m_TimerQueue.insert(it_temp, a_pTimer);
-			return a_Lower;
-		}
-		if (a_pTimer->m_NextSignal.GetEpochTime() < spTimer->m_NextSignal.GetEpochTime() )
-		{
-			m_TimerQueue.insert( iTimer, a_pTimer );
-			return a_Lower;
-		}
-		else if (a_Lower < m_TimerQueue.size() - 1 )
-		{
-			iTimer++;
-			m_TimerQueue.insert( iTimer , a_pTimer );
-			return a_Lower + 1;
-		}
-		else
-		{
-			m_TimerQueue.push_back( a_pTimer );
-			return a_Lower + 1;
-		}
-	}
-	else
-	{
-		int increment = (a_bAtLower) ? ceil( (a_Upper - a_Lower) / 2.0f) : floor( (a_Lower - a_Upper) / 2.0f);
-		std::advance( iTimer, increment);
-		ITimer::SP spTimer = (*iTimer).lock();
-
-		if (! spTimer)
-		{
-			// Log::Debug("TimerPool", "In BinaryInsert, cleaning up expired..");
-			TimerList::iterator it_temp = m_TimerQueue.erase(iTimer);
-			if (m_TimerQueue.size())
-			{
-				// Back one iteration and restart with element removed
-				std::advance( it_temp, -increment);
-				return BinaryInsert(a_pTimer, it_temp, a_bAtLower, a_Lower, a_Upper - 1);
-			}
-			else
-			{
-				m_TimerQueue.push_back(a_pTimer);
-				return 0;
-			}
-		}
-
-		int curr_temp = a_bAtLower ? a_Lower + increment : a_Upper + increment;
-
-		if ( a_pTimer->m_NextSignal.GetEpochTime() < spTimer->m_NextSignal.GetEpochTime() )
-		{
-			if (curr_temp != a_Lower)
-			{
-				std::advance(iTimer, -1);
-				curr_temp--;
-			}
-			return BinaryInsert(a_pTimer, iTimer, false, a_Lower, curr_temp);
-		}
-		else
-		{
-			if (curr_temp != a_Upper)
-			{
-				std::advance(iTimer, 1);
-				curr_temp++;
-			}
-			return BinaryInsert(a_pTimer, iTimer, true, curr_temp, a_Upper);
-		}
-	}
-}
 
 void TimerPool::InvokeTimer(ITimer::WP a_wpTimer)
 {
@@ -195,16 +105,16 @@ void TimerPool::TimerThread( void * arg )
 
 	boost::unique_lock<boost::mutex> lock(pPool->m_TimerQueueLock);
 
-	TimerList & timers = pPool->m_TimerQueue;
+	TimerMultiSet & timers = pPool->m_TimerQueue;
 	while(! pPool->m_bShutdown )
 	{
 		if ( timers.begin() != timers.end() )
 		{
-			ITimer::SP spTimer = timers.front().lock();
+			ITimer::SP spTimer = (timers.begin()->m_pTimer).lock();
 			if (!spTimer)
 			{
 				// timer object destroyed, just remove it from the list..
-				timers.pop_front();
+				timers.erase(timers.begin());
 				continue;
 			}
 
@@ -218,7 +128,8 @@ void TimerPool::TimerThread( void * arg )
 					break;
 				if (timers.begin() == timers.end())
 					continue;
-				spTimer = timers.front().lock();		// re-acquire the shared_ptr
+
+				spTimer = (timers.begin()->m_pTimer).lock();		// re-acquire the shared_ptr
 				if (!spTimer)
 					continue;
 			}
@@ -228,17 +139,17 @@ void TimerPool::TimerThread( void * arg )
 			{
 				if (timers.begin() == timers.end())
 					break;
-				spTimer = timers.front().lock();
+				spTimer = (timers.begin()->m_pTimer).lock();
 				if (!spTimer)
 				{
-					timers.pop_front();
+					timers.erase(timers.begin());
 					continue;
 				}
 				if (now < spTimer->m_NextSignal.GetEpochTime())
 					break;				// not time yet, stop enumerating timers..
 
 				// remove and invoke the timer..
-				timers.pop_front();
+				timers.erase(timers.begin());
 
 				if (spTimer->m_InvokeOnMain)
 					ThreadPool::Instance()->InvokeOnMain<ITimer::WP>(DELEGATE(TimerPool, InvokeTimer, ITimer::WP, pPool ), spTimer);

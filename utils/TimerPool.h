@@ -97,7 +97,25 @@ public:
 
 private:
 	//! Types
-	typedef std::list<ITimer::WP>				TimerList;
+	// Timer struct to enable the sorting of weak pointers within multiset
+	struct TimerMultiSetStruct
+	{
+		TimerMultiSetStruct( ITimer::SP a_pTimer )
+		{
+			m_NextSignalEpochTime = a_pTimer->m_NextSignal.GetEpochTime();
+			m_pTimer = a_pTimer;
+		}
+		ITimer::WP 		m_pTimer;
+		double 			m_NextSignalEpochTime;
+	};
+
+	struct TimerCompare {
+		bool operator() (const TimerMultiSetStruct & a_Timer1, const TimerMultiSetStruct & a_Timer2) const {
+			return a_Timer1.m_NextSignalEpochTime < a_Timer2.m_NextSignalEpochTime;
+		}
+	};
+
+	typedef std::multiset<TimerMultiSetStruct, TimerCompare>				TimerMultiSet;
 
 	template<typename ARG>
 	struct Timer : public ITimer
@@ -135,7 +153,6 @@ private:
 	};
 
 	void InsertTimer( ITimer::SP a_pTimer, bool newTimer );
-	size_t BinaryInsert( ITimer:: SP a_pTimer, TimerList::iterator iTimer, bool a_bAtLower, int a_Lower, int a_Upper);
 	void InvokeTimer(ITimer::WP a_wpTimer);
 
 	static void TimerThread( void * arg );
@@ -144,11 +161,11 @@ private:
 	volatile bool		m_bShutdown;
 	boost::thread *		m_pTimerThread;
 	boost::mutex		m_TimerQueueLock;
-	TimerList			m_TimerQueue;
+	TimerMultiSet		m_TimerQueue;
 	boost::condition_variable
 						m_WakeTimer;
-	double				m_MaxNextSignalEpochTime;
 	static TimerPool *	sm_pInstance;
+
 };
 
 inline TimerPool * TimerPool::Instance()
