@@ -243,15 +243,64 @@ private:
 #define VOID_DELEGATE( CLASS, FUNC, OBJ )		VoidDelegate::Create<CLASS,&CLASS::FUNC>( OBJ, __FILE__, __LINE__ )
 #endif
 
+//------------------------------------------------------------
+
+template<typename ARG>
+class DelegateList
+{
+public:
+	//! Types
+	typedef std::list< Delegate<ARG> >		List;
+
+	//! Accessors
+	const List & GetList() const 
+	{
+		return m_Delegates;
+	}
+
+	//! Mutators
+	void Add( Delegate<ARG> a_Delegate )
+	{
+		m_Delegates.push_back( a_Delegate );
+	}
+
+	bool Remove( void * a_pObject )
+	{
+		for( List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+		{
+			if ( (*iDelegate).IsObject( a_pObject ) )
+			{
+				m_Delegates.erase( iDelegate );
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void Invoke( ARG a_Arg )
+	{
+		for( List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+			(*iDelegate)( a_Arg );
+	}
+
+	void Clear()
+	{
+		m_Delegates.clear();
+	}
+
+private:
+	//! Data
+	List	m_Delegates;
+};
 
 class VoidDelegateList
 {
 public:
 	//! Types
-	typedef std::list<VoidDelegate>		DelegateList;
+	typedef std::list<VoidDelegate>		List;
 
 	//! Accessors
-	const DelegateList & GetList() const 
+	const List & GetList() const 
 	{
 		return m_Delegates;
 	}
@@ -264,7 +313,7 @@ public:
 
 	bool Remove( void * a_pObject )
 	{
-		for( DelegateList::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+		for( List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
 		{
 			if ( (*iDelegate).IsObject( a_pObject ) )
 			{
@@ -277,7 +326,7 @@ public:
 
 	void Invoke()
 	{
-		for( DelegateList::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+		for( List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
 			(*iDelegate)();
 	}
 
@@ -288,7 +337,7 @@ public:
 
 private:
 	//! Data
-	DelegateList	m_Delegates;
+	List	m_Delegates;
 };
 
 #endif
