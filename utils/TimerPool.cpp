@@ -78,8 +78,6 @@ void TimerPool::InsertTimer( ITimer::SP a_pTimer, bool a_bNewTimer )
 	if (a_bNewTimer)
 		m_TimerQueueLock.lock();
 
-	double start_time = Time().GetEpochTime();
-
 	// Insert new timer struct
 	TimerMultiSet::iterator itInserted = m_TimerQueue.insert( TimerMultiSetStruct(a_pTimer) );
 	bool bNewFirstTimer = itInserted == m_TimerQueue.begin();
