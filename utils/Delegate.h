@@ -18,6 +18,7 @@
 #ifndef WDC_DELEGATE_H
 #define WDC_DELEGATE_H
 
+#include <list>
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
 
@@ -241,6 +242,54 @@ private:
 #else
 #define VOID_DELEGATE( CLASS, FUNC, OBJ )		VoidDelegate::Create<CLASS,&CLASS::FUNC>( OBJ, __FILE__, __LINE__ )
 #endif
+
+
+class VoidDelegateList
+{
+public:
+	//! Types
+	typedef std::list<VoidDelegate>		DelegateList;
+
+	//! Accessors
+	const DelegateList & GetList() const 
+	{
+		return m_Delegates;
+	}
+
+	//! Mutators
+	void Add( VoidDelegate a_Delegate )
+	{
+		m_Delegates.push_back( a_Delegate );
+	}
+
+	bool Remove( void * a_pObject )
+	{
+		for( DelegateList::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+		{
+			if ( (*iDelegate).IsObject( a_pObject ) )
+			{
+				m_Delegates.erase( iDelegate );
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void Invoke()
+	{
+		for( DelegateList::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+			(*iDelegate)();
+	}
+
+	void Clear()
+	{
+		m_Delegates.clear();
+	}
+
+private:
+	//! Data
+	DelegateList	m_Delegates;
+};
 
 #endif
 
