@@ -18,6 +18,7 @@
 #include "TimerPool.h"
 #include "ThreadPool.h"
 #include "../utils/Log.h"
+#include "Time.h"
 
 const double MIN_INTERVAL_TIME = 0.01;		// the minimum amount of time for a recurring timer
 
@@ -53,11 +54,12 @@ bool TimerPool::StopTimer( ITimer::SP a_spTimer )
 	if ( !a_spTimer )
 		return false;
 
-	for( TimerList::iterator iTimer = m_TimerQueue.begin(); iTimer != m_TimerQueue.end(); ++iTimer )
+	// Cannot use built in erase(key_value)... would remove all timers with same next signal time
+	for( TimerMultiSet::iterator iTimerStruct = m_TimerQueue.begin(); iTimerStruct != m_TimerQueue.end(); ++iTimerStruct )
 	{
-		if ( (*iTimer).lock() == a_spTimer)
+		if ( (iTimerStruct->m_pTimer).lock() == a_spTimer)
 		{
-			m_TimerQueue.erase( iTimer );
+			m_TimerQueue.erase( iTimerStruct );
 			return true;
 		}
 	}
@@ -76,26 +78,9 @@ void TimerPool::InsertTimer( ITimer::SP a_pTimer, bool a_bNewTimer )
 	if (a_bNewTimer)
 		m_TimerQueueLock.lock();
 
-	bool bNewFirstTimer = true;
-	bool bInserted = false;
-	for( TimerList::iterator iTimer = m_TimerQueue.begin(); iTimer != m_TimerQueue.end(); ++iTimer )
-	{
-		ITimer::SP spTimer = (*iTimer).lock();
-		if (!spTimer)
-			continue;
-
-		if ( a_pTimer->m_NextSignal.GetEpochTime() < spTimer->m_NextSignal.GetEpochTime() )
-		{
-			bInserted = true;
-			m_TimerQueue.insert( iTimer, a_pTimer );
-			break;
-		}
-
-		bNewFirstTimer = false;
-	}
-
-	if (! bInserted )
-		m_TimerQueue.push_back( a_pTimer );
+	// Insert new timer struct
+	TimerMultiSet::iterator itInserted = m_TimerQueue.insert( TimerMultiSetStruct(a_pTimer) );
+	bool bNewFirstTimer = itInserted == m_TimerQueue.begin();
 
 	// new timer inserted, so wake our timer thread..
 	if ( bNewFirstTimer && a_bNewTimer )
@@ -103,6 +88,7 @@ void TimerPool::InsertTimer( ITimer::SP a_pTimer, bool a_bNewTimer )
 	if (a_bNewTimer)
 		m_TimerQueueLock.unlock();
 }
+
 
 void TimerPool::InvokeTimer(ITimer::WP a_wpTimer)
 {
@@ -117,16 +103,16 @@ void TimerPool::TimerThread( void * arg )
 
 	boost::unique_lock<boost::mutex> lock(pPool->m_TimerQueueLock);
 
-	TimerList & timers = pPool->m_TimerQueue;
+	TimerMultiSet & timers = pPool->m_TimerQueue;
 	while(! pPool->m_bShutdown )
 	{
 		if ( timers.begin() != timers.end() )
 		{
-			ITimer::SP spTimer = timers.front().lock();
+			ITimer::SP spTimer = (timers.begin()->m_pTimer).lock();
 			if (!spTimer)
 			{
 				// timer object destroyed, just remove it from the list..
-				timers.pop_front();
+				timers.erase(timers.begin());
 				continue;
 			}
 
@@ -140,7 +126,8 @@ void TimerPool::TimerThread( void * arg )
 					break;
 				if (timers.begin() == timers.end())
 					continue;
-				spTimer = timers.front().lock();		// re-acquire the shared_ptr
+
+				spTimer = (timers.begin()->m_pTimer).lock();		// re-acquire the shared_ptr
 				if (!spTimer)
 					continue;
 			}
@@ -150,17 +137,17 @@ void TimerPool::TimerThread( void * arg )
 			{
 				if (timers.begin() == timers.end())
 					break;
-				spTimer = timers.front().lock();
+				spTimer = (timers.begin()->m_pTimer).lock();
 				if (!spTimer)
 				{
-					timers.pop_front();
+					timers.erase(timers.begin());
 					continue;
 				}
 				if (now < spTimer->m_NextSignal.GetEpochTime())
 					break;				// not time yet, stop enumerating timers..
 
 				// remove and invoke the timer..
-				timers.pop_front();
+				timers.erase(timers.begin());
 
 				if (spTimer->m_InvokeOnMain)
 					ThreadPool::Instance()->InvokeOnMain<ITimer::WP>(DELEGATE(TimerPool, InvokeTimer, ITimer::WP, pPool ), spTimer);
