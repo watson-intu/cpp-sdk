@@ -266,7 +266,7 @@ public:
 
 	bool Remove( void * a_pObject )
 	{
-		for( List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+		for( typename List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
 		{
 			if ( (*iDelegate).IsObject( a_pObject ) )
 			{
@@ -279,7 +279,7 @@ public:
 
 	void Invoke( ARG a_Arg )
 	{
-		for( List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+		for( typename List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
 			(*iDelegate)( a_Arg );
 	}
 
