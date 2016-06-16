@@ -18,7 +18,7 @@
 #ifndef WDC_TIMERPOOL_H
 #define WDC_TIMERPOOL_H
 
-#include <list>
+#include <set>
 
 #include "boost/enable_shared_from_this.hpp"
 #include "boost/shared_ptr.hpp"
@@ -115,7 +115,7 @@ private:
 		}
 	};
 
-	typedef std::multiset<TimerMultiSetStruct, TimerCompare>				TimerMultiSet;
+	typedef std::multiset<TimerMultiSetStruct, TimerCompare, std::allocator<TimerMultiSetStruct> >				TimerMultiSet;
 
 	template<typename ARG>
 	struct Timer : public ITimer
