@@ -403,6 +403,7 @@ public:
 		for (int i = 0; i < m_nThreads; ++i)
 			m_Threads.push_back( ThreadSP( new Thread(boost::bind(&boost::asio::io_service::run, &m_Service))) );
 
+		Log::Status( "WebServer", "Listening on port %d", m_nPort );
 		return true;
 	}
 
