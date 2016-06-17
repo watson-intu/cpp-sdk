@@ -132,7 +132,7 @@ bool Logic::TestLogicalOp(LogicalOp a_Op, const std::vector<bool> & a_Values)
 	break;
 	case XOR:
 	{
-		bool bResult = true;
+		bool bResult = false;
 		for (size_t i = 0; i < a_Values.size(); ++i)
 			bResult ^= a_Values[i];
 		return bResult;
