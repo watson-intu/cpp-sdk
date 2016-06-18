@@ -17,7 +17,9 @@
 
 #include "RelationshipExtraction.h"
 
-REG_SERIALIZABLE(RelationshipExtraction);
+REG_SERIALIZABLE( RelationshipExtraction );
+RTTI_IMPL( RelationshipExtraction, IService );
+
 
 RelationshipExtraction::RelationshipExtraction() :
 	IService("RelationshipExtractionV1"),

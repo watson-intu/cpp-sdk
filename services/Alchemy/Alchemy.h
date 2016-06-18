@@ -26,7 +26,7 @@
 class WDC_API Alchemy : public IService
 {
 public:
-	RTTI_DECL(Alchemy, IService);
+	RTTI_DECL();
 
 	//! Types
 	typedef Delegate<const Json::Value &>	OnClassifyImage;

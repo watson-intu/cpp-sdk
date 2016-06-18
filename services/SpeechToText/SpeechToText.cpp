@@ -31,6 +31,16 @@ const int MAX_RECOGNIZE_CLIP_SIZE = 4 * (1024 * 1024);
 const float RECONNECT_TIME = 5.0f;
 
 REG_SERIALIZABLE( SpeechToText );
+RTTI_IMPL( SpeechToText, IService );
+RTTI_IMPL( SpeechModel, ISerializable );
+RTTI_IMPL( SpeechModels, ISerializable );
+RTTI_IMPL( WordConfidence, ISerializable );
+RTTI_IMPL( TimeStamp, ISerializable );
+RTTI_IMPL( SpeechAlt, ISerializable );
+RTTI_IMPL( SpeechResult, ISerializable );
+RTTI_IMPL( RecognizeResults, ISerializable );
+
+
 
 SpeechToText::SpeechToText() : IService( "SpeechToTextV1" ),
 	m_RecognizeModel("en-US_BroadbandModel" ),

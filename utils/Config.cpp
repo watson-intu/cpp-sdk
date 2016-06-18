@@ -17,6 +17,9 @@
 
 #include "Config.h"
 
+RTTI_IMPL( Config, ISerializable );
+RTTI_IMPL( ServiceConfig, ISerializable );
+
 Config * Config::sm_pInstance = NULL;
 
 Config * Config::Instance()

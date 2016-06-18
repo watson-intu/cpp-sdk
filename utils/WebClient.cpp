@@ -32,6 +32,14 @@
 
 #include <string>
 
+RTTI_IMPL_BASE( IWebServer );
+RTTI_IMPL( WebServer, IWebServer );
+RTTI_IMPL( SecureWebServer, IWebServer );
+
+RTTI_IMPL( IWebClient, IWebSocket );
+RTTI_IMPL( WebClient, IWebClient );
+
+
 // include the OpenSSL libs
 #ifdef _WIN32
 #ifdef _DEBUG

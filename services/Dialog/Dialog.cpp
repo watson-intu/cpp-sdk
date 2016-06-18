@@ -21,7 +21,11 @@
 #include "utils/Form.h"
 #include "utils/Path.h"
 
-REG_SERIALIZABLE(Dialog);
+REG_SERIALIZABLE( Dialog );
+RTTI_IMPL( DialogEntry, ISerializable );
+RTTI_IMPL( Dialogs, ISerializable );
+RTTI_IMPL( Dialog, IService );
+
 
 Dialog::Dialog() : IService( "DialogV1" ),
 	m_MaxDialogAge( 30 * 24 )

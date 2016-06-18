@@ -24,6 +24,8 @@
 #undef MAX
 #define MAX(a,b)		((a) > (b) ? (a) : (b))
 
+RTTI_IMPL( IService, ISerializable );
+
 boost::atomic<int>      IService::sm_Timeouts;
 
 IService::Request::Request(const std::string & a_URL,

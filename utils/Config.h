@@ -26,7 +26,7 @@
 class WDC_API Config : public ISerializable
 {
 public:
-	RTTI_DECL( Config, ISerializable );
+	RTTI_DECL();
 
 	//! Types
 	typedef std::list<std::string>		LibraryList;

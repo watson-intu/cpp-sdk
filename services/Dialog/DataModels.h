@@ -22,7 +22,7 @@
 
 struct DialogEntry : public ISerializable
 {
-	RTTI_DECL( DialogEntry, ISerializable );
+	RTTI_DECL();
 
 	std::string m_DialogId;
 	std::string m_Name;
@@ -42,7 +42,7 @@ struct DialogEntry : public ISerializable
 
 struct Dialogs : public ISerializable
 {
-	RTTI_DECL( Dialogs, ISerializable );
+	RTTI_DECL();
 
 	std::vector<DialogEntry> m_Dialogs;
 

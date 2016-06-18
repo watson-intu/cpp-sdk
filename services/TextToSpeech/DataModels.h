@@ -29,7 +29,7 @@ enum AudioFormatType
 
 struct Voice : public ISerializable
 {
-	RTTI_DECL( Voice, ISerializable );
+	RTTI_DECL();
 
 	std::string m_Name;
 	std::string m_Language;
@@ -55,7 +55,7 @@ struct Voice : public ISerializable
 
 struct Voices : public ISerializable
 {
-	RTTI_DECL( Voices, ISerializable );
+	RTTI_DECL();
 
 	std::vector< Voice > m_Voices;
 

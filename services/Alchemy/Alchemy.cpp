@@ -17,7 +17,9 @@
 
 #include "Alchemy.h"
 
-REG_SERIALIZABLE(Alchemy);
+REG_SERIALIZABLE( Alchemy );
+RTTI_IMPL( Alchemy, IService );
+
 
 Alchemy::Alchemy() : IService("AlchemyV1")
 {}

@@ -22,7 +22,7 @@
 
 struct SpeechModel : public ISerializable
 {
-	RTTI_DECL( SpeechModel, ISerializable );
+	RTTI_DECL();
 
 	std::string m_Name;
 	int			m_Rate;
@@ -51,7 +51,7 @@ struct SpeechModel : public ISerializable
 
 struct SpeechModels : ISerializable
 {
-	RTTI_DECL( SpeechModels, ISerializable );
+	RTTI_DECL();
 
 	std::vector<SpeechModel>	m_Models;
 
@@ -68,7 +68,7 @@ struct SpeechModels : ISerializable
 
 struct WordConfidence : public ISerializable
 {
-	RTTI_DECL( WordConfidence, ISerializable );
+	RTTI_DECL();
 
 	std::string m_Word;
 	double		m_Confidence;
@@ -88,7 +88,7 @@ struct WordConfidence : public ISerializable
 
 struct TimeStamp : public ISerializable
 {
-	RTTI_DECL( TimeStamp, ISerializable );
+	RTTI_DECL();
 
 	std::string m_Word;
 	double		m_Start;
@@ -111,7 +111,7 @@ struct TimeStamp : public ISerializable
 
 struct SpeechAlt : public ISerializable
 {
-	RTTI_DECL( SpeechAlt, ISerializable );
+	RTTI_DECL();
 
 	std::string m_Transcript;
 	double		m_Confidence;
@@ -141,7 +141,7 @@ struct SpeechAlt : public ISerializable
 
 struct SpeechResult : public ISerializable
 {
-	RTTI_DECL( SpeechResult, ISerializable );
+	RTTI_DECL();
 
 	bool	m_Final;
 	std::vector<SpeechAlt> 
@@ -163,7 +163,7 @@ struct SpeechResult : public ISerializable
 
 struct RecognizeResults : public ISerializable
 {
-	RTTI_DECL( RecognizeResults, ISerializable );
+	RTTI_DECL();
 
 	int m_ResultIndex;
 	std::vector<SpeechResult> m_Results;

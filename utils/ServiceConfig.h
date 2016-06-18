@@ -28,7 +28,7 @@
 //! is contained by the Config class usually.
 struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared_from_this<ServiceConfig>
 {
-	RTTI_DECL( ServiceConfig, ISerializable );
+	RTTI_DECL();
 
 	typedef boost::shared_ptr<ServiceConfig>		SP;
 	typedef boost::weak_ptr<ServiceConfig>			WP;

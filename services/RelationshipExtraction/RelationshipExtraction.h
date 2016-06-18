@@ -26,7 +26,7 @@
 class WDC_API RelationshipExtraction : public IService
 {
 public:
-	RTTI_DECL(RelationshipExtraction, IService);
+	RTTI_DECL();
 
 	//! Types
 	typedef Delegate<const Json::Value &>	OnParse;

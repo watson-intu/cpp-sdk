@@ -22,7 +22,7 @@
 
 struct Classifier : public ISerializable
 {
-	RTTI_DECL(Classifier,ISerializable);
+	RTTI_DECL();
 
 	std::string m_Name;
 	std::string m_Language;
@@ -64,7 +64,7 @@ struct Classifier : public ISerializable
 
 struct Classifiers : public ISerializable
 {
-	RTTI_DECL(Classifiers,ISerializable);
+	RTTI_DECL();
 
 	std::vector<Classifier> m_Classifiers;
 
@@ -81,7 +81,7 @@ struct Classifiers : public ISerializable
 
 struct Class : public ISerializable
 {
-	RTTI_DECL(Class, ISerializable );
+	RTTI_DECL();
 
 	double m_Confidence;
 	std::string m_ClassName;
@@ -103,7 +103,7 @@ struct Class : public ISerializable
 
 struct ClassifyResult : public ISerializable
 {
-	RTTI_DECL( ClassifyResult, ISerializable );
+	RTTI_DECL();
 
 	std::string m_ClassifierId;
 	std::string m_URL;

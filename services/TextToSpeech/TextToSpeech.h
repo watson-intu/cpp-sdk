@@ -27,7 +27,7 @@
 class WDC_API TextToSpeech : public IService
 {
 public:
-	RTTI_DECL(TextToSpeech, IService);
+	RTTI_DECL();
 
 	//! Types
 	typedef Delegate<Sound *>				ToSpeechCallback;

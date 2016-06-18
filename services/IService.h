@@ -36,7 +36,7 @@
 class WDC_API IService : public ISerializable, public boost::enable_shared_from_this<IService>
 {
 public:
-	RTTI_DECL( IService, ISerializable );
+	RTTI_DECL();
 
 	//! Forward declaration
 	class Request;

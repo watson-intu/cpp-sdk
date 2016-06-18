@@ -33,7 +33,7 @@
 class WDC_API IWebClient : public IWebSocket
 {
 public:
-	RTTI_DECL( IWebClient, IWebSocket );
+	RTTI_DECL();
 
 	//! Static function for creating a concrete WebClient class.
 	static IWebClient * Create();

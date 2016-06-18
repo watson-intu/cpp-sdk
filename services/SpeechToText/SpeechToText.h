@@ -31,7 +31,7 @@
 class WDC_API SpeechToText : public IService
 {
 public:
-	RTTI_DECL( SpeechToText, IService );
+	RTTI_DECL();
 
 	//! Types
 	typedef Delegate<RecognizeResults *>			OnRecognize;

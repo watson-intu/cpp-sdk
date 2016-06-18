@@ -588,7 +588,7 @@ protected:
 class WebServer : public WebServerT<boost::asio::ip::tcp::socket>
 {
 public:
-	RTTI_DECL( WebServer, IWebServer );
+	RTTI_DECL();
 
 	WebServer(const std::string & a_Interface = std::string(),
 		int a_nPort = 80, int a_nThreads = 5, float a_fRequestTimeout = 30.0f) :
@@ -610,7 +610,7 @@ protected:
 class SecureWebServer : public WebServerT< boost::asio::ssl::stream< boost::asio::ip::tcp::socket > >
 {
 public:
-	RTTI_DECL( SecureWebServer, IWebServer );
+	RTTI_DECL();
 
 	//! Construction
 	SecureWebServer( const std::string & a_CertFile,

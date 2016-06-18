@@ -27,7 +27,7 @@
 class WDC_API Dialog : public IService
 {
 public:
-	RTTI_DECL(Dialog, IService);
+	RTTI_DECL();
 
 	//! Types
 	typedef Delegate<Dialogs *>				OnGetDialogs;

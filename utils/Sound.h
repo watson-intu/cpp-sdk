@@ -24,7 +24,7 @@
 class WDC_API Sound : public ISerializable
 {
 public:
-	RTTI_DECL(Sound, ISerializable);
+	RTTI_DECL();
 
 	// Construction
 	Sound();

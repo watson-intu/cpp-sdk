@@ -21,6 +21,12 @@
 #include "utils/Form.h"
 
 REG_SERIALIZABLE( NaturalLanguageClassifier );
+RTTI_IMPL( Classifier, ISerializable );
+RTTI_IMPL( Classifiers, ISerializable );
+RTTI_IMPL( Class, ISerializable );
+RTTI_IMPL( ClassifyResult, ISerializable );
+RTTI_IMPL( NaturalLanguageClassifier, IService );
+
 
 NaturalLanguageClassifier::NaturalLanguageClassifier() : IService("NaturalLanguageClassifierV1")
 {}

@@ -23,6 +23,8 @@
 #include "Sound.h"
 #include "WatsonException.h"
 
+RTTI_IMPL(Sound, ISerializable);
+
 Sound::Sound() : m_Rate(-1), m_Channels(-1), m_Bits(-1)
 {}
 

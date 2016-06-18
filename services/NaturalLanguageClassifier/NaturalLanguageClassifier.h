@@ -27,7 +27,7 @@
 class WDC_API NaturalLanguageClassifier : public IService
 {
 public:
-	RTTI_DECL(NaturalLanguageClassifier, IService);
+	RTTI_DECL();
 
 	//! Types
 	typedef Delegate<Classifiers *>			OnGetClassifiers;

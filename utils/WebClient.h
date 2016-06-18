@@ -43,7 +43,7 @@
 class WDC_API WebClient : public IWebClient
 {
 public:
-	RTTI_DECL( WebClient, IWebClient );
+	RTTI_DECL();
 
 	//! Construction
 	WebClient();

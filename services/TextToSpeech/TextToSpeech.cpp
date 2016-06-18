@@ -18,7 +18,12 @@
 #include "TextToSpeech.h"
 #include "utils/StringHash.h"
 
-REG_SERIALIZABLE(TextToSpeech);
+REG_SERIALIZABLE( TextToSpeech );
+RTTI_IMPL( Voice, ISerializable );
+RTTI_IMPL( Voices, ISerializable );
+RTTI_IMPL( TextToSpeech, IService );
+
+
 
 TextToSpeech::TextToSpeech() : IService( "TextToSpeechV1" ),
 	m_Voice( "en-GB_KateVoice" ),
