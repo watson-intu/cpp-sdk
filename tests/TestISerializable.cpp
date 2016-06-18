@@ -26,7 +26,7 @@ namespace TestSerializableClasses {
 class SubObject : public ISerializable
 {
 public:
-	RTTI_DECL( SubObject, ISerializable );
+	RTTI_DECL();
 
 	SubObject() : 
 		m_integer( 42 )
@@ -49,12 +49,13 @@ public:
 };
 
 REG_SERIALIZABLE( SubObject );
+RTTI_IMPL( SubObject, ISerializable );
+
 
 class TestA : public ISerializable
 {
 public:
-	RTTI_DECL( TestA, ISerializable );
-
+	RTTI_DECL();
 
 	TestA() : 
 		m_integer( 42 ),
@@ -124,6 +125,8 @@ public:
 };
 
 REG_SERIALIZABLE( TestA );
+RTTI_IMPL( TestA, ISerializable );
+
 
 };
 

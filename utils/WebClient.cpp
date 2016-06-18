@@ -21,6 +21,7 @@
 
 #include "WebClient.h"
 #include "WebSocketFramer.h"
+#include "WebServer.h"
 
 #include "boost/thread/thread.hpp"
 #include "boost/algorithm/string.hpp"

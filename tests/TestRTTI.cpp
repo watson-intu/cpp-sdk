@@ -23,7 +23,7 @@ namespace TestRTTIClasses {
 	class TestA
 	{
 	public:
-		RTTI_DECL(TestA);
+		RTTI_DECL();
 
 		TestA() : m_A(1), m_B(42)
 		{}
@@ -31,28 +31,33 @@ namespace TestRTTIClasses {
 		int	m_A;
 		int m_B;
 	};
+	RTTI_IMPL_BASE(TestA);
 
 	class TestB : public TestA
 	{
 	public:
-		RTTI_DECL(TestB, TestA);
+		RTTI_DECL();
 
 		TestB() : m_C(2)
 		{}
 
 		int m_C;
 	};
+	RTTI_IMPL(TestB, TestA);
+	
 
 	class TestC : public TestA
 	{
 	public:
-		RTTI_DECL(TestC, TestA);
+		RTTI_DECL();
 
 		TestC() : m_D(5)
 		{}
 
 		int m_D;
 	};
+	RTTI_IMPL(TestC, TestA);
+	
 
 };
 
