@@ -48,7 +48,7 @@
 class WDC_API ISerializable
 {
 public:
-	RTTI_DECL_BASE(ISerializable);
+	RTTI_DECL();
 
 	//! Construction
 	virtual ~ISerializable()

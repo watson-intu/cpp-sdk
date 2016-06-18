@@ -110,16 +110,13 @@ private:
 	ClassList			m_ChildClasses;		// classes derived from this class
 };
 
-//! This macro should be used in the class defintion to define the RTTI data for a base class.
-#define RTTI_DECL_BASE(CLASS)																				\
-	static RTTI & GetStaticRTTI() { static RTTI rtti(#CLASS); return rtti; }								\
-	virtual RTTI & GetRTTI() { return GetStaticRTTI(); }
-
 //! Use this macro for a class that derives from anther class.
-#define RTTI_DECL(CLASS,BASE)																				\
-	static RTTI & GetStaticRTTI() { static RTTI rtti(#CLASS,BASE::GetStaticRTTI()); return rtti; }			\
+#define RTTI_DECL()										\
+	static RTTI & GetStaticRTTI();									\
 	virtual RTTI & GetRTTI() { return GetStaticRTTI(); }
 
+#define RTTI_IMPL_BASE(CLASS) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS); return rtti; }	
+#define RTTI_IMPL(CLASS,BASE) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS,BASE::GetStaticRTTI()); return rtti; }	
 
 //! This function can be used to cast one pointer type to another, it will return NULL if the type is not correct.
 template<typename T, typename K>

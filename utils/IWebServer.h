@@ -33,7 +33,7 @@
 class WDC_API IWebServer : public boost::enable_shared_from_this<IWebServer>
 {
 public:
-	RTTI_DECL_BASE(IWebServer);
+	RTTI_DECL(IWebServer);
 
 	//! Types
 	typedef boost::shared_ptr<IWebServer>			SP;

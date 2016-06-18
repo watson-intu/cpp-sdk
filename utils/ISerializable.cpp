@@ -21,6 +21,9 @@
 #include <streambuf>
 #include <string>
 
+RTTI_IMPL_BASE(ISerializable);
+
+
 Factory<ISerializable> & ISerializable::GetSerializableFactory()
 {
 	static Factory<ISerializable> factory;

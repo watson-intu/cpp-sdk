@@ -23,7 +23,7 @@ namespace TestRTTIClasses {
 	class TestA
 	{
 	public:
-		RTTI_DECL_BASE(TestA);
+		RTTI_DECL(TestA);
 
 		TestA() : m_A(1), m_B(42)
 		{}
