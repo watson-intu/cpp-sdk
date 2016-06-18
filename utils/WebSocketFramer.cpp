@@ -22,6 +22,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+RTTI_IMPL_BASE( IWebSocket );
+
 #pragma pack( push, 1 )
 struct WEB_SOCKET_HEADER
 {

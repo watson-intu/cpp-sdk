@@ -30,7 +30,7 @@
 class WDC_API IWebSocket : public boost::enable_shared_from_this<IWebSocket>
 {
 public:
-	RTTI_DECL( IWebSocket );
+	RTTI_DECL();
 
 	//! Types
 	typedef boost::shared_ptr<IWebSocket>			SP;
