@@ -361,7 +361,7 @@ public:
 
 protected:
 	//! Types
-	typedef std::map<std::string, DataCache>		DataCacheMap;
+	typedef std::map<std::string, DataCache::SP>		DataCacheMap;
 
 	//! Data
 	std::string		m_ServiceId;

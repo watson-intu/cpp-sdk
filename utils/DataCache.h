@@ -18,15 +18,18 @@
 #ifndef WDC_DATA_CACHE_H
 #define WDC_DATA_CACHE_H
 
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/shared_ptr.hpp>
 #include <map>
 #include <string>
+
 #include "Log.h"
 #include "StringUtil.h"
 
 #include "WDCLib.h"
 
 //! Simply binary cache for use by the services. The caches data into the local file system
-class WDC_API DataCache
+class WDC_API DataCache : public boost::enable_shared_from_this<DataCache>
 {
 public:
 	//! Types
@@ -42,6 +45,7 @@ public:
 		bool			m_bLoaded;		// true if loaded
 		std::string		m_Data;			// data of item
 	};
+	typedef boost::shared_ptr<DataCache>			SP;
 
 	//! Construction
 	DataCache();

@@ -310,17 +310,21 @@ DataCache * IService::GetDataCache(const std::string & a_Type)
 	if (!m_bCacheEnabled)
 		return NULL;
 
-	DataCache & cache = m_DataCache[a_Type];
-	if (!cache.IsInitialized())
+	DataCacheMap::iterator iCache = m_DataCache.find(a_Type);
+	if (iCache == m_DataCache.end())
 	{
-		if (!cache.Initialize("./cache/" + m_ServiceId + "_" + a_Type + "/", m_MaxCacheSize, m_MaxCacheAge))
+		DataCache::SP spCache(new DataCache());
+		if (!spCache->Initialize("./cache/" + m_ServiceId + "_" + a_Type + "/", m_MaxCacheSize, m_MaxCacheAge))
 		{
 			Log::Error("IService", "Failed to initialize the cache.");
 			return NULL;
 		}
+
+		m_DataCache[a_Type] = spCache;
+		return spCache.get();
 	}
 
-	return &cache;
+	return iCache->second.get();
 }
 
 bool IService::GetCachedResponse(const std::string & a_CacheName, const std::string & a_Id, std::string & a_Response)

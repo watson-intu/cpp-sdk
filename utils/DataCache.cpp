@@ -103,21 +103,28 @@ DataCache::CacheItem * DataCache::Find(const std::string & a_ID)
 		if (! pItem->m_bLoaded )
 		{
 			// load the file from disk into memory now..
-			std::ifstream input( pItem->m_Path.c_str(), std::ios::in | std::ios::binary );
-			pItem->m_Data.reserve( pItem->m_Size );
-			pItem->m_Data.assign( std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>() );
-			pItem->m_bLoaded = true;
+			try {
+				std::ifstream input(pItem->m_Path.c_str(), std::ios::in | std::ios::binary);
+				pItem->m_Data.reserve(pItem->m_Size);
+				pItem->m_Data.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
+				pItem->m_bLoaded = true;
 
-			if ( pItem->m_Data.size() != pItem->m_Size )
+				if (pItem->m_Data.size() != pItem->m_Size)
+				{
+					Log::Warning("DataCache", "Expected size of %u != %u", pItem->m_Size, pItem->m_Data.size());
+
+					// adjust our cache size and update the item size..
+					if (pItem->m_Data.size() > pItem->m_Size)
+						m_CurrentCacheSize += pItem->m_Data.size() - pItem->m_Size;
+					else
+						m_CurrentCacheSize -= pItem->m_Size - pItem->m_Data.size();
+					pItem->m_Size = pItem->m_Data.size();
+				}
+			}
+			catch (const std::exception & ex)
 			{
-				Log::Warning( "DataCache", "Expected size of %u != %u", pItem->m_Size, pItem->m_Data.size() );
-
-				// adjust our cache size and update the item size..
-				if ( pItem->m_Data.size() > pItem->m_Size )
-					m_CurrentCacheSize += pItem->m_Data.size() - pItem->m_Size;
-				else
-					m_CurrentCacheSize -= pItem->m_Size - pItem->m_Data.size();
-				pItem->m_Size = pItem->m_Data.size();
+				Log::Error("DataCache", "Caught exception: %s", ex.what());
+				return NULL;
 			}
 		}
 
@@ -151,9 +158,15 @@ bool DataCache::Save(const std::string & a_ID, const std::string & a_Data)
 	item.m_bLoaded = true;
 	item.m_Data = a_Data;
 
-	std::ofstream output( item.m_Path.c_str(), std::ios::out | std::ios::binary );
-	output << a_Data;
-	output.close();
+	try {
+		std::ofstream output(item.m_Path.c_str(), std::ios::out | std::ios::binary);
+		output << a_Data;
+		output.close();
+	}
+	catch (const std::exception & ex)
+	{
+		Log::Warning("DataCache", "Caught exception: %s", ex.what());
+	}
 
 	m_CurrentCacheSize += item.m_Size;
 	while( m_CurrentCacheSize > m_MaxCacheSize )
