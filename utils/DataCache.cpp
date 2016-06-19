@@ -63,7 +63,7 @@ bool DataCache::Initialize(const std::string & a_CachePath,
 #ifdef _WIN32
 				std::string path = StringUtil::Format("%S", p->path().c_str());
 #else
-				std::string path = p->path.c_str();
+				std::string path = p->path().c_str();
 #endif
 				std::string id = Path(path).GetFile();
 
