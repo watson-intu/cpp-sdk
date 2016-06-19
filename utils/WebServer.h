@@ -585,7 +585,7 @@ protected:
 
 //--------------------------------------------------
 
-class WebServer : public WebServerT<boost::asio::ip::tcp::socket>
+class WDC_API WebServer : public WebServerT<boost::asio::ip::tcp::socket>
 {
 public:
 	RTTI_DECL();
@@ -607,7 +607,7 @@ protected:
 	}
 };
 
-class SecureWebServer : public WebServerT< boost::asio::ssl::stream< boost::asio::ip::tcp::socket > >
+class WDC_API SecureWebServer : public WebServerT< boost::asio::ssl::stream< boost::asio::ip::tcp::socket > >
 {
 public:
 	RTTI_DECL();

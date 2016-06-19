@@ -19,8 +19,9 @@
 #define WDC_DIALOG_MODELS_H
 
 #include "utils/ISerializable.h"
+#include "WDCLib.h"
 
-struct DialogEntry : public ISerializable
+struct WDC_API DialogEntry : public ISerializable
 {
 	RTTI_DECL();
 
@@ -40,7 +41,7 @@ struct DialogEntry : public ISerializable
 	}
 };
 
-struct Dialogs : public ISerializable
+struct WDC_API Dialogs : public ISerializable
 {
 	RTTI_DECL();
 
