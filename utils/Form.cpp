@@ -21,6 +21,7 @@
 #include "Log.h"
 #include "UniqueID.h"
 #include "StringUtil.h"
+#include "Path.h"
 
 #include <iostream>
 #include <fstream>
@@ -58,7 +59,7 @@ bool Form::AddFilePartFromPath(const std::string & a_FieldName,const  std::strin
 	const std::string & a_ContentType /*= "application/octet-stream"*/ ) 
 {
 	// get just the filename part..
-	std::string filename( StringUtil::Format("%S", boost::filesystem::path( a_FullFilePath ).filename().c_str() ) );
+	std::string filename( Path( a_FullFilePath ).GetFile() );
 
 	// read in all the file data..
     std::ifstream input(a_FullFilePath.c_str(), std::ios::in | std::ios::binary);

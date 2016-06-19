@@ -60,16 +60,18 @@ bool DataCache::Initialize(const std::string & a_CachePath,
 		if ( fs::is_regular_file( p->status() ) )
 		{
 			try {
-				const fs::path & path = p->path();
-
-				std::string file = StringUtil::Format("%S", path.c_str());
-				std::string id = Path(file).GetFile();
+#ifdef _WIN32
+				std::string path = StringUtil::Format("%S", p->path().c_str());
+#else
+				std::string path = p->path.c_str();
+#endif
+				std::string id = Path(path).GetFile();
 
 				CacheItem &item = m_Cache[id];
-				item.m_Path = file;
+				item.m_Path = path;
 				item.m_Id = id;
-				item.m_Time = Time(fs::last_write_time(path)).GetEpochTime();
-				item.m_Size = (unsigned int) fs::file_size(path);
+				item.m_Time = Time(fs::last_write_time(p->path())).GetEpochTime();
+				item.m_Size = (unsigned int) fs::file_size(p->path());
 				m_CurrentCacheSize += item.m_Size;
 			}
 			catch( const std::exception & e )
