@@ -87,7 +87,7 @@ public:
 
 private:
 	//! Types
-	typedef std::map< std::string, CacheItem >		CacheMap;
+	typedef std::map< std::string, CacheItem >		CacheItemMap;
 
 	//! Data
 	bool				m_bInitialized;
@@ -95,7 +95,7 @@ private:
 	unsigned int		m_MaxCacheSize;
 	double				m_MaxCacheAge;
 	unsigned int		m_CurrentCacheSize;
-	CacheMap			m_Cache;
+	CacheItemMap		m_Cache;
 };
 
 #endif

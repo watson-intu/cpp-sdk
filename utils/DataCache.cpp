@@ -24,6 +24,7 @@
 #include "DataCache.h"
 #include "StringUtil.h"
 #include "Time.h"
+#include "Path.h"
 
 namespace fs = boost::filesystem;
 
@@ -59,13 +60,14 @@ bool DataCache::Initialize(const std::string & a_CachePath,
 		if ( fs::is_regular_file( p->status() ) )
 		{
 			try {
-				const fs::path &path = p->path();
+				const fs::path & path = p->path();
 
-				std::string id = StringUtil::Format("%S", path.stem().c_str());
+				std::string file = StringUtil::Format("%S", path.c_str());
+				std::string id = Path(file).GetFile();
 
 				CacheItem &item = m_Cache[id];
+				item.m_Path = file;
 				item.m_Id = id;
-				item.m_Path = StringUtil::Format("%S", path.c_str());
 				item.m_Time = Time(fs::last_write_time(path)).GetEpochTime();
 				item.m_Size = (unsigned int) fs::file_size(path);
 				m_CurrentCacheSize += item.m_Size;
@@ -96,7 +98,7 @@ DataCache::CacheItem * DataCache::Find(const std::string & a_ID)
 	std::string id = a_ID;
 	StringUtil::Replace( id, "/", "_" );
 
-	CacheMap::iterator iFind = m_Cache.find( id );
+	CacheItemMap::iterator iFind = m_Cache.find( id );
 	if ( iFind != m_Cache.end() )
 	{
 		CacheItem * pItem  = &iFind->second;
@@ -181,7 +183,7 @@ bool DataCache::Flush(const std::string & a_ID)
 	StringUtil::Replace(id, "/", "_");
 
 	// flush the old object..
-	CacheMap::iterator iItem = m_Cache.find( id );
+	CacheItemMap::iterator iItem = m_Cache.find( id );
 	if ( iItem != m_Cache.end() )
 	{
 		CacheItem & item = iItem->second;
@@ -206,7 +208,7 @@ bool DataCache::FlushAged()
 	Time now;
 
 	std::list<std::string> flush;
-	for( CacheMap::iterator iItem = m_Cache.begin(); iItem != m_Cache.end(); ++iItem )
+	for( CacheItemMap::iterator iItem = m_Cache.begin(); iItem != m_Cache.end(); ++iItem )
 	{
 		double age = (now.GetEpochTime() - iItem->second.m_Time) / 3600.0;
 		if ( age > m_MaxCacheAge )
@@ -223,7 +225,7 @@ bool DataCache::FlushAged()
 bool DataCache::FlushOldest()
 {
 	CacheItem * pOldest = NULL;
-	for (CacheMap::iterator iItem = m_Cache.begin(); iItem != m_Cache.end(); ++iItem)
+	for (CacheItemMap::iterator iItem = m_Cache.begin(); iItem != m_Cache.end(); ++iItem)
 	{
 		if ( pOldest == NULL || iItem->second.m_Time < pOldest->m_Time )
 			pOldest = &iItem->second;
@@ -237,7 +239,7 @@ bool DataCache::FlushOldest()
 
 bool DataCache::FlushAll()
 {
-	for (CacheMap::iterator iItem = m_Cache.begin(); iItem != m_Cache.end(); ++iItem)
+	for (CacheItemMap::iterator iItem = m_Cache.begin(); iItem != m_Cache.end(); ++iItem)
 	{
 		try {
 			fs::remove( fs::path( iItem->second.m_Path ) );
