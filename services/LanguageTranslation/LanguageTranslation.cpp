@@ -62,6 +62,24 @@ void LanguageTranslation::GetServiceStatus( ServiceStatusCallback a_Callback )
         a_Callback(ServiceStatus(m_ServiceId, false));
 }
 
+//! Creates an object responsible for service status checking
+LanguageTranslation::ServiceStatusChecker::ServiceStatusChecker
+        (LanguageTranslation* a_pLTService, ServiceStatusCallback a_Callback)
+        : m_pLTService(a_pLTService), m_Callback(a_Callback)
+{
+    m_pLTService->IdentifiableLanguages(DELEGATE(ServiceStatusChecker, OnCheckService, Languages*, this));
+}
+
+//! Callback function invoked when service status is checked
+void LanguageTranslation::ServiceStatusChecker::OnCheckService(Languages* a_pLanguages)
+{
+    if (m_Callback.IsValid())
+        m_Callback(ServiceStatus(m_pLTService->m_ServiceId, a_pLanguages != NULL));
+
+    delete a_pLanguages;
+    delete this;
+}
+
 
 void LanguageTranslation::Translation(std::string & a_Source,
                                       std::string & a_Target,

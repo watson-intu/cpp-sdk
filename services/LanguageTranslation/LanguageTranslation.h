@@ -68,7 +68,7 @@ private:
             ServiceStatusChecker(LanguageTranslation *a_pLTService, ServiceStatusCallback a_Callback);
 
         private:
-            LanguageTranslation *a_pLTService;
+            LanguageTranslation *m_pLTService;
             IService::ServiceStatusCallback m_Callback;
 
             void OnCheckService(Languages *a_pLanguages);
