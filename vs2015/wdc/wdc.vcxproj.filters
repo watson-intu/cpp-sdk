@@ -46,63 +46,66 @@
     <Filter Include="libs\crossguid">
       <UniqueIdentifier>{b3f2b786-508f-4278-99a7-81087b379f68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="libs\boost">
+      <UniqueIdentifier>{0830102c-ecf3-4ec8-b2f7-1d103f101b9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\services\IService.cpp">
+    <ClCompile Include="..\..\wdc\services\IService.cpp">
       <Filter>services</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\ISerializable.cpp">
+    <ClCompile Include="..\..\wdc\utils\ISerializable.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\Log.cpp">
+    <ClCompile Include="..\..\wdc\utils\Log.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\StringUtil.cpp">
+    <ClCompile Include="..\..\wdc\utils\StringUtil.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\ThreadPool.cpp">
+    <ClCompile Include="..\..\wdc\utils\ThreadPool.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\TimerPool.cpp">
+    <ClCompile Include="..\..\wdc\utils\TimerPool.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\Config.cpp">
+    <ClCompile Include="..\..\wdc\utils\Config.cpp">
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp">
       <Filter>libs\tinythread++</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestDelegate.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestDelegate.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestFactory.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestFactory.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestISerializable.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestISerializable.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestRTTI.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestRTTI.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestThreadPool.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestThreadPool.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestTimerPool.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestTimerPool.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\UnitTest.cpp">
+    <ClCompile Include="..\..\wdc\tests\UnitTest.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\Library.cpp">
+    <ClCompile Include="..\..\wdc\utils\Library.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\Sound.cpp">
+    <ClCompile Include="..\..\wdc\utils\Sound.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\services\SpeechToText\SpeechToText.cpp">
+    <ClCompile Include="..\..\wdc\services\SpeechToText\SpeechToText.cpp">
       <Filter>services\SpeechToText</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestSpeechToText.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestSpeechToText.cpp">
       <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\base64\cdecode.c">
@@ -111,154 +114,154 @@
     <ClCompile Include="..\..\lib\base64\cencode.c">
       <Filter>libs\base64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestURL.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestURL.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\URL.cpp">
+    <ClCompile Include="..\..\wdc\utils\URL.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\WebClient.cpp">
+    <ClCompile Include="..\..\wdc\utils\WebClient.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestWebClient.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestWebClient.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\UniqueID.cpp">
+    <ClCompile Include="..\..\wdc\utils\UniqueID.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\DataCache.cpp">
+    <ClCompile Include="..\..\wdc\utils\DataCache.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestDataCache.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestDataCache.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\services\TextToSpeech\TextToSpeech.cpp">
+    <ClCompile Include="..\..\wdc\services\TextToSpeech\TextToSpeech.cpp">
       <Filter>services\TextToSpeech</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestTextToSpeech.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestTextToSpeech.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\services\Dialog\Dialog.cpp">
+    <ClCompile Include="..\..\wdc\services\Dialog\Dialog.cpp">
       <Filter>services\Dialog</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\Form.cpp">
+    <ClCompile Include="..\..\wdc\utils\Form.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestDialog.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestDialog.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp">
+    <ClCompile Include="..\..\wdc\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp">
       <Filter>services\NaturalLanguageClassifier</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\services\RelationshipExtraction\RelationshipExtraction.cpp">
+    <ClCompile Include="..\..\wdc\services\RelationshipExtraction\RelationshipExtraction.cpp">
       <Filter>services\RelationshipExtraction</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestRelationshipExtraction.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestRelationshipExtraction.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\services\Alchemy\Alchemy.cpp">
+    <ClCompile Include="..\..\wdc\services\Alchemy\Alchemy.cpp">
       <Filter>services\Alchemy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestAlchemy.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestAlchemy.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\GetMac.cpp">
+    <ClCompile Include="..\..\wdc\utils\GetMac.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestGetMac.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestGetMac.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestNaturalLanguageClassifier.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestNaturalLanguageClassifier.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestStringUtil.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestStringUtil.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestWebServer.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestWebServer.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\WebSocketFramer.cpp">
+    <ClCompile Include="..\..\wdc\utils\WebSocketFramer.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestMain.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestMain.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\Time.cpp">
+    <ClCompile Include="..\..\wdc\utils\Time.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\Logic.cpp">
+    <ClCompile Include="..\..\wdc\utils\Logic.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestPath.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestPath.cpp">
       <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\crossguid\crossguid.cpp">
       <Filter>libs\crossguid</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestUnityWebSocket.cpp">
+    <ClCompile Include="..\..\wdc\tests\TestUnityWebSocket.cpp">
       <Filter>tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\services\IService.h">
+    <ClInclude Include="..\..\wdc\services\IService.h">
       <Filter>services</Filter>
     </ClInclude>
     <ClInclude Include="..\..\WDCLib.h" />
-    <ClInclude Include="..\..\utils\Delegate.h">
+    <ClInclude Include="..\..\wdc\utils\Delegate.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\Factory.h">
+    <ClInclude Include="..\..\wdc\utils\Factory.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\ISerializable.h">
+    <ClInclude Include="..\..\wdc\utils\ISerializable.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\Log.h">
+    <ClInclude Include="..\..\wdc\utils\Log.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\RTTI.h">
+    <ClInclude Include="..\..\wdc\utils\RTTI.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\StringHash.h">
+    <ClInclude Include="..\..\wdc\utils\StringHash.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\StringUtil.h">
+    <ClInclude Include="..\..\wdc\utils\StringUtil.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\ThreadPool.h">
+    <ClInclude Include="..\..\wdc\utils\ThreadPool.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\TimerPool.h">
+    <ClInclude Include="..\..\wdc\utils\TimerPool.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\WatsonException.h">
+    <ClInclude Include="..\..\wdc\utils\WatsonException.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\Time.h">
+    <ClInclude Include="..\..\wdc\utils\Time.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\Config.h">
+    <ClInclude Include="..\..\wdc\utils\Config.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\tinythread++\tinythread.h">
       <Filter>libs\tinythread++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tests\UnitTest.h">
+    <ClInclude Include="..\..\wdc\tests\UnitTest.h">
       <Filter>tests</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\Library.h">
+    <ClInclude Include="..\..\wdc\utils\Library.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\Sound.h">
+    <ClInclude Include="..\..\wdc\utils\Sound.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\services\SpeechToText\SpeechToText.h">
+    <ClInclude Include="..\..\wdc\services\SpeechToText\SpeechToText.h">
       <Filter>services\SpeechToText</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\services\SpeechToText\DataModels.h">
+    <ClInclude Include="..\..\wdc\services\SpeechToText\DataModels.h">
       <Filter>services\SpeechToText</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\ServiceConfig.h">
+    <ClInclude Include="..\..\wdc\utils\ServiceConfig.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\base64\cdecode.h">
@@ -273,13 +276,13 @@
     <ClInclude Include="..\..\lib\base64\encode.h">
       <Filter>libs\base64</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\URL.h">
+    <ClInclude Include="..\..\wdc\utils\URL.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\WebClient.h">
+    <ClInclude Include="..\..\wdc\utils\WebClient.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\UniqueID.h">
+    <ClInclude Include="..\..\wdc\utils\UniqueID.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8.h">
@@ -294,61 +297,61 @@
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h">
       <Filter>libs\utf8_v2_3_4\utf8</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\IWebClient.h">
+    <ClInclude Include="..\..\wdc\utils\IWebClient.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\services\TextToSpeech\TextToSpeech.h">
+    <ClInclude Include="..\..\wdc\services\TextToSpeech\TextToSpeech.h">
       <Filter>services\TextToSpeech</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\services\TextToSpeech\DataModels.h">
+    <ClInclude Include="..\..\wdc\services\TextToSpeech\DataModels.h">
       <Filter>services\TextToSpeech</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\DataCache.h">
+    <ClInclude Include="..\..\wdc\utils\DataCache.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\services\Dialog\DataModels.h">
+    <ClInclude Include="..\..\wdc\services\Dialog\DataModels.h">
       <Filter>services\Dialog</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\services\Dialog\Dialog.h">
+    <ClInclude Include="..\..\wdc\services\Dialog\Dialog.h">
       <Filter>services\Dialog</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\Form.h">
+    <ClInclude Include="..\..\wdc\utils\Form.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h">
+    <ClInclude Include="..\..\wdc\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h">
       <Filter>services\NaturalLanguageClassifier</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\services\NaturalLanguageClassifier\DataModels.h">
+    <ClInclude Include="..\..\wdc\services\NaturalLanguageClassifier\DataModels.h">
       <Filter>services\NaturalLanguageClassifier</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\services\RelationshipExtraction\RelationshipExtraction.h">
+    <ClInclude Include="..\..\wdc\services\RelationshipExtraction\RelationshipExtraction.h">
       <Filter>services\RelationshipExtraction</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\services\Alchemy\Alchemy.h">
+    <ClInclude Include="..\..\wdc\services\Alchemy\Alchemy.h">
       <Filter>services\Alchemy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\GetMac.h">
+    <ClInclude Include="..\..\wdc\utils\GetMac.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\WebServer.h">
+    <ClInclude Include="..\..\wdc\utils\WebServer.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\WebSocketFramer.h">
+    <ClInclude Include="..\..\wdc\utils\WebSocketFramer.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\IWebServer.h">
+    <ClInclude Include="..\..\wdc\utils\IWebServer.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\SHA1.h">
+    <ClInclude Include="..\..\wdc\utils\SHA1.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\IWebSocket.h">
+    <ClInclude Include="..\..\wdc\utils\IWebSocket.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\Logic.h">
+    <ClInclude Include="..\..\wdc\utils\Logic.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\Path.h">
+    <ClInclude Include="..\..\wdc\utils\Path.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="Base36.h">
@@ -356,6 +359,399 @@
     </ClInclude>
     <ClInclude Include="..\..\lib\crossguid\crossguid.h">
       <Filter>libs\crossguid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\align.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\aligned_storage.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\any.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\array.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\asio.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\assert.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\assign.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\atomic.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\bimap.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\bind.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\blank.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\blank_fwd.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\call_traits.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cast.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cerrno.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\checked_delete.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\chrono.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\circular_buffer.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\circular_buffer_fwd.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\compressed_pair.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\concept_archetype.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\concept_check.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\config.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\convert.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\crc.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cregex.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cstdfloat.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cstdint.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cstdlib.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\current_function.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cxx11_char_types.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\date_time.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\dynamic_bitset.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\dynamic_bitset_fwd.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\enable_shared_from_this.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\exception_ptr.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\filesystem.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\flyweight.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\foreach.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\foreach_fwd.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\format.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\function.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\function_equal.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\function_output_iterator.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\functional.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\generator_iterator.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\geometry.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\get_pointer.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\implicit_cast.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\indirect_reference.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\integer.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\integer_fwd.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\integer_traits.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\intrusive_ptr.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\io_fwd.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\is_placeholder.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\iterator.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\iterator_adaptors.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\last_value.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\lexical_cast.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\limits.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\local_function.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\locale.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\make_default.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\make_shared.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\make_unique.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\math_fwd.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\mem_fn.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\memory_order.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\mpi.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\multi_array.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\multi_index_container.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\multi_index_container_fwd.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\next_prior.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\non_type.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\noncopyable.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\nondet_random.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\none.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\none_t.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\operators.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\optional.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\parameter.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\phoenix.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\pointee.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\pointer_cast.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\pointer_to_other.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\polymorphic_cast.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\polymorphic_pointer_cast.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\predef.h">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\preprocessor.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\program_options.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\progress.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\python.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\random.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\range.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\ratio.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\rational.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\ref.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\regex.h">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\regex.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\regex_fwd.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\scope_exit.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\scoped_array.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\scoped_ptr.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\shared_array.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\shared_container_iterator.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\shared_ptr.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\signal.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\signals.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\signals2.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\smart_ptr.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\spirit.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\static_assert.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\swap.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\thread.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\throw_exception.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\timer.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\token_functions.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\token_iterator.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\tokenizer.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\type.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\type_index.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\type_traits.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\unordered_map.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\unordered_set.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\utility.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\variant.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\version.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\visit_each.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\wave.hpp">
+      <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\weak_ptr.hpp">
+      <Filter>libs\boost</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
