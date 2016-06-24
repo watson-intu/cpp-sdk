@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DF26E299-62E3-438A-8403-3D427BB81DB1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>wdc</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>wdc</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;_DEBUG;_WINDOWS;_USRDLL;WDC_SERVICES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>false</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../lib/boost_1_60_0/stage/lib;../../lib/openssl-1.0.1q-vs2015/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;NDEBUG;_WINDOWS;_USRDLL;WDC_SERVICES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>false</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../lib/boost_1_60_0/stage/lib;../../lib/openssl-1.0.1q-vs2015/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\base64\cdecode.c" />
+    <ClCompile Include="..\..\lib\base64\cencode.c" />
+    <ClCompile Include="..\..\lib\crossguid\crossguid.cpp" />
+    <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
+    <ClCompile Include="..\..\services\Alchemy\Alchemy.cpp" />
+    <ClCompile Include="..\..\services\Dialog\Dialog.cpp" />
+    <ClCompile Include="..\..\services\IService.cpp" />
+    <ClCompile Include="..\..\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp" />
+    <ClCompile Include="..\..\services\RelationshipExtraction\RelationshipExtraction.cpp" />
+    <ClCompile Include="..\..\services\SpeechToText\SpeechToText.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\services\TextToSpeech\TextToSpeech.cpp" />
+    <ClCompile Include="..\..\tests\TestAlchemy.cpp" />
+    <ClCompile Include="..\..\tests\TestDataCache.cpp" />
+    <ClCompile Include="..\..\tests\TestDialog.cpp" />
+    <ClCompile Include="..\..\tests\TestGetMac.cpp" />
+    <ClCompile Include="..\..\tests\TestMain.cpp" />
+    <ClCompile Include="..\..\tests\TestNaturalLanguageClassifier.cpp" />
+    <ClCompile Include="..\..\tests\TestPath.cpp" />
+    <ClCompile Include="..\..\tests\TestRelationshipExtraction.cpp" />
+    <ClCompile Include="..\..\tests\TestStringUtil.cpp" />
+    <ClCompile Include="..\..\tests\TestTextToSpeech.cpp" />
+    <ClCompile Include="..\..\tests\TestUnityWebSocket.cpp" />
+    <ClCompile Include="..\..\tests\TestWebClient.cpp" />
+    <ClCompile Include="..\..\tests\TestDelegate.cpp" />
+    <ClCompile Include="..\..\tests\TestFactory.cpp" />
+    <ClCompile Include="..\..\tests\TestISerializable.cpp" />
+    <ClCompile Include="..\..\tests\TestRTTI.cpp" />
+    <ClCompile Include="..\..\tests\TestSpeechToText.cpp" />
+    <ClCompile Include="..\..\tests\TestThreadPool.cpp" />
+    <ClCompile Include="..\..\tests\TestTimerPool.cpp" />
+    <ClCompile Include="..\..\tests\TestURL.cpp" />
+    <ClCompile Include="..\..\tests\TestWebServer.cpp" />
+    <ClCompile Include="..\..\tests\UnitTest.cpp" />
+    <ClCompile Include="..\..\utils\Config.cpp" />
+    <ClCompile Include="..\..\utils\DataCache.cpp" />
+    <ClCompile Include="..\..\utils\Form.cpp" />
+    <ClCompile Include="..\..\utils\GetMac.cpp" />
+    <ClCompile Include="..\..\utils\Logic.cpp" />
+    <ClCompile Include="..\..\utils\Time.cpp" />
+    <ClCompile Include="..\..\utils\UniqueID.cpp" />
+    <ClCompile Include="..\..\utils\ISerializable.cpp" />
+    <ClCompile Include="..\..\utils\Library.cpp" />
+    <ClCompile Include="..\..\utils\Log.cpp" />
+    <ClCompile Include="..\..\utils\Sound.cpp" />
+    <ClCompile Include="..\..\utils\StringUtil.cpp" />
+    <ClCompile Include="..\..\utils\ThreadPool.cpp" />
+    <ClCompile Include="..\..\utils\TimerPool.cpp" />
+    <ClCompile Include="..\..\utils\URL.cpp" />
+    <ClCompile Include="..\..\utils\WebSocketFramer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\base64\cdecode.h" />
+    <ClInclude Include="..\..\lib\base64\cencode.h" />
+    <ClInclude Include="..\..\lib\base64\decode.h" />
+    <ClInclude Include="..\..\lib\base64\encode.h" />
+    <ClInclude Include="..\..\lib\crossguid\crossguid.h" />
+    <ClInclude Include="..\..\lib\tinythread++\tinythread.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h" />
+    <ClInclude Include="..\..\services\Alchemy\Alchemy.h" />
+    <ClInclude Include="..\..\services\Dialog\DataModels.h" />
+    <ClInclude Include="..\..\services\Dialog\Dialog.h" />
+    <ClInclude Include="..\..\services\IService.h" />
+    <ClInclude Include="..\..\services\NaturalLanguageClassifier\DataModels.h" />
+    <ClInclude Include="..\..\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h" />
+    <ClInclude Include="..\..\services\RelationshipExtraction\RelationshipExtraction.h" />
+    <ClInclude Include="..\..\services\SpeechToText\DataModels.h" />
+    <ClInclude Include="..\..\services\SpeechToText\SpeechToText.h" />
+    <ClInclude Include="..\..\services\TextToSpeech\DataModels.h" />
+    <ClInclude Include="..\..\services\TextToSpeech\TextToSpeech.h" />
+    <ClInclude Include="..\..\tests\UnitTest.h" />
+    <ClInclude Include="..\..\utils\Config.h" />
+    <ClInclude Include="..\..\utils\DataCache.h" />
+    <ClInclude Include="..\..\utils\Form.h" />
+    <ClInclude Include="..\..\utils\GetMac.h" />
+    <ClInclude Include="..\..\utils\IWebClient.h" />
+    <ClInclude Include="..\..\utils\IWebServer.h" />
+    <ClInclude Include="..\..\utils\IWebSocket.h" />
+    <ClInclude Include="..\..\utils\Logic.h" />
+    <ClInclude Include="..\..\utils\Path.h" />
+    <ClInclude Include="..\..\utils\SHA1.h" />
+    <ClInclude Include="..\..\utils\UniqueID.h" />
+    <ClInclude Include="..\..\utils\WebClient.h" />
+    <ClInclude Include="..\..\utils\ServiceConfig.h" />
+    <ClInclude Include="..\..\utils\Delegate.h" />
+    <ClInclude Include="..\..\utils\Factory.h" />
+    <ClInclude Include="..\..\utils\ISerializable.h" />
+    <ClInclude Include="..\..\utils\Library.h" />
+    <ClInclude Include="..\..\utils\Log.h" />
+    <ClInclude Include="..\..\utils\RTTI.h" />
+    <ClInclude Include="..\..\utils\Sound.h" />
+    <ClInclude Include="..\..\utils\StringHash.h" />
+    <ClInclude Include="..\..\utils\StringUtil.h" />
+    <ClInclude Include="..\..\utils\ThreadPool.h" />
+    <ClInclude Include="..\..\utils\Time.h" />
+    <ClInclude Include="..\..\utils\TimerPool.h" />
+    <ClInclude Include="..\..\utils\URL.h" />
+    <ClInclude Include="..\..\utils\WatsonException.h" />
+    <ClInclude Include="..\..\utils\WebServer.h" />
+    <ClInclude Include="..\..\utils\WebSocketFramer.h" />
+    <ClInclude Include="..\..\WDCLib.h" />
+    <ClInclude Include="Base36.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\utils\WebClient.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\jsoncpp\jsoncpp.vcxproj">
+      <Project>{28ba4301-4c55-41d2-b122-01dbde375452}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

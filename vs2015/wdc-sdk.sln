@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wdc", "wdc\wdc.vcxproj", "{DF26E299-62E3-438A-8403-3D427BB81DB1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{4870F05D-A82C-4D3F-AE8C-FF9946CD6F87}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsoncpp", "jsoncpp\jsoncpp.vcxproj", "{28BA4301-4C55-41D2-B122-01DBDE375452}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DF26E299-62E3-438A-8403-3D427BB81DB1}.Debug|x64.ActiveCfg = Debug|Win32
+		{DF26E299-62E3-438A-8403-3D427BB81DB1}.Debug|x86.ActiveCfg = Debug|Win32
+		{DF26E299-62E3-438A-8403-3D427BB81DB1}.Debug|x86.Build.0 = Debug|Win32
+		{DF26E299-62E3-438A-8403-3D427BB81DB1}.Release|x64.ActiveCfg = Release|Win32
+		{DF26E299-62E3-438A-8403-3D427BB81DB1}.Release|x86.ActiveCfg = Release|Win32
+		{DF26E299-62E3-438A-8403-3D427BB81DB1}.Release|x86.Build.0 = Release|Win32
+		{28BA4301-4C55-41D2-B122-01DBDE375452}.Debug|x64.ActiveCfg = Debug|x64
+		{28BA4301-4C55-41D2-B122-01DBDE375452}.Debug|x64.Build.0 = Debug|x64
+		{28BA4301-4C55-41D2-B122-01DBDE375452}.Debug|x86.ActiveCfg = Debug|Win32
+		{28BA4301-4C55-41D2-B122-01DBDE375452}.Debug|x86.Build.0 = Debug|Win32
+		{28BA4301-4C55-41D2-B122-01DBDE375452}.Release|x64.ActiveCfg = Release|x64
+		{28BA4301-4C55-41D2-B122-01DBDE375452}.Release|x64.Build.0 = Release|x64
+		{28BA4301-4C55-41D2-B122-01DBDE375452}.Release|x86.ActiveCfg = Release|Win32
+		{28BA4301-4C55-41D2-B122-01DBDE375452}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{28BA4301-4C55-41D2-B122-01DBDE375452} = {4870F05D-A82C-4D3F-AE8C-FF9946CD6F87}
+	EndGlobalSection
+EndGlobal

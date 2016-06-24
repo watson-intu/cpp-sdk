@@ -1,0 +1,364 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="services">
+      <UniqueIdentifier>{d4ea00f1-d7a7-47bc-99e0-f66bb27b4ffa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{f1641002-94df-4a63-8e5a-9527d2f3783e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs">
+      <UniqueIdentifier>{8c8189b4-ca5c-4da7-8ad1-e78b33a82442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\tinythread++">
+      <UniqueIdentifier>{0dde3d4a-3764-477c-a42e-cf209fec84bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests">
+      <UniqueIdentifier>{14810026-958d-462c-9475-b0924c18e7db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\SpeechToText">
+      <UniqueIdentifier>{35a51563-4027-4661-87e0-08da4470e334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\TextToSpeech">
+      <UniqueIdentifier>{22cdcc59-f98d-4b08-a446-c58b3f573698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\Dialog">
+      <UniqueIdentifier>{bbf49952-4595-438b-afbe-47a55885e99d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\base64">
+      <UniqueIdentifier>{a9e7a5a3-e208-4737-a6ef-c1f51cb0905e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\utf8_v2_3_4">
+      <UniqueIdentifier>{08e50365-f51a-4c57-8324-91f7ef7caca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\utf8_v2_3_4\utf8">
+      <UniqueIdentifier>{27db0a95-5739-4d6b-a05c-eaa259ee940d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\NaturalLanguageClassifier">
+      <UniqueIdentifier>{a22f1de0-eafa-499e-afa7-d9136b263b7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\RelationshipExtraction">
+      <UniqueIdentifier>{eab98038-b7c6-4cf4-abc2-39591e590cc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\Alchemy">
+      <UniqueIdentifier>{b7e3bff0-4242-4865-9c75-6e8906888900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\crossguid">
+      <UniqueIdentifier>{b3f2b786-508f-4278-99a7-81087b379f68}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\services\IService.cpp">
+      <Filter>services</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\ISerializable.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\Log.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\StringUtil.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\ThreadPool.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\TimerPool.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\Config.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp">
+      <Filter>libs\tinythread++</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestDelegate.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestFactory.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestISerializable.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestRTTI.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestThreadPool.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestTimerPool.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\UnitTest.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\Library.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\Sound.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\services\SpeechToText\SpeechToText.cpp">
+      <Filter>services\SpeechToText</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestSpeechToText.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\base64\cdecode.c">
+      <Filter>libs\base64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\base64\cencode.c">
+      <Filter>libs\base64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestURL.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\URL.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\WebClient.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestWebClient.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\UniqueID.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\DataCache.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestDataCache.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\services\TextToSpeech\TextToSpeech.cpp">
+      <Filter>services\TextToSpeech</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestTextToSpeech.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\services\Dialog\Dialog.cpp">
+      <Filter>services\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\Form.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestDialog.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp">
+      <Filter>services\NaturalLanguageClassifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\services\RelationshipExtraction\RelationshipExtraction.cpp">
+      <Filter>services\RelationshipExtraction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestRelationshipExtraction.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\services\Alchemy\Alchemy.cpp">
+      <Filter>services\Alchemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestAlchemy.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\GetMac.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestGetMac.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestNaturalLanguageClassifier.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestStringUtil.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestWebServer.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\WebSocketFramer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestMain.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\Time.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\Logic.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestPath.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\crossguid\crossguid.cpp">
+      <Filter>libs\crossguid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestUnityWebSocket.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\services\IService.h">
+      <Filter>services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WDCLib.h" />
+    <ClInclude Include="..\..\utils\Delegate.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\Factory.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\ISerializable.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\Log.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\RTTI.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\StringHash.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\StringUtil.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\ThreadPool.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\TimerPool.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\WatsonException.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\Time.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\Config.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\tinythread++\tinythread.h">
+      <Filter>libs\tinythread++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tests\UnitTest.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\Library.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\Sound.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\services\SpeechToText\SpeechToText.h">
+      <Filter>services\SpeechToText</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\services\SpeechToText\DataModels.h">
+      <Filter>services\SpeechToText</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\ServiceConfig.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\base64\cdecode.h">
+      <Filter>libs\base64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\base64\cencode.h">
+      <Filter>libs\base64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\base64\decode.h">
+      <Filter>libs\base64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\base64\encode.h">
+      <Filter>libs\base64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\URL.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\WebClient.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\UniqueID.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8.h">
+      <Filter>libs\utf8_v2_3_4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h">
+      <Filter>libs\utf8_v2_3_4\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h">
+      <Filter>libs\utf8_v2_3_4\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h">
+      <Filter>libs\utf8_v2_3_4\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\IWebClient.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\services\TextToSpeech\TextToSpeech.h">
+      <Filter>services\TextToSpeech</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\services\TextToSpeech\DataModels.h">
+      <Filter>services\TextToSpeech</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\DataCache.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\services\Dialog\DataModels.h">
+      <Filter>services\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\services\Dialog\Dialog.h">
+      <Filter>services\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\Form.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h">
+      <Filter>services\NaturalLanguageClassifier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\services\NaturalLanguageClassifier\DataModels.h">
+      <Filter>services\NaturalLanguageClassifier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\services\RelationshipExtraction\RelationshipExtraction.h">
+      <Filter>services\RelationshipExtraction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\services\Alchemy\Alchemy.h">
+      <Filter>services\Alchemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\GetMac.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\WebServer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\WebSocketFramer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\IWebServer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\SHA1.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\IWebSocket.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\Logic.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\Path.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Base36.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\crossguid\crossguid.h">
+      <Filter>libs\crossguid</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\CMakeLists.txt" />
+  </ItemGroup>
+</Project>
