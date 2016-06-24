@@ -33,8 +33,10 @@ int main( int argc, char ** argv )
 	Library platform_nao( "platform_nao" );
 	Library platform_win( "platform_win" );
 	Library platform_mac( "platform_mac" );
+	Library platform_ros( "platform_ros" );
 	Library faces("face_plugin");
 	Library hilton("hilton_plugin");
+
 
 	// TODO: let the user specify the platform with the command line
 
