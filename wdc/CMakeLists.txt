@@ -11,4 +11,3 @@ else()
 endif()
 qi_stage_lib(wdc)
 
-
