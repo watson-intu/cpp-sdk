@@ -83,21 +83,21 @@ Log::ReactorList & Log::GetReactorList()
 	return reactors;
 }
 
-tthread::recursive_mutex & Log::GetReactorLock()
+boost::recursive_mutex & Log::GetReactorLock()
 {
-	static tthread::recursive_mutex lock;
+	static boost::recursive_mutex lock;
 	return lock;
 }
 
 void Log::RegisterReactor(ILogReactor * a_pReactor)
 {
-	tthread::lock_guard<tthread::recursive_mutex> lock( GetReactorLock() );
+	boost::lock_guard<boost::recursive_mutex> lock( GetReactorLock() );
 	GetReactorList().push_back(a_pReactor);
 }
 
 void Log::RemoveReactor(ILogReactor * a_pReactor)
 {
-	tthread::lock_guard<tthread::recursive_mutex> lock( GetReactorLock() );
+	boost::lock_guard<boost::recursive_mutex> lock( GetReactorLock() );
 	GetReactorList().remove(a_pReactor);
 }
 
@@ -123,7 +123,7 @@ void Log::DoLog(LogLevel a_Level, const char * a_pSub, const char * a_pFormat, v
 
 void Log::ProcessRecord(const LogRecord & rec)
 {
-	tthread::lock_guard<tthread::recursive_mutex> lock( GetReactorLock() );
+	boost::lock_guard<boost::recursive_mutex> lock( GetReactorLock() );
 	for (ReactorList::iterator iReactor = GetReactorList().begin();
 		iReactor != GetReactorList().end(); ++iReactor)
 	{

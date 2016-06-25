@@ -24,7 +24,7 @@
 #include <list>
 #include <stdarg.h>
 
-#include "tinythread++/tinythread.h"
+#include <boost/thread.hpp>
 #include "WDCLib.h"		// include last
 
 enum LogLevel
@@ -103,7 +103,7 @@ private:
 	typedef std::list<ILogReactor *>		ReactorList;
 	//! Data
 	static ReactorList & GetReactorList();
-	static tthread::recursive_mutex & GetReactorLock();
+	static boost::recursive_mutex & GetReactorLock();
 };
 
 #endif

@@ -21,7 +21,6 @@
 
 #include "WebClient.h"
 #include "WebSocketFramer.h"
-#include "WebServer.h"
 
 #include "boost/thread/thread.hpp"
 #include "boost/algorithm/string.hpp"
@@ -32,10 +31,6 @@
 #include "WatsonException.h"
 
 #include <string>
-
-RTTI_IMPL_BASE( IWebServer );
-RTTI_IMPL( WebServer, IWebServer );
-RTTI_IMPL( SecureWebServer, IWebServer );
 
 RTTI_IMPL( IWebClient, IWebSocket );
 RTTI_IMPL( WebClient, IWebClient );

@@ -17,7 +17,7 @@
 
 #include "UnitTest.h"
 #include "utils/WebClient.h"
-#include "utils/WebServer.h"
+#include "utils/IWebServer.h"
 #include "utils/Log.h"
 #include "utils/ThreadPool.h"
 #include "utils/Time.h"
@@ -40,10 +40,10 @@ public:
 
 		ThreadPool pool(1);
 
-		WebServer server;
-		server.AddEndpoint("/test_http", DELEGATE(TestWebServer, OnTestHTTP, WebServer::RequestSP, this));
-		server.AddEndpoint("/test_ws", DELEGATE(TestWebServer, OnTestWS, WebServer::RequestSP, this));
-		Test(server.Start());
+		IWebServer * pServer = IWebServer::Create();
+		pServer->AddEndpoint("/test_http", DELEGATE(TestWebServer, OnTestHTTP, IWebServer::RequestSP, this));
+		pServer->AddEndpoint("/test_ws", DELEGATE(TestWebServer, OnTestWS, IWebServer::RequestSP, this));
+		Test(pServer->Start());
 
 		// test web requests
 		WebClient client;
@@ -91,11 +91,11 @@ public:
 			boost::this_thread::sleep(boost::posix_time::milliseconds(50));
 		}
 
-		SecureWebServer secure_server("./etc/tests/server.crt", 
+		IWebServer * pSecureServer = IWebServer::Create( "./etc/tests/server.crt", 
 			"./etc/tests/server.key");
-		secure_server.AddEndpoint("/test_https", DELEGATE(TestWebServer, OnTestHTTPS, SecureWebServer::RequestSP, this));
-		secure_server.AddEndpoint("/test_wss", DELEGATE(TestWebServer, OnTestWSS, SecureWebServer::RequestSP, this));
-		Test(secure_server.Start());
+		pSecureServer->AddEndpoint("/test_https", DELEGATE(TestWebServer, OnTestHTTPS, IWebServer::RequestSP, this));
+		pSecureServer->AddEndpoint("/test_wss", DELEGATE(TestWebServer, OnTestWSS, IWebServer::RequestSP, this));
+		Test(pSecureServer->Start());
 
 		m_bClientClosed = false;
 		client.Request("https://127.0.0.1/test_https", WebClient::Headers(), "GET", "",
@@ -134,9 +134,12 @@ public:
 			pool.ProcessMainThread();
 			boost::this_thread::sleep(boost::posix_time::milliseconds(50));
 		}
+
+		delete pSecureServer;
+		delete pServer;
 	}
 
-	void OnTestHTTP(WebServer::RequestSP a_spRequest)
+	void OnTestHTTP(IWebServer::RequestSP a_spRequest)
 	{
 		Log::Debug("TestWebServer", "OnTestHTTP()");
 		Test(a_spRequest.get() != NULL );
@@ -145,13 +148,13 @@ public:
 		a_spRequest->m_spConnection->SendAsync("HTTP/1.1 200 Hello World\r\nConnection: close\r\n\r\n");
 	}
 
-	void OnTestWS(WebServer::RequestSP a_spRequest)
+	void OnTestWS(IWebServer::RequestSP a_spRequest)
 	{
 		Log::Debug("TestWebServer", "OnTestWS()");
 		Test(a_spRequest.get() != NULL);
 		Test(a_spRequest->m_RequestType == "GET");
 
-		WebServer::Headers::iterator iWebSocketKey = a_spRequest->m_Headers.find("Sec-WebSocket-Key");
+		IWebServer::Headers::iterator iWebSocketKey = a_spRequest->m_Headers.find("Sec-WebSocket-Key");
 		Test(iWebSocketKey != a_spRequest->m_Headers.end());
 
 		a_spRequest->m_spConnection->SetFrameReceiver( DELEGATE(TestWebServer, OnServerFrame, IWebSocket::FrameSP, this ) );
@@ -161,7 +164,7 @@ public:
 		//a_spRequest->m_spConnection->SendAsync("HTTP/1.1 200 Hello World\r\nConnection: close\r\n\r\n");
 	}
 
-	void OnTestHTTPS(SecureWebServer::RequestSP a_spRequest)
+	void OnTestHTTPS(IWebServer::RequestSP a_spRequest)
 	{
 		Log::Debug("TestWebServer", "OnTestHTTPS()");
 		Test(a_spRequest.get() != NULL);
@@ -170,13 +173,13 @@ public:
 		a_spRequest->m_spConnection->SendAsync("HTTP/1.1 200 Hello World\r\nConnection: close\r\n\r\n");
 	}
 
-	void OnTestWSS(SecureWebServer::RequestSP a_spRequest)
+	void OnTestWSS(IWebServer::RequestSP a_spRequest)
 	{
 		Log::Debug("TestWebServer", "OnTestWSS()");
 		Test(a_spRequest.get() != NULL);
 		Test(a_spRequest->m_RequestType == "GET");
 
-		WebServer::Headers::iterator iWebSocketKey = a_spRequest->m_Headers.find("Sec-WebSocket-Key");
+		IWebServer::Headers::iterator iWebSocketKey = a_spRequest->m_Headers.find("Sec-WebSocket-Key");
 		Test(iWebSocketKey != a_spRequest->m_Headers.end());
 
 		a_spRequest->m_spConnection->SetFrameReceiver( DELEGATE(TestWebServer, OnServerFrame, IWebSocket::FrameSP, this ) );

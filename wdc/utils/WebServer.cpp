@@ -15,9 +15,6 @@
 *
 */
 
-#ifndef WDC_WEB_SERVER_H
-#define WDC_WEB_SERVER_H
-
 #include <map>
 
 #include "boost/asio.hpp"		
@@ -53,13 +50,13 @@ public:
 	{
 	public:
 		//! Construction
-		Connection( WebServerT * a_pServer, socket_type * a_pSocket ) :
+		Connection(WebServerT * a_pServer, socket_type * a_pSocket) :
 			m_bClosed(false),
 			m_bWebSocket(false),
 			m_pServer(a_pServer),
 			m_pSocket(a_pSocket),
-			m_SendBuffer( new StreamBuffer() ),
-			m_ReadBuffer( new StreamBuffer() )
+			m_SendBuffer(new StreamBuffer()),
+			m_ReadBuffer(new StreamBuffer())
 		{}
 		~Connection()
 		{
@@ -79,7 +76,7 @@ public:
 		void StartTimeout(float a_fSeconds)
 		{
 			TimerPool * pPool = TimerPool::Instance();
-			if ( pPool != NULL )
+			if (pPool != NULL)
 				m_spTimeoutTimer = pPool->StartTimer(VOID_DELEGATE(Connection, OnTimeout, this), a_fSeconds, true, false);
 		}
 		void CancelTimeout()
@@ -88,11 +85,11 @@ public:
 		}
 
 		//! IWebSocket interface
-		virtual void SetFrameReceiver( Delegate<FrameSP> a_Receiver ) 
+		virtual void SetFrameReceiver(Delegate<FrameSP> a_Receiver)
 		{
 			m_OnFrame = a_Receiver;
 		}
-		virtual void SetErrorHandler( VoidDelegate a_Handler)
+		virtual void SetErrorHandler(VoidDelegate a_Handler)
 		{
 			m_OnError = a_Handler;
 		}
@@ -111,7 +108,7 @@ public:
 			SendAsync(frame);
 		}
 
-		virtual void SendPing(const std::string & a_PingData) 
+		virtual void SendPing(const std::string & a_PingData)
 		{
 			std::string frame;
 			WebSocketFramer::CreateFrame(frame, IWebSocket::PING, a_PingData, false);
@@ -150,7 +147,7 @@ public:
 			{
 				m_bClosed = true;
 
-				if ( m_bWebSocket )
+				if (m_bWebSocket)
 				{
 					SendClose("Close Requested");
 					m_bWebSocket = false;
@@ -187,45 +184,45 @@ public:
 			boost::asio::async_read(*m_pSocket, *m_ReadBuffer,
 				boost::asio::transfer_at_least(a_Bytes),
 				boost::bind(&Connection::OnRead, this, this->shared_from_this(), a_ReadCallback,
-					boost::asio::placeholders::error ));
+					boost::asio::placeholders::error));
 		}
 
 		virtual void SendResponse(int a_nStatusCode, const std::string & a_Reply, const Headers & a_Headers,
-			const std::string & a_Content, bool a_bClose = true ) 
+			const std::string & a_Content, bool a_bClose = true)
 		{
-			std::string response(StringUtil::Format("HTTP/1.1 %d %s\r\n", a_nStatusCode, a_Reply.c_str() ));
-			for( typename Headers::const_iterator iHeader = a_Headers.begin(); iHeader != a_Headers.end(); ++iHeader )
+			std::string response(StringUtil::Format("HTTP/1.1 %d %s\r\n", a_nStatusCode, a_Reply.c_str()));
+			for (typename Headers::const_iterator iHeader = a_Headers.begin(); iHeader != a_Headers.end(); ++iHeader)
 				response += iHeader->first + " : " + iHeader->second + "\r\n";
 			response += "\r\n";
-			if ( a_Content.size() > 0 )
+			if (a_Content.size() > 0)
 				response += a_Content;
 
 			SendAsync(response);
-			if ( a_bClose )
+			if (a_bClose)
 				Close();
 		}
 
 		virtual void SendResponse(int a_nStatusCode, const std::string & a_Reply,
-			const std::string & a_Content, bool a_bClose = true )
+			const std::string & a_Content, bool a_bClose = true)
 		{
-			std::string response(StringUtil::Format("HTTP/1.1 %d %s\r\n\r\n", a_nStatusCode, a_Reply.c_str() ));
-			if ( a_Content.size() > 0 )
+			std::string response(StringUtil::Format("HTTP/1.1 %d %s\r\n\r\n", a_nStatusCode, a_Reply.c_str()));
+			if (a_Content.size() > 0)
 				response += a_Content;
 
 			SendAsync(response);
-			if ( a_bClose )
+			if (a_bClose)
 				Close();
 		}
 
-		virtual void StartWebSocket(const std::string & a_WebSocketKey )
+		virtual void StartWebSocket(const std::string & a_WebSocketKey)
 		{
 			std::ostream output(m_SendBuffer.get());
-			
-			std::string sha1( SHA1(a_WebSocketKey + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
+
+			std::string sha1(SHA1(a_WebSocketKey + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
 			output << "HTTP/1.1 101 Web Socket Protocol Handshake\r\n";
 			output << "Upgrade: websocket\r\n";
 			output << "Connection: Upgrade\r\n";
-			output << "Sec-WebSocket-Accept: " << StringUtil::EncodeBase64( sha1 ) << "\r\n";
+			output << "Sec-WebSocket-Accept: " << StringUtil::EncodeBase64(sha1) << "\r\n";
 			output << "\r\n";
 
 			boost::asio::async_write(*m_pSocket, *m_SendBuffer,
@@ -251,7 +248,7 @@ public:
 		std::string		m_Incoming;
 		FrameList		m_Frames;
 		Delegate<FrameSP>
-						m_OnFrame;
+			m_OnFrame;
 		VoidDelegate	m_OnError;
 
 		WebServerT *	m_pServer;
@@ -260,7 +257,7 @@ public:
 		StreamBufferSP 	m_SendBuffer;
 		StreamBufferSP	m_ReadBuffer;
 		TimerPool::ITimer::SP
-						m_spTimeoutTimer;
+			m_spTimeoutTimer;
 
 		void OnReadWS(SP a_spConnection, const boost::system::error_code& ec)
 		{
@@ -284,10 +281,10 @@ public:
 				{
 					pFrame->m_pSocket = this;
 
-					if ( m_OnFrame.IsValid() )
+					if (m_OnFrame.IsValid())
 					{
-						IWebSocket::FrameSP spFrame( pFrame );
-						ThreadPool::Instance()->InvokeOnMain( m_OnFrame, spFrame );
+						IWebSocket::FrameSP spFrame(pFrame);
+						ThreadPool::Instance()->InvokeOnMain(m_OnFrame, spFrame);
 					}
 				}
 
@@ -304,7 +301,7 @@ public:
 
 		void OnRead(SP a_spConnection,
 			Delegate< std::string & > a_ReadCallback,
-			const boost::system::error_code& error )
+			const boost::system::error_code& error)
 		{
 			if (!error)
 			{
@@ -352,14 +349,14 @@ public:
 		}
 	};
 
-	WebServerT(const std::string & a_Interface = std::string(), 
-		int a_nPort = 80, int a_nThreads = 5, float a_fRequestTimeout = 30.0f ) :
+	WebServerT(const std::string & a_Interface = std::string(),
+		int a_nPort = 80, int a_nThreads = 5, float a_fRequestTimeout = 30.0f) :
 		m_Acceptor(m_Service),
-		m_Interface( a_Interface ),
-		m_nPort( a_nPort ),
-		m_nThreads( a_nThreads ),
-		m_fRequestTimeout( a_fRequestTimeout ),
-		m_pWork( NULL )
+		m_Interface(a_Interface),
+		m_nPort(a_nPort),
+		m_nThreads(a_nThreads),
+		m_fRequestTimeout(a_fRequestTimeout),
+		m_pWork(NULL)
 	{}
 
 	~WebServerT()
@@ -380,20 +377,20 @@ public:
 
 		try {
 			boost::asio::ip::tcp::endpoint endpoint;
-			if ( m_Interface.size() > 0)
+			if (m_Interface.size() > 0)
 				endpoint = boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(m_Interface), m_nPort);
 			else
 				endpoint = boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), m_nPort);
 
 			m_Acceptor.open(endpoint.protocol());
 			boost::asio::ip::tcp::acceptor::reuse_address option(true);
-			m_Acceptor.set_option( option );
+			m_Acceptor.set_option(option);
 			m_Acceptor.bind(endpoint);
 			m_Acceptor.listen();
 		}
-		catch( const std::exception & ex )
+		catch (const std::exception & ex)
 		{
-			Log::Error( "WebServer", "Caught Exception: %s", ex.what() );
+			Log::Error("WebServer", "Caught Exception: %s", ex.what());
 			return false;
 		}
 
@@ -401,9 +398,9 @@ public:
 
 		m_Threads.clear();
 		for (int i = 0; i < m_nThreads; ++i)
-			m_Threads.push_back( ThreadSP( new Thread(boost::bind(&boost::asio::io_service::run, &m_Service))) );
+			m_Threads.push_back(ThreadSP(new Thread(boost::bind(&boost::asio::io_service::run, &m_Service))));
 
-		Log::Status( "WebServer", "Listening on port %d", m_nPort );
+		Log::Status("WebServer", "Listening on port %d", m_nPort);
 		return true;
 	}
 
@@ -430,7 +427,7 @@ public:
 	//! NOTE: the delegate will be invoked in a thread from this servers thread-pool.
 	virtual void AddEndpoint(const std::string & a_EndPointMask,
 		Delegate<RequestSP> a_RequestHandler,
-		bool a_bInvokeOnMain = true )
+		bool a_bInvokeOnMain = true)
 	{
 		boost::lock_guard<Mutex> lock(m_EndPointLock);
 		m_EndPoints.push_back(EndPoint(a_EndPointMask, a_RequestHandler, a_bInvokeOnMain));
@@ -469,7 +466,7 @@ protected:
 	struct EndPoint
 	{
 		EndPoint(const std::string & a_EndPointMask, Delegate<RequestSP> a_RequestHandler, bool a_bInvokeOnMain) :
-			m_EndPointMask(a_EndPointMask), m_RequestHandler(a_RequestHandler), m_bInvokeOnMain( a_bInvokeOnMain )
+			m_EndPointMask(a_EndPointMask), m_RequestHandler(a_RequestHandler), m_bInvokeOnMain(a_bInvokeOnMain)
 		{}
 
 		std::string			m_EndPointMask;
@@ -493,18 +490,18 @@ protected:
 	Mutex			m_EndPointLock;
 	EndPointList	m_EndPoints;			// NOTE: we may want to move to a std::map at some point
 
-	//! Accept incoming connections, this must be provided by the base class.
+											//! Accept incoming connections, this must be provided by the base class.
 	virtual void	Accept() = 0;
 
-	void ReadRequest(ConnectionSP a_spConnection )
+	void ReadRequest(ConnectionSP a_spConnection)
 	{
-		Connection * pConnection = static_cast<Connection *>( a_spConnection.get() );
+		Connection * pConnection = static_cast<Connection *>(a_spConnection.get());
 		pConnection->StartTimeout(m_fRequestTimeout);
 
 		StreamBufferSP spBuffer(new StreamBuffer());
 		boost::asio::async_read_until(*pConnection->GetSocket(),
 			*spBuffer, "\r\n\r\n",
-			boost::bind( &WebServerT::OnRequestRead, this, a_spConnection, spBuffer,
+			boost::bind(&WebServerT::OnRequestRead, this, a_spConnection, spBuffer,
 				boost::asio::placeholders::error));
 	}
 
@@ -573,7 +570,7 @@ protected:
 		if (spRequestHandler.IsValid())
 		{
 			if (bInvokeOnMain)
-				ThreadPool::Instance()->InvokeOnMain<RequestSP>(spRequestHandler, a_spRequest );
+				ThreadPool::Instance()->InvokeOnMain<RequestSP>(spRequestHandler, a_spRequest);
 			else
 				spRequestHandler(a_spRequest);
 		}
@@ -583,9 +580,7 @@ protected:
 
 };
 
-//--------------------------------------------------
-
-class WDC_API WebServer : public WebServerT<boost::asio::ip::tcp::socket>
+class WebServer : public WebServerT<boost::asio::ip::tcp::socket>
 {
 public:
 	RTTI_DECL();
@@ -601,24 +596,24 @@ protected:
 	{
 		ConnectionSP spConnection(new Connection(this, new WebServerT<boost::asio::ip::tcp::socket>::SocketType(m_Service)));
 
-		Connection * pConnection = static_cast<Connection *>( spConnection.get() );
+		Connection * pConnection = static_cast<Connection *>(spConnection.get());
 		m_Acceptor.async_accept(*pConnection->GetSocket(),
 			boost::bind(&WebServerT<boost::asio::ip::tcp::socket>::OnAccepted, this, spConnection, boost::asio::placeholders::error));
 	}
 };
 
-class WDC_API SecureWebServer : public WebServerT< boost::asio::ssl::stream< boost::asio::ip::tcp::socket > >
+class SecureWebServer : public WebServerT< boost::asio::ssl::stream< boost::asio::ip::tcp::socket > >
 {
 public:
 	RTTI_DECL();
 
 	//! Construction
-	SecureWebServer( const std::string & a_CertFile,
+	SecureWebServer(const std::string & a_CertFile,
 		const std::string & a_PrivateKeyFile,
 		const std::string & a_VerifyFile = std::string(),
 		const std::string & a_Interface = std::string(),
-		int a_nPort = 443, int a_nThreads = 5, float a_fRequestTimeout = 30.0f ) : m_pSSL(NULL),
-		WebServerT< boost::asio::ssl::stream< boost::asio::ip::tcp::socket > >( a_Interface, a_nPort, a_nThreads, a_fRequestTimeout )
+		int a_nPort = 443, int a_nThreads = 5, float a_fRequestTimeout = 30.0f) : m_pSSL(NULL),
+		WebServerT< boost::asio::ssl::stream< boost::asio::ip::tcp::socket > >(a_Interface, a_nPort, a_nThreads, a_fRequestTimeout)
 	{
 		m_pSSL = new SSL(boost::asio::ssl::context::sslv23);
 		m_pSSL->use_certificate_chain_file(a_CertFile);
@@ -638,8 +633,8 @@ protected:
 	{
 		ConnectionSP spConnection(new Connection(this, new SocketType(m_Service, *m_pSSL)));
 
-		Connection * pConnection = static_cast<Connection *>( spConnection.get() );
-		m_Acceptor.async_accept( pConnection->GetSocket()->lowest_layer(),
+		Connection * pConnection = static_cast<Connection *>(spConnection.get());
+		m_Acceptor.async_accept(pConnection->GetSocket()->lowest_layer(),
 			boost::bind(&SecureWebServer::OnBeginHandshake, this, spConnection, boost::asio::placeholders::error));
 	}
 
@@ -650,7 +645,7 @@ protected:
 
 		if (!ec)
 		{
-			Connection * pConnection = static_cast<Connection *>( a_spConnection.get() );
+			Connection * pConnection = static_cast<Connection *>(a_spConnection.get());
 			pConnection->StartTimeout(m_fRequestTimeout);
 
 			pConnection->GetSocket()->async_handshake(boost::asio::ssl::stream_base::server,
@@ -675,5 +670,27 @@ private:
 	SSL *			m_pSSL;
 };
 
-#endif
+RTTI_IMPL_BASE(IWebServer);
+RTTI_IMPL(WebServer, IWebServer);
+RTTI_IMPL(SecureWebServer, IWebServer);
+
+IWebServer * IWebServer::Create(const std::string & a_Interface /*= std::string()*/,
+	int a_nPort /*= 80*/, 
+	int a_nThreads /*= 5*/, 
+	float a_fRequestTimeout /*= 30.0f*/)
+{
+	return new WebServer(a_Interface, a_nPort, a_nThreads, a_fRequestTimeout);
+}
+
+IWebServer * IWebServer::Create(const std::string & a_CertFile,
+	const std::string & a_PrivateKeyFile,
+	const std::string & a_VerifyFile /*= std::string()*/,
+	const std::string & a_Interface /*= std::string()*/,
+	int a_nPort /*= 443*/,
+	int a_nThreads /*= 5*/,
+	float a_fRequestTimeout /*= 30.0f*/)
+{
+	return new SecureWebServer(a_CertFile, a_PrivateKeyFile, a_VerifyFile, a_Interface, a_nPort, a_nThreads, a_fRequestTimeout);
+}
+
 

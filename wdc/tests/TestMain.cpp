@@ -21,27 +21,47 @@
 #include "utils/Log.h"
 #include "utils/Library.h"
 
+#include <iostream>
+
 int main( int argc, char ** argv )
 {
 	Log::RegisterReactor( new ConsoleReactor( LL_DEBUG_LOW ) );
 	Log::RegisterReactor( new FileReactor( "UnitTest.log", LL_DEBUG_LOW ) );
 
-	// invoke GetInstance() to force the linker to link the DLL
-	Library self( "self" );
+	std::vector<std::string> tests;
+	std::list<Library> libs;
+	for (int i = 1; i < argc; ++i)
+	{
+		if (argv[i][0] == '-')
+		{
+			switch (argv[i][1])
+			{
+			case 'T':
+				if ((i + 1) < argc)
+				{
+					tests.push_back(argv[i + 1]);
+					i++;
+					break;
+				}
+				printf("ERROR: -T is missing argument.\r\n");
+				return 1;
+			case 'L':
+				if ((i + 1) < argc)
+				{
+					libs.push_back(Library(argv[i + 1]));
+					i++;
+					break;
+				}
+				printf("ERROR: -L is missing argument.\r\n");
+				return 1;
+			default:
+				std::cout << "Usage: unit_test [options] [test]\r\n"
+					"-L <library> .. Load dynamic library\r\n"
+					"-T <test> .. Run test\r\n";
+				return 1;
+			}
+		}
+	}
 
-	// load only one platform type.. 
-	Library platform_nao( "platform_nao" );
-	Library platform_win( "platform_win" );
-	Library platform_mac( "platform_mac" );
-	Library platform_ros( "platform_ros" );
-	Library faces("face_plugin");
-	Library hilton("hilton_plugin");
-
-
-	// TODO: let the user specify the platform with the command line
-
-	if( argc == 0 )
-		return UnitTest::RunTests(NULL);
-	else
-		return UnitTest::RunTests(argv[1]);
+	return UnitTest::RunTests(tests);
 }

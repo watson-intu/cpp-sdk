@@ -18,7 +18,7 @@
 #include "UnitTest.h"
 #include "utils/Log.h"
 
-int UnitTest::RunTests( const char * a_pFilter /*= NULL*/ )
+int UnitTest::RunTests( const std::vector<std::string> & a_Tests )
 {
 	int executed = 0;
 	int failed = 0;
@@ -27,8 +27,14 @@ int UnitTest::RunTests( const char * a_pFilter /*= NULL*/ )
 #ifndef _DEBUG
 		try {
 #endif
-			if ( a_pFilter != NULL &&  (*iTest)->GetName().find( a_pFilter ) == std::string::npos )
-				continue;
+			if (a_Tests.size() > 0)
+			{
+				bool bFound = false;
+				for (size_t i = 0; i < a_Tests.size() && !bFound; ++i)
+					bFound = (*iTest)->GetName().find(a_Tests[i]) != std::string::npos;
+				if (!bFound)
+					continue;
+			}
 
 			// TODO: replace printf with logging system..
 			executed += 1;

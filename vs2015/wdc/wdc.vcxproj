@@ -143,6 +143,7 @@
     <ClCompile Include="..\..\wdc\utils\ThreadPool.cpp" />
     <ClCompile Include="..\..\wdc\utils\TimerPool.cpp" />
     <ClCompile Include="..\..\wdc\utils\URL.cpp" />
+    <ClCompile Include="..\..\wdc\utils\WebServer.cpp" />
     <ClCompile Include="..\..\wdc\utils\WebSocketFramer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -326,7 +327,6 @@
     <ClInclude Include="..\..\wdc\utils\TimerPool.h" />
     <ClInclude Include="..\..\wdc\utils\URL.h" />
     <ClInclude Include="..\..\wdc\utils\WatsonException.h" />
-    <ClInclude Include="..\..\wdc\utils\WebServer.h" />
     <ClInclude Include="..\..\wdc\utils\WebSocketFramer.h" />
     <ClInclude Include="..\..\WDCLib.h" />
     <ClInclude Include="Base36.h" />

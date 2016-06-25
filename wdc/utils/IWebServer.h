@@ -83,6 +83,18 @@ public:
 	};
 	typedef boost::shared_ptr<Request>			RequestSP;
 
+	// make destructor virtual to ensure proper cleanup
+	virtual ~IWebServer()
+	{}
+
+	static IWebServer * Create( const std::string & a_Interface = std::string(),
+		int a_nPort = 80, int a_nThreads = 5, float a_fRequestTimeout = 30.0f );
+	static IWebServer * Create(const std::string & a_CertFile,
+		const std::string & a_PrivateKeyFile,
+		const std::string & a_VerifyFile = std::string(),
+		const std::string & a_Interface = std::string(),
+		int a_nPort = 443, int a_nThreads = 5, float a_fRequestTimeout = 30.0f);
+
 	//! This starts this server listening for incoming connections
 	virtual bool Start() = 0;
 	//! Invoke to shutdown this server.

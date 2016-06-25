@@ -17,7 +17,7 @@
 
 #include "UnitTest.h"
 #include "utils/WebClient.h"
-#include "utils/WebServer.h"
+#include "utils/IWebServer.h"
 #include "utils/Log.h"
 #include "utils/ThreadPool.h"
 #include "utils/Time.h"
@@ -35,20 +35,23 @@ public:
 
 		ThreadPool pool(1);
 
-		WebServer server;
-		server.AddEndpoint("/test_ws", DELEGATE(TestUnityWebSocket, OnTestWS, WebServer::RequestSP, this));
-		Test(server.Start());
+		IWebServer * pServer = IWebServer::Create();
+		pServer->AddEndpoint("/test_ws", DELEGATE(TestUnityWebSocket, OnTestWS, IWebServer::RequestSP, this));
+		Test(pServer->Start());
 
 		Spin( m_bStopServer, 300.0f );
+
+		Test(pServer->Stop());
+		delete pServer;
 	}
 
-	void OnTestWS(WebServer::RequestSP a_spRequest)
+	void OnTestWS(IWebServer::RequestSP a_spRequest)
 	{
 		Log::Debug("TestUnityWebSocket", "OnTestWS()");
 		Test(a_spRequest.get() != NULL);
 		Test(a_spRequest->m_RequestType == "GET");
 
-		WebServer::Headers::iterator iWebSocketKey = a_spRequest->m_Headers.find("Sec-WebSocket-Key");
+		IWebServer::Headers::iterator iWebSocketKey = a_spRequest->m_Headers.find("Sec-WebSocket-Key");
 		Test(iWebSocketKey != a_spRequest->m_Headers.end());
 
 		a_spRequest->m_spConnection->SetFrameReceiver( DELEGATE(TestUnityWebSocket, OnServerFrame, IWebSocket::FrameSP, this ) );

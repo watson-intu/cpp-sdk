@@ -201,6 +201,9 @@
     <ClCompile Include="..\..\wdc\tests\TestUnityWebSocket.cpp">
       <Filter>tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\wdc\utils\WebServer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\wdc\services\IService.h">
@@ -331,9 +334,6 @@
       <Filter>services\Alchemy</Filter>
     </ClInclude>
     <ClInclude Include="..\..\wdc\utils\GetMac.h">
-      <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\wdc\utils\WebServer.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\wdc\utils\WebSocketFramer.h">

@@ -19,6 +19,7 @@
 #define UNIT_TEST_H
 
 #include <list>
+#include <vector>
 #include <string>
 #include <stdio.h>
 
@@ -79,7 +80,7 @@ public:
 	virtual void RunTest() = 0;
 
 	//! Run one or more tests, optionally provide a name to filter tests. Returns 0 on success, otherwise it returns the number of tests that failed.
-	static int RunTests( const char * a_pFilter = NULL );
+	static int RunTests( const std::vector<std::string> & a_Tests );
 
 private:
 	//! Types

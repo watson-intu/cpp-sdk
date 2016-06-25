@@ -23,7 +23,25 @@
 #include "boost/asio.hpp"		// not including SSL at this level on purpose
 #include "boost/thread.hpp"
 #include "boost/thread/mutex.hpp"
+
+#if !defined(NO_OPENSSL_INCLUDES)
 #include "boost/asio/ssl.hpp"
+#else
+
+// boost::asio::ssl::stream<boost::asio::ip::tcp::socket> *
+namespace boost {
+	namespace asio {
+		namespace ssl{
+			template<class SOCKET>
+			class stream
+			{};
+			class context
+			{};
+		};
+	};
+};
+
+#endif
 #include "boost/atomic.hpp"
 
 #include "Delegate.h"

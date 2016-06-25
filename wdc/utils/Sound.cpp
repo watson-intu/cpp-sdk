@@ -117,11 +117,9 @@ bool Sound::SaveToFile(const std::string & a_FileName) const
 
 //----------------------------------------------------------------------------
 
-#ifndef WIN32
 typedef unsigned short	WORD;
 typedef unsigned int	DWORD;
 typedef unsigned char	BYTE;
-#endif
 
 typedef DWORD	IdTag;
 
