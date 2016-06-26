@@ -126,7 +126,7 @@ private:
 bool TextToSpeech::ToSpeech( const std::string & a_Text, ToSpeechCallback a_Callback )
 {
 	Json::Value json;
-	json["text"] = "\"" + a_Text + "\"";
+	json["text"] = a_Text;
 	Headers headers;
 	headers["Content-Type"] = "application/json";
 
