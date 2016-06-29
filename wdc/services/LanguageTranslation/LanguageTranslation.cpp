@@ -16,6 +16,7 @@
 */
 
 #include "LanguageTranslation.h"
+#include "utils/Form.h"
 
 REG_SERIALIZABLE( LanguageTranslation );
 RTTI_IMPL( Translations, ISerializable );
@@ -86,7 +87,16 @@ void LanguageTranslation::Translation(std::string & a_Source,
                                       std::string & a_Text,
                                       OnTranslation a_Callback)
 {
-    new RequestObj<Translations>( this, "/v2/translate", "GET", NULL_HEADERS, EMPTY_STRING, a_Callback );
+    Form form;
+    form.AddFormField( "text", a_Text );
+    form.AddFormField( "source",a_Source );
+    form.AddFormField( "target", a_Target );
+    form.Finish();
+
+    Headers headers;
+    headers["Content-Type"] = form.GetContentType();
+
+    new RequestObj<Translations>( this, "/v2/translate", "POST", headers, form.GetBody(), a_Callback );
 }
 
 void LanguageTranslation::IdentifiableLanguages(OnLanguage a_Callback)
@@ -97,5 +107,5 @@ void LanguageTranslation::IdentifiableLanguages(OnLanguage a_Callback)
 void LanguageTranslation::Identify(std::string & a_Text,
                                    OnIdentifiedLanguages a_Callback)
 {
-    new RequestObj<IdentifiedLanguages>( this, "/v2/identify", "GET", NULL_HEADERS, EMPTY_STRING, a_Callback );
+    new RequestObj<IdentifiedLanguages>( this, "/v2/identify", "POST", NULL_HEADERS, a_Text, a_Callback );
 }
