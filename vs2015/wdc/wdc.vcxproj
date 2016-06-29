@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DF26E299-62E3-438A-8403-3D427BB81DB1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>wdc</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>wdc</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;_DEBUG;_WINDOWS;_USRDLL;WDC_SERVICES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\wdc\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>false</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../lib/boost_1_60_0/stage/lib;../../lib/openssl-1.0.1q-vs2015/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;NDEBUG;_WINDOWS;_USRDLL;WDC_SERVICES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\wdc\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>false</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../lib/boost_1_60_0/stage/lib;../../lib/openssl-1.0.1q-vs2015/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\base64\cdecode.c" />
+    <ClCompile Include="..\..\lib\base64\cencode.c" />
+    <ClCompile Include="..\..\lib\crossguid\crossguid.cpp" />
+    <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
+    <ClCompile Include="..\..\wdc\services\Alchemy\Alchemy.cpp" />
+    <ClCompile Include="..\..\wdc\services\Dialog\Dialog.cpp" />
+    <ClCompile Include="..\..\wdc\services\IService.cpp" />
+    <ClCompile Include="..\..\wdc\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp" />
+    <ClCompile Include="..\..\wdc\services\RelationshipExtraction\RelationshipExtraction.cpp" />
+    <ClCompile Include="..\..\wdc\services\SpeechToText\SpeechToText.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\services\TextToSpeech\TextToSpeech.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestAlchemy.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestDataCache.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestDialog.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestGetMac.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestMain.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestNaturalLanguageClassifier.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestPath.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestRelationshipExtraction.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestStringUtil.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestTextToSpeech.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestUnityWebSocket.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestWebClient.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestDelegate.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestFactory.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestISerializable.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestRTTI.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestSpeechToText.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestThreadPool.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestTimerPool.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestURL.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestWebServer.cpp" />
+    <ClCompile Include="..\..\wdc\tests\UnitTest.cpp" />
+    <ClCompile Include="..\..\wdc\utils\Config.cpp" />
+    <ClCompile Include="..\..\wdc\utils\DataCache.cpp" />
+    <ClCompile Include="..\..\wdc\utils\Form.cpp" />
+    <ClCompile Include="..\..\wdc\utils\GetMac.cpp" />
+    <ClCompile Include="..\..\wdc\utils\Logic.cpp" />
+    <ClCompile Include="..\..\wdc\utils\Time.cpp" />
+    <ClCompile Include="..\..\wdc\utils\UniqueID.cpp" />
+    <ClCompile Include="..\..\wdc\utils\ISerializable.cpp" />
+    <ClCompile Include="..\..\wdc\utils\Library.cpp" />
+    <ClCompile Include="..\..\wdc\utils\Log.cpp" />
+    <ClCompile Include="..\..\wdc\utils\Sound.cpp" />
+    <ClCompile Include="..\..\wdc\utils\StringUtil.cpp" />
+    <ClCompile Include="..\..\wdc\utils\ThreadPool.cpp" />
+    <ClCompile Include="..\..\wdc\utils\TimerPool.cpp" />
+    <ClCompile Include="..\..\wdc\utils\URL.cpp" />
+    <ClCompile Include="..\..\wdc\utils\WebServer.cpp" />
+    <ClCompile Include="..\..\wdc\utils\WebSocketFramer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\base64\cdecode.h" />
+    <ClInclude Include="..\..\lib\base64\cencode.h" />
+    <ClInclude Include="..\..\lib\base64\decode.h" />
+    <ClInclude Include="..\..\lib\base64\encode.h" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\align.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\aligned_storage.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\any.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\array.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\asio.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\assert.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\assign.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\atomic.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\bimap.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\bind.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\blank.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\blank_fwd.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\call_traits.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cast.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cerrno.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\checked_delete.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\chrono.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\circular_buffer.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\circular_buffer_fwd.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\compressed_pair.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\concept_archetype.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\concept_check.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\config.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\convert.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\crc.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cregex.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cstdfloat.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cstdint.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cstdlib.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\current_function.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\cxx11_char_types.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\date_time.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\dynamic_bitset.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\dynamic_bitset_fwd.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\enable_shared_from_this.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\exception_ptr.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\filesystem.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\flyweight.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\foreach.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\foreach_fwd.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\format.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\function.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\functional.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\function_equal.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\function_output_iterator.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\generator_iterator.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\geometry.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\get_pointer.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\implicit_cast.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\indirect_reference.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\integer.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\integer_fwd.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\integer_traits.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\intrusive_ptr.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\io_fwd.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\is_placeholder.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\iterator.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\iterator_adaptors.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\last_value.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\lexical_cast.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\limits.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\locale.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\local_function.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\make_default.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\make_shared.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\make_unique.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\math_fwd.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\memory_order.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\mem_fn.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\mpi.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\multi_array.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\multi_index_container.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\multi_index_container_fwd.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\next_prior.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\noncopyable.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\nondet_random.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\none.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\none_t.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\non_type.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\operators.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\optional.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\parameter.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\phoenix.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\pointee.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\pointer_cast.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\pointer_to_other.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\polymorphic_cast.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\polymorphic_pointer_cast.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\predef.h" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\preprocessor.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\program_options.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\progress.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\python.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\random.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\range.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\ratio.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\rational.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\ref.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\regex.h" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\regex.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\regex_fwd.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\scoped_array.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\scoped_ptr.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\scope_exit.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\shared_array.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\shared_container_iterator.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\shared_ptr.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\signal.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\signals.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\signals2.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\smart_ptr.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\spirit.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\static_assert.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\swap.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\thread.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\throw_exception.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\timer.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\tokenizer.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\token_functions.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\token_iterator.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\type.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\type_index.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\type_traits.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\unordered_map.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\unordered_set.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\utility.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\variant.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\version.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\visit_each.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\wave.hpp" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\boost\weak_ptr.hpp" />
+    <ClInclude Include="..\..\lib\crossguid\crossguid.h" />
+    <ClInclude Include="..\..\lib\tinythread++\tinythread.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h" />
+    <ClInclude Include="..\..\wdc\services\Alchemy\Alchemy.h" />
+    <ClInclude Include="..\..\wdc\services\Dialog\DataModels.h" />
+    <ClInclude Include="..\..\wdc\services\Dialog\Dialog.h" />
+    <ClInclude Include="..\..\wdc\services\IService.h" />
+    <ClInclude Include="..\..\wdc\services\NaturalLanguageClassifier\DataModels.h" />
+    <ClInclude Include="..\..\wdc\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h" />
+    <ClInclude Include="..\..\wdc\services\RelationshipExtraction\RelationshipExtraction.h" />
+    <ClInclude Include="..\..\wdc\services\SpeechToText\DataModels.h" />
+    <ClInclude Include="..\..\wdc\services\SpeechToText\SpeechToText.h" />
+    <ClInclude Include="..\..\wdc\services\TextToSpeech\DataModels.h" />
+    <ClInclude Include="..\..\wdc\services\TextToSpeech\TextToSpeech.h" />
+    <ClInclude Include="..\..\wdc\tests\UnitTest.h" />
+    <ClInclude Include="..\..\wdc\utils\Config.h" />
+    <ClInclude Include="..\..\wdc\utils\DataCache.h" />
+    <ClInclude Include="..\..\wdc\utils\Form.h" />
+    <ClInclude Include="..\..\wdc\utils\GetMac.h" />
+    <ClInclude Include="..\..\wdc\utils\IWebClient.h" />
+    <ClInclude Include="..\..\wdc\utils\IWebServer.h" />
+    <ClInclude Include="..\..\wdc\utils\IWebSocket.h" />
+    <ClInclude Include="..\..\wdc\utils\Logic.h" />
+    <ClInclude Include="..\..\wdc\utils\Path.h" />
+    <ClInclude Include="..\..\wdc\utils\SHA1.h" />
+    <ClInclude Include="..\..\wdc\utils\UniqueID.h" />
+    <ClInclude Include="..\..\wdc\utils\WebClient.h" />
+    <ClInclude Include="..\..\wdc\utils\ServiceConfig.h" />
+    <ClInclude Include="..\..\wdc\utils\Delegate.h" />
+    <ClInclude Include="..\..\wdc\utils\Factory.h" />
+    <ClInclude Include="..\..\wdc\utils\ISerializable.h" />
+    <ClInclude Include="..\..\wdc\utils\Library.h" />
+    <ClInclude Include="..\..\wdc\utils\Log.h" />
+    <ClInclude Include="..\..\wdc\utils\RTTI.h" />
+    <ClInclude Include="..\..\wdc\utils\Sound.h" />
+    <ClInclude Include="..\..\wdc\utils\StringHash.h" />
+    <ClInclude Include="..\..\wdc\utils\StringUtil.h" />
+    <ClInclude Include="..\..\wdc\utils\ThreadPool.h" />
+    <ClInclude Include="..\..\wdc\utils\Time.h" />
+    <ClInclude Include="..\..\wdc\utils\TimerPool.h" />
+    <ClInclude Include="..\..\wdc\utils\URL.h" />
+    <ClInclude Include="..\..\wdc\utils\WatsonException.h" />
+    <ClInclude Include="..\..\wdc\utils\WebSocketFramer.h" />
+    <ClInclude Include="..\..\WDCLib.h" />
+    <ClInclude Include="Base36.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\wdc\utils\WebClient.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\jsoncpp\jsoncpp.vcxproj">
+      <Project>{28ba4301-4c55-41d2-b122-01dbde375452}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
