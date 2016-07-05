@@ -50,7 +50,7 @@ public:
         std::string target = "es";
         std::string source = "en";
         std::string text = "hello";
-        language->Translation(target, source, text, DELEGATE(TestLanguageTranslation, OnTranslate, Translations *, this));
+        language->Translation(source, target, text, DELEGATE(TestLanguageTranslation, OnTranslate, Translations *, this));
         language->IdentifiableLanguages(DELEGATE(TestLanguageTranslation, OnIdentifiedLanguages, Languages *, this));
         language->Identify(text, DELEGATE(TestLanguageTranslation, OnIdentify, IdentifiedLanguages *, this ));
 
@@ -65,6 +65,9 @@ public:
     {
         m_Counter++;
         m_bTranslate = true;
+        Translation translation = a_Callback->m_Translations[0];
+        std::string a_Translation = translation.m_Translation;
+        Log::Debug("TestLanguageTranslation", "Found translation: %s", a_Translation.c_str());
     }
 
     void OnIdentifiedLanguages(Languages * a_Callback)

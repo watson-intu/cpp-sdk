@@ -87,16 +87,16 @@ void LanguageTranslation::Translation(std::string & a_Source,
                                       std::string & a_Text,
                                       OnTranslation a_Callback)
 {
-    Form form;
-    form.AddFormField( "text", a_Text );
-    form.AddFormField( "source",a_Source );
-    form.AddFormField( "target", a_Target );
-    form.Finish();
+    std::string parameters = "/v2/translate";
+    parameters += "?source=" + a_Source;
+    parameters += "&target=" + a_Target;
+    parameters += "&text=" + a_Text;
 
     Headers headers;
-    headers["Content-Type"] = form.GetContentType();
+    headers["Content-Type"] = "application/x-www-form-urlencoded";
+    headers["Accept"] = "application/json";
 
-    new RequestObj<Translations>( this, "/v2/translate", "POST", headers, form.GetBody(), a_Callback );
+    new RequestObj<Translations>( this, parameters, "GET", headers, EMPTY_STRING, a_Callback );
 }
 
 void LanguageTranslation::IdentifiableLanguages(OnLanguage a_Callback)
@@ -107,5 +107,8 @@ void LanguageTranslation::IdentifiableLanguages(OnLanguage a_Callback)
 void LanguageTranslation::Identify(std::string & a_Text,
                                    OnIdentifiedLanguages a_Callback)
 {
-    new RequestObj<IdentifiedLanguages>( this, "/v2/identify", "POST", NULL_HEADERS, a_Text, a_Callback );
+    Headers headers;
+    headers["Content-Type"] = "text/plain";
+    headers["Accept"] = "application/json";
+    new RequestObj<IdentifiedLanguages>( this, "/v2/identify", "POST", headers, a_Text, a_Callback );
 }
