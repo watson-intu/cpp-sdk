@@ -58,7 +58,8 @@ SpeechToText::SpeechToText() : IService( "SpeechToTextV1" ),
 	m_SilenceThreshold( 0.03f ),
 	m_MaxAudioQueueSize( 1024 * 1024 ),		// default to 1MB of audio data
 	m_RecordingHZ( -1 ),
-	m_bReconnecting( false )
+	m_bReconnecting( false ),
+	m_LearningOptOut( 1 )
 {}
 
 SpeechToText::~SpeechToText()
@@ -79,6 +80,7 @@ void SpeechToText::Serialize(Json::Value & json)
 	json["m_DetectSilence"] = m_DetectSilence;
 	json["m_SilenceThreshold"] = m_SilenceThreshold;
 	json["m_MaxAudioQueueSize"] = m_MaxAudioQueueSize;
+	json["m_LearningOptOut"] = m_LearningOptOut;
 }
 
 void SpeechToText::Deserialize(const Json::Value & json)
@@ -103,6 +105,8 @@ void SpeechToText::Deserialize(const Json::Value & json)
 		m_SilenceThreshold = json["m_SilenceThreshold"].asFloat();
 	if (json.isMember("m_MaxAudioQueueSize"))
 		m_MaxAudioQueueSize = json["m_MaxAudioQueueSize"].asUInt();
+	if (json.isMember("m_LearningOptOut"))
+		m_LearningOptOut = json["m_LearningOptOut"].asInt();
 }
 
 bool SpeechToText::Start()
@@ -246,11 +250,23 @@ bool SpeechToText::StopListening()
 	return true;
 }
 
+bool SpeechToText::OnReconnectWithNewOptOut(int a_LearningOptOut)
+{
+	if(m_LearningOptOut == a_LearningOptOut)
+	{
+		return false;
+	}
+
+	m_LearningOptOut = a_LearningOptOut;
+
+	return true;
+}
+
 bool SpeechToText::CreateListenConnector()
 {
 	if (m_ListenSocket == NULL)
 	{
-		std::string url = GetConfig()->m_URL + "/v1/recognize?x-watson-learning-opt-out=1&model=" + StringUtil::UrlEscape( m_RecognizeModel );
+		std::string url = GetConfig()->m_URL + "/v1/recognize?x-watson-learning-opt-out=" + StringUtil::Format("%d", m_LearningOptOut) + "&model=" + StringUtil::UrlEscape( m_RecognizeModel );
 		StringUtil::Replace(url, "https://", "wss://", true );
 		StringUtil::Replace(url, "http://", "ws://", true );
 
@@ -275,6 +291,8 @@ bool SpeechToText::CreateListenConnector()
 
 	return true;
 }
+
+
 
 void SpeechToText::CloseListenConnector()
 {

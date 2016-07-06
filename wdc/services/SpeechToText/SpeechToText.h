@@ -64,6 +64,8 @@ public:
 	void SetEnableContinousRecognition( bool a_bEnable );
 	void SetEnableInteriumResults( bool a_bEnable );
 	void SetEnableDetectSilence( bool a_bEnable, float a_fThreshold = 0.03f );
+	bool OnReconnectWithNewOptOut(int a_LearningOptOut);
+
 
 	//! Start listening mode, the user must provide audio data by calling the OnListen() function
 	//! on a regular basis. The user is responsible for the object returned by all the callbacks.
@@ -125,6 +127,7 @@ private:
 	int				m_RecordingHZ;
 	ErrorEvent		m_OnError;
 	bool			m_bReconnecting;
+	int 			m_LearningOptOut;
 	TimerPool::ITimer::SP
 					m_spReconnectTimer;
 
