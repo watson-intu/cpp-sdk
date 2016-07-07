@@ -64,7 +64,7 @@ public:
 	void SetEnableContinousRecognition( bool a_bEnable );
 	void SetEnableInteriumResults( bool a_bEnable );
 	void SetEnableDetectSilence( bool a_bEnable, float a_fThreshold = 0.03f );
-	bool OnReconnectWithNewOptOut(int a_LearningOptOut);
+	bool OnReconnectWithNewOptOut(bool a_Flag);
 
 
 	//! Start listening mode, the user must provide audio data by calling the OnListen() function

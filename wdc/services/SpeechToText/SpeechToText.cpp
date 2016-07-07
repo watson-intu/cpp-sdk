@@ -250,8 +250,9 @@ bool SpeechToText::StopListening()
 	return true;
 }
 
-bool SpeechToText::OnReconnectWithNewOptOut(int a_LearningOptOut)
+bool SpeechToText::OnReconnectWithNewOptOut(bool a_Flag)
 {
+	int a_LearningOptOut = a_Flag ? 1 : 0;
 	if(m_LearningOptOut == a_LearningOptOut)
 	{
 		return false;
