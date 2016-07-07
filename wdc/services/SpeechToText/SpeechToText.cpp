@@ -258,7 +258,9 @@ bool SpeechToText::OnReconnectWithNewOptOut(int a_LearningOptOut)
 	}
 
 	m_LearningOptOut = a_LearningOptOut;
-
+	OnRecognize callback = m_ListenCallback;
+	StopListening();
+	StartListening(callback);
 	return true;
 }
 
