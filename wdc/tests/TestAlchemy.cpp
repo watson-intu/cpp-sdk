@@ -19,15 +19,15 @@
 #include "utils/Log.h"
 #include "utils/Time.h"
 #include "utils/Config.h"
-#include "services/Alchemy/Alchemy.h"
+#include "services/VisualRecognition/VisualRecognition.h"
 
 #include <fstream>
 
-class TestAlchemy : UnitTest
+class TestVisualRecognition : UnitTest
 {
 public:
 	//! Construction
-	TestAlchemy() : UnitTest("TestAlchemy"),
+	TestVisualRecognition() : UnitTest("TestVisualRecognition"),
 		m_bDetectFacesTested(false),
 		m_bClassifyImageTested(false)
 	{}
@@ -38,7 +38,7 @@ public:
 	virtual void RunTest()
 	{
 		// read in all the file data..
-		std::ifstream input("./etc/tests/AlchemyTest.jpg", std::ios::in | std::ios::binary);
+		std::ifstream input("./etc/tests/VisualRecognitionTest.jpg", std::ios::in | std::ios::binary);
 		Test(input.is_open());
 		std::string imageData;
 		imageData.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
@@ -49,13 +49,13 @@ public:
 
 		ThreadPool pool(1);
 
-		Alchemy alchemy;
-		Test(alchemy.Start());
+		VisualRecognition visualRecognition;
+		Test(visualRecognition.Start());
 
-		alchemy.DetectFaces(imageData,
-			DELEGATE(TestAlchemy, OnDetectFaces, const Json::Value &, this) );
-		alchemy.ClassifyImage(imageData,
-			DELEGATE(TestAlchemy, OnClassifyImage, const Json::Value &, this) );
+		visualRecognition.DetectFaces(imageData,
+			DELEGATE(TestVisualRecognition, OnDetectFaces, const Json::Value &, this) );
+		visualRecognition.ClassifyImage(imageData,
+			DELEGATE(TestVisualRecognition, OnClassifyImage, const Json::Value &, this) );
 
 		Time start;
 		while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && (!m_bDetectFacesTested || !m_bClassifyImageTested) )
@@ -70,7 +70,7 @@ public:
 
 	void OnDetectFaces(const Json::Value & json)
 	{
-		Log::Debug("AlchemyTest", "OnDetectFaces(): %s", json.toStyledString().c_str());
+		Log::Debug("VisualRecognitionTest", "OnDetectFaces(): %s", json.toStyledString().c_str());
 
 		Test(!json.isNull());
 		Test(json["imageFaces"].size() > 0);
@@ -80,7 +80,7 @@ public:
 
 	void OnClassifyImage(const Json::Value & json)
 	{
-		Log::Debug("AlchemyTest", "OnClassifyImage(): %s", json.toStyledString().c_str());
+		Log::Debug("VisualRecognitionTest", "OnClassifyImage(): %s", json.toStyledString().c_str());
 
 		Test(!json.isNull());
 		Test(json["imageKeywords"].size() > 0);
@@ -91,4 +91,4 @@ public:
 
 };
 
-TestAlchemy TEST_ALCHEMY;
+TestVisualRecognition TEST_VISUALRECOGNITION;
