@@ -31,6 +31,7 @@ public:
 	//! Types
 	typedef Delegate<const Json::Value &>	OnClassifyImage;
 	typedef Delegate<const Json::Value &>	OnDetectFaces;
+	typedef Delegate<const Json::Value &>   OnIdentifyText;
 
 	//! Construction 
 	VisualRecognition();
@@ -51,7 +52,7 @@ public:
 	void DetectFaces(const std::string & a_ImageData,
 		OnDetectFaces a_Callback, 
 		bool a_bKnowledgeGraph = false );
-
+	//! Identify the Text within a provided image
 	void IdentifyText(const std::string & a_ImageData,
 		OnIdentifyText a_Callback,
 		bool a_bKnowledgeGraph = false );

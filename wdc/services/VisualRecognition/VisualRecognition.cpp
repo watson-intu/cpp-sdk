@@ -95,7 +95,7 @@ void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFac
 	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
 }
 
-void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph /*= false*/ )
+void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentifyText a_Callback, bool a_bKnowledgeGraph /*= false*/ )
 {
 	std::string parameters = "/v3/recognize_text";
 	parameters += "?apikey=" + m_pConfig->m_User;

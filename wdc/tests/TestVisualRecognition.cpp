@@ -29,11 +29,13 @@ public:
 	//! Construction
 	TestVisualRecognition() : UnitTest("TestVisualRecognition"),
 		m_bDetectFacesTested(false),
-		m_bClassifyImageTested(false)
+		m_bClassifyImageTested(false),
+		m_bIdentifyTextTested(false)
 	{}
 
 	bool m_bDetectFacesTested;
 	bool m_bClassifyImageTested;
+	bool m_bIdentifyTextTested;
 
 	virtual void RunTest()
 	{
@@ -56,6 +58,8 @@ public:
 			DELEGATE(TestVisualRecognition, OnDetectFaces, const Json::Value &, this) );
 		visualRecognition.ClassifyImage(imageData,
 			DELEGATE(TestVisualRecognition, OnClassifyImage, const Json::Value &, this) );
+		visualRecognition.IdentifyText(imageData,
+			DELEGATE(TestVisualRecognition, OnIdentifyText, const Json::Value &, this) );
 
 		Time start;
 		while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && (!m_bDetectFacesTested || !m_bClassifyImageTested) )
@@ -66,6 +70,7 @@ public:
 
 		Test(m_bDetectFacesTested);
 		Test(m_bClassifyImageTested);
+		Test(m_bIdentifyTextTested);
 	}
 
 	void OnDetectFaces(const Json::Value & json)
@@ -73,7 +78,7 @@ public:
 		Log::Debug("VisualRecognitionTest", "OnDetectFaces(): %s", json.toStyledString().c_str());
 
 		Test(!json.isNull());
-		Test(json["imageFaces"].size() > 0);
+		Test(json["images"]["faces"].size() > 0);
 
 		m_bDetectFacesTested = true;
 	}
@@ -83,9 +88,19 @@ public:
 		Log::Debug("VisualRecognitionTest", "OnClassifyImage(): %s", json.toStyledString().c_str());
 
 		Test(!json.isNull());
-		Test(json["imageKeywords"].size() > 0);
+		Test(json["images"]["classifiers"]["classes"].size() > 0);
 
 		m_bClassifyImageTested = true;
+	}
+
+	void OnIdentifyText(const Json::Value & json)
+	{
+		Log::Debug("VisualRecognitionTest", "OnIdentifyText(): %s", json.toStyledString().c_str());
+
+		Test(!json.isNull());
+		Test(json["images"]["words"].size() > 0);
+
+		m_bIdentifyTextTested = true;
 	}
 
 
