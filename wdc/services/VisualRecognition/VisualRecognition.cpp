@@ -15,47 +15,47 @@
 *
 */
 
-#include "Alchemy.h"
+#include "VisualRecognition.h"
 
-REG_SERIALIZABLE( Alchemy );
-RTTI_IMPL( Alchemy, IService );
+REG_SERIALIZABLE( VisualRecognition );
+RTTI_IMPL( VisualRecognition, IService );
 
 
-Alchemy::Alchemy() : IService("AlchemyV1")
+VisualRecognition::VisualRecognition() : IService("VisualRecognitionV3")
 {}
 
 //! ISerializable
-void Alchemy::Serialize(Json::Value & json)
+void VisualRecognition::Serialize(Json::Value & json)
 {
 	IService::Serialize(json);
 }
 
-void Alchemy::Deserialize(const Json::Value & json)
+void VisualRecognition::Deserialize(const Json::Value & json)
 {
 	IService::Deserialize(json);
 }
 
 //! IService interface
-bool Alchemy::Start()
+bool VisualRecognition::Start()
 {
 	if (!IService::Start())
 		return false;
 
 	if (!StringUtil::EndsWith(m_pConfig->m_URL, "calls"))
 	{
-		Log::Error("Alchemy", "Configured URL not ended with calls");
+		Log::Error("VisualRecognition", "Configured URL not ended with calls");
 		return false;
 	}
 	if (m_pConfig->m_User.size() == 0)
 	{
-		Log::Error("Alchemy", "API-Key expected in user field.");
+		Log::Error("VisualRecognition", "API-Key expected in user field.");
 		return false;
 	}
 
 	return true;
 }
 
-void Alchemy::GetServiceStatus(ServiceStatusCallback a_Callback)
+void VisualRecognition::GetServiceStatus(ServiceStatusCallback a_Callback)
 {
 	if (m_pConfig != NULL)
 		new ServiceStatusChecker(this, a_Callback);
@@ -63,9 +63,9 @@ void Alchemy::GetServiceStatus(ServiceStatusCallback a_Callback)
 		a_Callback(ServiceStatus(m_ServiceId, false));
 }
 
-void Alchemy::ClassifyImage(const std::string & a_ImageData, OnClassifyImage a_Callback, bool a_bKnowledgeGraph /*= false*/)
+void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassifyImage a_Callback, bool a_bKnowledgeGraph /*= false*/)
 {
-	std::string parameters = "/image/ImageGetRankedImageKeywords";
+	std::string parameters = "/v3/classify";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&outputMode=json";
 	parameters += "&imagePostMode=raw";
@@ -79,9 +79,9 @@ void Alchemy::ClassifyImage(const std::string & a_ImageData, OnClassifyImage a_C
 	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
 }
 
-void Alchemy::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph /*= false*/ )
+void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph /*= false*/ )
 {
-	std::string parameters = "/image/ImageGetRankedImageFaceTags";
+	std::string parameters = "/v3/detect_faces";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&outputMode=json";
 	parameters += "&imagePostMode=raw";
@@ -95,7 +95,23 @@ void Alchemy::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callb
 	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
 }
 
-Alchemy::ServiceStatusChecker::ServiceStatusChecker(Alchemy * a_pService, ServiceStatusCallback a_Callback)
+void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph /*= false*/ )
+{
+	std::string parameters = "/v3/recognize_text";
+	parameters += "?apikey=" + m_pConfig->m_User;
+	parameters += "&outputMode=json";
+	parameters += "&imagePostMode=raw";
+	//parameters += "&img_file=.jpg";
+	if (a_bKnowledgeGraph)
+		parameters += "&knowledgeGraph=1";
+
+	Headers headers;
+	headers["Content-Type"] = "application/x-www-form-urlencoded";
+
+	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
+}
+
+VisualRecognition::ServiceStatusChecker::ServiceStatusChecker(VisualRecognition * a_pService, ServiceStatusCallback a_Callback)
 	: m_pService(a_pService), m_Callback(a_Callback)
 {
 	if (a_Callback.IsValid())
@@ -103,6 +119,6 @@ Alchemy::ServiceStatusChecker::ServiceStatusChecker(Alchemy * a_pService, Servic
 	delete this;
 }
 
-void Alchemy::ServiceStatusChecker::OnCheckService(const Json::Value & a_Response)
+void VisualRecognition::ServiceStatusChecker::OnCheckService(const Json::Value & a_Response)
 {}
 
