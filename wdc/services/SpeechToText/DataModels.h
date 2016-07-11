@@ -167,6 +167,7 @@ struct RecognizeResults : public ISerializable
 
 	int m_ResultIndex;
 	std::vector<SpeechResult> m_Results;
+	std::string m_Language;
 
 	RecognizeResults() : m_ResultIndex( 0 )
 	{}
@@ -183,6 +184,16 @@ struct RecognizeResults : public ISerializable
 	bool HasFinalResult() const
 	{
 		return HasResult() && m_Results[0].m_Final;
+	}
+
+	void SetLanguage(std::string & a_Language)
+	{
+		m_Language = a_Language;
+	}
+
+	std::string & GetLanguage() 
+	{
+		return m_Language;
 	}
 
 	virtual void Serialize(Json::Value & json)

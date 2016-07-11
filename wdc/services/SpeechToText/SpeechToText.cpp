@@ -361,6 +361,9 @@ void SpeechToText::OnListenMessage( IWebSocket::FrameSP a_spFrame )
 				RecognizeResults * pResults = new RecognizeResults();
 				if (ISerializable::DeserializeObject( json, pResults ) == pResults )
 				{
+					// Add language to RecognizeResults
+					std::string language = StringUtil::RightTrim(m_RecognizeModel, "_");
+					pResults->SetLanguage(language);
 					// when we get results, start listening for the next block ..
 					// if continuous is true, then we don't need to do this..
 					if (!m_Continous && pResults->HasFinalResult())
