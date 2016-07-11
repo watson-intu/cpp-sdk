@@ -46,6 +46,12 @@ public:
 		imageData.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
 		input.close();
 
+		std::ifstream inputText("./etc/tests/VisualRecognitionTestText.jpg", std::ios::in | std::ios::binary);
+		Test(input.is_open());
+		std::string textImageData;
+		textImageData.assign(std::istreambuf_iterator<char>(inputText), std::istreambuf_iterator<char>());
+		input.close();
+
 		Config config;
 		Test(ISerializable::DeserializeFromFile("./etc/tests/unit_test_config.json", &config) != NULL);
 
@@ -58,7 +64,7 @@ public:
 			DELEGATE(TestVisualRecognition, OnDetectFaces, const Json::Value &, this) );
 		visualRecognition.ClassifyImage(imageData,
 			DELEGATE(TestVisualRecognition, OnClassifyImage, const Json::Value &, this) );
-		visualRecognition.IdentifyText(imageData,
+		visualRecognition.IdentifyText(textImageData,
 			DELEGATE(TestVisualRecognition, OnIdentifyText, const Json::Value &, this) );
 
 		Time start;
