@@ -47,16 +47,16 @@ public:
     virtual void GetServiceStatus( ServiceStatusCallback a_Callback );
 
     //! Translates input text from the source language to the target language.
-    void Translation(std::string & a_Source,
-                     std::string & a_Target,
-                     std::string & a_Text,
+    void Translation(const std::string & a_Source,
+                     const std::string & a_Target,
+                     const std::string & a_Text,
                      OnTranslation a_Callback);
 
     //! Return the list of languages it can detect.
     void IdentifiableLanguages(OnLanguage a_Callback);
 
     //! Identify the language in which a text is written.
-    void Identify(std::string & a_Text,
+    void Identify(const std::string & a_Text,
                   OnIdentifiedLanguages a_Callback);
 
 

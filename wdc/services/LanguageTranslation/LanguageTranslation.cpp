@@ -82,9 +82,9 @@ void LanguageTranslation::ServiceStatusChecker::OnCheckService(Languages* a_pLan
 }
 
 
-void LanguageTranslation::Translation(std::string & a_Source,
-                                      std::string & a_Target,
-                                      std::string & a_Text,
+void LanguageTranslation::Translation(const std::string & a_Source,
+                                      const std::string & a_Target,
+                                      const std::string & a_Text,
                                       OnTranslation a_Callback)
 {
     std::string parameters = "/v2/translate";
@@ -104,7 +104,7 @@ void LanguageTranslation::IdentifiableLanguages(OnLanguage a_Callback)
     new RequestObj<Languages>( this, "/v2/identifiable_languages", "GET", NULL_HEADERS, EMPTY_STRING, a_Callback );
 }
 
-void LanguageTranslation::Identify(std::string & a_Text,
+void LanguageTranslation::Identify(const std::string & a_Text,
                                    OnIdentifiedLanguages a_Callback)
 {
     Headers headers;
