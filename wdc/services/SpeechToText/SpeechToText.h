@@ -127,7 +127,7 @@ private:
 	int				m_RecordingHZ;
 	ErrorEvent		m_OnError;
 	bool			m_bReconnecting;
-	int 			m_LearningOptOut;
+	bool 			m_bLearningOptOut;
 	TimerPool::ITimer::SP
 					m_spReconnectTimer;
 
