@@ -40,12 +40,7 @@ bool VisualRecognition::Start()
 {
 	if (!IService::Start())
 		return false;
-
-	if (!StringUtil::EndsWith(m_pConfig->m_URL, "calls"))
-	{
-		Log::Error("VisualRecognition", "Configured URL not ended with calls");
-		return false;
-	}
+		
 	if (m_pConfig->m_User.size() == 0)
 	{
 		Log::Error("VisualRecognition", "API-Key expected in user field.");
@@ -67,9 +62,10 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassif
 {
 	std::string parameters = "/v3/classify";
 	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&outputMode=json";
-	parameters += "&imagePostMode=raw";
+	// parameters += "&outputMode=json";
+	// parameters += "&imagePostMode=raw";
 	//parameters += "&img_file=.jpg";
+	parameters += "&version=2016-05-20";
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
@@ -83,9 +79,10 @@ void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFac
 {
 	std::string parameters = "/v3/detect_faces";
 	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&outputMode=json";
-	parameters += "&imagePostMode=raw";
+	// parameters += "&outputMode=json";
+	// parameters += "&imagePostMode=raw";
 	//parameters += "&img_file=.jpg";
+	parameters += "&version=2016-05-20";
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
@@ -95,21 +92,23 @@ void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFac
 	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
 }
 
-void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentifyText a_Callback, bool a_bKnowledgeGraph /*= false*/ )
-{
-	std::string parameters = "/v3/recognize_text";
-	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&outputMode=json";
-	parameters += "&imagePostMode=raw";
-	//parameters += "&img_file=.jpg";
-	if (a_bKnowledgeGraph)
-		parameters += "&knowledgeGraph=1";
+// void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentifyText a_Callback, bool a_bKnowledgeGraph /*= false*/ )
+// {
+// 	std::string parameters = "/v3/recognize_text";
+// 	parameters += "?apikey=" + m_pConfig->m_User;
+// 	// parameters += "&outputMode=json";
+// 	// parameters += "&imagePostMode=raw";
+// 	//parameters += "&img_file=.jpg";
+// 	parameters += "&version=2016-05-20";
+// 	if (a_bKnowledgeGraph)
+// 		parameters += "&knowledgeGraph=1";
 
-	Headers headers;
-	headers["Content-Type"] = "application/x-www-form-urlencoded";
+// 	Headers headers;
+// 	headers["Content-Type"] = "application/x-www-form-urlencoded";
 
-	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
-}
+// 	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
+
+// }
 
 VisualRecognition::ServiceStatusChecker::ServiceStatusChecker(VisualRecognition * a_pService, ServiceStatusCallback a_Callback)
 	: m_pService(a_pService), m_Callback(a_Callback)
