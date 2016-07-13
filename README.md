@@ -3,6 +3,8 @@ This SDK abstract serveral of the services available through Bluemix.
 
 # Building
 
+NOTE: It probably is not necessary to download the toolchains from the aldebaran website to compile the WDC SDK.
+
 ## Building for Nao/Pepper using OSX
 
 1. Setup qibuild & cmake, see http://doc.aldebaran.com/2-1/dev/cpp/install_guide.html for instructions on getting those installed.
