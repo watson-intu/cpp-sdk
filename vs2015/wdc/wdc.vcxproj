@@ -99,6 +99,7 @@
     <ClCompile Include="..\..\wdc\services\Alchemy\Alchemy.cpp" />
     <ClCompile Include="..\..\wdc\services\Dialog\Dialog.cpp" />
     <ClCompile Include="..\..\wdc\services\IService.cpp" />
+    <ClCompile Include="..\..\wdc\services\LanguageTranslation\LanguageTranslation.cpp" />
     <ClCompile Include="..\..\wdc\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp" />
     <ClCompile Include="..\..\wdc\services\RelationshipExtraction\RelationshipExtraction.cpp" />
     <ClCompile Include="..\..\wdc\services\SpeechToText\SpeechToText.cpp">
@@ -292,6 +293,8 @@
     <ClInclude Include="..\..\wdc\services\Dialog\DataModels.h" />
     <ClInclude Include="..\..\wdc\services\Dialog\Dialog.h" />
     <ClInclude Include="..\..\wdc\services\IService.h" />
+    <ClInclude Include="..\..\wdc\services\LanguageTranslation\DataModels.h" />
+    <ClInclude Include="..\..\wdc\services\LanguageTranslation\LanguageTranslation.h" />
     <ClInclude Include="..\..\wdc\services\NaturalLanguageClassifier\DataModels.h" />
     <ClInclude Include="..\..\wdc\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h" />
     <ClInclude Include="..\..\wdc\services\RelationshipExtraction\RelationshipExtraction.h" />
