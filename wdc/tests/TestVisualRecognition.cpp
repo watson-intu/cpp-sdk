@@ -47,15 +47,6 @@ public:
 		imageData.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
 		input.close();
 
-		// Log::Status("TestVisualRecognition", "Opened VisualRecognitionTest.jpg");
-		// std::ifstream inputText("./etc/tests/VisualRecognitionTestText.jpg", std::ios::in | std::ios::binary);
-		// Test(inputText.is_open());
-		// std::string textImageData;
-		// textImageData.assign(std::istreambuf_iterator<char>(inputText), std::istreambuf_iterator<char>());
-		// input.close();
-		// Log::Status("TestVisualRecognition", "Opened VisualRecognitionTestText.jpg");
-
-
 		Config config;
 		Test(ISerializable::DeserializeFromFile("./etc/tests/unit_test_config.json", &config) != NULL);
 
@@ -69,8 +60,8 @@ public:
 			DELEGATE(TestVisualRecognition, OnDetectFaces, const Json::Value &, this) );
 		visualRecognition->ClassifyImage(imageData,
 			DELEGATE(TestVisualRecognition, OnClassifyImage, const Json::Value &, this) );
-		// visualRecognition->IdentifyText(textImageData,
-		// 	DELEGATE(TestVisualRecognition, OnIdentifyText, const Json::Value &, this) );
+		visualRecognition->IdentifyText(imageData,
+			DELEGATE(TestVisualRecognition, OnIdentifyText, const Json::Value &, this) );
 
 		Time start;
 		while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && (!m_bDetectFacesTested || !m_bClassifyImageTested) )
@@ -85,13 +76,13 @@ public:
 		if (m_bClassifyImageTested) {
 			Log::Status("TestVisualRecognition", "Successfully tested image classification");
 		}
-		// if (m_bIdentifyTextTested) {
-		// 	Log::Status("TestVisualRecognition", "Successfully tested text recognition");
-		// }
+		if (m_bIdentifyTextTested) {
+			Log::Status("TestVisualRecognition", "Successfully tested text recognition");
+		}
 
 		Test(m_bDetectFacesTested);
 		Test(m_bClassifyImageTested);
-		// Test(m_bIdentifyTextTested);
+		Test(m_bIdentifyTextTested);
 	}
 
 	void OnDetectFaces(const Json::Value & json)
@@ -99,7 +90,7 @@ public:
 		Log::Debug("VisualRecognitionTest", "OnDetectFaces(): %s", json.toStyledString().c_str());
 
 		Test(!json.isNull());
-		// Test(json["images"].size() > 0);
+		Test(json["images"].size() > 0);
 
 		m_bDetectFacesTested = true;
 	}
@@ -109,20 +100,20 @@ public:
 		Log::Debug("VisualRecognitionTest", "OnClassifyImage(): %s", json.toStyledString().c_str());
 
 		Test(!json.isNull());
-		// Test(json["images"].size() > 0);
+		Test(json["images"].size() > 0);
 
 		m_bClassifyImageTested = true;
 	}
 
-	// void OnIdentifyText(const Json::Value & json)
-	// {
-	// 	Log::Debug("VisualRecognitionTest", "OnIdentifyText(): %s", json.toStyledString().c_str());
+	void OnIdentifyText(const Json::Value & json)
+	{
+		Log::Debug("VisualRecognitionTest", "OnIdentifyText(): %s", json.toStyledString().c_str());
 
-	// 	Test(!json.isNull());
-	// 	// Test(json["images"].size() > 0);
+		Test(!json.isNull());
+		Test(json["images"].size() > 0);
 
-	// 	m_bIdentifyTextTested = true;
-	// }
+		m_bIdentifyTextTested = true;
+	}
 
 
 };
