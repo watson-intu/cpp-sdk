@@ -90,7 +90,7 @@ void LanguageTranslation::Translation(const std::string & a_Source,
     std::string parameters = "/v2/translate";
     parameters += "?source=" + a_Source;
     parameters += "&target=" + a_Target;
-    parameters += "&text=" + a_Text;
+    parameters += "&text=" + StringUtil::UrlEscape(a_Text);
 
     Headers headers;
     headers["Content-Type"] = "application/x-www-form-urlencoded";
