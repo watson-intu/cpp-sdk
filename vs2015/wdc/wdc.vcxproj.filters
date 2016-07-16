@@ -210,6 +210,12 @@
     <ClCompile Include="..\..\wdc\services\LanguageTranslation\LanguageTranslation.cpp">
       <Filter>services\LanguageTranslation</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\wdc\utils\IConditional.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\utils\JsonHelpers.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\wdc\services\IService.h">
@@ -764,6 +770,12 @@
     </ClInclude>
     <ClInclude Include="..\..\wdc\services\LanguageTranslation\LanguageTranslation.h">
       <Filter>services\LanguageTranslation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\utils\IConditional.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\utils\JsonHelpers.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

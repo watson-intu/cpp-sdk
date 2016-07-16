@@ -133,6 +133,8 @@
     <ClCompile Include="..\..\wdc\utils\DataCache.cpp" />
     <ClCompile Include="..\..\wdc\utils\Form.cpp" />
     <ClCompile Include="..\..\wdc\utils\GetMac.cpp" />
+    <ClCompile Include="..\..\wdc\utils\IConditional.cpp" />
+    <ClCompile Include="..\..\wdc\utils\JsonHelpers.cpp" />
     <ClCompile Include="..\..\wdc\utils\Logic.cpp" />
     <ClCompile Include="..\..\wdc\utils\Time.cpp" />
     <ClCompile Include="..\..\wdc\utils\UniqueID.cpp" />
@@ -307,9 +309,11 @@
     <ClInclude Include="..\..\wdc\utils\DataCache.h" />
     <ClInclude Include="..\..\wdc\utils\Form.h" />
     <ClInclude Include="..\..\wdc\utils\GetMac.h" />
+    <ClInclude Include="..\..\wdc\utils\IConditional.h" />
     <ClInclude Include="..\..\wdc\utils\IWebClient.h" />
     <ClInclude Include="..\..\wdc\utils\IWebServer.h" />
     <ClInclude Include="..\..\wdc\utils\IWebSocket.h" />
+    <ClInclude Include="..\..\wdc\utils\JsonHelpers.h" />
     <ClInclude Include="..\..\wdc\utils\Logic.h" />
     <ClInclude Include="..\..\wdc\utils\Path.h" />
     <ClInclude Include="..\..\wdc\utils\SHA1.h" />
