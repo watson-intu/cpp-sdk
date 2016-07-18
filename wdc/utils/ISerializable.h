@@ -87,6 +87,20 @@ public:
 		 bool a_bWriteType = true, bool a_bFormatJson = false );
 
 
+	//! Load object from file as template type.
+	template<typename T>
+	static T * DeserializeFromFile( const std::string & a_File, 
+		ISerializable * a_pObject = NULL )
+	{
+		ISerializable * pUncasted = DeserializeFromFile( a_File, a_pObject );
+		T * pCasted = DynamicCast<T>( pUncasted );
+		if ( pCasted != NULL )
+			return pCasted;
+		if ( a_pObject != pUncasted )
+			delete pUncasted;
+		return NULL;
+	}
+
 	//! Helper to serialize an object into a specific pointer type, will destroy the created object
 	//! if the DyanmicCast fails.
 	template<typename T>
