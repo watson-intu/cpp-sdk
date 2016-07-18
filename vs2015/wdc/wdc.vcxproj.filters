@@ -49,6 +49,9 @@
     <Filter Include="libs\boost">
       <UniqueIdentifier>{0830102c-ecf3-4ec8-b2f7-1d103f101b9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="services\LanguageTranslation">
+      <UniqueIdentifier>{9432a364-65fd-4ddc-993e-b1b8ed4c9c7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\wdc\services\IService.cpp">
@@ -202,6 +205,15 @@
       <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="..\..\wdc\utils\WebServer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\services\LanguageTranslation\LanguageTranslation.cpp">
+      <Filter>services\LanguageTranslation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\utils\IConditional.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\utils\JsonHelpers.cpp">
       <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
@@ -752,6 +764,18 @@
     </ClInclude>
     <ClInclude Include="..\..\lib\boost_1_60_0\boost\weak_ptr.hpp">
       <Filter>libs\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\services\LanguageTranslation\DataModels.h">
+      <Filter>services\LanguageTranslation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\services\LanguageTranslation\LanguageTranslation.h">
+      <Filter>services\LanguageTranslation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\utils\IConditional.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\utils\JsonHelpers.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

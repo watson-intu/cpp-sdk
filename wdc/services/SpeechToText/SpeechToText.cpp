@@ -59,7 +59,7 @@ SpeechToText::SpeechToText() : IService( "SpeechToTextV1" ),
 	m_MaxAudioQueueSize( 1024 * 1024 ),		// default to 1MB of audio data
 	m_RecordingHZ( -1 ),
 	m_bReconnecting( false ),
-	m_LearningOptOut( 1 )
+	m_bLearningOptOut( true )
 {}
 
 SpeechToText::~SpeechToText()
@@ -80,7 +80,7 @@ void SpeechToText::Serialize(Json::Value & json)
 	json["m_DetectSilence"] = m_DetectSilence;
 	json["m_SilenceThreshold"] = m_SilenceThreshold;
 	json["m_MaxAudioQueueSize"] = m_MaxAudioQueueSize;
-	json["m_LearningOptOut"] = m_LearningOptOut;
+	json["m_LearningOptOut"] = m_bLearningOptOut;
 }
 
 void SpeechToText::Deserialize(const Json::Value & json)
@@ -106,7 +106,7 @@ void SpeechToText::Deserialize(const Json::Value & json)
 	if (json.isMember("m_MaxAudioQueueSize"))
 		m_MaxAudioQueueSize = json["m_MaxAudioQueueSize"].asUInt();
 	if (json.isMember("m_LearningOptOut"))
-		m_LearningOptOut = json["m_LearningOptOut"].asInt();
+		m_bLearningOptOut = json["m_LearningOptOut"].asBool();
 }
 
 bool SpeechToText::Start()
@@ -250,18 +250,17 @@ bool SpeechToText::StopListening()
 	return true;
 }
 
-bool SpeechToText::OnReconnectWithNewOptOut(bool a_Flag)
+bool SpeechToText::SetLearningOptOut(bool a_Flag)
 {
-	int a_LearningOptOut = a_Flag ? 1 : 0;
-	if(m_LearningOptOut == a_LearningOptOut)
+	if(m_bLearningOptOut != a_Flag)
 	{
-		return false;
+		m_bLearningOptOut = a_Flag;
+
+		OnRecognize callback = m_ListenCallback;	// save the callback so we can restore it..
+		StopListening();
+		StartListening(callback);	
 	}
 
-	m_LearningOptOut = a_LearningOptOut;
-	OnRecognize callback = m_ListenCallback;
-	StopListening();
-	StartListening(callback);
 	return true;
 }
 
@@ -269,7 +268,8 @@ bool SpeechToText::CreateListenConnector()
 {
 	if (m_ListenSocket == NULL)
 	{
-		std::string url = GetConfig()->m_URL + "/v1/recognize?x-watson-learning-opt-out=" + StringUtil::Format("%d", m_LearningOptOut) + "&model=" + StringUtil::UrlEscape( m_RecognizeModel );
+		std::string learningOptOut( m_bLearningOptOut ? "1" : "0" );
+		std::string url = GetConfig()->m_URL + "/v1/recognize?x-watson-learning-opt-out=" + learningOptOut + "&model=" + StringUtil::UrlEscape( m_RecognizeModel );
 		StringUtil::Replace(url, "https://", "wss://", true );
 		StringUtil::Replace(url, "http://", "ws://", true );
 
@@ -382,6 +382,9 @@ void SpeechToText::OnListenMessage( IWebSocket::FrameSP a_spFrame )
 				RecognizeResults * pResults = new RecognizeResults();
 				if (ISerializable::DeserializeObject( json, pResults ) == pResults )
 				{
+					// Add language to RecognizeResults
+					std::string language = StringUtil::RightTrim(m_RecognizeModel, "_");
+					pResults->SetLanguage(language);
 					// when we get results, start listening for the next block ..
 					// if continuous is true, then we don't need to do this..
 					if (!m_Continous && pResults->HasFinalResult())
