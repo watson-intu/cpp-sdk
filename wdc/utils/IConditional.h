@@ -26,6 +26,9 @@ struct WDC_API IConditional : public ISerializable
 {
 	RTTI_DECL();
 
+	IConditional()
+	{}
+
 	//! Types
 	typedef boost::shared_ptr<IConditional>		SP;
 	typedef boost::weak_ptr<IConditional>		WP;
@@ -38,6 +41,9 @@ struct WDC_API IConditional : public ISerializable
 struct WDC_API NullCondition : public IConditional
 {
 	RTTI_DECL();
+
+	NullCondition()
+	{}
 
 	//! ISerializable interface
 	virtual void Serialize(Json::Value & json)
