@@ -26,8 +26,7 @@ RTTI_IMPL( TextToSpeech, IService );
 
 
 TextToSpeech::TextToSpeech() : IService( "TextToSpeechV1" ),
-	m_Voice( "en-GB_KateVoice" ),
-	m_AudioFormat( AF_WAV )
+	m_Voice( "en-GB_KateVoice" )
 {}	
 
 void TextToSpeech::Serialize(Json::Value & json)
@@ -83,10 +82,9 @@ void TextToSpeech::ServiceStatusChecker::OnCheckService(Voices* a_pVoices)
 	delete this;
 }
 
-bool TextToSpeech::GetVoices( GetVoicesCallback callback )
+void TextToSpeech::GetVoices( GetVoicesCallback callback )
 {
 	new RequestObj<Voices>( this, "/v1/voices", "GET", NULL_HEADERS, EMPTY_STRING, callback );
-	return true;
 }
 
 class RequestSound : public IService::RequestData
@@ -120,24 +118,53 @@ private:
 			m_Callback( pSound );
 	}
 
-	TextToSpeech::ToSpeechCallback	m_Callback;
+	TextToSpeech::ToSoundCallback	m_Callback;
 };
 
-bool TextToSpeech::ToSpeech( const std::string & a_Text, ToSpeechCallback a_Callback )
+void TextToSpeech::Synthesis( const std::string & a_Text, AudioFormatType a_eFormat, Delegate<const std::string &> a_Callback )
 {
 	Json::Value json;
 	json["text"] = a_Text;
 	Headers headers;
 	headers["Content-Type"] = "application/json";
 
-	new RequestSound( this, "/v1/synthesize?accept=" + GetFormatName( m_AudioFormat ) + "&voice=" + m_Voice,
-		"POST", headers, json.toStyledString(), a_Callback, 
-		new IService::CacheRequest( m_Voice, StringHash::DJB( a_Text.c_str() ) ) );
+	std::string cacheName( m_Voice + "_" + GetFormatName( a_eFormat ) );
 
-	return true;
+	new RequestData( this, "/v1/synthesize?accept=" + GetFormatId( a_eFormat ) + "&voice=" + m_Voice,
+		"POST", headers, json.toStyledString(), a_Callback, 
+		new IService::CacheRequest( cacheName, StringHash::DJB( a_Text.c_str() ) ) );
+}
+
+void TextToSpeech::ToSound( const std::string & a_Text, ToSoundCallback a_Callback )
+{
+	Json::Value json;
+	json["text"] = a_Text;
+	Headers headers;
+	headers["Content-Type"] = "application/json";
+
+	std::string cacheName( m_Voice + "_" + GetFormatName( AF_WAV ) );
+
+	new RequestSound( this, "/v1/synthesize?accept=audio/wav&voice=" + m_Voice,
+		"POST", headers, json.toStyledString(), a_Callback, 
+		new IService::CacheRequest( cacheName, StringHash::DJB( a_Text.c_str() ) ) );
 }
 
 std::string & TextToSpeech::GetFormatName(AudioFormatType a_eFormat)
+{
+	static std::map<AudioFormatType, std::string> map;
+	static bool map_init = false;
+	if (!map_init)
+	{
+		map[AF_OGG] = "ogg";
+		map[AF_WAV] = "wav";
+		map[AF_FLAC] = "flac";
+		map_init = true;
+	}
+
+	return map[a_eFormat];
+}
+
+std::string & TextToSpeech::GetFormatId(AudioFormatType a_eFormat)
 {
 	static std::map<AudioFormatType, std::string> map;
 	static bool map_init = false;
@@ -151,4 +178,5 @@ std::string & TextToSpeech::GetFormatName(AudioFormatType a_eFormat)
 
 	return map[a_eFormat];
 }
+
 
