@@ -120,8 +120,54 @@ struct WDC_API LogicalCondition : public IConditional
 
 	LogicalCondition()
 	{}
-	LogicalCondition(Logic::LogicalOp a_Op, const Conditions & a_Conditions) : m_LogicOp(a_Op), m_Conditions(a_Conditions)
+	LogicalCondition(Logic::LogicalOp a_Op, 
+		const Conditions & a_Conditions) : m_LogicOp(a_Op), m_Conditions(a_Conditions)
 	{}
+	LogicalCondition(Logic::LogicalOp a_Op, 
+		const IConditional & a_Cond1 ) : m_LogicOp(a_Op)
+	{
+		m_Conditions.push_back(IConditional::SP(a_Cond1.Clone()));
+	}
+	LogicalCondition(Logic::LogicalOp a_Op,
+		const IConditional & a_Cond1,
+		const IConditional & a_Cond2 ) : m_LogicOp(a_Op)
+	{
+		m_Conditions.push_back(IConditional::SP(a_Cond1.Clone()));
+		m_Conditions.push_back(IConditional::SP(a_Cond2.Clone()));
+	}
+	LogicalCondition(Logic::LogicalOp a_Op, 
+		const IConditional & a_Cond1, 
+		const IConditional & a_Cond2,
+		const IConditional & a_Cond3 ) : m_LogicOp(a_Op)
+	{
+		m_Conditions.push_back(IConditional::SP(a_Cond1.Clone()));
+		m_Conditions.push_back(IConditional::SP(a_Cond2.Clone()));
+		m_Conditions.push_back(IConditional::SP(a_Cond3.Clone()));
+	}
+	LogicalCondition(Logic::LogicalOp a_Op,
+		const IConditional & a_Cond1,
+		const IConditional & a_Cond2,
+		const IConditional & a_Cond3,
+		const IConditional & a_Cond4 ) : m_LogicOp(a_Op)
+	{
+		m_Conditions.push_back(IConditional::SP(a_Cond1.Clone()));
+		m_Conditions.push_back(IConditional::SP(a_Cond2.Clone()));
+		m_Conditions.push_back(IConditional::SP(a_Cond3.Clone()));
+		m_Conditions.push_back(IConditional::SP(a_Cond4.Clone()));
+	}
+	LogicalCondition(Logic::LogicalOp a_Op,
+		const IConditional & a_Cond1,
+		const IConditional & a_Cond2,
+		const IConditional & a_Cond3,
+		const IConditional & a_Cond4,
+		const IConditional & a_Cond5 ) : m_LogicOp(a_Op)
+	{
+		m_Conditions.push_back(IConditional::SP(a_Cond1.Clone()));
+		m_Conditions.push_back(IConditional::SP(a_Cond2.Clone()));
+		m_Conditions.push_back(IConditional::SP(a_Cond3.Clone()));
+		m_Conditions.push_back(IConditional::SP(a_Cond4.Clone()));
+		m_Conditions.push_back(IConditional::SP(a_Cond5.Clone()));
+	}
 
 	Logic::LogicalOp		m_LogicOp;
 	Conditions				m_Conditions;
