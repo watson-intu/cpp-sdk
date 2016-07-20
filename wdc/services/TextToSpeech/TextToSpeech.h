@@ -30,7 +30,7 @@ public:
 	RTTI_DECL();
 
 	//! Types
-	typedef Delegate<Sound *>				ToSpeechCallback;
+	typedef Delegate<Sound *>				ToSoundCallback;
 	typedef Delegate<Voices *>				GetVoicesCallback;
 
 	//! Construction
@@ -49,10 +49,6 @@ public:
 	{
 		return m_bCacheEnabled;
 	}
-	AudioFormatType GetAudioFormat() const
-	{
-		return m_AudioFormat;
-	}
 	const std::string & GetVoice() const
 	{
 		return m_Voice;
@@ -63,10 +59,6 @@ public:
 	{
 		m_bCacheEnabled = a_bEnabled;
 	}
-	void SetAudioFormat( AudioFormatType a_eFormat )
-	{
-		m_AudioFormat = a_eFormat;
-	}
 	void SetVoice( const std::string & a_Voice )
 	{
 		m_Voice = a_Voice;
@@ -74,13 +66,17 @@ public:
 
 	//! Request all the available voices to use with TextToSpeech, the provided callback
 	//! will be invoked with the results.
-	bool GetVoices( GetVoicesCallback a_Callback );
+	void GetVoices( GetVoicesCallback a_Callback );
+	//! Request the audio data in the specified format for the provided text.
+	void Synthesis( const std::string & a_Text, AudioFormatType a_eFormat, 
+		Delegate<const std::string &> a_Callback );
 	//! Request a conversion of text to speech, note if the speech is in the local cache
 	//! then the callback will be invoked and NULL will be returned.
-	bool ToSpeech( const std::string & a_Text, ToSpeechCallback a_Callback );
+	void ToSound( const std::string & a_Text, ToSoundCallback a_Callback );
 
 	//! Static
 	static std::string & GetFormatName( AudioFormatType a_eFormat );
+	static std::string & GetFormatId( AudioFormatType a_eFormat );
 
 private:
 	//! This class is responsible for checking whether the service is available or not
@@ -98,7 +94,6 @@ private:
 
 	//! Data
 	std::string		m_Voice;
-	AudioFormatType m_AudioFormat;
 };
 
 #endif
