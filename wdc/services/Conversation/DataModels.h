@@ -20,39 +20,24 @@
 
 #include "utils/ISerializable.h"
 
-struct Convo : public ISerializable
+
+struct ConversationIntent : public ISerializable
 {
-    RTTI_DECL();
-
-    std::string m_Name;
-    std::string m_WorkspaceId;
-    std::string m_ConversationId;
-    std::string m_URL;
-    std::string m_Version;
-
+    std::string m_Intent;
+    float m_fConfidence;
 
     virtual void Serialize(Json::Value & json)
     {
-        json["name"] = m_Name;
-        json["workspace_id"] = m_WorkspaceId;
-        json["url"] = m_URL;
-        json["version"] = m_Version;
-        json["conversation_id"] = m_ConversationId;
+        json["confidence"] = m_fConfidence;
+        json["intent"] = m_Intent;
     }
 
     virtual void Deserialize(const Json::Value & json)
     {
-        if ( json.isMember("name") )
-            m_Name = json["name"].asString();
-        if ( json.isMember("workspace_id") )
-            m_WorkspaceId = json["workspace_id"].asString();
-        if( json.isMember("conversation_id") )
-            m_ConversationId = json["conversation_id"].asString();
-        if( json.isMember("url") )
-            m_URL = json["url"].asString();
-        if( json.isMember("version"))
-            m_Version = json["version"].asString();
-
+        if ( json.isMember("confidence") )
+            m_fConfidence = json["confidence"].asFloat();
+        if ( json.isMember("intent") )
+            m_Intent = json["intent"].asString();
     }
 };
 
@@ -61,44 +46,27 @@ struct ConversationMessageResponse : public ISerializable
 {
     RTTI_DECL();
 
-    Json::Value m_Intents;
-    Json::Value m_IntentJson;
-    Json::Value m_Output;
-    Json::Value m_Context;
-
     std::string m_ConversationId;
-    std::string m_TextResponse;
-    std::string m_TopIntent;
-    float m_fTopIntentConfidence;
+    std::vector<ConversationIntent> m_Intents;
+    std::vector<std::string> m_Output;
 
     virtual void Serialize(Json::Value & json)
     {
-        json["output"]["text"][0] = m_TextResponse;
         json["context"]["conversation_id"] = m_ConversationId;
-
-        m_Intents["intent"] = m_TopIntent;
-        m_Intents["confidence"] = m_fTopIntentConfidence;
-        json["intents"][0] = m_Intents;
+        SerializeVector("intents", m_Intents, json);
+        SerializeVector("text", m_Output, json["output"]);
     }
 
     virtual void Deserialize(const Json::Value & json)
     {
         if( json.isMember("intents"))
-            m_Intents = json["intents"];
-        if( m_Intents.size() > 0)
-            m_IntentJson = m_Intents[0];
-        if( m_IntentJson.isMember("intent") )
-            m_TopIntent = m_IntentJson["intent"].asString();
-        if( m_IntentJson.isMember("confidence") )
-            m_fTopIntentConfidence = m_IntentJson["confidence"].asFloat();
-        if( json.isMember("output") )
-            m_Output = json["output"];
-        if( m_Output.isMember("text") && m_Output["text"].size() > 0 )
-            m_TextResponse = m_Output["text"][0].asString();
-        if( json.isMember("context") )
-            m_Context = json["context"];
-        if( m_Context.isMember("conversation_id") )
-            m_ConversationId = m_Context["conversation_id"].asString();
+            DeserializeVector("intents", json, m_Intents);
+
+        if( json.isMember("output") && json["output"].isMember("text") )
+            DeserializeVector("text", json["output"], m_Output);
+
+        if( json.isMember("context") && json["context"].isMember("conversation_id"))
+            m_ConversationId = json["context"]["conversation_id"].asString();
 
     }
 };

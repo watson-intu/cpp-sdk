@@ -30,9 +30,7 @@ public:
         m_WorkspaceId("e8e888b1-5141-4747-9bbb-5a5440bae96a"),
         m_ConversationId(""),
         m_VersionId("2016-07-11"),
-        m_TestText("thank you kindly"),
-        m_dIntentSize(0),
-        m_fIntentConfidence(0.0f)
+        m_TestText("thank you kindly")
     {}
 
     bool m_bConversationTested;
@@ -40,11 +38,6 @@ public:
     std::string m_VersionId;
     std::string m_ConversationId;
     std::string m_TestText;
-    std::string m_TopIntent;
-    std::string m_TextResponse;
-    int m_dIntentSize;
-    float m_fIntentConfidence;
-
 
     virtual void RunTest() {
         Config config;
@@ -61,27 +54,34 @@ public:
         Spin(m_bConversationTested);
         Test(m_bConversationTested);
 
-        //! Add in other Conversation API Endpoints provided by Brandon W.
+        // TODO Add in other Conversation API Endpoints provided by Brandon W.
     }
 
     void OnMessage(ConversationMessageResponse * a_pConversationResponse)
     {
-        std::string m_Intent = a_pConversationResponse->m_TopIntent;
-        Test(!m_Intent.empty());
-        Log::Debug("TestConversation","Intent: %s", a_pConversationResponse->m_TopIntent.c_str());
+        // Test that an Intent is returned
+        std::vector<ConversationIntent> m_Intents = a_pConversationResponse->m_Intents;
+        Test(m_Intents.size() > 0);
+        std::string m_TopIntent = m_Intents[0].m_Intent;
+        Test(!m_TopIntent.empty());
+        Log::Debug("TestConversation","Intent: %s", m_TopIntent.c_str());
 
-        float m_fConfidence = a_pConversationResponse->m_fTopIntentConfidence;
+        // Test that the confidence of the top intent is greater than 0
+        float m_fConfidence = m_Intents[0].m_fConfidence;
         Test(m_fConfidence > 0.0);
-        Log::Debug("TestConversation","Confidence: %f", a_pConversationResponse->m_fTopIntentConfidence);
+        Log::Debug("TestConversation","Confidence: %f", m_fConfidence);
 
-        std::string m_Response = a_pConversationResponse->m_TextResponse;
-        Test(!m_Response.empty());
-        Log::Debug("TestConversation","Response: %s", a_pConversationResponse->m_TextResponse.c_str());
+        // Test that a response is returned
+        std::vector<std::string> m_Output = a_pConversationResponse->m_Output;
+        Test(m_Output.size() > 0);
+        std::string m_TextResponse = m_Output[0];
+        Test(!m_TextResponse.empty());
+        Log::Debug("TestConversation","Response: %s", m_TextResponse.c_str());
 
+        // Test that the Conversation Id is set
         m_ConversationId = a_pConversationResponse->m_ConversationId;
         Test(!m_ConversationId.empty());
         Log::Debug("TestConversation","ConversationId: %s", a_pConversationResponse->m_ConversationId.c_str());
-
 
         m_bConversationTested = true;
     }

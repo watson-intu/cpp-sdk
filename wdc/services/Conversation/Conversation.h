@@ -31,9 +31,7 @@ public:
     RTTI_DECL();
 
     //! Types
-//    typedef Delegate<const Json::Value &>	OnMessage;
     typedef Delegate<ConversationMessageResponse *>	OnMessage;
-
 
     //! Construction
     Conversation();
@@ -44,7 +42,6 @@ public:
 
     //! IService interface
     virtual bool Start();
-
 
     //! Message text -- sends text to the Conversation Service
     void Message( const std::string & a_WorkspaceId, const std::string & a_Version,

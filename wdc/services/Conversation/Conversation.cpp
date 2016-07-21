@@ -21,10 +21,9 @@
 #include "utils/Form.h"
 
 REG_SERIALIZABLE( Conversation );
-RTTI_IMPL( Convo, ISerializable );
+//RTTI_IMPL( Convo, ISerializable );
 RTTI_IMPL( ConversationMessageResponse, ISerializable );
 RTTI_IMPL( Conversation, IService );
-
 
 Conversation::Conversation() : IService("ConversationV1")
 {}
@@ -54,13 +53,13 @@ bool Conversation::Start()
     return true;
 }
 
+
 //! Send Question / Statement / Command
 void Conversation::Message( const std::string & a_WorkspaceId, const std::string & a_Version,
                             const std::string & a_Text, OnMessage a_Callback )
 {
     Headers headers;
     headers["Content-Type"] = "application/json";
-
     std::string params = "/v1/workspaces/" + a_WorkspaceId + "/message?version=" + a_Version;
 
     Json::Value req;
@@ -68,7 +67,8 @@ void Conversation::Message( const std::string & a_WorkspaceId, const std::string
     req["text"] = a_Text;
     input["input"] = req;
 
-//    new RequestJson( this, params, "POST", headers, input.toStyledString(),  a_Callback );
     new RequestObj<ConversationMessageResponse>( this, params, "POST", headers, input.toStyledString(),  a_Callback );
 
 }
+
+// TODO Add other API Endpoints for Conversation Service (currently in Staging, not GA)
