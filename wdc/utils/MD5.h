@@ -19,8 +19,9 @@
 #define WDC_MD5_H
 
 #include <openssl/md5.h>
+#include <stdio.h>						// sprintf
 
-#pragma warning( disable : 4996 )
+#pragma warning( disable : 4996 )		// silence windows warning
 
 template<class type>
 void MD5(const type& input, type& hash)
