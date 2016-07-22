@@ -15,15 +15,15 @@
 *
 */
 
-#ifndef WDC_ALCHEMY_H
-#define WDC_ALCHEMY_H
+#ifndef WDC_VISUALRECOGNITION_H
+#define WDC_VISUALRECOGNITION_H
 
 #include "utils/Delegate.h"
 #include "utils/DataCache.h"
 #include "services/IService.h"
 #include "WDCLib.h"		// include last always
 
-class WDC_API Alchemy : public IService
+class WDC_API VisualRecognition : public IService
 {
 public:
 	RTTI_DECL();
@@ -31,9 +31,10 @@ public:
 	//! Types
 	typedef Delegate<const Json::Value &>	OnClassifyImage;
 	typedef Delegate<const Json::Value &>	OnDetectFaces;
+	typedef Delegate<const Json::Value &>   OnIdentifyText;
 
 	//! Construction 
-	Alchemy();
+	VisualRecognition();
 
 	//! ISerializable
 	virtual void Serialize(Json::Value & json);
@@ -51,17 +52,21 @@ public:
 	void DetectFaces(const std::string & a_ImageData,
 		OnDetectFaces a_Callback, 
 		bool a_bKnowledgeGraph = false );
+	//! Identify the Text within a provided image
+	void IdentifyText(const std::string & a_ImageData,
+		OnIdentifyText a_Callback,
+		bool a_bKnowledgeGraph = false );
 
 private:
 	//! Types
 	class ServiceStatusChecker
 	{
 	public:
-		ServiceStatusChecker(Alchemy * a_pService,
+		ServiceStatusChecker(VisualRecognition * a_pService,
 			ServiceStatusCallback a_Callback);
 
 	private:
-		Alchemy *						m_pService;
+		VisualRecognition *				m_pService;
 		IService::ServiceStatusCallback m_Callback;
 
 		void OnCheckService(const Json::Value &);
