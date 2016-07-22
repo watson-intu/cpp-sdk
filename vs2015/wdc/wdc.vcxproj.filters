@@ -40,9 +40,6 @@
     <Filter Include="services\RelationshipExtraction">
       <UniqueIdentifier>{eab98038-b7c6-4cf4-abc2-39591e590cc5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="services\Alchemy">
-      <UniqueIdentifier>{b7e3bff0-4242-4865-9c75-6e8906888900}</UniqueIdentifier>
-    </Filter>
     <Filter Include="libs\crossguid">
       <UniqueIdentifier>{b3f2b786-508f-4278-99a7-81087b379f68}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="services\Conversation">
       <UniqueIdentifier>{7a68bb60-dc82-4c3f-996f-687ba16a0252}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\VisualRecognition">
+      <UniqueIdentifier>{2d958eba-2ca3-4990-8564-7658faee1f2f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -165,12 +165,6 @@
     <ClCompile Include="..\..\wdc\tests\TestRelationshipExtraction.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wdc\services\Alchemy\Alchemy.cpp">
-      <Filter>services\Alchemy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\wdc\tests\TestAlchemy.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\wdc\utils\GetMac.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -221,6 +215,18 @@
     </ClCompile>
     <ClCompile Include="..\..\wdc\services\Conversation\Conversation.cpp">
       <Filter>services\Conversation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\services\VisualRecognition\VisualRecognition.cpp">
+      <Filter>services\VisualRecognition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\tests\TestConversation.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\tests\TestLanguageTranslation.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\tests\TestVisualRecognition.cpp">
+      <Filter>tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -347,9 +353,6 @@
     </ClInclude>
     <ClInclude Include="..\..\wdc\services\RelationshipExtraction\RelationshipExtraction.h">
       <Filter>services\RelationshipExtraction</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\wdc\services\Alchemy\Alchemy.h">
-      <Filter>services\Alchemy</Filter>
     </ClInclude>
     <ClInclude Include="..\..\wdc\utils\GetMac.h">
       <Filter>utils</Filter>
@@ -791,6 +794,9 @@
     </ClInclude>
     <ClInclude Include="..\..\wdc\utils\MD5.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\services\VisualRecognition\VisualRecognition.h">
+      <Filter>services\VisualRecognition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
