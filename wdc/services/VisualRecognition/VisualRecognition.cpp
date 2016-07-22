@@ -41,7 +41,10 @@ bool VisualRecognition::Start()
 	if (!IService::Start())
 		return false;
 	if (!StringUtil::EndsWith(m_pConfig->m_URL, "visual-recognition/api"))
-		return false;	
+	{
+		Log::Error("VisualRecognition", "Configured URL not ended with visual-recognition/api");
+		return false;
+	}	
 	if (m_pConfig->m_User.size() == 0)
 	{
 		Log::Error("VisualRecognition", "API-Key expected in user field.");
