@@ -107,6 +107,8 @@ public:
 		{
 			Log::Debug("TestSTTResponseTime", "Running trial number: %d of %d", k, m_Samples);
 			csv_writer << Time().GetFormattedTime("%d-%m-%Y %I:%M:%S") << ',';
+			Log::Debug("TestSTTResponseTime", "Time stamped new row in csv");
+									
 			//! Run test on each sample
 			for ( std::vector<std::string>::const_iterator it = audioTestFiles.begin(); it != audioTestFiles.end(); it++ )
 			{
