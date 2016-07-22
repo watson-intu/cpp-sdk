@@ -96,7 +96,8 @@ void LanguageTranslation::Translation(const std::string & a_Source,
     headers["Content-Type"] = "application/x-www-form-urlencoded";
     headers["Accept"] = "application/json";
 
-    new RequestObj<Translations>( this, parameters, "GET", headers, EMPTY_STRING, a_Callback );
+    new RequestObj<Translations>( this, parameters, "GET", headers, EMPTY_STRING, a_Callback,
+		new CacheRequest( a_Source + "_" + a_Target, StringHash::DJB(a_Text.c_str()) ) );
 }
 
 void LanguageTranslation::IdentifiableLanguages(OnLanguage a_Callback)
@@ -110,5 +111,6 @@ void LanguageTranslation::Identify(const std::string & a_Text,
     Headers headers;
     headers["Content-Type"] = "text/plain";
     headers["Accept"] = "application/json";
-    new RequestObj<IdentifiedLanguages>( this, "/v2/identify", "POST", headers, a_Text, a_Callback );
+    new RequestObj<IdentifiedLanguages>( this, "/v2/identify", "POST", headers, a_Text, a_Callback,
+		new CacheRequest( "id_lang", StringHash::DJB( a_Text.c_str() ) ) );
 }
