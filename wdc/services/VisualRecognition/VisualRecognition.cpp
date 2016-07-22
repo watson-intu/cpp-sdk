@@ -58,13 +58,10 @@ void VisualRecognition::GetServiceStatus(ServiceStatusCallback a_Callback)
 		a_Callback(ServiceStatus(m_ServiceId, false));
 }
 
-void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassifyImage a_Callback, bool a_bKnowledgeGraph /*= false*/)
+void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassifyImage a_Callback, bool a_bKnowledgeGraph )
 {
 	std::string parameters = "/v3/classify";
 	parameters += "?apikey=" + m_pConfig->m_User;
-	// parameters += "&outputMode=json";
-	// parameters += "&imagePostMode=raw";
-	//parameters += "&img_file=.jpg";
 	parameters += "&version=2016-05-20";
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
@@ -75,13 +72,10 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassif
 	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
 }
 
-void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph /*= false*/ )
+void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph )
 {
 	std::string parameters = "/v3/detect_faces";
 	parameters += "?apikey=" + m_pConfig->m_User;
-	// parameters += "&outputMode=json";
-	// parameters += "&imagePostMode=raw";
-	//parameters += "&img_file=.jpg";
 	parameters += "&version=2016-05-20";
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
@@ -92,13 +86,10 @@ void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFac
 	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
 }
 
-void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentifyText a_Callback, bool a_bKnowledgeGraph /*= false*/ )
+void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentifyText a_Callback, bool a_bKnowledgeGraph )
 {
 	std::string parameters = "/v3/recognize_text";
 	parameters += "?apikey=" + m_pConfig->m_User;
-	// parameters += "&outputMode=json";
-	// parameters += "&imagePostMode=raw";
-	//parameters += "&img_file=.jpg";
 	parameters += "&version=2016-05-20";
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
