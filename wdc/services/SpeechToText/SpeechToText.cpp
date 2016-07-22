@@ -168,8 +168,9 @@ bool SpeechToText::StartListening(OnRecognize callback)
 
 	if (! CreateListenConnector() )
 		OnReconnect();
-	m_spKeepAliveTimer = TimerPool::Instance()->StartTimer( 
-		VOID_DELEGATE( SpeechToText, KeepAlive, this ), WS_KEEP_ALIVE_TIME, true, true ); 
+	if (TimerPool::Instance() )
+		m_spKeepAliveTimer = TimerPool::Instance()->StartTimer( 
+			VOID_DELEGATE( SpeechToText, KeepAlive, this ), WS_KEEP_ALIVE_TIME, true, true ); 
 	return true;
 }
 
@@ -183,7 +184,7 @@ void SpeechToText::OnListen(const SpeechAudioData & clip)
 			SendStart();
 		}
 
-		if (!m_DetectSilence || clip.m_Level >= m_SilenceThreshold)
+		if (!m_DetectSilence || clip.m_Level > 0.0 ) //>= m_SilenceThreshold)
 		{
 			if (m_ListenActive)
 			{
@@ -277,9 +278,12 @@ bool SpeechToText::CreateListenConnector()
 		m_ListenSocket->SetURL( url );
 		m_ListenSocket->SetHeaders(m_Headers);
 		m_ListenSocket->SetFrameReceiver( DELEGATE( SpeechToText, OnListenMessage, IWebSocket::FrameSP, this ) );
+		Log::Debug("STT", "About to call SetStateReceiver");				
 		m_ListenSocket->SetStateReceiver( DELEGATE( SpeechToText, OnListenState, IWebClient *, this ) );
+		Log::Debug("STT", "About to call SetDataReceiver ");				
 		m_ListenSocket->SetDataReceiver( DELEGATE( SpeechToText, OnListenData, IWebClient::RequestData *, this ) );
 
+		Log::Debug("STT", "About to call Send");			
 		if (! m_ListenSocket->Send() )
 		{
 			m_Connected = false;
@@ -461,14 +465,17 @@ void SpeechToText::OnListenState( IWebClient * a_pClient )
 			Log::Debug("SpeechToText", "m_ListenSocket.GetState() = %u", a_pClient->GetState() );
 			if ( a_pClient->GetState() == IWebClient::DISCONNECTED || a_pClient->GetState() == IWebClient::CLOSED )
 			{
+				Log::Debug("STT", "Connected = false");
 				m_Connected = false;
 				m_ListenActive = false;		// stop trying to send audio data
 				OnReconnect();
 			}
 			else if ( a_pClient->GetState() == IWebClient::CONNECTED )
 			{
+				Log::Debug("STT", "Connected = true");				
 				m_Connected = true;
 			}
+			Log::Debug("STT", "Connected = neither");							
 		}
 	}
 	else 

@@ -85,6 +85,11 @@ public:
 	Request * Recognize(const SpeechAudioData & clip, OnRecognize callback);
 	Request * Recognize(const Sound & clip, OnRecognize callback);
 
+	void PubKeepAlive()
+	{
+		KeepAlive();
+	}
+
 
 private:
 	//! Types
