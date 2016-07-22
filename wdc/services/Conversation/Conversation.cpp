@@ -21,7 +21,6 @@
 #include "utils/Form.h"
 
 REG_SERIALIZABLE( Conversation );
-//RTTI_IMPL( Convo, ISerializable );
 RTTI_IMPL( ConversationMessageResponse, ISerializable );
 RTTI_IMPL( Conversation, IService );
 

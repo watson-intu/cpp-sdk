@@ -30,7 +30,7 @@ public:
         m_WorkspaceId("e8e888b1-5141-4747-9bbb-5a5440bae96a"),
         m_ConversationId(""),
         m_VersionId("2016-07-11"),
-        m_TestText("thank you kindly")
+        m_TestText("please raise your right hand")
     {}
 
     bool m_bConversationTested;
@@ -70,6 +70,14 @@ public:
         float m_fConfidence = m_Intents[0].m_fConfidence;
         Test(m_fConfidence > 0.0);
         Log::Debug("TestConversation","Confidence: %f", m_fConfidence);
+
+        // Test Entity Extraction
+        std::vector<ConversationEntities> m_Entities = a_pConversationResponse->m_Entities;
+        Test(m_Entities.size() > 0);
+        std::string m_Entity = m_Entities[0].m_Entity;
+        std::string m_EntityValue = m_Entities[0].m_Value;
+        Test(!m_Entity.empty() && !m_EntityValue.empty());
+        Log::Debug("TestConversation","Entity: %s, Value: %s",m_Entity.c_str(), m_EntityValue.c_str());
 
         // Test that a response is returned
         std::vector<std::string> m_Output = a_pConversationResponse->m_Output;

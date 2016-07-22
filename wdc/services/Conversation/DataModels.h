@@ -21,7 +21,7 @@
 #include "utils/ISerializable.h"
 
 
-struct ConversationIntent : public ISerializable
+struct WDC_API ConversationIntent : public ISerializable
 {
     std::string m_Intent;
     float m_fConfidence;
@@ -41,13 +41,34 @@ struct ConversationIntent : public ISerializable
     }
 };
 
+struct WDC_API ConversationEntities : public ISerializable
+{
+    std::string m_Entity; // Example: "joint" or "direction"
+    std::string m_Value; // Example: "arm" or "left"
 
-struct ConversationMessageResponse : public ISerializable
+    virtual void Serialize(Json::Value & json)
+    {
+        json["entity"] = m_Entity;
+        json["value"] = m_Value;
+    }
+
+    virtual void Deserialize(const Json::Value & json)
+    {
+        if ( json.isMember("entity") )
+            m_Entity = json["entity"].asString();
+        if ( json.isMember("value") )
+            m_Value = json["value"].asString();
+    }
+};
+
+
+struct WDC_API ConversationMessageResponse : public ISerializable
 {
     RTTI_DECL();
 
     std::string m_ConversationId;
     std::vector<ConversationIntent> m_Intents;
+    std::vector<ConversationEntities> m_Entities;
     std::vector<std::string> m_Output;
 
     virtual void Serialize(Json::Value & json)
@@ -55,6 +76,7 @@ struct ConversationMessageResponse : public ISerializable
         json["context"]["conversation_id"] = m_ConversationId;
         SerializeVector("intents", m_Intents, json);
         SerializeVector("text", m_Output, json["output"]);
+        SerializeVector("entities", m_Entities, json);
     }
 
     virtual void Deserialize(const Json::Value & json)
@@ -67,6 +89,9 @@ struct ConversationMessageResponse : public ISerializable
 
         if( json.isMember("context") && json["context"].isMember("conversation_id"))
             m_ConversationId = json["context"]["conversation_id"].asString();
+
+        if( json.isMember("entities") )
+            DeserializeVector("entities", json, m_Entities);
 
     }
 };
