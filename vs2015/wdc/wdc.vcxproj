@@ -97,6 +97,7 @@
     <ClCompile Include="..\..\lib\crossguid\crossguid.cpp" />
     <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
     <ClCompile Include="..\..\wdc\services\Alchemy\Alchemy.cpp" />
+    <ClCompile Include="..\..\wdc\services\Conversation\Conversation.cpp" />
     <ClCompile Include="..\..\wdc\services\Dialog\Dialog.cpp" />
     <ClCompile Include="..\..\wdc\services\IService.cpp" />
     <ClCompile Include="..\..\wdc\services\LanguageTranslation\LanguageTranslation.cpp" />
@@ -292,6 +293,8 @@
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h" />
     <ClInclude Include="..\..\wdc\services\Alchemy\Alchemy.h" />
+    <ClInclude Include="..\..\wdc\services\Conversation\Conversation.h" />
+    <ClInclude Include="..\..\wdc\services\Conversation\DataModels.h" />
     <ClInclude Include="..\..\wdc\services\Dialog\DataModels.h" />
     <ClInclude Include="..\..\wdc\services\Dialog\Dialog.h" />
     <ClInclude Include="..\..\wdc\services\IService.h" />
