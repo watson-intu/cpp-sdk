@@ -185,6 +185,10 @@ struct RecognizeResults : public ISerializable
 	{
 		return HasResult() && m_Results[0].m_Final;
 	}
+	double GetConfidence() const
+	{
+		return HasResult() ? m_Results[0].m_Alternatives[0].m_Confidence : -1.0f;
+	}
 
 	void SetLanguage(std::string & a_Language)
 	{
