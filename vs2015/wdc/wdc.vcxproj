@@ -318,6 +318,7 @@
     <ClInclude Include="..\..\wdc\utils\IWebSocket.h" />
     <ClInclude Include="..\..\wdc\utils\JsonHelpers.h" />
     <ClInclude Include="..\..\wdc\utils\Logic.h" />
+    <ClInclude Include="..\..\wdc\utils\MD5.h" />
     <ClInclude Include="..\..\wdc\utils\Path.h" />
     <ClInclude Include="..\..\wdc\utils\SHA1.h" />
     <ClInclude Include="..\..\wdc\utils\UniqueID.h" />

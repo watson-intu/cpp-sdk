@@ -36,6 +36,9 @@ public:
 	//! Merge one JSON into the other, if a_bReplace is true, then any duplicates are replaced, otherwise
 	//! we will skip elements if they already exist
 	static void Merge(Json::Value & a_MergeInto, const Json::Value & a_Merge, bool a_bReplace = true);
+
+	//! Generate a hash of the provided Json.
+	static std::string Hash(const Json::Value & a_Json);
 };
 
 #endif

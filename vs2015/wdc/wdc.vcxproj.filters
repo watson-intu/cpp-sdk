@@ -789,6 +789,9 @@
     <ClInclude Include="..\..\wdc\services\Conversation\DataModels.h">
       <Filter>services\Conversation</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\wdc\utils\MD5.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\CMakeLists.txt" />
