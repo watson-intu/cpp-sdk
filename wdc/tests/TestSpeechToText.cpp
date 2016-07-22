@@ -32,7 +32,7 @@ public:
 
 		SpeechToText stt;
 		Test( stt.Start() );
-		Test( stt.GetModels( DELEGATE( TestSpeechToText, OnGetModels, SpeechModels *, this ) ) != NULL );
+		stt.GetModels( DELEGATE( TestSpeechToText, OnGetModels, SpeechModels *, this ) );
 
 		Time start;
 		while( (Time().GetEpochTime() - start.GetEpochTime()) < 300.0 && !m_GetModelsTested )

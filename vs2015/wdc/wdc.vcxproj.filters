@@ -52,6 +52,9 @@
     <Filter Include="services\LanguageTranslation">
       <UniqueIdentifier>{9432a364-65fd-4ddc-993e-b1b8ed4c9c7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="services\Conversation">
+      <UniqueIdentifier>{7a68bb60-dc82-4c3f-996f-687ba16a0252}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\wdc\services\IService.cpp">
@@ -215,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="..\..\wdc\utils\JsonHelpers.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\services\Conversation\Conversation.cpp">
+      <Filter>services\Conversation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -775,6 +781,15 @@
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\wdc\utils\JsonHelpers.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\services\Conversation\Conversation.h">
+      <Filter>services\Conversation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\services\Conversation\DataModels.h">
+      <Filter>services\Conversation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\utils\MD5.h">
       <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>

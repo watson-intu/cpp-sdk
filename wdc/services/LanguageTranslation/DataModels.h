@@ -19,9 +19,9 @@
 #define WDC_LT_MODELS_H
 
 #include "utils/ISerializable.h"
+#include "WDCLib.h"
 
-
-struct Translation : public ISerializable
+struct WDC_API Translation : public ISerializable
 {
     RTTI_DECL();
 
@@ -39,7 +39,7 @@ struct Translation : public ISerializable
     }
 };
 
-struct Translations : public ISerializable
+struct WDC_API Translations : public ISerializable
 {
     RTTI_DECL();
 
@@ -65,7 +65,7 @@ struct Translations : public ISerializable
     }
 };
 
-struct Language : public ISerializable
+struct WDC_API Language : public ISerializable
 {
     RTTI_DECL();
 
@@ -87,7 +87,7 @@ struct Language : public ISerializable
     }
 };
 
-struct Languages : public ISerializable
+struct WDC_API Languages : public ISerializable
 {
     RTTI_DECL();
 
@@ -104,7 +104,7 @@ struct Languages : public ISerializable
     }
 };
 
-struct IdentifiedLanguage : public ISerializable
+struct WDC_API IdentifiedLanguage : public ISerializable
 {
     RTTI_DECL();
 
@@ -126,7 +126,7 @@ struct IdentifiedLanguage : public ISerializable
     }
 };
 
-struct IdentifiedLanguages : public ISerializable
+struct WDC_API IdentifiedLanguages : public ISerializable
 {
     RTTI_DECL();
 
