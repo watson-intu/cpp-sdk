@@ -12,6 +12,7 @@
 /* ***************************************************************** */
 
 #include "JsonHelpers.h"
+#include "utils/MD5.h"
 
 //! What character is used a seperator for paths
 #define PARAMS_PATH_SEPERATOR		'/'
@@ -175,4 +176,9 @@ void JsonHelpers::Merge(Json::Value & a_MergeInto, const Json::Value & a_Merge, 
 	}
 	else
 		a_MergeInto = a_Merge;
+}
+
+std::string JsonHelpers::Hash(const Json::Value & a_Json)
+{
+	return MD5<std::string>(Json::FastWriter().write( a_Json ) );
 }

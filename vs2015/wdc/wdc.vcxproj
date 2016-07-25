@@ -96,7 +96,7 @@
     <ClCompile Include="..\..\lib\base64\cencode.c" />
     <ClCompile Include="..\..\lib\crossguid\crossguid.cpp" />
     <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
-    <ClCompile Include="..\..\wdc\services\Alchemy\Alchemy.cpp" />
+    <ClCompile Include="..\..\wdc\services\Conversation\Conversation.cpp" />
     <ClCompile Include="..\..\wdc\services\Dialog\Dialog.cpp" />
     <ClCompile Include="..\..\wdc\services\IService.cpp" />
     <ClCompile Include="..\..\wdc\services\LanguageTranslation\LanguageTranslation.cpp" />
@@ -107,10 +107,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\wdc\services\TextToSpeech\TextToSpeech.cpp" />
-    <ClCompile Include="..\..\wdc\tests\TestAlchemy.cpp" />
+    <ClCompile Include="..\..\wdc\services\VisualRecognition\VisualRecognition.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestConversation.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestDataCache.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestDialog.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestGetMac.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestLanguageTranslation.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestMain.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestNaturalLanguageClassifier.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestPath.cpp" />
@@ -118,6 +120,7 @@
     <ClCompile Include="..\..\wdc\tests\TestStringUtil.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestTextToSpeech.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestUnityWebSocket.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestVisualRecognition.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestWebClient.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestDelegate.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestFactory.cpp" />
@@ -291,7 +294,8 @@
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h" />
-    <ClInclude Include="..\..\wdc\services\Alchemy\Alchemy.h" />
+    <ClInclude Include="..\..\wdc\services\Conversation\Conversation.h" />
+    <ClInclude Include="..\..\wdc\services\Conversation\DataModels.h" />
     <ClInclude Include="..\..\wdc\services\Dialog\DataModels.h" />
     <ClInclude Include="..\..\wdc\services\Dialog\Dialog.h" />
     <ClInclude Include="..\..\wdc\services\IService.h" />
@@ -304,6 +308,7 @@
     <ClInclude Include="..\..\wdc\services\SpeechToText\SpeechToText.h" />
     <ClInclude Include="..\..\wdc\services\TextToSpeech\DataModels.h" />
     <ClInclude Include="..\..\wdc\services\TextToSpeech\TextToSpeech.h" />
+    <ClInclude Include="..\..\wdc\services\VisualRecognition\VisualRecognition.h" />
     <ClInclude Include="..\..\wdc\tests\UnitTest.h" />
     <ClInclude Include="..\..\wdc\utils\Config.h" />
     <ClInclude Include="..\..\wdc\utils\DataCache.h" />
@@ -315,6 +320,7 @@
     <ClInclude Include="..\..\wdc\utils\IWebSocket.h" />
     <ClInclude Include="..\..\wdc\utils\JsonHelpers.h" />
     <ClInclude Include="..\..\wdc\utils\Logic.h" />
+    <ClInclude Include="..\..\wdc\utils\MD5.h" />
     <ClInclude Include="..\..\wdc\utils\Path.h" />
     <ClInclude Include="..\..\wdc\utils\SHA1.h" />
     <ClInclude Include="..\..\wdc\utils\UniqueID.h" />
