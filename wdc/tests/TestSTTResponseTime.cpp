@@ -148,7 +148,10 @@ public:
 						temp.m_PCM = pcm;                 
 					}
 					// Send to STT and spin
+					Log::Debug("TestSTTResponseTime", "Segfault in here? (1)");
 					stt.OnListen(temp);
+					Log::Debug("TestSTTResponseTime", "Nope (1)");
+					
 					Spin( F, spin_time );
 
 					i += read;
@@ -166,7 +169,9 @@ public:
 					temp.m_Level = 0.5;
 					temp.m_PCM = std::string(m_ChunkSz, '\0');
 
+					Log::Debug("TestSTTResponseTime", "Segfault in here? (2)");					
 					stt.OnListen(temp);
+					Log::Debug("TestSTTResponseTime", "Nope (2)");					
 					Spin( F, spin_time );
 				}  
 				csv_writer << m_fResponseTime << ','; 
