@@ -42,7 +42,7 @@ public:
 		m_bComplete( false ),
 		m_fStartTime( 0.0f ),
 		m_fResponseTime( 0.0f ),
-		m_Samples( 20 )
+		m_Samples( 5 )
 	{}
 
 	int						m_ChunkSz;
@@ -70,6 +70,10 @@ public:
 
 		// Spin...
 		Spin( F, 1.0 );
+
+		std::vector<std::string> models;
+		models.push_back( "en-US_BroadbandModel" );
+		stt.SetRecognizeModels( models );
 		
 		Log::Debug("TestSTTResponseTime", "Opening websocket");
 		Test( stt.StartListening( DELEGATE(
@@ -106,7 +110,7 @@ public:
 		for (int k = 0; k < m_Samples; k++)
 		{
 			Log::Debug("TestSTTResponseTime", "Running trial number: %d of %d", k, m_Samples);
-			csv_writer << Time().GetFormattedTime("%d-%m-%Y %I:%M:%S") << ',';
+			csv_writer << Time().GetFormattedTime("%d-%m-%Y %H:%M:%S") << ',';
 			Log::Debug("TestSTTResponseTime", "Time stamped new row in csv");
 									
 			//! Run test on each sample
@@ -121,7 +125,7 @@ public:
 				fseek (pFile , 0 , SEEK_END);
 				int sz = ftell (pFile);
 				rewind (pFile);
-				Log::Debug("TestFourierFilters", "Loading raw audio: %s, size: %d", fullPath.c_str(), sz );
+				Log::Debug("TestSTTResponseTime", "Loading raw audio: %s, size: %d", fullPath.c_str(), sz );
 				
 				int i = 0;
 				char buffer[m_ChunkSz];
@@ -148,10 +152,7 @@ public:
 						temp.m_PCM = pcm;                 
 					}
 					// Send to STT and spin
-					Log::Debug("TestSTTResponseTime", "Segfault in here? (1)");
 					stt.OnListen(temp);
-					Log::Debug("TestSTTResponseTime", "Nope (1)");
-					
 					Spin( F, spin_time );
 
 					i += read;
@@ -169,15 +170,14 @@ public:
 					temp.m_Level = 0.5;
 					temp.m_PCM = std::string(m_ChunkSz, '\0');
 
-					Log::Debug("TestSTTResponseTime", "Segfault in here? (2)");					
 					stt.OnListen(temp);
-					Log::Debug("TestSTTResponseTime", "Nope (2)");					
 					Spin( F, spin_time );
 				}  
-				csv_writer << m_fResponseTime << ','; 
+				csv_writer << m_fResponseTime << ',';
+
+				fclose( pFile );
 			}
 			csv_writer << '\n';
-			stt.PubKeepAlive();
 		}
 		csv_writer.close();
 	}
@@ -187,7 +187,7 @@ public:
 		Log::Debug("TestSTTResponseTime", "OnResponse");
 		if( a_pResults != NULL && a_pResults->m_Results.size() > 0 )
 		{
-			for( size_t k=0;k<a_pResults->m_Results.size();++k)
+			for( size_t k=0;k<a_pResults->m_Results.size() && !m_bComplete;++k)
 			{
 				const std::vector<SpeechAlt> & alternatives = a_pResults->m_Results[k].m_Alternatives;
 				for(size_t i=0;i<alternatives.size();++i)
