@@ -70,10 +70,15 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassif
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
+	Form form;
+	form.AddFormField("classifier_ids", m_pConfig->m_ClassifierId);
+	form.AddFilePart("img", "ImageToClassify.jpg", a_ImageData);
+	form.Finish();
+
 	Headers headers;
 	headers["Content-Type"] = "application/x-www-form-urlencoded";
 
-	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
+	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
 }
 
 void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph )
@@ -103,6 +108,40 @@ void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentify
 
 	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
 
+}
+
+void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, const std::string & imageClass, OnClassifierTrained a_Callback)
+{
+	std::string parameters = "/v3/classifiers/" + m_pConfig->m_ClassifierId;
+	parameters += "?apikey=" + m_pConfig->m_User;
+	parameters += "&version=2016-05-20";
+	
+	Form form;
+    form.AddFilePart("img", imageClass + "_positive_examples.jpg", a_ImageData);
+	form.AddFormField("name", m_pConfig->m_ClassifierName);
+    form.Finish();
+
+	Headers headers;
+	headers["Content-Type"] = "application/x-www-form-urlencoded";
+
+	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
+}
+
+void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData, const std::string & imageClass, OnClassifierTrained a_Callback)
+{
+	std::string parameters = "/v3/classifiers" + m_pConfig->m_ClassifierId;
+	parameters += "?apikey=" + m_pConfig->m_User;
+	parameters += "&version=2016-05-20";
+
+	Form form;
+	form.AddFilePart("img", imageClass + "_negative_examples", a_ImageData);
+	form.AddFormField("name", m_pConfig->m_ClassifierName);
+	form.Finish();
+
+	Headers headers;
+	headers["Content-Type"] = "application/x-www-form-urlencoded";
+
+	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
 }
 
 VisualRecognition::ServiceStatusChecker::ServiceStatusChecker(VisualRecognition * a_pService, ServiceStatusCallback a_Callback)

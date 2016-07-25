@@ -56,6 +56,14 @@ public:
 	void IdentifyText(const std::string & a_ImageData,
 		OnIdentifyText a_Callback,
 		bool a_bKnowledgeGraph = false );
+	//! Retrains the Image Classifier with positive examples
+	void TrainClassifierPositives(const std::string & a_ImageData,
+		const std::string & imageClass,
+		OnClassifierTrained a_Callback);
+	//! Retrains the Image Classifier with negative examples
+	void TrainClassifierNegatives(const std::string & a_ImageData,
+		const std::string & imageClass,
+		OnClassifierTrained a_Callback);
 
 private:
 	//! Types
