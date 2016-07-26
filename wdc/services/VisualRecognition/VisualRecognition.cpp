@@ -68,13 +68,22 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassif
 	std::string parameters = "/v3/classify";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=2016-05-20";
+	parameters += "&threshold=0.035";
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
-	Headers headers;
-	headers["Content-Type"] = "application/x-www-form-urlencoded";
+	std::string classifierParams = "{\"classifier_ids\": [\"golf_133833594\"]}";
 
-	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
+	Form form;
+    form.AddFilePart("images_file", "VR.jpg", a_ImageData);
+	form.AddFilePart("parameters", "myparams.json", classifierParams);
+    form.Finish();
+
+	Headers headers;
+	headers["Content-Type"] = form.GetContentType();
+	headers["Accept-Language"] = "en";
+
+	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
 }
 
 void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph )
@@ -114,7 +123,7 @@ void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData
 	parameters += "&version=2016-05-20";
 
 	std::string className = imageClass + "_positive_examples";
-	std::string fileName = imageClass + ".jpg";
+	std::string fileName = imageClass + "_positive_examples.jpg";
 	
 	Form form;
     form.AddFilePart(className, fileName, a_ImageData);
@@ -135,7 +144,7 @@ void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData
 	parameters += "&version=2016-05-20";
 
 	std::string className = imageClass + "_negative_examples";
-	std::string fileName = imageClass + ".jpg";
+	std::string fileName = imageClass + "_negative_examples.jpg";
 
 	Form form;
     form.AddFilePart(className, fileName, a_ImageData);
