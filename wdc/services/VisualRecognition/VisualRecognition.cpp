@@ -72,10 +72,10 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassif
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
-	std::string classifierParams = "{\"classifier_ids\": [\"golf_133833594\"]}";
+	std::string classifierParams = "{\"classifier_ids\": [\"golf_357664082\"]}";
 
 	Form form;
-    form.AddFilePart("images_file", "VR.jpg", a_ImageData);
+    form.AddFilePart("images_file", "imageToClassify.jpg", a_ImageData);
 	form.AddFilePart("parameters", "myparams.json", classifierParams);
     form.Finish();
 
@@ -118,7 +118,7 @@ void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentify
 // For now this is hardcoded. Add this stuff to body.json
 void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, const std::string & imageClass, OnClassifierTrained a_Callback)
 {
-	std::string parameters = "/v3/classifiers/golf_133833594";
+	std::string parameters = "/v3/classifiers/golf_357664082";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=2016-05-20";
 
@@ -139,7 +139,7 @@ void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData
 // Same as above
 void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData, const std::string & imageClass, OnClassifierTrained a_Callback)
 {
-	std::string parameters = "/v3/classifiers/golf_133833594";
+	std::string parameters = "/v3/classifiers/golf_357664082";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=2016-05-20";
 
