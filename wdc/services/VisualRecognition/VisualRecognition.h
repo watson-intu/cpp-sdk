@@ -32,6 +32,7 @@ public:
 	typedef Delegate<const Json::Value &>	OnClassifyImage;
 	typedef Delegate<const Json::Value &>	OnDetectFaces;
 	typedef Delegate<const Json::Value &>   OnIdentifyText;
+	typedef Delegate<const Json::Value &>   OnClassifierTrained;
 
 	//! Construction 
 	VisualRecognition();

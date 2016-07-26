@@ -16,6 +16,7 @@
 */
 
 #include "VisualRecognition.h"
+#include "utils/Form.h"
 
 REG_SERIALIZABLE( VisualRecognition );
 RTTI_IMPL( VisualRecognition, IService );
@@ -70,15 +71,10 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassif
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
-	Form form;
-	form.AddFormField("classifier_ids", m_pConfig->m_ClassifierId);
-	form.AddFilePart("img", "ImageToClassify.jpg", a_ImageData);
-	form.Finish();
-
 	Headers headers;
 	headers["Content-Type"] = "application/x-www-form-urlencoded";
 
-	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
+	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
 }
 
 void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph )
@@ -110,36 +106,44 @@ void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentify
 
 }
 
+// For now this is hardcoded. Add this stuff to body.json
 void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, const std::string & imageClass, OnClassifierTrained a_Callback)
 {
-	std::string parameters = "/v3/classifiers/" + m_pConfig->m_ClassifierId;
+	std::string parameters = "/v3/classifiers/golf_133833594";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=2016-05-20";
+
+	std::string className = imageClass + "_positive_examples";
+	std::string fileName = imageClass + ".jpg";
 	
 	Form form;
-    form.AddFilePart("img", imageClass + "_positive_examples.jpg", a_ImageData);
-	form.AddFormField("name", m_pConfig->m_ClassifierName);
+    form.AddFilePart(className, fileName, a_ImageData);
+	form.AddFormField("name", "golf");
     form.Finish();
 
 	Headers headers;
-	headers["Content-Type"] = "application/x-www-form-urlencoded";
+	headers["Content-Type"] = form.GetContentType();
 
 	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
 }
 
+// Same as above
 void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData, const std::string & imageClass, OnClassifierTrained a_Callback)
 {
-	std::string parameters = "/v3/classifiers" + m_pConfig->m_ClassifierId;
+	std::string parameters = "/v3/classifiers/golf_133833594";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=2016-05-20";
 
+	std::string className = imageClass + "_negative_examples";
+	std::string fileName = imageClass + ".jpg";
+
 	Form form;
-	form.AddFilePart("img", imageClass + "_negative_examples", a_ImageData);
-	form.AddFormField("name", m_pConfig->m_ClassifierName);
-	form.Finish();
+    form.AddFilePart(className, fileName, a_ImageData);
+	form.AddFormField("name", "golf");
+    form.Finish();
 
 	Headers headers;
-	headers["Content-Type"] = "application/x-www-form-urlencoded";
+	headers["Content-Type"] = form.GetContentType();
 
 	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
 }
