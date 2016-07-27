@@ -72,7 +72,7 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassif
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
-	std::string classifierParams = "{\"classifier_ids\": [\"golf_357664082\"]}";
+	std::string classifierParams = "{\"classifier_ids\": [\"default\"]}";
 
 	Form form;
     form.AddFilePart("images_file", "imageToClassify.jpg", a_ImageData);
