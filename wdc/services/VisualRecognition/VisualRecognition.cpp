@@ -21,7 +21,7 @@ REG_SERIALIZABLE( VisualRecognition );
 RTTI_IMPL( VisualRecognition, IService );
 
 
-VisualRecognition::VisualRecognition() : IService("VisualRecognitionV3")
+VisualRecognition::VisualRecognition() : IService("VisualRecognitionV1")
 {}
 
 //! ISerializable
