@@ -44,8 +44,8 @@ public:
     virtual bool Start();
 
     //! Message text -- sends text to the Conversation Service
-    void Message( const std::string & a_WorkspaceId, const std::string & a_Version,
-               const std::string & a_Text, OnMessage a_Callback );
+    void Message( const std::string & a_WorkspaceId, const Json::Value & a_Context,
+                  const std::string & a_Version, const std::string & a_Text, OnMessage a_Callback );
 };
 
 #endif
