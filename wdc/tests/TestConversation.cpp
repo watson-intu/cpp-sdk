@@ -38,6 +38,7 @@ public:
     std::string m_VersionId;
     std::string m_ConversationId;
     std::string m_TestText;
+    Json::Value m_Context;
 
     virtual void RunTest() {
         Config config;
@@ -49,7 +50,7 @@ public:
         Log::Debug("TestConversation","Conversation Started");
 
         Log::Debug("TestConversation","Testing Conversation Response for input: %s", m_TestText.c_str());
-        conversation.Message(m_WorkspaceId, m_VersionId, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationMessageResponse *, this));
+        conversation.Message(m_WorkspaceId, m_Context, m_VersionId, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationMessageResponse *, this));
 
         Spin(m_bConversationTested);
         Test(m_bConversationTested);
@@ -86,10 +87,10 @@ public:
         Test(!m_TextResponse.empty());
         Log::Debug("TestConversation","Response: %s", m_TextResponse.c_str());
 
-        // Test that the Conversation Id is set
-        m_ConversationId = a_pConversationResponse->m_ConversationId;
-        Test(!m_ConversationId.empty());
-        Log::Debug("TestConversation","ConversationId: %s", a_pConversationResponse->m_ConversationId.c_str());
+        // Test that the Conversation Id is set in Conversation's Context
+        m_Context = a_pConversationResponse->m_Context;
+        Test(m_Context.isMember("conversation_id"));
+
 
         m_bConversationTested = true;
     }

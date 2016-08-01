@@ -66,14 +66,14 @@ struct WDC_API ConversationMessageResponse : public ISerializable
 {
     RTTI_DECL();
 
-    std::string m_ConversationId;
     std::vector<ConversationIntent> m_Intents;
     std::vector<ConversationEntities> m_Entities;
     std::vector<std::string> m_Output;
+    Json::Value m_Context;
 
     virtual void Serialize(Json::Value & json)
     {
-        json["context"]["conversation_id"] = m_ConversationId;
+        json["context"] = m_Context;
         SerializeVector("intents", m_Intents, json);
         SerializeVector("text", m_Output, json["output"]);
         SerializeVector("entities", m_Entities, json);
@@ -87,12 +87,11 @@ struct WDC_API ConversationMessageResponse : public ISerializable
         if( json.isMember("output") && json["output"].isMember("text") )
             DeserializeVector("text", json["output"], m_Output);
 
-        if( json.isMember("context") && json["context"].isMember("conversation_id"))
-            m_ConversationId = json["context"]["conversation_id"].asString();
+        if( json.isMember("context") )
+            m_Context = json["context"];
 
         if( json.isMember("entities") )
             DeserializeVector("entities", json, m_Entities);
-
     }
 };
 

@@ -54,8 +54,8 @@ bool Conversation::Start()
 
 
 //! Send Question / Statement / Command
-void Conversation::Message( const std::string & a_WorkspaceId, const std::string & a_Version,
-                            const std::string & a_Text, OnMessage a_Callback )
+void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value & a_Context,
+                            const std::string & a_Version, const std::string & a_Text, OnMessage a_Callback )
 {
     Headers headers;
     headers["Content-Type"] = "application/json";
@@ -65,6 +65,8 @@ void Conversation::Message( const std::string & a_WorkspaceId, const std::string
     Json::Value input;
     req["text"] = a_Text;
     input["input"] = req;
+    if( a_Context.isMember("conversation_id") )
+        input["context"] = a_Context;
 
     new RequestObj<ConversationMessageResponse>( this, params, "POST", headers, input.toStyledString(),  a_Callback );
 
