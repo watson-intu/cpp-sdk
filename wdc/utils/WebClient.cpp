@@ -200,7 +200,6 @@ bool WebClient::Send()
 
 	WebClientService::Instance()->GetService().post( 
 		boost::bind( &WebClient::BeginConnect, this ) );
-	Log::Debug("WebClient", "I Made it HEre!");
 	return true;
 }
 

@@ -42,7 +42,7 @@ public:
 		m_bComplete( false ),
 		m_fStartTime( 0.0f ),
 		m_fResponseTime( 0.0f ),
-		m_Samples( 5 )
+		m_Samples( 20 )
 	{}
 
 	int						m_ChunkSz;
