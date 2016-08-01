@@ -58,7 +58,7 @@ public:
 		Log::Status("TestVisualRecognition", "Started VisualRecognition");
 		visualRecognition->DetectFaces(imageData,
 			DELEGATE(TestVisualRecognition, OnDetectFaces, const Json::Value &, this) );
-		visualRecognition->ClassifyImage(imageData,
+		visualRecognition->ClassifyImage(imageData, "default",
 			DELEGATE(TestVisualRecognition, OnClassifyImage, const Json::Value &, this) );
 		visualRecognition->IdentifyText(imageData,
 			DELEGATE(TestVisualRecognition, OnIdentifyText, const Json::Value &, this) );

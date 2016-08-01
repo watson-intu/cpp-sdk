@@ -63,7 +63,7 @@ void VisualRecognition::GetServiceStatus(ServiceStatusCallback a_Callback)
 		a_Callback(ServiceStatus(m_ServiceId, false));
 }
 
-void VisualRecognition::ClassifyImage(const std::string & a_ImageData, const std::string classifierId, OnClassifyImage a_Callback, bool a_bKnowledgeGraph )
+void VisualRecognition::ClassifyImage(const std::string & a_ImageData, const std::string & classifierId, OnClassifyImage a_Callback, bool a_bKnowledgeGraph )
 {
 	std::string parameters = "/v3/classify";
 	parameters += "?apikey=" + m_pConfig->m_User;
@@ -115,8 +115,13 @@ void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentify
 
 }
 
-void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, const std::string & classifierId, const std::string & classifierName, const std::string & imageClass, OnClassifierTrained a_Callback)
+void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, std::string & classifierId, std::string & classifierName, const std::string & imageClass, OnClassifierTrained a_Callback)
 {
+	if (classifierId == "")
+		classifierId = "default";
+	if (classifierName == "")
+		classifierName = "default";
+
 	std::string parameters = "/v3/classifiers/";
 	parameters += classifierId;
 	parameters += "?apikey=" + m_pConfig->m_User;
@@ -137,8 +142,13 @@ void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData
 }
 
 // VisualRecognition as a service currently does not fully support this functionality. Leaving here until they do.
-void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData, const std::string & classifierId, const std::string & classifierName, const std::string & imageClass, OnClassifierTrained a_Callback)
+void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData, std::string & classifierId, std::string & classifierName, const std::string & imageClass, OnClassifierTrained a_Callback)
 {
+	if (classifierId == "")
+		classifierId = "default";
+	if (classifierName == "")
+		classifierName = "default"; 
+
 	std::string parameters = "/v3/classifiers/";
 	parameters += classifierId;
 	parameters += "?apikey=" + m_pConfig->m_User;
