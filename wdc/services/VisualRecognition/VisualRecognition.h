@@ -47,6 +47,7 @@ public:
 
 	//! Classify the given image and returns image tags for the image data.
 	void ClassifyImage(const std::string & a_ImageData,
+		const std::string & classifierId,
 		OnClassifyImage a_Callback,
 		bool a_bKnowledgeGraph = false );
 	//! Detect faces in the provided image 

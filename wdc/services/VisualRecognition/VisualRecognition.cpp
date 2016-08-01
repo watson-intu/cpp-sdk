@@ -63,7 +63,7 @@ void VisualRecognition::GetServiceStatus(ServiceStatusCallback a_Callback)
 		a_Callback(ServiceStatus(m_ServiceId, false));
 }
 
-void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassifyImage a_Callback, bool a_bKnowledgeGraph )
+void VisualRecognition::ClassifyImage(const std::string & a_ImageData, const std::string classifierId, OnClassifyImage a_Callback, bool a_bKnowledgeGraph )
 {
 	std::string parameters = "/v3/classify";
 	parameters += "?apikey=" + m_pConfig->m_User;
@@ -72,7 +72,7 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData, OnClassif
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
-	std::string classifierParams = "{\"classifier_ids\": [\"default\"]}";
+	std::string classifierParams = "{\"classifier_ids\": [\"" + classifierId + "\"]}";
 
 	Form form;
     form.AddFilePart("images_file", "imageToClassify.jpg", a_ImageData);
@@ -115,10 +115,10 @@ void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentify
 
 }
 
-// For now this is hardcoded. Add this stuff to body.json
-void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, const std::string & imageClass, OnClassifierTrained a_Callback)
+void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, const std::string & classifierId, const std::string & classifierName, const std::string & imageClass, OnClassifierTrained a_Callback)
 {
-	std::string parameters = "/v3/classifiers/golf_357664082";
+	std::string parameters = "/v3/classifiers/";
+	parameters += classifierId;
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=2016-05-20";
 
@@ -127,7 +127,7 @@ void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData
 	
 	Form form;
     form.AddFilePart(className, fileName, a_ImageData);
-	form.AddFormField("name", "golf");
+	form.AddFormField("name", classifierName);
     form.Finish();
 
 	Headers headers;
@@ -136,10 +136,11 @@ void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData
 	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
 }
 
-// Same as above
-void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData, const std::string & imageClass, OnClassifierTrained a_Callback)
+// VisualRecognition as a service currently does not fully support this functionality. Leaving here until they do.
+void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData, const std::string & classifierId, const std::string & classifierName, const std::string & imageClass, OnClassifierTrained a_Callback)
 {
-	std::string parameters = "/v3/classifiers/golf_357664082";
+	std::string parameters = "/v3/classifiers/";
+	parameters += classifierId;
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=2016-05-20";
 
@@ -148,7 +149,7 @@ void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData
 
 	Form form;
     form.AddFilePart(className, fileName, a_ImageData);
-	form.AddFormField("name", "golf");
+	form.AddFormField("name", classifierName);
     form.Finish();
 
 	Headers headers;
