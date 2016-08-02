@@ -195,7 +195,7 @@ public:
 				{
 					const std::string & transcript = alternatives[i].m_Transcript;
 					double confidence = alternatives[i].m_Confidence;
-					Log::Status("Conversation", "----- Recognized Text: %s (%g)", transcript.c_str(), confidence) ;
+					Log::Status("TestSTTResponseTime", "----- Recognized Text: %s (%g)", transcript.c_str(), confidence) ;
 				}
 				if( a_pResults->m_Results[k].m_Final )
 				{
