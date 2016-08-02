@@ -93,7 +93,7 @@ void WebClient::SetFrameReceiver( Delegate<FrameSP> a_Receiver )
 	m_OnFrame = a_Receiver;
 }
 
-void WebClient::SetErrorHandler( VoidDelegate a_Handler)
+void WebClient::SetErrorHandler( Delegate<IWebSocket *> a_Handler)
 {
 	m_OnError = a_Handler;
 }
@@ -572,6 +572,21 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 
 	if (!error && bytes_remaining > 0) 
 	{
+		// if we are not chunked and we have no content len, then go ahead and start piping 
+		// data to the user..
+		if (!m_bChunked && m_ContentLen == 0xffffffff)
+		{
+			RequestData * pNewReq = new RequestData();
+			pNewReq->m_Version = a_pReq->m_Version;
+			pNewReq->m_StatusCode = a_pReq->m_StatusCode;
+			pNewReq->m_StatusMessage = a_pReq->m_StatusMessage;
+			pNewReq->m_Headers = a_pReq->m_Headers;
+
+			ThreadPool::Instance()->InvokeOnMain<RequestData *>(
+				DELEGATE(WebClient, OnResponse, RequestData *, this), a_pReq);
+			a_pReq = pNewReq;
+		}
+
 		if (m_pStream != NULL)
 		{
 			boost::asio::async_read(*m_pStream, m_Response,

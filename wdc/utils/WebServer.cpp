@@ -89,7 +89,7 @@ public:
 		{
 			m_OnFrame = a_Receiver;
 		}
-		virtual void SetErrorHandler(VoidDelegate a_Handler)
+		virtual void SetErrorHandler(Delegate<IWebSocket *> a_Handler)
 		{
 			m_OnError = a_Handler;
 		}
@@ -248,8 +248,9 @@ public:
 		std::string		m_Incoming;
 		FrameList		m_Frames;
 		Delegate<FrameSP>
-			m_OnFrame;
-		VoidDelegate	m_OnError;
+						m_OnFrame;
+		Delegate<IWebSocket *>
+						m_OnError;
 
 		WebServerT *	m_pServer;
 		socket_type *	m_pSocket;
@@ -337,7 +338,7 @@ public:
 		{
 			if (m_OnError.IsValid())
 			{
-				ThreadPool::Instance()->InvokeOnMain(m_OnError);
+				ThreadPool::Instance()->InvokeOnMain<IWebSocket *>(m_OnError, this );
 				m_OnError.Reset();		// reset so we only queue an error once
 			}
 		}

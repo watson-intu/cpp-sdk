@@ -55,7 +55,7 @@ public:
 		Test(iWebSocketKey != a_spRequest->m_Headers.end());
 
 		a_spRequest->m_spConnection->SetFrameReceiver( DELEGATE(TestUnityWebSocket, OnServerFrame, IWebSocket::FrameSP, this ) );
-		a_spRequest->m_spConnection->SetErrorHandler( VOID_DELEGATE( TestUnityWebSocket, OnError, this) );
+		a_spRequest->m_spConnection->SetErrorHandler( DELEGATE( TestUnityWebSocket, OnError, IWebSocket *, this) );
 		a_spRequest->m_spConnection->StartWebSocket(iWebSocketKey->second );
 		Test(a_spRequest->m_spConnection->IsWebSocket());
 
@@ -80,7 +80,7 @@ public:
 			m_bStopServer = true;
 	}
 
-	void OnError()
+	void OnError( IWebSocket * )
 	{
 		Log::Debug("TestUnityWebSocket", "OnError()");
 		m_bStopServer = true;
