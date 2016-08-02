@@ -57,7 +57,8 @@ public:
 	virtual void RunTest()
 	{
 		bool F = false;
-		double spin_time = float(m_ChunkSz) / ( 2.0 * float(m_Rate) );
+		double spin_time = float(m_ChunkSz) / ( float( sizeof(short) / sizeof(char) ) * float(m_Rate) );
+		Log::Debug("TestSTTResponseTime", "Will spin %.3f seconds per chunk", spin_time);
 
 		// Start STT service
 		Config config;
