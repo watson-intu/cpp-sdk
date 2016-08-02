@@ -61,6 +61,7 @@ public:
 
 		// Start STT service
 		Config config;
+		Log::Debug("TestSTTResponseTime", "Deserializing service configs");		
 		Test( ISerializable::DeserializeFromFile( "./etc/tests/unit_test_config.json", &config ) != NULL );
 		ThreadPool pool(1);
 
@@ -78,7 +79,6 @@ public:
 		Log::Debug("TestSTTResponseTime", "Opening websocket");
 		Test( stt.StartListening( DELEGATE(
 			TestSTTResponseTime, OnResponse, RecognizeResults *, this ) ) );
-		Log::Debug("TestSTTResponseTime", "Opened websocket");
 
 		// Spin...
 		Spin( F, 1.0 );

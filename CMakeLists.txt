@@ -1,3 +1,8 @@
+cmake_minimum_required(VERSION 2.8.12.2)
+project(wdc)
+find_package(qibuild)
+include_directories(lib wdc)
+
 add_subdirectory(lib)
 add_subdirectory(wdc)
 
