@@ -1,0 +1,60 @@
+{
+  "Type_": "Config",
+  "m_Libs": [ "platform_win" ],
+  "m_ServiceConfigs": [
+    {
+      "m_URL": "https://stream.watsonplatform.net/speech-to-text/api",
+      "m_Password": "",
+      "m_ServiceId": "SpeechToTextV1",
+      "m_User": ""
+    },
+    {
+      "m_URL": "https://stream.watsonplatform.net/text-to-speech/api",
+      "m_Password": "",
+      "m_ServiceId": "TextToSpeechV1",
+      "m_User": ""
+    },
+    {
+      "m_URL": "https://gateway.watsonplatform.net/dialog/api",
+      "m_Password": "",
+      "m_ServiceId": "DialogV1",
+      "m_User": ""
+    },
+    {
+      "m_Password" : "",
+      "m_ServiceId" : "WeatherInsights",
+      "m_URL" : "https://twcservice.mybluemix.net",
+      "m_User" : ""
+    },
+    {
+     "m_URL": "https://gateway.watsonplatform.net/relationship-extraction-beta/api",
+     "m_Password": "",
+     "m_ServiceId": "RelationshipExtractionV1",
+     "m_User": "" 
+    },
+    {
+     "m_URL": "https://gateway-a.watsonplatform.net/visual-recognition/api",
+     "m_Password": "",
+     "m_ServiceId": "VisualRecognitionV3",
+     "m_User": ""
+    },
+    {
+      "m_Password" : "",
+      "m_ServiceId" : "LanguageTranslation",
+      "m_URL" : "https://gateway.watsonplatform.net/language-translation/api",
+      "m_User" : ""
+    },
+    {
+      "m_Password" : "",
+      "m_ServiceId" : "ConversationV1",
+      "m_URL" : "https://gateway.watsonplatform.net/conversation/api",
+      "m_User" : ""
+    },
+    {
+     "m_URL": "https://gateway.watsonplatform.net/natural-language-classifier/api",
+     "m_Password": "",
+     "m_ServiceId": "NaturalLanguageClassifierV1",
+     "m_User": ""
+   }
+  ]
+}

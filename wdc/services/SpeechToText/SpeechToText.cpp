@@ -208,8 +208,9 @@ SpeechToText::Connection::Connection( SpeechToText * a_pSTT, const std::string &
 {
 	if (! CreateListenConnector() )
 		OnReconnect();
-	m_spKeepAliveTimer = TimerPool::Instance()->StartTimer( 
-		VOID_DELEGATE( Connection, KeepAlive, this ), WS_KEEP_ALIVE_TIME, true, true ); 
+	if ( TimerPool::Instance() )
+		m_spKeepAliveTimer = TimerPool::Instance()->StartTimer( 
+			VOID_DELEGATE( Connection, KeepAlive, this ), WS_KEEP_ALIVE_TIME, true, true ); 
 }
 
 SpeechToText::Connection::~Connection()
