@@ -20,41 +20,54 @@
 
 int UnitTest::RunTests( const std::vector<std::string> & a_Tests )
 {
+	std::vector<std::string> tests( a_Tests );
+	if ( tests.size() == 0 )
+	{
+		for( TestList::iterator iTest = GetTestList().begin(); iTest != GetTestList().end(); ++iTest )
+			tests.push_back( (*iTest)->GetName() );
+	}
+
 	int executed = 0;
 	int failed = 0;
-	for( TestList::iterator iTest = GetTestList().begin(); iTest != GetTestList().end(); ++iTest )
+	for(size_t i=0;i<tests.size();++i)
 	{
+		UnitTest * pRunTest = NULL;
+
 #ifndef _DEBUG
 		try {
 #endif
-			if (a_Tests.size() > 0)
+			for( TestList::iterator iTest = GetTestList().begin(); pRunTest == NULL && iTest != GetTestList().end(); ++iTest )
 			{
-				bool bFound = false;
-				for (size_t i = 0; i < a_Tests.size() && !bFound; ++i)
-					bFound = (*iTest)->GetName().find(a_Tests[i]) != std::string::npos;
-				if (!bFound)
-					continue;
+				if ( (*iTest)->GetName() == tests[i] )
+					pRunTest = *iTest;
 			}
 
-			// TODO: replace printf with logging system..
-			executed += 1;
+			if ( pRunTest != NULL )
+			{
+				// TODO: replace printf with logging system..
+				executed += 1;
 
-			Log::Status( "UnitTest", "Running Test %s...", (*iTest)->GetName().c_str() );
-			(*iTest)->RunTest();
+				Log::Status( "UnitTest", "Running Test %s...", pRunTest->GetName().c_str() );
+				pRunTest->RunTest();
 
-			Log::Status( "UnitTest", "...Test %s COMPLETED.", (*iTest)->GetName().c_str() );
+				Log::Status( "UnitTest", "...Test %s COMPLETED.", pRunTest->GetName().c_str() );
+			}
+			else
+			{
+				Log::Error( "UnitTest", "Failed to find test %s...", a_Tests[i].c_str() );
+			}
 #ifndef _DEBUG
 		}
 		catch( const std::exception & e )
 		{
 			Log::Error( "UnitTest", "Caught Exception: %s", e.what() );
 			failed += 1;
-			Log::Error("UnitTest", "...Test %s FAILED.", (*iTest)->GetName().c_str());
+			Log::Error("UnitTest", "...Test %s FAILED.",  pRunTest->GetName().c_str());
 		}
 		catch(...)
 		{
 			failed += 1;
-			Log::Error( "UnitTest", "...Test %s FAILED.", (*iTest)->GetName().c_str() );
+			Log::Error( "UnitTest", "...Test %s FAILED.", pRunTest->GetName().c_str() );
 		}
 #endif
 	}
