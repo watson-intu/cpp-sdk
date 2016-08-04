@@ -58,7 +58,7 @@ public:
 		std::string		m_StatusMessage;
 		Headers			m_Headers;
 		std::string		m_Content;
-		bool			m_bClosed;			// set to true if this is the last RequestData coming through
+		bool			m_bClosed;			// set to true if the socket has been closed and this is the last RequestData object
 	};
 
 
