@@ -634,6 +634,7 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 			}
 		}
 
+		a_pReq->m_bClosed = true;
 		ThreadPool::Instance()->InvokeOnMain<RequestData *>(
 			DELEGATE(WebClient, OnResponse, RequestData *, this), a_pReq);
 	}

@@ -163,28 +163,31 @@ void IService::Request::OnState( IWebClient * a_pClient )
 
 void IService::Request::OnResponseData( IWebClient::RequestData * a_pResponse )
 {
-	m_Complete = true;
-	m_Error = a_pResponse->m_StatusCode < 200 || a_pResponse->m_StatusCode >= 300;
-
-	double end = Time().GetEpochTime();
-	Log::DebugMed( "Request", "REST request %s completed in %g seconds. Queued for %g seconds. Status: %d.", 
-		m_pClient->GetURL().GetURL().c_str(), end - m_StartTime, m_StartTime - m_CreateTime, a_pResponse->m_StatusCode );
-
-	m_Response.swap( a_pResponse->m_Content );
-	if (m_pCachedReq != NULL && m_pService != NULL && !m_Error)
-		m_pService->PutCachedResponse(m_pCachedReq->m_CacheName, m_pCachedReq->m_Id, m_Response);
-
-	if ( m_Error )
-		Log::Error( "Request", "Request Error %u: %s", a_pResponse->m_StatusCode, m_Response.c_str() );
-
-	if ( m_Callback.IsValid() )
+	m_Response += a_pResponse->m_Content;
+	if ( a_pResponse->m_bClosed )
 	{
-		m_Callback( this );
-		m_Callback.Reset();
-		if ( m_pService != NULL )
-			m_pService->m_RequestsPending -= 1;
+		m_Complete = true;
+		m_Error = a_pResponse->m_StatusCode < 200 || a_pResponse->m_StatusCode >= 300;
+
+		double end = Time().GetEpochTime();
+		Log::DebugMed( "Request", "REST request %s completed in %g seconds. Queued for %g seconds. Status: %d.", 
+			m_pClient->GetURL().GetURL().c_str(), end - m_StartTime, m_StartTime - m_CreateTime, a_pResponse->m_StatusCode );
+
+		if (m_pCachedReq != NULL && m_pService != NULL && !m_Error)
+			m_pService->PutCachedResponse(m_pCachedReq->m_CacheName, m_pCachedReq->m_Id, m_Response);
+
+		if ( m_Error )
+			Log::Error( "Request", "Request Error %u: %s", a_pResponse->m_StatusCode, m_Response.c_str() );
+
+		if ( m_Callback.IsValid() )
+		{
+			m_Callback( this );
+			m_Callback.Reset();
+			if ( m_pService != NULL )
+				m_pService->m_RequestsPending -= 1;
+		}
+		// note the OnState() change will take care of deleting this object.
 	}
-	// note the OnState() change will take care of deleting this object.
 }
 
 void IService::Request::OnLocalResponse()
