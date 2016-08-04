@@ -572,6 +572,7 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 
 	if (!error && bytes_remaining > 0) 
 	{
+#if 0
 		// if we are not chunked and we have no content len, then go ahead and start piping 
 		// data to the user..
 		if (!m_bChunked && m_ContentLen == 0xffffffff)
@@ -586,6 +587,7 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 				DELEGATE(WebClient, OnResponse, RequestData *, this), a_pReq);
 			a_pReq = pNewReq;
 		}
+#endif
 
 		if (m_pStream != NULL)
 		{
