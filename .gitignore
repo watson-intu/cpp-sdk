@@ -3,3 +3,4 @@ Debug
 *.sdf
 *.db
 *.opendb
+*.user
