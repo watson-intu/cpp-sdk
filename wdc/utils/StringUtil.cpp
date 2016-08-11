@@ -113,7 +113,7 @@ std::string StringUtil::Format( const char * a_pFormat, ... )
 	if ( rv >= sizeof(buffer) )
 	{
 		// buffer too small, allocate a buffer from the heap and try again..
-		char * heapBuffer = new char[ rv + 1 ];
+		char * heapBuffer = new char[ rv + 1024 ];
 		vsnprintf(heapBuffer, rv, a_pFormat, args);
 		va_end(args);
 
