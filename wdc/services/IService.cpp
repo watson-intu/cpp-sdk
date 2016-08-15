@@ -174,7 +174,15 @@ void IService::Request::OnResponseData( IWebClient::RequestData * a_pResponse )
 			m_pClient->GetURL().GetURL().c_str(), end - m_StartTime, m_StartTime - m_CreateTime, a_pResponse->m_StatusCode );
 
 		if (m_pCachedReq != NULL && m_pService != NULL && !m_Error)
-			m_pService->PutCachedResponse(m_pCachedReq->m_CacheName, m_pCachedReq->m_Id, m_Response);
+		{
+			bool bCache = true;
+			Headers::iterator iCacheControl = a_pResponse->m_Headers.find( "WDC-Cache" );
+			if ( iCacheControl != a_pResponse->m_Headers.end() )
+				bCache = StringUtil::Compare( iCacheControl->second, "no-cache", true) != 0;
+
+			if ( bCache )
+				m_pService->PutCachedResponse(m_pCachedReq->m_CacheName, m_pCachedReq->m_Id, m_Response);
+		}
 
 		if ( m_Error )
 			Log::Error( "Request", "Request Error %u: %s", a_pResponse->m_StatusCode, m_Response.c_str() );
