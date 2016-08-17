@@ -134,19 +134,35 @@ void SpeechToText::GetServiceStatus( ServiceStatusCallback a_Callback )
 		a_Callback(ServiceStatus(m_ServiceId, false));
 }
 
+void SpeechToText::RefreshConnections()
+{
+	m_IsListening = false;	
+	Log::Debug("SpeechToText", "About to delete old connections");
+	for( Connectionlist::iterator iConn = m_Connections.begin(); iConn != m_Connections.end(); ++iConn )
+	{
+		delete *iConn;
+	}
+	m_Connections.clear();
+	Log::Debug("SpeechToText", "Starting websockets back up");
+	StartListening( m_ListenCallback );
+}
+
 bool SpeechToText::StartListening(OnRecognize callback)
 {
 	if (!callback.IsValid())
 		return false;
 	if (m_IsListening)
 		return false;
+	Log::Debug("SpeechToText", "StartListening - A");
 
 	m_IsListening = true;
 	m_ListenCallback = callback;
+	Log::Debug("SpeechToText", "StartListening - B");
 
 	for( ModelList::iterator iModels = m_Models.begin(); iModels != m_Models.end(); ++iModels )
 		m_Connections.push_back( new Connection( this, *iModels ) );
 
+	Log::Debug("SpeechToText", "StartListening - C");	
 	return true;
 }
 
@@ -439,10 +455,10 @@ void SpeechToText::Connection::OnListenMessage( IWebSocket::FrameSP a_spFrame )
 				std::string error = json["error"].asString();
 				Log::Error("SpeechToText", "Error: %s", error.c_str() );
 
-				if ( m_ListenSocket != NULL )		// this may be NULL, since this callback can be invoked after we already called CloseListeningConnection().
-					m_ListenSocket->Close();
-				if (m_pSTT->m_OnError.IsValid())
-					m_pSTT->m_OnError(error);
+				//if ( m_ListenSocket != NULL )		// this may be NULL, since this callback can be invoked after we already called CloseListeningConnection().
+					//m_ListenSocket->Close();
+				//if (m_pSTT->m_OnError.IsValid())
+					//m_pSTT->m_OnError(error);
 			}
 			else
 			{
