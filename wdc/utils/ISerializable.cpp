@@ -63,10 +63,7 @@ ISerializable * ISerializable::DeserializeObject(const Json::Value & a_json,
 	}
 
 	if ( a_pObject != NULL )
-	{
 		a_pObject->Deserialize(a_json);
-		return a_pObject;
-	}
 
 	return a_pObject;
 }

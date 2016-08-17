@@ -55,6 +55,7 @@ int UnitTest::RunTests( const std::vector<std::string> & a_Tests )
 			else
 			{
 				Log::Error( "UnitTest", "Failed to find test %s...", a_Tests[i].c_str() );
+				failed += 1;
 			}
 #ifndef _DEBUG
 		}
