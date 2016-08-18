@@ -137,14 +137,14 @@ void SpeechToText::GetServiceStatus( ServiceStatusCallback a_Callback )
 void SpeechToText::RefreshConnections()
 {
 	m_IsListening = false;	
-	Log::Debug("SpeechToText", "About to delete old connections");
+	Log::Debug("SpeechToText", "About to Refresh websockets");
 	for( Connectionlist::iterator iConn = m_Connections.begin(); iConn != m_Connections.end(); ++iConn )
 	{
-		delete *iConn;
+		(*iConn)->CloseListenConnector();
+		(*iConn)->CreateListenConnector();
 	}
-	m_Connections.clear();
 	Log::Debug("SpeechToText", "Starting websockets back up");
-	StartListening( m_ListenCallback );
+	m_IsListening = true;
 }
 
 bool SpeechToText::StartListening(OnRecognize callback)
