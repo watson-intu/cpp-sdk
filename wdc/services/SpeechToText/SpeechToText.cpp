@@ -140,10 +140,7 @@ void SpeechToText::RefreshConnections()
 	Log::Debug("SpeechToText", "About to Refresh websockets");
 	for( Connectionlist::iterator iConn = m_Connections.begin(); iConn != m_Connections.end(); ++iConn )
 	{
-		(*iConn)->CloseListenConnector();
-			
-		if (! (*iConn)->CreateListenConnector() )
-			(*iConn)->OnReconnect();
+		(*iConn)->RefreshSocket();	
 	}
 	Log::Debug("SpeechToText", "Starting websockets back up");
 	m_IsListening = true;
@@ -155,16 +152,13 @@ bool SpeechToText::StartListening(OnRecognize callback)
 		return false;
 	if (m_IsListening)
 		return false;
-	Log::Debug("SpeechToText", "StartListening - A");
 
 	m_IsListening = true;
 	m_ListenCallback = callback;
-	Log::Debug("SpeechToText", "StartListening - B");
 
 	for( ModelList::iterator iModels = m_Models.begin(); iModels != m_Models.end(); ++iModels )
 		m_Connections.push_back( new Connection( this, *iModels ) );
 
-	Log::Debug("SpeechToText", "StartListening - C");	
 	return true;
 }
 
@@ -236,6 +230,19 @@ SpeechToText::Connection::~Connection()
 	CloseListenConnector();
 }
 
+void SpeechToText::Connection::RefreshSocket()
+{
+	CloseListenConnector();
+			
+	if (! CreateListenConnector() )
+		OnReconnect();
+
+	m_spKeepAliveTimer.reset();
+	if ( TimerPool::Instance() )
+		m_spKeepAliveTimer = TimerPool::Instance()->StartTimer( 
+			VOID_DELEGATE( Connection, KeepAlive, this ), WS_KEEP_ALIVE_TIME, true, true );
+}
+
 void SpeechToText::Connection::SendAudio(const SpeechAudioData & clip)
 {
 	if (m_RecordingHZ < 0)
@@ -302,8 +309,6 @@ bool SpeechToText::Connection::CreateListenConnector()
 		std::string url = m_pSTT->GetConfig()->m_URL + "/v1/recognize?x-watson-learning-opt-out=" + learningOptOut + "&model=" + StringUtil::UrlEscape( m_RecognizeModel );
 		StringUtil::Replace(url, "https://", "wss://", true );
 		StringUtil::Replace(url, "http://", "ws://", true );
-
-		Log::Status("SpeechToText", "Connecting to: %s", url.c_str() );
 
 		m_ListenSocket = IWebClient::Create();
 		m_ListenSocket->SetURL( url );
