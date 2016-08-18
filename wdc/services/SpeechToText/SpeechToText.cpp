@@ -457,8 +457,8 @@ void SpeechToText::Connection::OnListenMessage( IWebSocket::FrameSP a_spFrame )
 
 				//if ( m_ListenSocket != NULL )		// this may be NULL, since this callback can be invoked after we already called CloseListeningConnection().
 					//m_ListenSocket->Close();
-				//if (m_pSTT->m_OnError.IsValid())
-					//m_pSTT->m_OnError(error);
+				if (m_pSTT->m_OnError.IsValid())
+					m_pSTT->m_OnError(error);
 			}
 			else
 			{
