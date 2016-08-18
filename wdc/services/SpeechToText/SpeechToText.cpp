@@ -141,7 +141,9 @@ void SpeechToText::RefreshConnections()
 	for( Connectionlist::iterator iConn = m_Connections.begin(); iConn != m_Connections.end(); ++iConn )
 	{
 		(*iConn)->CloseListenConnector();
-		(*iConn)->CreateListenConnector();
+			
+		if (! (*iConn)->CreateListenConnector() )
+			(*iConn)->OnReconnect();
 	}
 	Log::Debug("SpeechToText", "Starting websockets back up");
 	m_IsListening = true;
@@ -300,6 +302,8 @@ bool SpeechToText::Connection::CreateListenConnector()
 		std::string url = m_pSTT->GetConfig()->m_URL + "/v1/recognize?x-watson-learning-opt-out=" + learningOptOut + "&model=" + StringUtil::UrlEscape( m_RecognizeModel );
 		StringUtil::Replace(url, "https://", "wss://", true );
 		StringUtil::Replace(url, "http://", "ws://", true );
+
+		Log::Status("SpeechToText", "Connecting to: %s", url.c_str() );
 
 		m_ListenSocket = IWebClient::Create();
 		m_ListenSocket->SetURL( url );
