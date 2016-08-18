@@ -50,7 +50,7 @@ public:
 
 	struct RequestData
 	{
-		RequestData() : m_StatusCode(0), m_bClosed( false )
+		RequestData() : m_StatusCode(0), m_bDone( false )
 		{}
 
 		std::string		m_Version;
@@ -58,7 +58,7 @@ public:
 		std::string		m_StatusMessage;
 		Headers			m_Headers;
 		std::string		m_Content;
-		bool			m_bClosed;			// set to true if the socket has been closed and this is the last RequestData object
+		bool			m_bDone;			// set to true if the socket has been closed and this is the last RequestData object
 	};
 
 

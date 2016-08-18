@@ -164,7 +164,7 @@ void IService::Request::OnState( IWebClient * a_pClient )
 void IService::Request::OnResponseData( IWebClient::RequestData * a_pResponse )
 {
 	m_Response += a_pResponse->m_Content;
-	if ( a_pResponse->m_bClosed )
+	if ( a_pResponse->m_bDone )
 	{
 		m_Complete = true;
 		m_Error = a_pResponse->m_StatusCode < 200 || a_pResponse->m_StatusCode >= 300;

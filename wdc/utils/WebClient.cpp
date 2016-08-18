@@ -572,10 +572,10 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 
 	if (!error && bytes_remaining > 0) 
 	{
-#if 0
 		// if we are not chunked and we have no content len, then go ahead and start piping 
-		// data to the user..
-		if (!m_bChunked && m_ContentLen == 0xffffffff)
+		// data to the user 4k at a time.
+		if (!m_bChunked && m_ContentLen == 0xffffffff 
+			&& a_pReq->m_Content.size() >= (4 * 1024))
 		{
 			RequestData * pNewReq = new RequestData();
 			pNewReq->m_Version = a_pReq->m_Version;
@@ -587,7 +587,6 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 				DELEGATE(WebClient, OnResponse, RequestData *, this), a_pReq);
 			a_pReq = pNewReq;
 		}
-#endif
 
 		if (m_pStream != NULL)
 		{
@@ -636,7 +635,7 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 			}
 		}
 
-		a_pReq->m_bClosed = true;
+		a_pReq->m_bDone = true;
 		ThreadPool::Instance()->InvokeOnMain<RequestData *>(
 			DELEGATE(WebClient, OnResponse, RequestData *, this), a_pReq);
 	}
@@ -827,8 +826,8 @@ void WebClient::OnResponse(RequestData * a_pData)
 
 	delete a_pData;
 
-	// close the socket afterwards..
-	if ( bClose )
+	// close the socket afterwards, only if 
+	if ( bClose && a_pData->m_bDone )
 		OnClose();
 }
 
