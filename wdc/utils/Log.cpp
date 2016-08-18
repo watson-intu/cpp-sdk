@@ -35,11 +35,14 @@ void ConsoleReactor::Process(const LogRecord & a_Record)
 #ifdef _WIN32
 		HANDLE h = NULL;
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
-		if (a_Record.m_Level >= LL_ERROR)
+		if (a_Record.m_Level >= LL_WARNING)
 		{
 			h = GetStdHandle(STD_OUTPUT_HANDLE);
 			GetConsoleScreenBufferInfo(h, &csbi);
-			SetConsoleTextAttribute(h, FOREGROUND_RED | FOREGROUND_INTENSITY );
+			if ( a_Record.m_Level >= LL_ERROR )
+				SetConsoleTextAttribute(h, FOREGROUND_RED | FOREGROUND_INTENSITY );
+			else
+				SetConsoleTextAttribute(h, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY );
 		}
 #endif
 		printf("[%s][%s][%s] %s\n",
