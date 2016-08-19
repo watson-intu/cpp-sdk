@@ -23,7 +23,6 @@
 #include "utils/StringUtil.h"
 #include "utils/WatsonException.h"
 
-const std::string SERVICE_ID = "SpeechToTextV1";
 const float WS_KEEP_ALIVE_TIME = 10.0f;
 const float LISTEN_TIMEOUT = 60.0f;
 const int MAX_QUEUED_RECORDINGS = 30 * 8;
