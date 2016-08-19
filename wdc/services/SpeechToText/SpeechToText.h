@@ -131,7 +131,7 @@ private:
 		bool CreateListenConnector();
 		void CloseListenConnector();
 		void Disconnected();
-		void RefreshSocket();
+		void Refresh();
 
 		void SendStart();
 		void SendStop();

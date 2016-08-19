@@ -136,14 +136,15 @@ void SpeechToText::GetServiceStatus( ServiceStatusCallback a_Callback )
 
 void SpeechToText::RefreshConnections()
 {
-	m_IsListening = false;	
-	Log::Debug("SpeechToText", "About to Refresh websockets");
-	for( Connectionlist::iterator iConn = m_Connections.begin(); iConn != m_Connections.end(); ++iConn )
+	if ( m_IsListening )
 	{
-		(*iConn)->RefreshSocket();	
-	}
-	Log::Debug("SpeechToText", "Starting websockets back up");
-	m_IsListening = true;
+		Log::Debug("SpeechToText", "About to Refresh websockets");
+		for( Connectionlist::iterator iConn = m_Connections.begin(); iConn != m_Connections.end(); ++iConn )
+		{
+			(*iConn)->Refresh();	
+		}
+		Log::Debug("SpeechToText", "Starting websockets back up");
+	}	
 }
 
 bool SpeechToText::StartListening(OnRecognize callback)
@@ -230,18 +231,13 @@ SpeechToText::Connection::~Connection()
 	CloseListenConnector();
 }
 
-void SpeechToText::Connection::RefreshSocket()
+void SpeechToText::Connection::Refresh()
 {
-	Disconnected();
-	CloseListenConnector();
+	m_Connected = false;
+	m_ListenSocket->Close();
 			
 	if (! CreateListenConnector() )
 		OnReconnect();
-
-	m_spKeepAliveTimer.reset();
-	if ( TimerPool::Instance() )
-		m_spKeepAliveTimer = TimerPool::Instance()->StartTimer( 
-			VOID_DELEGATE( Connection, KeepAlive, this ), WS_KEEP_ALIVE_TIME, true, true );
 }
 
 void SpeechToText::Connection::SendAudio(const SpeechAudioData & clip)
