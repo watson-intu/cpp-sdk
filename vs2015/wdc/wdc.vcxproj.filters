@@ -55,6 +55,9 @@
     <Filter Include="services\VisualRecognition">
       <UniqueIdentifier>{2d958eba-2ca3-4990-8564-7658faee1f2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="services\Alchemy">
+      <UniqueIdentifier>{59f15da7-1ce5-46b7-8f44-218477da0881}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\wdc\services\IService.cpp">
@@ -226,6 +229,12 @@
       <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="..\..\wdc\tests\TestVisualRecognition.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\services\Alchemy\Alchemy.cpp">
+      <Filter>services\Alchemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\tests\TestAlchemy.cpp">
       <Filter>tests</Filter>
     </ClCompile>
   </ItemGroup>
@@ -797,6 +806,9 @@
     </ClInclude>
     <ClInclude Include="..\..\wdc\services\VisualRecognition\VisualRecognition.h">
       <Filter>services\VisualRecognition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\services\Alchemy\Alchemy.h">
+      <Filter>services\Alchemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
