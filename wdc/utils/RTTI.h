@@ -128,7 +128,7 @@ inline T * DynamicCast(K * pObject)
 }
 
 template<typename T,typename K>
-inline boost::shared_ptr<T> DynamicCast( boost::shared_ptr<K> a_spObject )
+inline boost::shared_ptr<T> DynamicCast( const boost::shared_ptr<K> & a_spObject )
 {
 	if ( a_spObject && a_spObject->GetRTTI().IsType(&T::GetStaticRTTI()) )
 		return boost::static_pointer_cast<T>( a_spObject );

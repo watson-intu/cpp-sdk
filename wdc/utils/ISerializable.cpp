@@ -59,7 +59,10 @@ ISerializable * ISerializable::DeserializeObject(const Json::Value & a_json,
 	else if ( a_json["Type_"].isString() )
 	{
 		if ( a_pObject->GetRTTI().GetName() != a_json["Type_"].asString() )
-			Log::Warning( "ISerializable", "Type mis-match for deserialize." );
+		{
+			Log::Warning( "ISerializable", "Type mis-match for deserialize. %s != %s", 
+				a_pObject->GetRTTI().GetName().c_str(), a_json["Type_"].asCString() );
+		}
 	}
 
 	if ( a_pObject != NULL )
