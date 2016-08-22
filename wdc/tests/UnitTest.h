@@ -60,7 +60,7 @@ public:
 	void Spin( int & a_Count, int a_Amount, double a_Timeout = 30.0 )
 	{
 		Time start;
-		while( (Time().GetEpochTime() - start.GetEpochTime()) < a_Timeout && a_Count != a_Amount )
+		while( (Time().GetEpochTime() - start.GetEpochTime()) < a_Timeout && a_Count < a_Amount )
 		{
 			ThreadPool::Instance()->ProcessMainThread();
 			boost::this_thread::sleep( boost::posix_time::milliseconds(1) );
