@@ -159,6 +159,12 @@ public:
 			json[a_Id][i] = a_Vector[i];
 	}
 
+	static void SerializeVector(const char * a_Id, std::vector<float> & a_Vector, Json::Value & json)
+	{
+		for (size_t i = 0; i < a_Vector.size(); ++i)
+			json[a_Id][i] = a_Vector[i];
+	}
+
 	template<typename T>
 	static void SerializeVector( const char * a_Id, std::vector< boost::shared_ptr<T> > & a_Vector, Json::Value & json, bool a_bWriteType = true )
 	{
@@ -235,6 +241,15 @@ public:
 		const Json::Value & elements = json[a_Id];
 		for(size_t i=0;i<elements.size();++i)
 			a_Vector.push_back( elements[i].asString() );
+	}
+
+	static void DeserializeVector(const char * a_Id, const Json::Value & json, std::vector<float> & a_Vector)
+	{
+		a_Vector.clear();
+
+		const Json::Value & elements = json[a_Id];
+		for (size_t i = 0; i < elements.size(); ++i)
+			a_Vector.push_back(elements[i].asFloat());
 	}
 
 	template<typename T>
