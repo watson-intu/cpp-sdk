@@ -824,11 +824,11 @@ void WebClient::OnResponse(RequestData * a_pData)
 	if ( m_DataReceiver.IsValid() )
 		m_DataReceiver( a_pData );
 
-	delete a_pData;
-
 	// close the socket afterwards, only if 
 	if ( bClose && a_pData->m_bDone )
 		OnClose();
+
+	delete a_pData;
 }
 
 void WebClient::OnWebSocketFrame( IWebSocket::Frame * a_pFrame )
