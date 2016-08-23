@@ -68,7 +68,8 @@ void Alchemy::GetChunkTags(const std::string & a_Text,
 	parameters += "&outputMode=json";
 	parameters += "&text=" + StringUtil::UrlEscape( a_Text );
 
-	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback);
+	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback,
+		new CacheRequest( "GetChunkTags", StringHash::DJB(a_Text.c_str()) ) );
 }
 
 void Alchemy::GetPosTags(const std::string & a_Text,
@@ -79,6 +80,7 @@ void Alchemy::GetPosTags(const std::string & a_Text,
 	parameters += "&outputMode=json";
 	parameters += "&text=" + StringUtil::UrlEscape( a_Text );
 
-	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback);
+	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback, 
+		new CacheRequest( "GetPosTags", StringHash::DJB(a_Text.c_str()) ) );
 }
 

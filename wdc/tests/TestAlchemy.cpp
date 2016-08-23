@@ -50,7 +50,7 @@ public:
 		Spin( m_bGetPosTagsTested );
 
 		alchemy.GetChunkTags( "can you wave to the crowd?",
-			DELEGATE(TestAlchemy, OnGetPosTags, const Json::Value &, this) );
+			DELEGATE(TestAlchemy, OnGetChunkTags, const Json::Value &, this) );
 		Spin( m_bGetChunkTagsTested );
 
 		Test(m_bGetPosTagsTested);
