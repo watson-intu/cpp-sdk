@@ -132,7 +132,7 @@ void NaturalLanguageClassifier::TrainClassifier( const std::string & a_Classifie
 
 	Form form;
 	form.AddFormField( "training_metadata", trainingMeta.toStyledString() );
-	form.AddFormField( "training_data", a_TrainingData );
+	form.AddFormField( "training_data", StringUtil::Trim( a_TrainingData, " \r\n") );
 	form.Finish();
 
 	Headers headers;
