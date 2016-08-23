@@ -235,7 +235,8 @@ void SpeechToText::Connection::Refresh()
 {
 	m_Connected = false;
 	m_ListenSocket->Close();
-			
+
+	CloseListenConnector();
 	if (! CreateListenConnector() )
 		OnReconnect();
 }
