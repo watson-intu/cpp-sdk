@@ -28,7 +28,7 @@ const float WS_KEEP_ALIVE_TIME = 10.0f;
 const float LISTEN_TIMEOUT = 60.0f;
 const int MAX_QUEUED_RECORDINGS = 30 * 8;
 const int MAX_RECOGNIZE_CLIP_SIZE = 4 * (1024 * 1024);
-const float RECONNECT_TIME = 5.0f;
+const float RECONNECT_TIME = 1.0f;
 
 REG_SERIALIZABLE( SpeechToText );
 RTTI_IMPL( SpeechToText, IService );
@@ -234,6 +234,7 @@ SpeechToText::Connection::~Connection()
 void SpeechToText::Connection::Refresh()
 {
 	m_Connected = false;
+	m_ListenActive = false;
 	m_ListenSocket->Close();
 
 	CloseListenConnector();
