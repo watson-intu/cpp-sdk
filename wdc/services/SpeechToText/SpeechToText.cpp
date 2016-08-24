@@ -27,7 +27,7 @@ const float WS_KEEP_ALIVE_TIME = 10.0f;
 const float LISTEN_TIMEOUT = 60.0f;
 const int MAX_QUEUED_RECORDINGS = 30 * 8;
 const int MAX_RECOGNIZE_CLIP_SIZE = 4 * (1024 * 1024);
-const float RECONNECT_TIME = 5.0f;
+const float RECONNECT_TIME = 1.0f;
 
 REG_SERIALIZABLE( SpeechToText );
 RTTI_IMPL( SpeechToText, IService );
@@ -133,6 +133,19 @@ void SpeechToText::GetServiceStatus( ServiceStatusCallback a_Callback )
 		a_Callback(ServiceStatus(m_ServiceId, false));
 }
 
+void SpeechToText::RefreshConnections()
+{
+	if ( m_IsListening )
+	{
+		Log::Debug("SpeechToText", "About to Refresh websockets");
+		for( Connectionlist::iterator iConn = m_Connections.begin(); iConn != m_Connections.end(); ++iConn )
+		{
+			(*iConn)->Refresh();	
+		}
+		Log::Debug("SpeechToText", "Starting websockets back up");
+	}	
+}
+
 bool SpeechToText::StartListening(OnRecognize callback)
 {
 	if (!callback.IsValid())
@@ -215,6 +228,17 @@ SpeechToText::Connection::Connection( SpeechToText * a_pSTT, const std::string &
 SpeechToText::Connection::~Connection()
 {
 	CloseListenConnector();
+}
+
+void SpeechToText::Connection::Refresh()
+{
+	m_Connected = false;
+	m_ListenActive = false;
+	m_ListenSocket->Close();
+
+	CloseListenConnector();
+	if (! CreateListenConnector() )
+		OnReconnect();
 }
 
 void SpeechToText::Connection::SendAudio(const SpeechAudioData & clip)

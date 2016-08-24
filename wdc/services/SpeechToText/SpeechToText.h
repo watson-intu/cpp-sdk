@@ -57,6 +57,7 @@ public:
 	bool IsConnected() const;
 
 	//! Mutators
+	void RefreshConnections();
 	void SetOnError( ErrorEvent a_OnError );
 	void SetRecognizeModels( const ModelList & a_Models );
 	void SetEnableTimestamps( bool a_bEnable );
@@ -130,6 +131,7 @@ private:
 		bool CreateListenConnector();
 		void CloseListenConnector();
 		void Disconnected();
+		void Refresh();
 
 		void SendStart();
 		void SendStop();
