@@ -100,12 +100,20 @@ private:
 
 		virtual const char * GetFile() const
 		{
+#if ENABLE_DELEGATE_DEBUG
 			return m_Delegate.GetFile();
+#else
+			return "";
+#endif
 		}
 
 		virtual int GetLine() const
 		{
+#if ENABLE_DELEGATE_DEBUG
 			return m_Delegate.GetLine();
+#else
+			return 0;
+#endif
 		}
 
 		VoidDelegate	m_Delegate;
@@ -131,12 +139,20 @@ private:
 
 		virtual const char * GetFile() const
 		{
+#if ENABLE_DELEGATE_DEBUG
 			return m_Delegate.GetFile();
+#else
+			return "";
+#endif
 		}
 
 		virtual int GetLine() const
 		{
+#if ENABLE_DELEGATE_DEBUG
 			return m_Delegate.GetLine();
+#else
+			return 0;
+#endif
 		}
 
 		Delegate<ARG>	m_Delegate;

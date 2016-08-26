@@ -24,10 +24,12 @@
 
 #include "WDCLib.h"
 
-#if defined(_DEBUG) 
+#ifndef ENABLE_DELEGATE_DEBUG
+#if defined(_DEBUG) || !defined(__OPTIMIZE__)
 #define ENABLE_DELEGATE_DEBUG 1
 #else
-#define EABLE_DEELEGET_DEBUG 0
+#define ENABLE_DELEGATE_DEBUG 0
+#endif
 #endif
 
 //! This delegate class allows you to store a function call to object. This is useful for passing a callback
