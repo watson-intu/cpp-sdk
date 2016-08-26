@@ -16,9 +16,11 @@
 */
 
 //! Define to 1 to protect thread calls against a crash..
-#define ENABLE_THREAD_TRY_CATCH			0
+#define ENABLE_THREAD_TRY_CATCH					0
 //! Define to 1 to enable main delegate timing for finding and fixing callbacks that block the main thread
-#define MAIN_DELEGATE_TIME				1
+#define MEASURE_MAIN_DELEGATE_TIMES				1
+//! maximum amount of time to spend in a single delegate before we throw an error
+const double MAX_MAIN_DELEGATE_TIME	= 0.1;
 
 #include "ThreadPool.h"
 #include "WatsonException.h"
@@ -64,15 +66,18 @@ void ThreadPool::ProcessMainThread()
 
 	for( DelegateList::iterator iDelegate = invoke.begin(); iDelegate != invoke.end(); ++iDelegate )
 	{
-#if MAIN_DELEGATE_TIME && ENABLE_DELEGATE_DEBUG
+#if MEASURE_MAIN_DELEGATE_TIMES && ENABLE_DELEGATE_DEBUG
         double startTime = Time().GetEpochTime();
 #endif
 		(*iDelegate)->Invoke();
 
-#if MAIN_DELEGATE_TIME && ENABLE_DELEGATE_DEBUG
+#if MEASURE_MAIN_DELEGATE_TIMES && ENABLE_DELEGATE_DEBUG
         double elapsed = Time().GetEpochTime() - startTime;
-		if(elapsed > 0.5)
-			Log::Error("ThreadPool", "Delegate took %f seconds %s:%d", elapsed, (*iDelegate)->GetFile(), (*iDelegate)->GetLine());
+		if(elapsed > MAX_MAIN_DELEGATE_TIME)
+		{
+			Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+				(*iDelegate)->GetFile(), (*iDelegate)->GetLine(), elapsed );
+		}
 #endif
 		(*iDelegate)->Destroy();
 	}
