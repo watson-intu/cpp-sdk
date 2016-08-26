@@ -77,6 +77,8 @@ private:
 		{}
 		virtual void Invoke() = 0;
 		virtual void Destroy() = 0;
+		virtual const char * GetFile() const = 0;
+		virtual int GetLine() const = 0;
 	};
 
 	class VoidCallback : public ICallback
@@ -94,6 +96,16 @@ private:
 		virtual void Destroy()
 		{
 			delete this;
+		}
+
+		virtual const char * GetFile() const
+		{
+			return m_Delegate.GetFile();
+		}
+
+		virtual int GetLine() const
+		{
+			return m_Delegate.GetLine();
 		}
 
 		VoidDelegate	m_Delegate;
@@ -115,6 +127,16 @@ private:
 		virtual void Destroy()
 		{
 			delete this;
+		}
+
+		virtual const char * GetFile() const
+		{
+			return m_Delegate.GetFile();
+		}
+
+		virtual int GetLine() const
+		{
+			return m_Delegate.GetLine();
 		}
 
 		Delegate<ARG>	m_Delegate;

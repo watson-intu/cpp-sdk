@@ -24,6 +24,8 @@
 
 #include "WDCLib.h"
 
+#define ENABLE_DELEGATE_DEBUG 0
+
 //! This delegate class allows you to store a function call to object. This is useful for passing a callback
 //! around through functions or storing that callback as a data member in a class.
 //!
@@ -40,7 +42,7 @@ public:
 	{}
 
 	template <class T, void (T::*TMethod)(ARG)>
-#ifndef _DEBUG
+#if !ENABLE_DELEGATE_DEBUG
 	static Delegate Create(T* object_ptr)
 #else
 	static Delegate Create(T* object_ptr, const char * a_pFile, int a_nLine )
@@ -51,7 +53,7 @@ public:
 		{
 			d.m_pObject = object_ptr;
 			d.m_pStub = &method_stub<T, TMethod>; // #1
-#ifdef _DEBUG
+#if ENABLE_DELEGATE_DEBUG
 			d.m_pFile = a_pFile;
 			d.m_nLine = a_nLine;
 #endif
@@ -60,7 +62,7 @@ public:
 	}
 
 	template <class T, void (T::*TMethod)(ARG)>
-#ifndef _DEBUG
+#if !ENABLE_DELEGATE_DEBUG
 	static Delegate Create( boost::shared_ptr<T> object_ptr )
 #else
 	static Delegate Create( boost::shared_ptr<T> object_ptr, const char * a_pFile, int a_nLine )
@@ -72,7 +74,7 @@ public:
 			d.m_pObject = object_ptr.get();
 			d.m_WeakPtr = boost::weak_ptr<T>( object_ptr );
 			d.m_pStub = &method_stub<T, TMethod>; // #1
-#ifdef _DEBUG
+#if ENABLE_DELEGATE_DEBUG
 			d.m_pFile = a_pFile;
 			d.m_nLine = a_nLine;
 #endif
@@ -104,13 +106,25 @@ public:
 		return obj == m_pObject;
 	}
 
+#if ENABLE_DELEGATE_DEBUG
+	const char * GetFile() const
+	{
+		return m_pFile;
+	}
+
+	int GetLine() const
+	{
+		return m_nLine;
+	}
+#endif
+
 private:
 	typedef bool (*stub_type)(void* object_ptr, const boost::any & weak_ptr, ARG);
 
 	void *			m_pObject;
 	boost::any		m_WeakPtr;
 	stub_type		m_pStub;
-#ifdef _DEBUG
+#if ENABLE_DELEGATE_DEBUG
 	const char *	m_pFile;
 	int				m_nLine;
 #endif
@@ -131,7 +145,7 @@ private:
 
 //! Helper macro for making a delegate a little bit less wordy, e.g.
 //! Delegate<int> d = DELEGATE( int, MyObject, Func, pObject );
-#ifndef _DEBUG
+#if !ENABLE_DELEGATE_DEBUG
 #define DELEGATE( CLASS, FUNC, ARG, OBJ )		Delegate<ARG>::Create<CLASS,&CLASS::FUNC>( OBJ )
 #else
 #define DELEGATE( CLASS, FUNC, ARG, OBJ )		Delegate<ARG>::Create<CLASS,&CLASS::FUNC>( OBJ, __FILE__, __LINE__ )
@@ -146,7 +160,7 @@ public:
 	{}
 
 	template <class T, void (T::*TMethod)()>
-#ifndef _DEBUG
+#if !ENABLE_DELEGATE_DEBUG
 	static VoidDelegate Create(T* object_ptr)
 #else
 	static VoidDelegate Create(T* object_ptr, const char * a_pFile, int a_nLine)
@@ -157,7 +171,7 @@ public:
 		{
 			d.m_pObject = object_ptr;
 			d.m_pStub = &method_stub<T, TMethod>; // #1
-#ifdef _DEBUG
+#if ENABLE_DELEGATE_DEBUG
 			d.m_pFile = a_pFile;
 			d.m_nLine = a_nLine;
 #endif
@@ -166,7 +180,7 @@ public:
 	}
 
 	template <class T, void (T::*TMethod)()>
-#ifndef _DEBUG
+#if !ENABLE_DELEGATE_DEBUG
 	static VoidDelegate Create(boost::shared_ptr<T> object_ptr)
 #else
 	static VoidDelegate Create(boost::shared_ptr<T> object_ptr, const char * a_pFile, int a_nLine)
@@ -178,7 +192,7 @@ public:
 			d.m_pObject = object_ptr.get();
 			d.m_WeakPtr = boost::weak_ptr<T>( object_ptr );
 			d.m_pStub = &method_stub<T, TMethod>; // #1
-#ifdef _DEBUG
+#if ENABLE_DELEGATE_DEBUG
 			d.m_pFile = a_pFile;
 			d.m_nLine = a_nLine;
 #endif
@@ -210,13 +224,24 @@ public:
 		return obj == m_pObject;
 	}
 
+#if ENABLE_DELEGATE_DEBUG
+	const char * GetFile() const
+	{
+		return m_pFile;
+	}
+
+	int GetLine() const
+	{
+		return m_nLine;
+	}
+#endif
 private:
 	typedef bool (*stub_type)(void* object_ptr, const boost::any & );
 
 	void*		m_pObject;
 	boost::any	m_WeakPtr;
 	stub_type	m_pStub;
-#ifdef _DEBUG
+#if ENABLE_DELEGATE_DEBUG
 	const char * m_pFile;
 	int			m_nLine;
 #endif
@@ -237,7 +262,7 @@ private:
 
 //! Helper macro for making a delegate a little bit less wordy, e.g.
 //! Delegate<int> d = DELEGATE( int, MyObject, Func, pObject );
-#ifndef _DEBUG
+#if !ENABLE_DELEGATE_DEBUG
 #define VOID_DELEGATE( CLASS, FUNC, OBJ )		VoidDelegate::Create<CLASS,&CLASS::FUNC>( OBJ )
 #else
 #define VOID_DELEGATE( CLASS, FUNC, OBJ )		VoidDelegate::Create<CLASS,&CLASS::FUNC>( OBJ, __FILE__, __LINE__ )

@@ -17,10 +17,12 @@
 
 //! Define to 1 to protect thread calls against a crash..
 #define ENABLE_THREAD_TRY_CATCH		0
+#define MAIN_DELEGATE_TIME 0
 
 #include "ThreadPool.h"
 #include "WatsonException.h"
 #include "Log.h"
+#include "Time.h"
 
 ThreadPool * ThreadPool::sm_pInstance = NULL;
 
@@ -59,9 +61,21 @@ void ThreadPool::ProcessMainThread()
 	m_MainQueue.clear();
 	m_MainQueueLock.unlock();
 
+	Log::Debug("ThreadPool", "Invoking delegate %d", invoke.size());
 	for( DelegateList::iterator iDelegate = invoke.begin(); iDelegate != invoke.end(); ++iDelegate )
 	{
+#if MAIN_DELEGATE_TIME
+        double startTime = Time().GetEpochTime();
+#endif
 		(*iDelegate)->Invoke();
+
+#if MAIN_DELEGATE_TIME
+        double elapsed = Time().GetEpochTime() - startTime;
+		if(elapsed > 0.5)
+		{
+			Log::Error("ThreadPool", "Delegate took %f seconds %s:%d", elapsed, (*iDelegate)->GetFile(), (*iDelegate)->GetLine());
+		}
+#endif
 		(*iDelegate)->Destroy();
 	}
 }
