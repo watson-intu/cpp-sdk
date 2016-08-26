@@ -16,8 +16,9 @@
 */
 
 //! Define to 1 to protect thread calls against a crash..
-#define ENABLE_THREAD_TRY_CATCH		0
-#define MAIN_DELEGATE_TIME 0
+#define ENABLE_THREAD_TRY_CATCH			0
+//! Define to 1 to enable main delegate timing for finding and fixing callbacks that block the main thread
+#define MAIN_DELEGATE_TIME				0
 
 #include "ThreadPool.h"
 #include "WatsonException.h"
@@ -71,9 +72,7 @@ void ThreadPool::ProcessMainThread()
 #if MAIN_DELEGATE_TIME
         double elapsed = Time().GetEpochTime() - startTime;
 		if(elapsed > 0.5)
-		{
 			Log::Error("ThreadPool", "Delegate took %f seconds %s:%d", elapsed, (*iDelegate)->GetFile(), (*iDelegate)->GetLine());
-		}
 #endif
 		(*iDelegate)->Destroy();
 	}

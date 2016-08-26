@@ -24,7 +24,11 @@
 
 #include "WDCLib.h"
 
+#if defined(_DEBUG) 
 #define ENABLE_DELEGATE_DEBUG 1
+#else
+#define EABLE_DEELEGET_DEBUG 0
+#endif
 
 //! This delegate class allows you to store a function call to object. This is useful for passing a callback
 //! around through functions or storing that callback as a data member in a class.
