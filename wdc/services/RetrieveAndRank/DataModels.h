@@ -22,8 +22,6 @@
 
 struct WDC_API Documents : public ISerializable
 {
-    RTTI_DECL();
-
     std::string                 m_Id;
     std::string                 m_Title;
     std::string                 m_ContentHTML;
