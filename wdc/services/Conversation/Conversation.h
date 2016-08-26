@@ -31,7 +31,7 @@ public:
     RTTI_DECL();
 
     //! Types
-    typedef Delegate<ConversationMessageResponse *>	OnMessage;
+    typedef Delegate<ConversationResponse *>	OnMessage;
 
     //! Construction
     Conversation();

@@ -38,7 +38,8 @@ public:
     std::string m_TestText;
     Json::Value m_Context;
 
-    virtual void RunTest() {
+    virtual void RunTest() 
+	{
         Config config;
         Test(ISerializable::DeserializeFromFile("./etc/tests/unit_test_config.json", &config) != NULL);
         ThreadPool pool(1);
@@ -48,7 +49,7 @@ public:
         Log::Debug("TestConversation","Conversation Started");
 
         Log::Debug("TestConversation","Testing Conversation Response for input: %s", m_TestText.c_str());
-        conversation.Message(m_WorkspaceId, m_Context, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationMessageResponse *, this));
+        conversation.Message(m_WorkspaceId, m_Context, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationResponse *, this));
 
         Spin(m_bConversationTested);
         Test(m_bConversationTested);
@@ -56,7 +57,7 @@ public:
         // TODO Add in other Conversation API Endpoints provided by Brandon W.
     }
 
-    void OnMessage(ConversationMessageResponse * a_pConversationResponse)
+    void OnMessage(ConversationResponse * a_pConversationResponse)
     {
         // Test that an Intent is returned
         std::vector<ConversationIntent> m_Intents = a_pConversationResponse->m_Intents;

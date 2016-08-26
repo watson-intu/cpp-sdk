@@ -21,7 +21,7 @@
 #include "utils/Form.h"
 
 REG_SERIALIZABLE( Conversation );
-RTTI_IMPL( ConversationMessageResponse, ISerializable );
+RTTI_IMPL( ConversationResponse, ISerializable );
 RTTI_IMPL( Conversation, IService );
 
 Conversation::Conversation() : IService("ConversationV1"), m_APIVersion( "2016-07-11" )
@@ -70,6 +70,6 @@ void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value
     if( a_Context.isMember("conversation_id") )
         input["context"] = a_Context;
 
-    new RequestObj<ConversationMessageResponse>( this, params, "POST", headers, input.toStyledString(),  a_Callback );
+    new RequestObj<ConversationResponse>( this, params, "POST", headers, input.toStyledString(),  a_Callback );
 }
 
