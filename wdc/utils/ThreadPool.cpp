@@ -61,7 +61,6 @@ void ThreadPool::ProcessMainThread()
 	m_MainQueue.clear();
 	m_MainQueueLock.unlock();
 
-	Log::Debug("ThreadPool", "Invoking delegate %d", invoke.size());
 	for( DelegateList::iterator iDelegate = invoke.begin(); iDelegate != invoke.end(); ++iDelegate )
 	{
 #if MAIN_DELEGATE_TIME
