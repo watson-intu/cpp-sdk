@@ -77,28 +77,33 @@ struct WDC_API RetrieveAndRankResponse : public ISerializable
 {
     RTTI_DECL();
 
+    Json::Value   m_Response;
     std::vector<Documents>  m_Docs;
     int                     m_NumFound;
     int                     m_Start;
 
     virtual void Serialize(Json::Value & json)
     {
-        json["numFound"] = m_NumFound;
-        json["start"] = m_Start;
-        SerializeVector("docs", m_Docs, json);
+        json["response"] = m_Response;
+        m_Response["numFound"] = m_NumFound;
+        m_Response["start"] = m_Start;
+        SerializeVector("docs", m_Docs, m_Response);
     }
 
     virtual void Deserialize(const Json::Value & json)
     {
-        if( json.isMember("numFound"))
-            m_NumFound = json["numFound"].asInt();
+        m_Response = json["response"];
+        if( m_Response.isMember("numFound"))
+            m_NumFound = m_Response["numFound"].asInt();
 
-        if( json.isMember("start"))
-            m_Start = json["start"].asInt();
+        if( m_Response.isMember("start"))
+            m_Start = m_Response["start"].asInt();
 
-        if( json.isMember("docs"))
-            DeserializeVector("docs", json, m_Docs);
+        if( m_Response.isMember("docs"))
+            DeserializeVector("docs", m_Response, m_Docs);
     }
+
+
 };
 
 #endif //SELF_DATAMODELS_H

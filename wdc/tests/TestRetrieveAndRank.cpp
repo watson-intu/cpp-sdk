@@ -24,6 +24,7 @@
 
 class TestRetrieveAndRank : UnitTest
 {
+public:
     TestRetrieveAndRank() : UnitTest("TestRetrieveAndRank"),
                             m_bRetrieveAndRankTested( false ),
                             m_WorkspaceId( "Version1" ),
@@ -62,3 +63,5 @@ class TestRetrieveAndRank : UnitTest
         m_bRetrieveAndRankTested = true;
     }
 };
+
+TestRetrieveAndRank TEST_RETRIEVE_AND_RANK;
