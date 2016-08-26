@@ -24,17 +24,20 @@ REG_SERIALIZABLE( Conversation );
 RTTI_IMPL( ConversationMessageResponse, ISerializable );
 RTTI_IMPL( Conversation, IService );
 
-Conversation::Conversation() : IService("ConversationV1")
+Conversation::Conversation() : IService("ConversationV1"), m_APIVersion( "2016-07-11" )
 {}
 
 void Conversation::Serialize(Json::Value & json)
 {
     IService::Serialize(json);
+	json["m_APIVersion"] = m_APIVersion;
 }
 
 void Conversation::Deserialize(const Json::Value & json)
 {
     IService::Deserialize(json);
+	if ( json.isMember("m_APIVersion") )
+		m_APIVersion = json["m_APIVersion"].asString();
 }
 
 //! IService interface
@@ -54,22 +57,19 @@ bool Conversation::Start()
 
 
 //! Send Question / Statement / Command
-void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value & a_Context,
-                            const std::string & a_Version, const std::string & a_Text, OnMessage a_Callback )
+void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value & a_Context, const std::string & a_Text, OnMessage a_Callback )
 {
     Headers headers;
     headers["Content-Type"] = "application/json";
-    std::string params = "/v1/workspaces/" + a_WorkspaceId + "/message?version=" + a_Version;
+    std::string params = "/v1/workspaces/" + a_WorkspaceId + "/message?version=" + m_APIVersion;
 
     Json::Value req;
-    Json::Value input;
     req["text"] = a_Text;
-    input["input"] = req;
+	Json::Value input;
+	input["input"] = req;
     if( a_Context.isMember("conversation_id") )
         input["context"] = a_Context;
 
     new RequestObj<ConversationMessageResponse>( this, params, "POST", headers, input.toStyledString(),  a_Callback );
-
 }
 
-// TODO Add other API Endpoints for Conversation Service (currently in Staging, not GA)

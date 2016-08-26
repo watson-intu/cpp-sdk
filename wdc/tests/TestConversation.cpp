@@ -29,13 +29,11 @@ public:
         m_bConversationTested(false),
         m_WorkspaceId("e8e888b1-5141-4747-9bbb-5a5440bae96a"),
         m_ConversationId(""),
-        m_VersionId("2016-07-11"),
         m_TestText("please raise your right hand")
     {}
 
     bool m_bConversationTested;
     std::string m_WorkspaceId;
-    std::string m_VersionId;
     std::string m_ConversationId;
     std::string m_TestText;
     Json::Value m_Context;
@@ -50,7 +48,7 @@ public:
         Log::Debug("TestConversation","Conversation Started");
 
         Log::Debug("TestConversation","Testing Conversation Response for input: %s", m_TestText.c_str());
-        conversation.Message(m_WorkspaceId, m_Context, m_VersionId, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationMessageResponse *, this));
+        conversation.Message(m_WorkspaceId, m_Context, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationMessageResponse *, this));
 
         Spin(m_bConversationTested);
         Test(m_bConversationTested);
