@@ -107,6 +107,8 @@ ISerializable * ISerializable::DeserializeFromFile(const std::string & a_File, I
 	if (input.is_open())
 	{
 		std::string json = std::string(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
+		input.close();
+
 		return DeserializeObject(json, a_pObject);
 	}
 
@@ -120,6 +122,7 @@ bool ISerializable::SerializeToFile( const std::string & a_File, ISerializable *
 
 	std::ofstream output(a_File.c_str());
 	output << json_string;
+	output.close();
 
 	return true;
 }
