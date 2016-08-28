@@ -58,6 +58,9 @@
     <Filter Include="services\Alchemy">
       <UniqueIdentifier>{59f15da7-1ce5-46b7-8f44-218477da0881}</UniqueIdentifier>
     </Filter>
+    <Filter Include="services\RetreiveAndRank">
+      <UniqueIdentifier>{4bd1ae6c-1355-4ddb-8e88-9fdc39f3a069}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\wdc\services\IService.cpp">
@@ -236,6 +239,9 @@
     </ClCompile>
     <ClCompile Include="..\..\wdc\tests\TestAlchemy.cpp">
       <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\services\RetrieveAndRank\RetrieveAndRank.cpp">
+      <Filter>services\RetreiveAndRank</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -809,6 +815,12 @@
     </ClInclude>
     <ClInclude Include="..\..\wdc\services\Alchemy\Alchemy.h">
       <Filter>services\Alchemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\services\RetrieveAndRank\DataModels.h">
+      <Filter>services\RetreiveAndRank</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\services\RetrieveAndRank\RetrieveAndRank.h">
+      <Filter>services\RetreiveAndRank</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
