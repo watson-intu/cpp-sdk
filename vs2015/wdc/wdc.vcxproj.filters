@@ -243,6 +243,9 @@
     <ClCompile Include="..\..\wdc\services\RetrieveAndRank\RetrieveAndRank.cpp">
       <Filter>services\RetreiveAndRank</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\wdc\tests\TestRetrieveAndRank.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\wdc\services\IService.h">
