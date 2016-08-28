@@ -62,7 +62,7 @@ struct WDC_API ConversationEntities : public ISerializable
 };
 
 
-struct WDC_API ConversationMessageResponse : public ISerializable
+struct WDC_API ConversationResponse : public ISerializable
 {
     RTTI_DECL();
 

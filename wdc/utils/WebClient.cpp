@@ -325,9 +325,16 @@ void WebClient::HandleConnect(const boost::system::error_code & error,
 	else if ( ++i != boost::asio::ip::tcp::resolver::iterator() )
 	{
 		// try the next end-point in DNS..
-		m_pSocket->close();
-		m_pSocket->async_connect( *i,
-			boost::bind(&WebClient::HandleConnect, this, boost::asio::placeholders::error, i));
+		try {
+			m_pSocket->close();
+			m_pSocket->async_connect( *i,
+				boost::bind(&WebClient::HandleConnect, this, boost::asio::placeholders::error, i));
+		}
+		catch( const std::exception & ex )
+		{
+			Log::Error("WebClient", "Caught exception: %s", ex.what());
+			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+		}
 	}
 	else
 	{
