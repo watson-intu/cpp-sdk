@@ -70,6 +70,14 @@ public:
 		{
 			return m_pSocket;
 		}
+		const StreamBufferSP & GetSendBuffer() const
+		{
+			return m_SendBuffer;
+		}
+		const StreamBufferSP & GetReadBuffer() const
+		{
+			return m_ReadBuffer;
+		}
 
 		//! Start a timeout for this connection, if cancel() is not called on the returned timer
 		//! before it fires, then this socket will be closed automatically.
@@ -179,12 +187,22 @@ public:
 			}
 		}
 
-		virtual void ReadAsync(size_t a_Bytes, Delegate< std::string & > a_ReadCallback)
+		virtual void ReadAsync(size_t a_Bytes, Delegate< std::string * > a_ReadCallback)
 		{
-			boost::asio::async_read(*m_pSocket, *m_ReadBuffer,
-				boost::asio::transfer_at_least(a_Bytes),
-				boost::bind(&Connection::OnRead, this, this->shared_from_this(), a_ReadCallback,
-					boost::asio::placeholders::error));
+			size_t nBytesAvail = (size_t)m_ReadBuffer->in_avail();
+			if ( a_Bytes > nBytesAvail )
+			{
+				boost::asio::async_read(*m_pSocket, *m_ReadBuffer,
+					boost::asio::transfer_at_least(a_Bytes - nBytesAvail),
+					boost::bind(&Connection::OnRead, this, this->shared_from_this(), a_ReadCallback,
+						boost::asio::placeholders::error,
+						boost::asio::placeholders::bytes_transferred ));
+			}
+			else
+			{
+				// we already have enough bytes in the buffer, return those bytes now..
+				OnRead( this->shared_from_this(), a_ReadCallback, boost::system::error_code(), nBytesAvail );
+			}
 		}
 
 		virtual void SendResponse(int a_nStatusCode, const std::string & a_Reply, const Headers & a_Headers,
@@ -236,7 +254,6 @@ public:
 				boost::asio::transfer_at_least(1),
 				boost::bind(&Connection::OnReadWS, this, this->shared_from_this(), boost::asio::placeholders::error));
 		}
-
 
 	private:
 		//! Types
@@ -301,8 +318,9 @@ public:
 		}
 
 		void OnRead(SP a_spConnection,
-			Delegate< std::string & > a_ReadCallback,
-			const boost::system::error_code& error)
+			Delegate< std::string * > a_ReadCallback,
+			const boost::system::error_code& error,
+			size_t bytes_transferred )
 		{
 			if (!error)
 			{
@@ -311,12 +329,11 @@ public:
 				{
 					std::istream input(m_ReadBuffer.get());
 
-					std::string content;
-					content.resize(max_read);
-					input.read(&content[0], max_read);
+					std::string * content = new std::string();
+					content->resize(max_read);
+					input.read(&(*content)[0], max_read);
 
-					if (a_ReadCallback.IsValid())
-						a_ReadCallback(content);
+					ThreadPool::Instance()->InvokeOnMain<std::string *>( a_ReadCallback, content );
 				}
 			}
 			else
@@ -499,22 +516,20 @@ protected:
 		Connection * pConnection = static_cast<Connection *>(a_spConnection.get());
 		pConnection->StartTimeout(m_fRequestTimeout);
 
-		StreamBufferSP spBuffer(new StreamBuffer());
 		boost::asio::async_read_until(*pConnection->GetSocket(),
-			*spBuffer, "\r\n\r\n",
-			boost::bind(&WebServerT::OnRequestRead, this, a_spConnection, spBuffer,
+			*pConnection->GetReadBuffer(), "\r\n\r\n",
+			boost::bind(&WebServerT::OnRequestRead, this, a_spConnection, 
 				boost::asio::placeholders::error));
 	}
 
-	void OnRequestRead(ConnectionSP a_spConnection, StreamBufferSP a_spBuffer,
-		const boost::system::error_code & ec)
+	void OnRequestRead(ConnectionSP a_spConnection, const boost::system::error_code & ec)
 	{
 		Connection * pConnection = static_cast<Connection *>(a_spConnection.get());
 		pConnection->CancelTimeout();
 
 		if (!ec)
 		{
-			std::istream input(a_spBuffer.get());
+			std::istream input( pConnection->GetReadBuffer().get() );
 
 			std::string line;
 			std::getline(input, line);
@@ -544,6 +559,7 @@ protected:
 						nSeperator = line.find(':');
 					}
 
+					// hand off our stream buffer to the connect, so it can get any remaining bytes..
 					ProcessRequest(spRequest);
 				}
 			}

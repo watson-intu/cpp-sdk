@@ -55,7 +55,7 @@ public:
 
 		virtual void Close() = 0;
 		virtual void SendAsync(const std::string & a_Send) = 0;
-		virtual void ReadAsync(size_t a_Bytes, Delegate< std::string & > a_ReadCallback) = 0;
+		virtual void ReadAsync(size_t a_Bytes, Delegate< std::string * > a_ReadCallback ) = 0;
 		virtual void SendResponse(int a_nStatusCode, const std::string & a_Reply, const Headers & a_Headers,
 			const std::string & a_Content, bool a_bClose = true ) = 0;
 		virtual void SendResponse(int a_nStatusCode, const std::string & a_Reply, 
