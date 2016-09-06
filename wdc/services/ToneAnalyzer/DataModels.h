@@ -26,7 +26,7 @@ struct WDC_API Tone : public ISerializable
     std::string m_ToneId;
     std::string m_ToneName;
 
-    virtual void Serializable(Json::Value & json)
+    virtual void Serialize(Json::Value & json)
     {
         json["score"] = m_Score;
         json["tone_id"] = m_ToneId;
@@ -40,7 +40,7 @@ struct WDC_API Tone : public ISerializable
         if( json.isMember("tone_id") )
             m_ToneId = json["tone_id"].asString();
         if( json.isMember("tone_name") )
-            m_TOneName = json["tone_name"].asString();
+            m_ToneName = json["tone_name"].asString();
     }
 };
 
@@ -50,7 +50,7 @@ struct WDC_API ToneCategory : public ISerializable
     std::string m_CategoryName;
     std::vector<Tone> m_Tones;
 
-    virtual void Serializable(Json::Value & json)
+    virtual void Serialize(Json::Value & json)
     {
         json["category_id"] = m_CategoryId;
         json["category_name"] = m_CategoryName;
