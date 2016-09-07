@@ -42,6 +42,7 @@ public:
 
     //! IService interface
     virtual bool Start();
+
     void GetTone( const std::string & a_Text, OnMessage a_Callback );
 
 private:

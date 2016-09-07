@@ -21,7 +21,7 @@ REG_SERIALIZABLE( ToneAnalyzer );
 RTTI_IMPL( DocumentTones, ISerializable );
 RTTI_IMPL( ToneAnalyzer, IService );
 
-ToneAnalyzer::ToneAnalyzer() : IService("ToneAnalyzerV1")
+ToneAnalyzer::ToneAnalyzer() : IService("ToneAnalyzerV1"), m_Version("2016-05-19")
 {}
 
 void ToneAnalyzer::Serialize(Json::Value & json)
