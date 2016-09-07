@@ -52,6 +52,8 @@ public:
     {
         Tone tone = a_Callback->m_ToneCategories[0].m_Tones[0];
         Log::Debug("TestToneAnalyzer", "Found top tone as: %s", tone.m_ToneName.c_str());
+        Log::Debug("TestToneAnalyzer", "Found top tone id as: %s", tone.m_ToneId.c_str());
+        Log::Debug("TestToneAnalyzer", "Found top confidence as: %f", tone.m_Score);
         m_bToneTested = true;
     }
 };

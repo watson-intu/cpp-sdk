@@ -55,9 +55,11 @@ bool ToneAnalyzer::Start()
 
 void ToneAnalyzer::GetTone( const std::string & a_Text, OnMessage a_Callback )
 {
-    std::string params = "/v3/tone?version" + m_Version;
+    Headers headers;
+    headers["Content-Type"] = "application/json";
+    std::string params = "/v3/tone?version=" + m_Version;
     Json::Value req;
     req["text"] = a_Text;
-    new RequestObj<DocumentTones>( this, params, "POST", m_Headers, req.toStyledString(),  a_Callback );
+    new RequestObj<DocumentTones>( this, params, "POST", headers, req.toStyledString(),  a_Callback );
 }
 
