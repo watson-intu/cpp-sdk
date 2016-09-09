@@ -559,6 +559,33 @@ protected:
 						nSeperator = line.find(':');
 					}
 
+					// add all query parameters as headers as well.
+					size_t nQuery = spRequest->m_EndPoint.find( '?' );
+					if ( nQuery != std::string::npos )
+					{
+						std::string ep( spRequest->m_EndPoint.substr( 0, nQuery ) );
+						std::string query( spRequest->m_EndPoint.substr( nQuery + 1 ) );
+
+						std::vector<std::string> params;
+						StringUtil::Split( query, "&", params );
+						for(size_t i=0;i<params.size();++i)
+						{
+							const std::string & param = params[i];
+
+							size_t nSeperator = param.find( '=' );
+							if ( nSeperator != std::string::npos )
+							{
+								std::string key( param.substr( 0, nSeperator ) );
+								std::string value( param.substr( nSeperator + 1 ) );
+								spRequest->m_Headers[key] = value;
+							}
+							else
+								spRequest->m_Headers[param] = "";
+						}
+
+						spRequest->m_EndPoint = ep;
+					}
+
 					// hand off our stream buffer to the connect, so it can get any remaining bytes..
 					ProcessRequest(spRequest);
 				}
