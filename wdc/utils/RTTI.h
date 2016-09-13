@@ -113,7 +113,7 @@ private:
 //! Use this macro for a class that derives from anther class.
 #define RTTI_DECL()										\
 	static RTTI & GetStaticRTTI();									\
-	virtual RTTI & GetRTTI() { return GetStaticRTTI(); }
+	virtual RTTI & GetRTTI() const { return GetStaticRTTI(); }
 
 #define RTTI_IMPL_BASE(CLASS) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS); return rtti; }	
 #define RTTI_IMPL(CLASS,BASE) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS,BASE::GetStaticRTTI()); return rtti; }	
