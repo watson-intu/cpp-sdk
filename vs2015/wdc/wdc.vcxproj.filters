@@ -61,6 +61,9 @@
     <Filter Include="services\RetreiveAndRank">
       <UniqueIdentifier>{4bd1ae6c-1355-4ddb-8e88-9fdc39f3a069}</UniqueIdentifier>
     </Filter>
+    <Filter Include="services\ToneAnalyzer">
+      <UniqueIdentifier>{4cf044ce-bce8-4e59-8335-85c158919fb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\wdc\services\IService.cpp">
@@ -245,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="..\..\wdc\tests\TestRetrieveAndRank.cpp">
       <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wdc\services\ToneAnalyzer\ToneAnalyzer.cpp">
+      <Filter>services\ToneAnalyzer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -824,6 +830,12 @@
     </ClInclude>
     <ClInclude Include="..\..\wdc\services\RetrieveAndRank\RetrieveAndRank.h">
       <Filter>services\RetreiveAndRank</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\services\ToneAnalyzer\DataModels.h">
+      <Filter>services\ToneAnalyzer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wdc\services\ToneAnalyzer\ToneAnalyzer.h">
+      <Filter>services\ToneAnalyzer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

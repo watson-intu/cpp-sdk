@@ -109,6 +109,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\wdc\services\TextToSpeech\TextToSpeech.cpp" />
+    <ClCompile Include="..\..\wdc\services\ToneAnalyzer\ToneAnalyzer.cpp" />
     <ClCompile Include="..\..\wdc\services\VisualRecognition\VisualRecognition.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestAlchemy.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestConversation.cpp" />
@@ -315,6 +316,8 @@
     <ClInclude Include="..\..\wdc\services\SpeechToText\SpeechToText.h" />
     <ClInclude Include="..\..\wdc\services\TextToSpeech\DataModels.h" />
     <ClInclude Include="..\..\wdc\services\TextToSpeech\TextToSpeech.h" />
+    <ClInclude Include="..\..\wdc\services\ToneAnalyzer\DataModels.h" />
+    <ClInclude Include="..\..\wdc\services\ToneAnalyzer\ToneAnalyzer.h" />
     <ClInclude Include="..\..\wdc\services\VisualRecognition\VisualRecognition.h" />
     <ClInclude Include="..\..\wdc\tests\UnitTest.h" />
     <ClInclude Include="..\..\wdc\utils\Config.h" />
