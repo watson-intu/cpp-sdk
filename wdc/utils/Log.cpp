@@ -117,6 +117,7 @@ void Log::DoLog(LogLevel a_Level, const char * a_pSub, const char * a_pFormat, v
 
 	strftime(buffer, sizeof(buffer), "%x %X", localtime(&now));
 	rec.m_Time = buffer;
+	rec.m_TimeEpoch = now;
 
 	vsnprintf(buffer, sizeof(buffer) - 1, a_pFormat, args);
 	rec.m_Message = buffer;

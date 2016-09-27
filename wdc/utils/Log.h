@@ -45,6 +45,7 @@ struct LogRecord
 	std::string		m_Time;
 	std::string		m_SubSystem;
 	std::string		m_Message;
+	time_t          m_TimeEpoch;
 };
 
 //! Abstract interface for any object that wants to hook into the LogSystem.
