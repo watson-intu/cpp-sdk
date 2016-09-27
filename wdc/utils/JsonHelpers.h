@@ -16,6 +16,7 @@
 
 #include <string>
 #include "jsoncpp/json/json.h"
+#include "tinyxml/tinyxml.h"
 #include "WDCLib.h"
 
 //! This is a container for skill/gesture arguments.
@@ -24,6 +25,9 @@ class WDC_API JsonHelpers
 public:
 	//! Validate a given path, returns false if any member of the path doesn't exist.
 	static bool ValidPath(const Json::Value & a_Json, const std::string & a_Path);
+
+	//! Convert XML to JSON
+	static void MakeJSON( const TiXmlElement * a_pElement, Json::Value & a_Value );
 
 	//! Get a const reference to a Json::Value following the provided path. Returns a NULL json
 	//! if the path isn't valid.

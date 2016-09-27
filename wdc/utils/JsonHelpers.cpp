@@ -67,6 +67,30 @@ bool JsonHelpers::ValidPath(const Json::Value & a_Json, const std::string & a_Pa
 	return false;
 }
 
+void JsonHelpers::MakeJSON( const TiXmlElement * a_pElement, Json::Value & a_Value )
+{
+	const TiXmlAttribute * pAttribute = a_pElement->FirstAttribute();
+	while( pAttribute != NULL )
+	{
+		const std::string & key = pAttribute->NameTStr();
+		const std::string & value = pAttribute->ValueStr();
+
+		a_Value[key] = value;
+		pAttribute = pAttribute->Next();
+	}
+
+	int index = 0;
+
+	const TiXmlElement * pChild = a_pElement->FirstChildElement();
+	while( pChild != NULL )
+	{
+		const std::string & elementName = pChild->ValueStr();
+		if(pChild->FirstAttribute() != NULL || pChild->FirstChildElement() != NULL)
+			MakeJSON( pChild, a_Value[elementName][index++] );
+		pChild = pChild->NextSiblingElement();
+	}
+}
+
 //! Get a const reference to a Json::Value following the provided path. Returns a NULL json
 //! if the path isn't valid.
 const Json::Value & JsonHelpers::Resolve(const Json::Value & a_Json, const std::string & a_Path)
