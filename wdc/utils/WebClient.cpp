@@ -726,12 +726,13 @@ void WebClient::WS_Send( OpCode a_Op, const std::string & a_Data, bool a_bUseMas
 {
 	std::string * pPacket = new std::string();
 	WebSocketFramer::CreateFrame( *pPacket, a_Op, a_Data, a_bUseMask);
-	WebClientService::Instance()->GetService().post( 
-		boost::bind( &WebClient::WS_QueueSend, this, pPacket) );
+
+	WS_QueueSend( pPacket );
 }
 
 void WebClient::WS_QueueSend(std::string * a_pBuffer)
 {
+	boost::lock_guard<boost::recursive_mutex> lock( m_SendLock );
 	if (!m_SendError)
 	{
 		if (m_eState == CONNECTED)
@@ -759,6 +760,7 @@ void WebClient::WS_QueueSend(std::string * a_pBuffer)
 //! in any way.
 void WebClient::WS_SendNext()
 {
+	boost::lock_guard<boost::recursive_mutex> lock( m_SendLock );
 	if (m_Send.begin() != m_Send.end())
 	{
 		std::string * pFrame = m_Send.front();
@@ -795,8 +797,10 @@ void WebClient::WS_SendNext()
 
 void WebClient::WS_Sent( const boost::system::error_code& error, size_t bytes_transferred, std::string * pBuffer )
 {
+	boost::lock_guard<boost::recursive_mutex> lock( m_SendLock );
+
 	m_SendCount -= 1;
-	if ( error )
+	if ( error || m_SendError )
 	{
 		Log::Error( "WebClient", "Error sending web socket frame : %s", error.message().c_str() );
 
