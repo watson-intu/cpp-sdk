@@ -218,6 +218,8 @@ SpeechToText::Connection::Connection( SpeechToText * a_pSTT, const std::string &
 	m_RecordingHZ( -1 ),
 	m_bReconnecting( false )
 {
+	assert( a_pSTT != NULL );
+
 	if (! CreateListenConnector() )
 		OnReconnect();
 	if ( TimerPool::Instance() )
