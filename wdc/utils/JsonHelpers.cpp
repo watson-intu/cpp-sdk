@@ -13,6 +13,7 @@
 
 #include "JsonHelpers.h"
 #include "utils/MD5.h"
+#include "utils/Log.h"
 
 //! What character is used a seperator for paths
 #define PARAMS_PATH_SEPERATOR		'/'
@@ -70,23 +71,26 @@ bool JsonHelpers::ValidPath(const Json::Value & a_Json, const std::string & a_Pa
 void JsonHelpers::MakeJSON( const TiXmlElement * a_pElement, Json::Value & a_Value )
 {
 	const TiXmlAttribute * pAttribute = a_pElement->FirstAttribute();
-	while( pAttribute != NULL )
+	while (pAttribute != NULL)
 	{
 		const std::string & key = pAttribute->NameTStr();
 		const std::string & value = pAttribute->ValueStr();
-
-		a_Value[key] = value;
+		if (key[0] != 0)
+			a_Value[key] = value;
 		pAttribute = pAttribute->Next();
 	}
 
-	int index = 0;
+	const char * pText = a_pElement->GetText();
+	if (pText != NULL)
+		a_Value["_text"] = pText;
+
+	std::map < std::string, int > indexes;
 
 	const TiXmlElement * pChild = a_pElement->FirstChildElement();
-	while( pChild != NULL )
+	while (pChild != NULL)
 	{
 		const std::string & elementName = pChild->ValueStr();
-		if(pChild->FirstAttribute() != NULL || pChild->FirstChildElement() != NULL)
-			MakeJSON( pChild, a_Value[elementName][index++] );
+		MakeJSON(pChild, a_Value[elementName][indexes[elementName]++]);
 		pChild = pChild->NextSiblingElement();
 	}
 }
