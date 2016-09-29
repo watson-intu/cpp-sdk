@@ -64,6 +64,9 @@
     <Filter Include="services\ToneAnalyzer">
       <UniqueIdentifier>{4cf044ce-bce8-4e59-8335-85c158919fb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="libs\tinyxml">
+      <UniqueIdentifier>{f7348055-9473-48e0-8850-3b61a02885b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\wdc\services\IService.cpp">
@@ -251,6 +254,15 @@
     </ClCompile>
     <ClCompile Include="..\..\wdc\services\ToneAnalyzer\ToneAnalyzer.cpp">
       <Filter>services\ToneAnalyzer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxml.cpp">
+      <Filter>libs\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxmlerror.cpp">
+      <Filter>libs\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxmlparser.cpp">
+      <Filter>libs\tinyxml</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -836,6 +848,9 @@
     </ClInclude>
     <ClInclude Include="..\..\wdc\services\ToneAnalyzer\ToneAnalyzer.h">
       <Filter>services\ToneAnalyzer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib\tinyxml\tinyxml.h">
+      <Filter>libs\tinyxml</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
