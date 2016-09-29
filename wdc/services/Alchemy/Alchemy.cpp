@@ -84,3 +84,14 @@ void Alchemy::GetPosTags(const std::string & a_Text,
 		new CacheRequest( "GetPosTags", StringHash::DJB(a_Text.c_str()) ) );
 }
 
+void Alchemy::GetEntities(const std::string & a_Text, Delegate<const Json::Value &> a_Callback)
+{
+	std::string parameters = "/text/TextGetRankedNamedEntities";
+	parameters += "?apikey=" + m_pConfig->m_User;
+	parameters += "&outputMode=json";
+	parameters += "&text=" + StringUtil::UrlEscape( a_Text );
+
+	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback,
+		new CacheRequest( "GetEntityTags", StringHash::DJB(a_Text.c_str()) ) );
+}
+
