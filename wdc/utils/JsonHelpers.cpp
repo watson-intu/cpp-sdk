@@ -14,6 +14,7 @@
 #include "JsonHelpers.h"
 #include "utils/MD5.h"
 #include "utils/Log.h"
+#include "tinyxml/tinyxml.h"
 
 //! What character is used a seperator for paths
 #define PARAMS_PATH_SEPERATOR		'/'

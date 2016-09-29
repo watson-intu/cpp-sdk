@@ -16,8 +16,9 @@
 
 #include <string>
 #include "jsoncpp/json/json.h"
-#include "tinyxml/tinyxml.h"
 #include "WDCLib.h"
+
+class TiXmlElement;
 
 //! This is a container for skill/gesture arguments.
 class WDC_API JsonHelpers
