@@ -92,6 +92,6 @@ void Alchemy::GetEntities(const std::string & a_Text, Delegate<const Json::Value
 	parameters += "&text=" + StringUtil::UrlEscape( a_Text );
 
 	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback,
-		new CacheRequest( "GetEntityTags", StringHash::DJB(a_Text.c_str()) ) );
+		new CacheRequest( "TextGetRankedNamedEntities", StringHash::DJB(a_Text.c_str()) ) );
 }
 
