@@ -252,6 +252,9 @@
     <ClCompile Include="..\..\wdc\services\ToneAnalyzer\ToneAnalyzer.cpp">
       <Filter>services\ToneAnalyzer</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\wdc\tests\TestSecureWebServer.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\wdc\services\IService.h">
