@@ -58,7 +58,7 @@ public:
 	//! Returns true if any special characters are all escaped.
 	static bool IsEscaped( const std::string & a_Input );
 	//! Escape special characters in the given string for passing as a parameter in a URL.
-	static std::string UrlEscape( const std::string & a_Input );
+	static std::string UrlEscape( const std::string & a_Input, bool a_bEscapeWithPlus = true );
 	//! Helper for appending parameters onto a URL string, will separate parameters with &
 	static void AppendParameter( const std::string & a_Param, 
 		std::string & a_Output );

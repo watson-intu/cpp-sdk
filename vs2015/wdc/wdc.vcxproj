@@ -92,6 +92,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\lib\base64\cdecode.c" />
     <ClCompile Include="..\..\lib\base64\cencode.c" />
     <ClCompile Include="..\..\lib\crossguid\crossguid.cpp" />
@@ -159,6 +162,7 @@
     <ClCompile Include="..\..\wdc\utils\WebSocketFramer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\lib\tinyxml\tinyxml.h" />
     <ClInclude Include="..\..\lib\base64\cdecode.h" />
     <ClInclude Include="..\..\lib\base64\cencode.h" />
     <ClInclude Include="..\..\lib\base64\decode.h" />

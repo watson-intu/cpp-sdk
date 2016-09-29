@@ -13,6 +13,7 @@
 
 #include "JsonHelpers.h"
 #include "utils/MD5.h"
+#include "utils/Log.h"
 
 //! What character is used a seperator for paths
 #define PARAMS_PATH_SEPERATOR		'/'
@@ -65,6 +66,33 @@ bool JsonHelpers::ValidPath(const Json::Value & a_Json, const std::string & a_Pa
 	}
 
 	return false;
+}
+
+void JsonHelpers::MakeJSON( const TiXmlElement * a_pElement, Json::Value & a_Value )
+{
+	const TiXmlAttribute * pAttribute = a_pElement->FirstAttribute();
+	while (pAttribute != NULL)
+	{
+		const std::string & key = pAttribute->NameTStr();
+		const std::string & value = pAttribute->ValueStr();
+		if (key[0] != 0)
+			a_Value[key] = value;
+		pAttribute = pAttribute->Next();
+	}
+
+	const char * pText = a_pElement->GetText();
+	if (pText != NULL)
+		a_Value["_text"] = pText;
+
+	std::map < std::string, int > indexes;
+
+	const TiXmlElement * pChild = a_pElement->FirstChildElement();
+	while (pChild != NULL)
+	{
+		const std::string & elementName = pChild->ValueStr();
+		MakeJSON(pChild, a_Value[elementName][indexes[elementName]++]);
+		pChild = pChild->NextSiblingElement();
+	}
 }
 
 //! Get a const reference to a Json::Value following the provided path. Returns a NULL json
