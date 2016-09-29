@@ -160,4 +160,4 @@ public:
 	bool m_bClientClosed;
 };
 
-TestSecureWebServer TEST_WEB_SERVER;
+TestSecureWebServer TEST_SECURE_WEB_SERVER;
