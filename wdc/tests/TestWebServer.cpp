@@ -148,8 +148,7 @@ public:
 	void OnState(IWebClient * a_pConnector)
 	{
 		Log::Debug("TestWebServer", "OnState(): %d", a_pConnector->GetState());
-		if (a_pConnector->GetState() == WebClient::CLOSED || a_pConnector->GetState() == IWebClient::DISCONNECTED
-			|| a_pConnector->GetState() == WebClient::CLOSING)
+		if (a_pConnector->GetState() == WebClient::CLOSED || a_pConnector->GetState() == IWebClient::DISCONNECTED)
 			m_bClientClosed = true;
 	}
 
