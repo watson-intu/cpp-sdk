@@ -127,9 +127,9 @@ public:
 	{
 		Log::Debug("TestWebServer", "OnServerFrame() OpCode: %d, Data: %s", a_spFrame->m_Op, 
 			a_spFrame->m_Op == IWebSocket::TEXT_FRAME ? a_spFrame->m_Data.c_str() : StringUtil::Format( "%u bytes", a_spFrame->m_Data.size()).c_str() );
-		if (a_spFrame->m_Op == IWebSocket::BINARY_FRAME)
+		if (a_spFrame->m_Op == IWebSocket::BINARY_FRAME && !m_bClientClosed)
 			a_spFrame->m_pSocket->SendBinary(a_spFrame->m_Data);
-		else if (a_spFrame->m_Op == IWebSocket::TEXT_FRAME)
+		else if (a_spFrame->m_Op == IWebSocket::TEXT_FRAME && !m_bClientClosed)
 			a_spFrame->m_pSocket->SendText(a_spFrame->m_Data);
 	}
 

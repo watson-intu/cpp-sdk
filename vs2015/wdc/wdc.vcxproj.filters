@@ -264,6 +264,9 @@
     <ClCompile Include="..\..\..\lib\tinyxml\tinyxmlparser.cpp">
       <Filter>libs\tinyxml</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\wdc\tests\TestSecureWebServer.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\wdc\services\IService.h">
