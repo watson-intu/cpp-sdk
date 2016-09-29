@@ -125,6 +125,7 @@
     <ClCompile Include="..\..\wdc\tests\TestPath.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestRelationshipExtraction.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestRetrieveAndRank.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestSecureWebServer.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestStringUtil.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestTextToSpeech.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestUnityWebSocket.cpp" />
