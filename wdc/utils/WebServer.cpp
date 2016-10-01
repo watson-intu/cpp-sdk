@@ -238,6 +238,7 @@ public:
 
 			std::string sha1(SHA1(a_WebSocketKey + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
 			output << "HTTP/1.1 101 Web Socket Protocol Handshake\r\n";
+			output << "Cache-Control: no-cache\r\n";
 			output << "Upgrade: websocket\r\n";
 			output << "Connection: Upgrade\r\n";
 			output << "Sec-WebSocket-Accept: " << StringUtil::EncodeBase64(sha1) << "\r\n";
