@@ -69,10 +69,6 @@ public:
 		{
 			return m_pSocket;
 		}
-		const StreamBufferSP & GetSendBuffer() const
-		{
-			return m_SendBuffer;
-		}
 		const StreamBufferSP & GetReadBuffer() const
 		{
 			return m_ReadBuffer;
