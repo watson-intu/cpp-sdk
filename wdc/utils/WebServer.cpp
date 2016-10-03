@@ -347,6 +347,7 @@ public:
 			catch (const std::exception & ex)
 			{
 				Log::Error("Connection", "SendAsync Exception: %s", ex.what());
+				OnError( boost::system::error_code() );
 			}
 		}
 		void OnSent(SP a_spConnection, const boost::system::error_code & ec)
@@ -374,6 +375,7 @@ public:
 				ThreadPool::Instance()->InvokeOnMain<IWebSocket *>(m_OnError, this );
 				m_OnError.Reset();		// reset so we only queue an error once
 			}
+			Close();
 		}
 
 		void OnTimeout()
