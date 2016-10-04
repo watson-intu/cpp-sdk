@@ -169,10 +169,10 @@ public:
 
 		virtual void SendAsync(const std::string & a_Send)
 		{
-			boost::lock_guard<boost::recursive_mutex> lock( m_SendLock );
-
+			m_SendLock.lock();
 			bool bSend = m_Sending.begin() == m_Sending.end();
 			m_Sending.push_back( a_Send );
+			m_SendLock.unlock();
 
 			if ( bSend )
 				OnSend();
@@ -336,7 +336,6 @@ public:
 			}
 		}
 
-		// NOTE: We expect m_SendLock to be locked when calling this functioN!
 		void OnSend()
 		{
 			try {
@@ -351,12 +350,16 @@ public:
 		}
 		void OnSent(SP a_spConnection, const boost::system::error_code & ec)
 		{
-			boost::lock_guard<boost::recursive_mutex> lock( m_SendLock );
+			m_SendLock.lock();
+
 			m_Sending.pop_front();
+			bool bSend = m_Sending.begin() != m_Sending.end();
+
+			m_SendLock.unlock();
 
 			if (!ec)
 			{
-				if ( m_Sending.begin() != m_Sending.end() )
+				if ( bSend )
 					OnSend();
 			}
 			else
