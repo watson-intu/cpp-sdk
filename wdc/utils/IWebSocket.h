@@ -61,6 +61,7 @@ public:
 	virtual void SendPing(const std::string & a_PingData) = 0;
 	virtual void SendPong(const std::string & a_PingData) = 0;
 	virtual void SendClose(const std::string & a_Reason) = 0;
+	virtual bool Close() = 0;
 };
 
 #endif

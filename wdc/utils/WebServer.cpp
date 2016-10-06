@@ -144,7 +144,7 @@ public:
 			return m_bWebSocket;
 		}
 
-		virtual void Close()
+		virtual bool Close()
 		{
 			if (!m_bClosed)
 			{
@@ -165,6 +165,7 @@ public:
 					Log::Debug("Connection", "Caught Exception: %s", ex.what());
 				}
 			}
+			return m_bClosed;
 		}
 
 		virtual void SendAsync(const std::string & a_Send)
