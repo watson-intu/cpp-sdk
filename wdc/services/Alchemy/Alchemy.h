@@ -50,6 +50,18 @@ public:
 		Delegate<const Json::Value &> a_Callback );
 	void GetEntities(const std::string & a_Text,
 		Delegate<const Json::Value &> a_Callback);
+	void GetNews(const std::string & a_Subject,
+		Delegate<const Json::Value &> a_Callback);
+	void GetNews(const std::string & a_Subject, int a_StartDate, int a_EndDate,
+		Delegate<const Json::Value &> a_Callback);
+
+private:
+
+	//!Data
+	std::vector<std::string>	m_ReturnParameters;
+	int							m_NumberOfArticles;
+	int							m_StartDate;
+	int							m_EndDate;
 };
 
 #endif

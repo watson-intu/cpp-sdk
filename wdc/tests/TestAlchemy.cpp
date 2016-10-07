@@ -30,12 +30,14 @@ public:
 	TestAlchemy() : UnitTest("TestAlchemy"),
 		m_bGetChunkTagsTested(false),
 		m_bGetPosTagsTested(false),
-		m_bGetEntitiesTested(false)
+		m_bGetEntitiesTested(false),
+		m_bGetNewsTested(false)
 	{}
 
 	bool m_bGetChunkTagsTested;
 	bool m_bGetPosTagsTested;
 	bool m_bGetEntitiesTested;
+	bool m_bGetNewsTested;
 
 	virtual void RunTest()
 	{
@@ -59,9 +61,14 @@ public:
 			DELEGATE(TestAlchemy, OnGetEntities, const Json::Value &, this) );
 		Spin( m_bGetEntitiesTested );
 
+		alchemy.GetNews("IBM", 1475193600, 1475881200,
+			DELEGATE(TestAlchemy, OnGetNews, const Json::Value &, this));
+		Spin(m_bGetNewsTested);
+
 		Test(m_bGetPosTagsTested);
 		Test(m_bGetChunkTagsTested);
 		Test(m_bGetEntitiesTested);
+		Test(m_bGetNewsTested);
 	}
 
 	void OnGetPosTags(const Json::Value & json)
@@ -85,6 +92,13 @@ public:
 		Log::Debug("AlchemyTest", "OnGetEntities(): %s", json.toStyledString().c_str());
 		Test(!json.isNull());
 		m_bGetEntitiesTested = true;
+	}
+
+	void OnGetNews(const Json::Value & json)
+	{
+		Log::Debug("AlchemyTest", "OnGetNews(): %s", json.toStyledString().c_str());
+		Test(!json.isNull());
+		m_bGetNewsTested = true;
 	}
 };
 
