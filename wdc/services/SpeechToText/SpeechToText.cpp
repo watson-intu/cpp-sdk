@@ -396,7 +396,7 @@ void SpeechToText::Connection::KeepAlive()
 		Json::Value nop;
 		nop["action"] = "no-op";
 
-		Log::Status( "SpeechToText", "Sending keep alive." );
+		Log::Debug( "SpeechToText", "Sending keep alive." );
 		m_ListenSocket->SendText( Json::FastWriter().write( nop ) );
 	}
 }
