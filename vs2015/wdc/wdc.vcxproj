@@ -122,6 +122,7 @@
     <ClCompile Include="..\..\wdc\tests\TestPath.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestRelationshipExtraction.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestRetrieveAndRank.cpp" />
+    <ClCompile Include="..\..\wdc\tests\TestSecureWebServer.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestStringUtil.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestTextToSpeech.cpp" />
     <ClCompile Include="..\..\wdc\tests\TestUnityWebSocket.cpp" />
@@ -363,6 +364,9 @@
   <ItemGroup>
     <ProjectReference Include="..\jsoncpp\jsoncpp.vcxproj">
       <Project>{28ba4301-4c55-41d2-b122-01dbde375452}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\tinyxml\tinyxml.vcxproj">
+      <Project>{7e45de27-419e-469c-affa-f669750d6338}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

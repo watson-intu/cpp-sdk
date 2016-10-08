@@ -55,7 +55,6 @@ public:
 			m_bWebSocket(false),
 			m_pServer(a_pServer),
 			m_pSocket(a_pSocket),
-			m_SendBuffer(new StreamBuffer()),
 			m_ReadBuffer(new StreamBuffer())
 		{}
 		~Connection()
@@ -69,10 +68,6 @@ public:
 		socket_type * GetSocket() const
 		{
 			return m_pSocket;
-		}
-		const StreamBufferSP & GetSendBuffer() const
-		{
-			return m_SendBuffer;
 		}
 		const StreamBufferSP & GetReadBuffer() const
 		{
@@ -149,7 +144,7 @@ public:
 			return m_bWebSocket;
 		}
 
-		virtual void Close()
+		virtual bool Close()
 		{
 			if (!m_bClosed)
 			{
@@ -170,21 +165,18 @@ public:
 					Log::Debug("Connection", "Caught Exception: %s", ex.what());
 				}
 			}
+			return m_bClosed;
 		}
 
 		virtual void SendAsync(const std::string & a_Send)
 		{
-			std::ostream output(m_SendBuffer.get());
-			output.write(&a_Send[0], a_Send.size());
+			m_SendLock.lock();
+			bool bSend = m_Sending.begin() == m_Sending.end();
+			m_Sending.push_back( a_Send );
+			m_SendLock.unlock();
 
-			try {
-				boost::asio::async_write(*m_pSocket, *m_SendBuffer,
-					boost::bind(&Connection::OnSent, this, this->shared_from_this(), boost::asio::placeholders::error));
-			}
-			catch (const std::exception & ex)
-			{
-				Log::Error("Connection", "SendAsync Exception: %s", ex.what());
-			}
+			if ( bSend )
+				OnSend();
 		}
 
 		virtual void ReadAsync(size_t a_Bytes, Delegate< std::string * > a_ReadCallback)
@@ -234,17 +226,17 @@ public:
 
 		virtual void StartWebSocket(const std::string & a_WebSocketKey)
 		{
-			std::ostream output(m_SendBuffer.get());
+			std::stringstream output;
 
 			std::string sha1(SHA1(a_WebSocketKey + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
 			output << "HTTP/1.1 101 Web Socket Protocol Handshake\r\n";
+			output << "Cache-Control: no-cache\r\n";
 			output << "Upgrade: websocket\r\n";
 			output << "Connection: Upgrade\r\n";
 			output << "Sec-WebSocket-Accept: " << StringUtil::EncodeBase64(sha1) << "\r\n";
 			output << "\r\n";
 
-			boost::asio::async_write(*m_pSocket, *m_SendBuffer,
-				boost::bind(&Connection::OnSent, this, this->shared_from_this(), boost::asio::placeholders::error));
+			SendAsync( output.str() );
 
 			m_bWebSocket = true;
 
@@ -258,6 +250,7 @@ public:
 	private:
 		//! Types
 		typedef std::list< FrameSP >		FrameList;
+		typedef std::list< std::string >	SendList;
 
 		//! Data
 		bool			m_bClosed;
@@ -272,10 +265,12 @@ public:
 		WebServerT *	m_pServer;
 		socket_type *	m_pSocket;
 
-		StreamBufferSP 	m_SendBuffer;
+		boost::recursive_mutex
+						m_SendLock;
+		SendList		m_Sending;
 		StreamBufferSP	m_ReadBuffer;
 		TimerPool::ITimer::SP
-			m_spTimeoutTimer;
+						m_spTimeoutTimer;
 
 		void OnReadWS(SP a_spConnection, const boost::system::error_code& ec)
 		{
@@ -338,26 +333,53 @@ public:
 			}
 			else
 			{
-				Log::Error("Connection", "OnRead() error: %s", error.message().c_str());
-				OnError();
+				OnError(error);
+			}
+		}
+
+		void OnSend()
+		{
+			try {
+				boost::asio::async_write(*m_pSocket, 
+					boost::asio::buffer( m_Sending.front().data(), m_Sending.front().size() ),
+					boost::bind(&Connection::OnSent, this, this->shared_from_this(), boost::asio::placeholders::error));
+			}
+			catch (const std::exception & ex)
+			{
+				Log::Error("Connection", "SendAsync Exception: %s", ex.what());
+				OnError( boost::system::error_code() );
 			}
 		}
 		void OnSent(SP a_spConnection, const boost::system::error_code & ec)
 		{
-			if (ec)
+			m_SendLock.lock();
+
+			m_Sending.pop_front();
+			bool bSend = m_Sending.begin() != m_Sending.end();
+
+			m_SendLock.unlock();
+
+			if (!ec)
 			{
-				Log::Error("Connection", "OnSent() error: %s", ec.message().c_str());
-				OnError();
+				if ( bSend )
+					OnSend();
+			}
+			else
+			{
+				OnError(ec);
 			}
 		}
 
-		void OnError()
+		void OnError(const boost::system::error_code & ec)
 		{
 			if (m_OnError.IsValid())
 			{
+				Log::Error("Connection", "OnSent() error: %s", ec.message().c_str());
+
 				ThreadPool::Instance()->InvokeOnMain<IWebSocket *>(m_OnError, this );
 				m_OnError.Reset();		// reset so we only queue an error once
 			}
+			Close();
 		}
 
 		void OnTimeout()

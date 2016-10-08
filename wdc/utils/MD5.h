@@ -20,6 +20,7 @@
 
 #include <openssl/md5.h>
 #include <stdio.h>						// sprintf
+#include "WDCLib.h"
 
 #pragma warning( disable : 4996 )		// silence windows warning
 
@@ -44,6 +45,11 @@ type MD5(const type& input)
 	type hash;
 	MD5(input, hash);
 	return hash;
+}
+
+inline WDC_API std::string MakeMD5( const std::string & a_Data )
+{
+	return MD5( a_Data );
 }
 
 #endif

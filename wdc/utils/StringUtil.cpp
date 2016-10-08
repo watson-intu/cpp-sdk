@@ -139,13 +139,13 @@ bool StringUtil::IsEscaped( const std::string & a_Input )
 	return true;
 }
 
-std::string StringUtil::UrlEscape( const std::string & a_Input )
+std::string StringUtil::UrlEscape( const std::string & a_Input, bool a_bEscapeWithPlus )
 {
 	std::string output;
 	for(size_t i=0;i<a_Input.size();++i)
 	{
 		unsigned char c = a_Input[i];
-		if ( c == ' ' )
+		if ( c == ' ' && a_bEscapeWithPlus )
 			output += '+';
 		else if ( isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~' )
 			output += c;

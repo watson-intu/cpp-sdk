@@ -29,11 +29,13 @@ public:
 	//! Construction
 	TestAlchemy() : UnitTest("TestAlchemy"),
 		m_bGetChunkTagsTested(false),
-		m_bGetPosTagsTested(false)
+		m_bGetPosTagsTested(false),
+		m_bGetEntitiesTested(false)
 	{}
 
 	bool m_bGetChunkTagsTested;
 	bool m_bGetPosTagsTested;
+	bool m_bGetEntitiesTested;
 
 	virtual void RunTest()
 	{
@@ -53,8 +55,13 @@ public:
 			DELEGATE(TestAlchemy, OnGetChunkTags, const Json::Value &, this) );
 		Spin( m_bGetChunkTagsTested );
 
+		alchemy.GetEntities( "what is the weather like in Austin",
+			DELEGATE(TestAlchemy, OnGetEntities, const Json::Value &, this) );
+		Spin( m_bGetEntitiesTested );
+
 		Test(m_bGetPosTagsTested);
 		Test(m_bGetChunkTagsTested);
+		Test(m_bGetEntitiesTested);
 	}
 
 	void OnGetPosTags(const Json::Value & json)
@@ -71,6 +78,13 @@ public:
 
 		Test(!json.isNull());
 		m_bGetChunkTagsTested = true;
+	}
+
+	void OnGetEntities(const Json::Value & json)
+	{
+		Log::Debug("AlchemyTest", "OnGetEntities(): %s", json.toStyledString().c_str());
+		Test(!json.isNull());
+		m_bGetEntitiesTested = true;
 	}
 };
 

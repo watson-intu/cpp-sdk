@@ -173,6 +173,8 @@ private:
 	volatile bool	m_SendError;			// set to true when a send fails
 	boost::atomic<size_t>
 					m_SendCount;			// number of outstanding websocket sends
+	boost::recursive_mutex
+					m_SendLock;
 
 	static std::string 
 					sm_ClientId;			// ID placed in all headers sent by this client

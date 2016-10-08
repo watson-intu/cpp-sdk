@@ -48,6 +48,8 @@ public:
 		Delegate<const Json::Value &> a_Callback );
 	void GetPosTags(const std::string & a_Text,
 		Delegate<const Json::Value &> a_Callback );
+	void GetEntities(const std::string & a_Text,
+		Delegate<const Json::Value &> a_Callback);
 };
 
 #endif
