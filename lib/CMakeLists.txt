@@ -1,5 +1,11 @@
 include_directories(".")
 
+qi_create_lib(tinyxml_static STATIC
+                tinyxml/tinyxml.cpp
+                tinyxml/tinyxmlerror.cpp
+                tinyxml/tinyxmlparser.cpp)
+qi_stage_lib(tinyxml_static)
+
 qi_create_lib(base64 STATIC
 		base64/cdecode.c
 		base64/cdecode.h
