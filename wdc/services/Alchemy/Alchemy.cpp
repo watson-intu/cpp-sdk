@@ -116,18 +116,16 @@ void Alchemy::GetNews(const std::string & a_Subject, Delegate<const Json::Value 
 		searchCriteria += m_ReturnParameters[i] + ",";
 
 	std::string parameters = "/data/GetNews";
-	parameters += "?apikey" + m_pConfig->m_User;
+	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&return=" + searchCriteria;
 	parameters += "&start=" + StringUtil::Format("%d", m_StartDate);
 	parameters += "&end=" + StringUtil::Format("%d", m_EndDate);
 	parameters += "&q.enriched.url.enrichedTitle.entities.entity=|";
-	parameters += "&text=" + StringUtil::UrlEscape(a_Subject);
-	parameters += ",type=company|";
-	parameters += "&count=" + m_NumberOfArticles;
+	parameters += "text=" + StringUtil::UrlEscape(a_Subject);
+	parameters += ",type=company|&count=" + StringUtil::Format("%d", m_NumberOfArticles);
 	parameters += "&outputMode=json";
 
-	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback,
-		new CacheRequest("GetNews", StringHash::DJB(a_Subject.c_str())));
+	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback);
 }
 
 void Alchemy::GetNews(const std::string & a_Subject, int a_StartDate, int a_EndDate,
@@ -139,7 +137,7 @@ void Alchemy::GetNews(const std::string & a_Subject, int a_StartDate, int a_EndD
 
 	std::string parameters = "/data/GetNews";
 	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&return=enriched.url.title,enriched.url.url"; // + searchCriteria;
+	parameters += "&return=" + searchCriteria;
 	parameters += "&start=" + StringUtil::Format("%d", a_StartDate);
 	parameters += "&end=" + StringUtil::Format("%d", a_EndDate);
 	parameters += "&q.enriched.url.enrichedTitle.entities.entity=|";
@@ -147,8 +145,6 @@ void Alchemy::GetNews(const std::string & a_Subject, int a_StartDate, int a_EndD
 	parameters += ",type=company|&count=" + StringUtil::Format("%d", m_NumberOfArticles);
 	parameters += "&outputMode=json";
 
-	Log::Debug("Alchemy", "Hitting URL %s%s", m_pConfig->m_URL.c_str(), parameters.c_str());
-	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback,
-		new CacheRequest("GetNews", StringHash::DJB(a_Subject.c_str())));
+	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback);
 }
 
