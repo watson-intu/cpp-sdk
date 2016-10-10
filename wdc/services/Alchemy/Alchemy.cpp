@@ -39,13 +39,14 @@ void Alchemy::Deserialize(const Json::Value & json)
 	IService::Deserialize(json);
 	DeserializeVector("m_ReturnParameters", json, m_ReturnParameters);
 	m_NumberOfArticles = json["m_NumberOfArticles"].asInt();
-	m_StartDate = json["m_StartDate"].asInt();
-	m_EndDate = json["m_EndDate"].asInt();
+	m_StartDate = json["m_StartDate"].asUInt();
+	m_EndDate = json["m_EndDate"].asUInt();
 
 	if (m_ReturnParameters.size() == 0)
 	{
 		m_ReturnParameters.push_back("enriched.url.title");
 		m_ReturnParameters.push_back("enriched.url.url");
+		m_ReturnParameters.push_back("enriched.url.text");
 	}
 }
 
@@ -120,8 +121,8 @@ void Alchemy::GetNews(const std::string & a_Subject, Delegate<const Json::Value 
 	std::string parameters = "/data/GetNews";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&return=" + searchCriteria;
-	parameters += "&start=" + StringUtil::Format("%d", m_StartDate);
-	parameters += "&end=" + StringUtil::Format("%d", m_EndDate);
+	parameters += "&start=" + StringUtil::Format("%u", m_StartDate);
+	parameters += "&end=" + StringUtil::Format("%u", m_EndDate);
 	parameters += "&q.enriched.url.enrichedTitle.entities.entity=|";
 	parameters += "text=" + StringUtil::UrlEscape(a_Subject);
 	parameters += ",type=company|&count=" + StringUtil::Format("%d", m_NumberOfArticles);
@@ -130,7 +131,7 @@ void Alchemy::GetNews(const std::string & a_Subject, Delegate<const Json::Value 
 	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback);
 }
 
-void Alchemy::GetNews(const std::string & a_Subject, int a_StartDate, int a_EndDate,
+void Alchemy::GetNews(const std::string & a_Subject, time_t a_StartDate, time_t a_EndDate,
 	Delegate<const Json::Value &> a_Callback)
 {
 	std::string searchCriteria;
@@ -142,8 +143,8 @@ void Alchemy::GetNews(const std::string & a_Subject, int a_StartDate, int a_EndD
 	std::string parameters = "/data/GetNews";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&return=" + searchCriteria;
-	parameters += "&start=" + StringUtil::Format("%d", a_StartDate);
-	parameters += "&end=" + StringUtil::Format("%d", a_EndDate);
+	parameters += "&start=" + StringUtil::Format("%u", a_StartDate);
+	parameters += "&end=" + StringUtil::Format("%u", a_EndDate);
 	parameters += "&q.enriched.url.enrichedTitle.entities.entity=|";
 	parameters += "text=" + StringUtil::UrlEscape(a_Subject);
 	parameters += ",type=company|&count=" + StringUtil::Format("%d", m_NumberOfArticles);
