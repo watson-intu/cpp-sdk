@@ -67,7 +67,7 @@ void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value
     req["text"] = a_Text;
 	Json::Value input;
 	input["input"] = req;
-    if( a_Context.isMember("conversation_id") || a_Context.isMember( "m_EmotionalState" ) )
+    if( !a_Context.isNull() )
         input["context"] = a_Context;
 
 
