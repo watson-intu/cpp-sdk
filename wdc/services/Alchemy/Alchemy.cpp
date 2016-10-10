@@ -115,6 +115,8 @@ void Alchemy::GetNews(const std::string & a_Subject, Delegate<const Json::Value 
 	for (int i = 0; i < m_ReturnParameters.size(); ++i)
 		searchCriteria += m_ReturnParameters[i] + ",";
 
+	searchCriteria = searchCriteria.substr(0, searchCriteria.size() - 1);
+
 	std::string parameters = "/data/GetNews";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&return=" + searchCriteria;
@@ -134,6 +136,8 @@ void Alchemy::GetNews(const std::string & a_Subject, int a_StartDate, int a_EndD
 	std::string searchCriteria;
 	for (int i = 0; i < m_ReturnParameters.size(); ++i)
 		searchCriteria += m_ReturnParameters[i] + ",";
+	
+	searchCriteria = searchCriteria.substr(0, searchCriteria.size() - 1);
 
 	std::string parameters = "/data/GetNews";
 	parameters += "?apikey=" + m_pConfig->m_User;
