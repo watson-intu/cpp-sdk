@@ -113,7 +113,7 @@ void Alchemy::GetEntities(const std::string & a_Text, Delegate<const Json::Value
 void Alchemy::GetNews(const std::string & a_Subject, Delegate<const Json::Value &> a_Callback)
 {
 	std::string searchCriteria;
-	for (int i = 0; i < m_ReturnParameters.size(); ++i)
+	for (size_t i = 0; i < m_ReturnParameters.size(); ++i)
 		searchCriteria += m_ReturnParameters[i] + ",";
 
 	searchCriteria = searchCriteria.substr(0, searchCriteria.size() - 1);
@@ -135,7 +135,7 @@ void Alchemy::GetNews(const std::string & a_Subject, time_t a_StartDate, time_t 
 	Delegate<const Json::Value &> a_Callback)
 {
 	std::string searchCriteria;
-	for (int i = 0; i < m_ReturnParameters.size(); ++i)
+	for (size_t i = 0; i < m_ReturnParameters.size(); ++i)
 		searchCriteria += m_ReturnParameters[i] + ",";
 	
 	searchCriteria = searchCriteria.substr(0, searchCriteria.size() - 1);
