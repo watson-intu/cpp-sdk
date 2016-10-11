@@ -61,7 +61,7 @@ public:
 			DELEGATE(TestAlchemy, OnGetEntities, const Json::Value &, this) );
 		Spin( m_bGetEntitiesTested );
 
-		alchemy.GetNews("IBM", 1475193600, 1475881200,
+		alchemy.GetNews("IBM", 1475193600, 1475881200, 10,
 			DELEGATE(TestAlchemy, OnGetNews, const Json::Value &, this));
 		Spin(m_bGetNewsTested);
 
