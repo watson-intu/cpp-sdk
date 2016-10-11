@@ -30,8 +30,6 @@ void Alchemy::Serialize(Json::Value & json)
 	IService::Serialize(json);
 	SerializeVector("m_ReturnParameters", m_ReturnParameters, json);
 	json["m_NumberOfArticles"] = m_NumberOfArticles;
-	json["m_StartDate"] = m_StartDate;
-	json["m_EndDate"] = m_EndDate;
 }
 
 void Alchemy::Deserialize(const Json::Value & json)
@@ -39,8 +37,6 @@ void Alchemy::Deserialize(const Json::Value & json)
 	IService::Deserialize(json);
 	DeserializeVector("m_ReturnParameters", json, m_ReturnParameters);
 	m_NumberOfArticles = json["m_NumberOfArticles"].asInt();
-	m_StartDate = json["m_StartDate"].asUInt();
-	m_EndDate = json["m_EndDate"].asUInt();
 
 	if (m_ReturnParameters.size() == 0)
 	{
@@ -108,27 +104,6 @@ void Alchemy::GetEntities(const std::string & a_Text, Delegate<const Json::Value
 
 	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback,
 		new CacheRequest( "TextGetRankedNamedEntities", StringHash::DJB(a_Text.c_str()) ) );
-}
-
-void Alchemy::GetNews(const std::string & a_Subject, Delegate<const Json::Value &> a_Callback)
-{
-	std::string searchCriteria;
-	for (int i = 0; i < m_ReturnParameters.size(); ++i)
-		searchCriteria += m_ReturnParameters[i] + ",";
-
-	searchCriteria = searchCriteria.substr(0, searchCriteria.size() - 1);
-
-	std::string parameters = "/data/GetNews";
-	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&return=" + searchCriteria;
-	parameters += "&start=" + StringUtil::Format("%u", m_StartDate);
-	parameters += "&end=" + StringUtil::Format("%u", m_EndDate);
-	parameters += "&q.enriched.url.enrichedTitle.entities.entity=|";
-	parameters += "text=" + StringUtil::UrlEscape(a_Subject);
-	parameters += ",type=company|&count=" + StringUtil::Format("%d", m_NumberOfArticles);
-	parameters += "&outputMode=json";
-
-	new RequestJson(this, parameters, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback);
 }
 
 void Alchemy::GetNews(const std::string & a_Subject, time_t a_StartDate, time_t a_EndDate,
