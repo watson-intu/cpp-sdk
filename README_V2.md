@@ -11,7 +11,7 @@ Watson Developer Cloud C++ SDK
 The C++ SDK uses the Watson Developer Cloud services, a collection of REST APIs, and SDKs that use cognitive computing to solve complex problems.
 
 ## Table of Contents
-  * [Installation](#installation)
+  * [Compiling the SDK for various platforms](#compiling-the-sdk-for-various-platforms)
   * [Usage](#usage)
   * [Getting the Service Credentials](#getting-the-service-credentials)
   * [Questions](#questions)
@@ -42,12 +42,50 @@ The C++ SDK uses the Watson Developer Cloud services, a collection of REST APIs,
   * [License](#license)
   * [Contributing](#contributing)
 
-## Installation
-**THIS SECTION REQUIRES CODE**
-```
-GET INSTALLATION CODE
-```
+## Compiling the SDK for various platforms
 
+### Windows
+
+1. Install Visual Studio 2015.
+2. Open the solution found in vs2015/wdc-sdk.sln
+
+## OS X
+
+1. Setup qibuild and CMake. You can use Homebrew to install CMake, and any distribution of Python (2.7 recommended) to install qibuild through pip.
+2. Download the "Mac Toolchain" for Mac (C++ SDK 2.1.4 Mac 64) from https://community.aldebaran.com/en/resources/software and unzip into ~/toolchains/naoqi-sdk-mac64/.
+3. Run the following commands:
+  * cd {self root directory}
+  * qitoolchain create mac ~/toolchains/naoqi-sdk-mac64/toolchain.xml
+  * qibuild init
+  * qibuild add-config mac --toolchain mac
+  * qibuild configure -c mac
+  * qibuild make -c mac
+
+## Linux
+
+1. Setup qibuild and CMake. You can use your Linux package manager to install CMake, and any distribution of Python (2.7 recommended) to install qibuild through pip.
+2. Download the "Linux Toolchain" for Linux (C++ SDK 2.1.4 Linux 64) from https://community.aldebaran.com/en/resources/software and unzip into ~/toolchains/naoqi-sdk-linux64/.
+3. Run the following commands:
+  * cd {self root directory}
+  * qitoolchain create linux ~/toolchains/naoqi-sdk-linux64/toolchain.xml
+  * qibuild init
+  * qibuild add-config linux --toolchain linux
+  * qibuild configure -c linux
+  * qibuild make -c linux
+
+## Aldebaran Nao and Pepper robots using OS X
+
+1. Setup qibuild & cmake, see http://doc.aldebaran.com/2-1/dev/cpp/install_guide.html for instructions on getting those installed.
+2. Download the "Cross Toolchain" for Mac from https://community.aldebaran.com/en/resources/software and unzip into ~/toolchains/ctc-mac64-atom.2.4.2.26/.
+3. Run the following commmands:
+  * cd {self root directory}
+  * qitoolchain create pepper ~/toolchains/ctc-mac64-atom.2.4.2.26/toolchain.xml
+  * qitoolchain add-package -c pepper packages/openssl-i686-aldebaran-linux-gnu-1.0.1s.zip
+  * qibuild init
+  * qibuild add-config pepper --toolchain pepper --default
+  * qibuild configure
+  * qibuild make
+  
 ## Usage
 
 The examples below assume that you already have service credentials. If not,
