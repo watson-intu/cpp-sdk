@@ -137,12 +137,8 @@ void SpeechToText::RefreshConnections()
 {
 	if ( m_IsListening )
 	{
-		Log::Debug("SpeechToText", "About to Refresh websockets");
 		for( Connectionlist::iterator iConn = m_Connections.begin(); iConn != m_Connections.end(); ++iConn )
-		{
 			(*iConn)->Refresh();	
-		}
-		Log::Debug("SpeechToText", "Starting websockets back up");
 	}	
 }
 
