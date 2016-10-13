@@ -115,6 +115,35 @@ bool Sound::SaveToFile(const std::string & a_FileName) const
 	return true;
 }
 
+#pragma warning(disable: 4244 )
+
+bool Sound::Resample( int a_Rate )
+{
+	if ( m_Bits == 16 )
+	{
+		size_t bps = m_Channels * (m_Bits / 8);				// bytes per sample
+		size_t newSamples = (size_t)((m_WaveData.size() / bps) * a_Rate) / m_Rate;
+		size_t newSize = newSamples * bps;
+
+		std::string resampled;
+		resampled.resize( newSize );
+
+		for(size_t i = 0; i< newSamples ; i += m_Channels )
+		{
+			size_t s = (size_t)(i * m_Rate) / a_Rate;
+			for(size_t j=0;j<(size_t)m_Channels;++j)
+				*(((unsigned short *)resampled.data()) + i + j) = *(((unsigned short *)m_WaveData.data()) + s + j);
+		}
+
+		m_Rate = a_Rate;
+		m_WaveData = resampled;
+		return true;
+	}
+
+	Log::Error( "Sound", "Unsupported bits for Resample." );
+	return false;
+}
+
 //----------------------------------------------------------------------------
 
 typedef unsigned short	WORD;
