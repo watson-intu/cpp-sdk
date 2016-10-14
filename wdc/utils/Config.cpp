@@ -16,7 +16,6 @@
 */
 
 #include "Config.h"
-#include "services/IService.h"
 
 RTTI_IMPL( Config, ISerializable );
 RTTI_IMPL( ServiceConfig, ISerializable );

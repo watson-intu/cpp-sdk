@@ -18,12 +18,12 @@
 #ifndef WDC_CONFIG_H
 #define WDC_CONFIG_H
 
+#include "services/IService.h"
+
 #include "ISerializable.h"
 #include "Library.h"
 #include "ServiceConfig.h"
 #include "WDCLib.h"
-
-class IService;
 
 class WDC_API Config : public ISerializable
 {
