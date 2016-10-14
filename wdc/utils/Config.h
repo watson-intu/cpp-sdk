@@ -23,18 +23,21 @@
 #include "ServiceConfig.h"
 #include "WDCLib.h"
 
+class IService;
+
 class WDC_API Config : public ISerializable
 {
 public:
 	RTTI_DECL();
 
 	//! Types
-	typedef std::list<std::string>		LibraryList;
+	typedef std::list<std::string>						LibraryList;
+	typedef std::list<boost::shared_ptr<IService>>		ServiceList;
 
 	//! Singleton
 	static Config * Instance();
 
-	Config() 
+	Config() : m_bServicesActive( false )
 	{
 		sm_pInstance = this;
 	}
@@ -53,6 +56,10 @@ public:
 	{
 		return m_Libs;
 	}
+	const ServiceList &	GetServiceList() const
+	{
+		return m_Services;
+	}
 	ServiceConfig * FindServiceConfig( const std::string & a_ServiceId ) const
 	{
 		for(size_t i=0;i<m_ServiceConfigs.size();++i)
@@ -61,52 +68,79 @@ public:
 		return NULL;
 	}
 
-	//! Mutators
-	bool AddServiceConfig( const ServiceConfig & a_Credential, bool a_bUpdateOnly = false )
+	//! Returns the given service by it's type.
+	template<typename T>
+	T * FindService( const std::string & a_ServiceId = EMPTY_STRING ) const
 	{
-		for(size_t i=0;i<m_ServiceConfigs.size();++i)
-			if ( m_ServiceConfigs[i]->m_ServiceId == a_Credential.m_ServiceId )
-			{
-				if ( *m_ServiceConfigs[i] != a_Credential )
-				{
-					*m_ServiceConfigs[i] = a_Credential;
-					return true;
-				}
-
-				// no changes...
-				return false;
-			}
-
-		if ( a_bUpdateOnly )
-			return false;
-		m_ServiceConfigs.push_back( ServiceConfig::SP( new ServiceConfig( a_Credential ) ) );
-		return true;
-	}
-	bool RemoveServiceConfig( const std::string & a_ServiceId )
-	{
-		for(size_t i=0;i<m_ServiceConfigs.size();++i)
+		for (ServiceList::const_iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService)
 		{
-			if ( m_ServiceConfigs[i]->m_ServiceId == a_ServiceId )
+			IService * pService = (*iService).get();
+			if ( a_ServiceId[0] != 0 && a_ServiceId != pService->GetServiceId() )
+				continue;		// service ID doesn't match
+
+			T * pServiceT = DynamicCast<T>(pService);
+			if (pServiceT != NULL)
+				return pServiceT;
+		}
+
+		return NULL;
+	}
+
+	//! Returns vector of services
+	template<typename T>
+	int FindServices(std::vector<T*> & a_Services)
+	{
+		for (ServiceList::const_iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService)
+		{
+			T * pService = DynamicCast<T>((*iService).get());
+			if (pService != NULL)
+				a_Services.push_back(pService);
+		}
+
+		return a_Services.size();
+	}
+
+	//! Get the given service by type, returns an existing service if found or creates it if needed.
+	template<typename T>
+	T * GetService()
+	{
+		T * pService = FindService<T>();
+		if (pService == NULL)
+		{
+			pService = new T();
+			if (!AddServiceInternal(pService))
 			{
-				m_ServiceConfigs.erase( m_ServiceConfigs.begin() + i );
-				return true;
+				delete pService;
+				pService = NULL;
 			}
 		}
-		return false;
+
+		return pService;
 	}
+
+	//! Mutators
+	bool AddServiceConfig( const ServiceConfig & a_Credential, bool a_bUpdateOnly = false );
+	bool RemoveServiceConfig( const std::string & a_ServiceId );
 
 	//! load all dynamic libs
 	void LoadLibs();
 	//! unload all dynamic libs
 	void UnloadLibs();
 
+	bool StartServices();
+	bool StopServices();
+
 protected:
 	//! Types
 	typedef std::list<Library>	LoadedLibraryList;
 	typedef std::vector<ServiceConfig::SP> ServiceConfigs;
 
+	bool AddServiceInternal(IService * a_pService);
+
 	//! Data
 	LibraryList		m_Libs;				// list of libraries to load dynamically
+	ServiceList		m_Services;			// list of available services
+	bool			m_bServicesActive;
 	ServiceConfigs	m_ServiceConfigs;
 	LoadedLibraryList
 					m_LoadedLibs;
