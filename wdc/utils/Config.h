@@ -32,7 +32,7 @@ public:
 
 	//! Types
 	typedef std::list<std::string>						LibraryList;
-	typedef std::list<boost::shared_ptr<IService>>		ServiceList;
+	typedef std::list<boost::shared_ptr<IService> >		ServiceList;
 
 	//! Singleton
 	static Config * Instance();
