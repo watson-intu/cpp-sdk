@@ -358,6 +358,8 @@ public:
 	//! Check if the service is up or down, and invoke the callback with the current
 	//! state of the service once determined.
 	virtual void GetServiceStatus(ServiceStatusCallback a_Callback);
+	//! This is invoked when the ServiceConfig object has been modified for this service
+	virtual void OnConfigModified();
 
 protected:
 	//! Types

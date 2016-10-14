@@ -316,6 +316,24 @@ void IService::GetServiceStatus(ServiceStatusCallback a_Callback)
 		a_Callback(ServiceStatus(m_ServiceId, true));
 }
 
+void IService::OnConfigModified()
+{
+	// update our authorization header on config changes.
+	ServiceConfig * pConfig = Config::Instance()->FindServiceConfig( m_ServiceId );
+	if ( pConfig != NULL )
+	{
+		m_pConfig = pConfig;
+
+		if ( m_pConfig->m_User.size() > 0 && 
+			m_pConfig->m_Password.size() > 0 )
+		{
+			// add the Authorization header..
+			m_Headers["Authorization"] = StringUtil::Format( "Basic %s", 
+				StringUtil::EncodeBase64( m_pConfig->m_User + ":" + m_pConfig->m_Password).c_str() );
+		}
+	}
+}
+
 DataCache * IService::GetDataCache(const std::string & a_Type)
 {
 	if (!m_bCacheEnabled)
