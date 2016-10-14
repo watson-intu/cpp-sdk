@@ -18,12 +18,11 @@
 #ifndef WDC_CONFIG_H
 #define WDC_CONFIG_H
 
+#include "services/IService.h"
 #include "ISerializable.h"
 #include "Library.h"
 #include "ServiceConfig.h"
 #include "WDCLib.h"
-
-class IService;
 
 class WDC_API Config : public ISerializable
 {
@@ -32,7 +31,7 @@ public:
 
 	//! Types
 	typedef std::list<std::string>						LibraryList;
-	typedef std::list<boost::shared_ptr<IService>>		ServiceList;
+	typedef std::list<boost::shared_ptr<IService> >		ServiceList;
 
 	//! Singleton
 	static Config * Instance();
