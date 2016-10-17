@@ -64,6 +64,15 @@ struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared
 		//DeserializeMap("m_CustomMap", json, m_CustomMap);
 	}
 
+	const std::string & GetKeyValue( const std::string & a_Key, const std::string & a_Default ) const
+	{
+		CustomMap::const_iterator iMap = m_CustomMap.find( a_Key );
+		if ( iMap != m_CustomMap.end() )
+			return iMap->second;
+
+		return a_Default;
+	}
+
 	bool operator==( const ServiceConfig & a_Compare ) const
 	{
 		return m_ServiceId == a_Compare.m_ServiceId
