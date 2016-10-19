@@ -75,6 +75,8 @@ public:
 		for (ServiceList::const_iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService)
 		{
 			IService * pService = (*iService).get();
+			if ( pService == NULL )
+				continue;
 			if ( a_ServiceId[0] != 0 && a_ServiceId != pService->GetServiceId() )
 				continue;		// service ID doesn't match
 
