@@ -32,6 +32,8 @@ void Config::Serialize(Json::Value & json)
 	int index = 0;
 	for( LibraryList::iterator iLib = m_Libs.begin(); iLib != m_Libs.end(); ++iLib )
 		json["m_Libs"][index++] = *iLib;
+
+	LoadLibs();
 	
 	SerializeVector( "m_ServiceConfigs", m_ServiceConfigs, json, false );
 	SerializeList("m_Services", m_Services, json);
