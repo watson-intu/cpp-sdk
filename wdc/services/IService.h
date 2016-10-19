@@ -181,7 +181,7 @@ public:
 				if (!Json::Reader(Json::Features::strictMode()).parse(m_Response, root))
 				{
 					Log::Error("RequestJson", "Failed to parse JSON response: %s", m_Response.c_str());
-					root = Json::Value::null;
+					root.clear();
 				}
 			}
 

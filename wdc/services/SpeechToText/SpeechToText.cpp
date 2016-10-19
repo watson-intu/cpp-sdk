@@ -137,12 +137,8 @@ void SpeechToText::RefreshConnections()
 {
 	if ( m_IsListening )
 	{
-		Log::Debug("SpeechToText", "About to Refresh websockets");
 		for( Connectionlist::iterator iConn = m_Connections.begin(); iConn != m_Connections.end(); ++iConn )
-		{
 			(*iConn)->Refresh();	
-		}
-		Log::Debug("SpeechToText", "Starting websockets back up");
 	}	
 }
 
@@ -396,7 +392,7 @@ void SpeechToText::Connection::KeepAlive()
 		Json::Value nop;
 		nop["action"] = "no-op";
 
-		Log::Status( "SpeechToText", "Sending keep alive." );
+		Log::Debug( "SpeechToText", "Sending keep alive." );
 		m_ListenSocket->SendText( Json::FastWriter().write( nop ) );
 	}
 }

@@ -32,6 +32,13 @@ public:
 		std::vector<std::string> args;
 		StringUtil::Split(splitTest, "&", args);
 		Test(args.size() == 5);
+
+		std::string trim( " t " );
+		std::string result = StringUtil::Trim( trim );
+		Test( result.size() == 1 );
+		std::string empty( " " );
+		std::string result2 = StringUtil::Trim( empty );
+		Test( result2.size() == 0 );
 	}
 
 };
