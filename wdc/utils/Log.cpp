@@ -21,12 +21,14 @@
 #include <windows.h>
 #endif
 
+#include <boost/filesystem.hpp>
 #include <string>
 #include <list>
 #include <stdio.h>
 #include <time.h>
 
 #include "Log.h"
+#include "StringUtil.h"
 
 void ConsoleReactor::Process(const LogRecord & a_Record)
 {
@@ -58,13 +60,22 @@ void ConsoleReactor::Process(const LogRecord & a_Record)
 	}
 }
 
-FileReactor::FileReactor(const char * a_pLogFile, LogLevel a_MinLevel /*= DEBUG*/) :
+FileReactor::FileReactor(const char * a_pLogFile, LogLevel a_MinLevel /*= DEBUG*/, int a_LogHistory /*= 5*/) :
 	m_LogFile(a_pLogFile),
 	m_MinLevel(a_MinLevel)
 {
-	// truncate log file..
-	FILE * f = fopen(m_LogFile.c_str(), "w");
-	fclose(f);
+	// rotate log files...
+	try {
+		boost::filesystem::remove( StringUtil::Format( "%s.%d", a_pLogFile, a_LogHistory ).c_str() );
+		for(int i=a_LogHistory;i>0;--i)
+		{
+			boost::filesystem::rename( StringUtil::Format( "%s.%d", a_pLogFile, i - 1),
+				StringUtil::Format( "%s.%d", a_pLogFile, i ) );
+		}
+		boost::filesystem::rename( a_pLogFile, StringUtil::Format( "%s.%d", a_pLogFile, 0 ) );
+	}
+	catch( const std::exception & ex )
+	{}
 }
 
 void FileReactor::Process(const LogRecord & a_Record)
