@@ -501,7 +501,7 @@ void SpeechToText::Connection::OnListenState( IWebClient * a_pClient )
 		// handle a removed client when it finally decides to invoke this callback.
 		if ( a_pClient->GetState() == IWebClient::DISCONNECTED || a_pClient->GetState() == IWebClient::CLOSED )
 		{
-			Log::Status("SpeechToText", "Deleting previous WebClient." );
+			Log::DebugLow("SpeechToText", "Deleting previous WebClient." );
 			delete a_pClient;
 		}
 	}
