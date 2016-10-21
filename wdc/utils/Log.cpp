@@ -66,15 +66,21 @@ FileReactor::FileReactor(const char * a_pLogFile, LogLevel a_MinLevel /*= DEBUG*
 {
 	// rotate log files...
 	try {
-		boost::filesystem::remove( StringUtil::Format( "%s.%d", a_pLogFile, a_LogHistory ).c_str() );
-		for(int i=a_LogHistory;i>0;--i)
+		boost::filesystem::remove( StringUtil::Format( "%s.%d", a_pLogFile, a_LogHistory - 1 ).c_str() );
+		for(int i=a_LogHistory - 1;i>0;--i)
 		{
-			boost::filesystem::rename( StringUtil::Format( "%s.%d", a_pLogFile, i - 1),
-				StringUtil::Format( "%s.%d", a_pLogFile, i ) );
+			std::string src = StringUtil::Format( "%s.%d", a_pLogFile, i - 1);
+			if ( boost::filesystem::exists( src ) )
+			{
+				std::string dst = StringUtil::Format( "%s.%d", a_pLogFile, i );
+				boost::filesystem::rename( src.c_str(), dst.c_str() );
+			}
 		}
-		boost::filesystem::rename( a_pLogFile, StringUtil::Format( "%s.%d", a_pLogFile, 0 ) );
+
+		if ( boost::filesystem::exists( a_pLogFile ) )
+			boost::filesystem::rename( a_pLogFile, StringUtil::Format( "%s.%d", a_pLogFile, 0 ) );
 	}
-	catch( const std::exception & ex )
+	catch( const std::exception & )
 	{}
 }
 
