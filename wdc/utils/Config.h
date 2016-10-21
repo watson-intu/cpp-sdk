@@ -36,7 +36,11 @@ public:
 	//! Singleton
 	static Config * Instance();
 
-	Config() : m_bServicesActive( false )
+	Config(const std::string & a_staticDataPath = "./etc/",
+		const std::string & a_InstanceDataPath = "./" ) : 
+		m_StaticDataPath( a_staticDataPath ),
+		m_InstanceDataPath( a_InstanceDataPath ),
+		m_bServicesActive( false )
 	{
 		sm_pInstance = this;
 	}
@@ -51,6 +55,16 @@ public:
 	virtual void Deserialize(const Json::Value & json);
 
 	//! Accessors
+	const std::string & GetStaticDataPath() const
+	{
+		return m_StaticDataPath;
+	}
+
+	const std::string &	GetInstanceDataPath() const
+	{
+		return m_InstanceDataPath;
+	}
+
 	const LibraryList & GetLibraryList() const
 	{
 		return m_Libs;
@@ -139,6 +153,8 @@ protected:
 	bool AddServiceInternal(IService * a_pService);
 
 	//! Data
+	std::string		m_StaticDataPath;
+	std::string		m_InstanceDataPath;
 	LibraryList		m_Libs;				// list of libraries to load dynamically
 	ServiceList		m_Services;			// list of available services
 	bool			m_bServicesActive;
