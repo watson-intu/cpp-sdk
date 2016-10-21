@@ -339,11 +339,13 @@ DataCache * IService::GetDataCache(const std::string & a_Type)
 	if (!m_bCacheEnabled)
 		return NULL;
 
+	const std::string & instanceData = Config::Instance()->GetInstanceDataPath();
+
 	DataCacheMap::iterator iCache = m_DataCache.find(a_Type);
 	if (iCache == m_DataCache.end())
 	{
 		DataCache::SP spCache(new DataCache());
-		if (!spCache->Initialize("./cache/" + m_ServiceId + "_" + a_Type + "/", m_MaxCacheSize, m_MaxCacheAge))
+		if (!spCache->Initialize( instanceData + "cache/" + m_ServiceId + "_" + a_Type + "/", m_MaxCacheSize, m_MaxCacheAge))
 		{
 			Log::Error("IService", "Failed to initialize the cache.");
 			return NULL;
