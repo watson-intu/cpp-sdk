@@ -47,10 +47,7 @@ bool VisualRecognition::Start()
 		return false;
 	}	
 	if (m_pConfig->m_User.size() == 0)
-	{
-		Log::Error("VisualRecognition", "API-Key expected in user field.");
-		return false;
-	}
+		Log::Warning("VisualRecognition", "API-Key expected in user field.");
 
 	return true;
 }

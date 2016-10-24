@@ -56,10 +56,7 @@ bool Alchemy::Start()
 		return false;
 	}
 	if (m_pConfig->m_User.size() == 0)
-	{
-		Log::Error("Alchemy", "API-Key expected in user field.");
-		return false;
-	}
+		Log::Warning("Alchemy", "API-Key expected in user field.");
 
 	return true;
 }
