@@ -1,4 +1,5 @@
 include_directories(".")
+cmake_minimum_required(VERSION 3.5)
 
 qi_create_lib(tinyxml_static STATIC
                 tinyxml/tinyxml.cpp
