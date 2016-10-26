@@ -45,16 +45,22 @@ public:
         ThreadPool pool(1);
 
         Conversation conversation;
-        Test(conversation.Start());
-        Log::Debug("TestConversation","Conversation Started");
+        if (conversation.Start())
+		{
+			Log::Debug("TestConversation","Conversation Started");
 
-        Log::Debug("TestConversation","Testing Conversation Response for input: %s", m_TestText.c_str());
-        conversation.Message(m_WorkspaceId, m_Context, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationResponse *, this));
+			Log::Debug("TestConversation","Testing Conversation Response for input: %s", m_TestText.c_str());
+			conversation.Message(m_WorkspaceId, m_Context, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationResponse *, this));
 
-        Spin(m_bConversationTested);
-        Test(m_bConversationTested);
+			Spin(m_bConversationTested);
+			Test(m_bConversationTested);
 
-        // TODO Add in other Conversation API Endpoints provided by Brandon W.
+			// TODO Add in other Conversation API Endpoints provided by Brandon W.
+		}
+		else
+		{
+			Log::Status( "TestConversation", "Skipping test." );
+		}
     }
 
     void OnMessage(ConversationResponse * a_pConversationResponse)

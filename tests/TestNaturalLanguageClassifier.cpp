@@ -55,107 +55,80 @@ public:
         Test(ISerializable::DeserializeFromFile("./etc/tests/unit_test_config.json", &config) != NULL);
         
         ThreadPool pool(1);
-        Time start;
 
-        NaturalLanguageClassifier naturalLanguageClassifier;
-        Test(naturalLanguageClassifier.Start());
+        NaturalLanguageClassifier nlc;
+        if (nlc.Start())
+		{
+			Log::Status("TestNaturalLanguageClassifier", "Testing GetServiceStatus");
+			nlc.GetServiceStatus(
+				DELEGATE(TestNaturalLanguageClassifier, OnGetServiceStatus, const IService::ServiceStatus &, this));
 
-        Log::Status("TestNaturalLanguageClassifier", "Testing GetServiceStatus");
+			Spin( m_ServiceStatusTested );
+			Test(m_ServiceStatusTested);
 
-        naturalLanguageClassifier.GetServiceStatus(DELEGATE(TestNaturalLanguageClassifier, OnGetServiceStatus, const IService::ServiceStatus &, this));
+			// TEST GETTING ALL CLASSIFIERS
+			Log::Status("TestNaturalLanguageClassifier", "Testing GetClassifiers");
+			nlc.GetClassifiers(DELEGATE(TestNaturalLanguageClassifier, OnGetClassifiers, Classifiers *, this));
+        
+			Spin( m_GetClassifiersTested );
+			Test(m_GetClassifiersTested);
+        
+			// If there is at least one classifier, it will get it's Id and Status
+			if ( m_NumberOfClassifiers > 0 )
+			{
+				// TEST GETTING A CLASSIFIER
+				// Checks if a Classifier's status is 'Available'
+				// If the classifier is not available, it will train another classifier.
+				// If the classifier is availble, it will test the ability to classify and delete
+				Log::Status("TestNaturalLanguageClassifier", "Testing GetClassifier");
+				nlc.GetClassifier(m_NaturalLanguageClassifierId,DELEGATE(TestNaturalLanguageClassifier, OnGetClassifier, Classifier *, this));
 
-        start = Time();
-        while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_ServiceStatusTested)
-        {
-            pool.ProcessMainThread();
-            tthread::this_thread::yield();
-        }
+				Spin( m_GetClassifiersTested );
+				Test(m_GetClassifierTested);
+			}
+        
+			// If there are no classifiers, it will train one
+			else
+			{
+				// TEST TRAINING A CLASSIFIER
+				// Since no classifiers are available, a new classifier will be trained
+				Log::Status("TestNaturalLanguageClassifier","No available classifier to test -- training new classifier");
+				Log::Status("TestNaturalLanguageClassifier", "Testing TrainClassifier");
+				Test(nlc.TrainClassifierFile("TestClassifier","en","./etc/tests/weather_sample.csv",DELEGATE(TestNaturalLanguageClassifier, OnTrainClassifier, Classifier *, this)));
 
-        Test(m_ServiceStatusTested);
-
-        // TEST GETTING ALL CLASSIFIERS
-        Log::Status("TestNaturalLanguageClassifier", "Testing GetClassifiers");
-        naturalLanguageClassifier.GetClassifiers(DELEGATE(TestNaturalLanguageClassifier, OnGetClassifiers, Classifiers *, this));
+				Spin( m_TrainingTested );
+				Test(m_TrainingTested);
+			}
         
-        start = Time();
-        while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_GetClassifiersTested)
-        {
-            pool.ProcessMainThread();
-            tthread::this_thread::yield();
-        }
-        Test(m_GetClassifiersTested);
+			// TEST CLASSIFYING A QUESTION
+			// Only Classify a question if the Classifier is Available
+			if (m_NLCStatus == "Available")
+			{
+				// Classifies the question 'How hot is it'
+				// Will pass if the JSON has field 'top_class'
+				Log::Status("TestNaturalLanguageClassifier", "Testing Classify 'How hot is it'");
+				nlc.Classify(m_NaturalLanguageClassifierId,"How hot is it", DELEGATE(TestNaturalLanguageClassifier, OnClassify, const Json::Value &, this));
         
+				Spin( m_ClassifyTested );
+				Test(m_ClassifyTested);
+			}
         
-        // If there is at least one classifier, it will get it's Id and Status
-        if ( m_NumberOfClassifiers > 0 )
-        {
-            // TEST GETTING A CLASSIFIER
-            // Checks if a Classifier's status is 'Available'
-            // If the classifier is not available, it will train another classifier.
-            // If the classifier is availble, it will test the ability to classify and delete
-            Log::Status("TestNaturalLanguageClassifier", "Testing GetClassifier");
-            naturalLanguageClassifier.GetClassifier(m_NaturalLanguageClassifierId,DELEGATE(TestNaturalLanguageClassifier, OnGetClassifier, Classifier *, this));
-            start = Time();
-            while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_GetClassifierTested)
-            {
-                pool.ProcessMainThread();
-                tthread::this_thread::yield();
-            }
-            Test(m_GetClassifierTested);
-        }
+			// TEST DELETING A CLASSIFIER
+			// Only delete a classifier if it is Available or Unavailable (NOT Testing)
+			if (m_NLCStatus == "Available" || m_NLCStatus == "Unavailable")
+			{
+				Log::Status("TestNaturalLanguageClassifier", "Testing DeleteClassifier");
+				nlc.DeleteClassifer(m_NaturalLanguageClassifierId,DELEGATE(TestNaturalLanguageClassifier, OnDeleteClassifier, const Json::Value &, this));
         
-        // If there are no classifiers, it will train one
-        else
-        {
-            // TEST TRAINING A CLASSIFIER
-            // Since no classifiers are available, a new classifier will be trained
-            Log::Status("TestNaturalLanguageClassifier","No available classifier to test -- training new classifier");
-            Log::Status("TestNaturalLanguageClassifier", "Testing TrainClassifier");
-            Test(naturalLanguageClassifier.TrainClassifierFile("TestClassifier","en","./etc/tests/weather_sample.csv",DELEGATE(TestNaturalLanguageClassifier, OnTrainClassifier, Classifier *, this)));
-
-            start = Time();
-            while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_TrainingTested)
-            {
-                pool.ProcessMainThread();
-                tthread::this_thread::yield();
-            }
-            Test(m_TrainingTested);
-        }
-        
-        // TEST CLASSIFYING A QUESTION
-        // Only Classify a question if the Classifier is Available
-        if (m_NLCStatus == "Available")
-        {
-            // Classifies the question 'How hot is it'
-            // Will pass if the JSON has field 'top_class'
-            Log::Status("TestNaturalLanguageClassifier", "Testing Classify 'How hot is it'");
-            naturalLanguageClassifier.Classify(m_NaturalLanguageClassifierId,"How hot is it", DELEGATE(TestNaturalLanguageClassifier, OnClassify, const Json::Value &, this));
-        
-            start = Time();
-            while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_ClassifyTested)
-            {
-                pool.ProcessMainThread();
-                tthread::this_thread::yield();
-            }
-            Test(m_ClassifyTested);
-        }
-        
-        // TEST DELETING A CLASSIFIER
-        // Only delete a classifier if it is Available or Unavailable (NOT Testing)
-        if (m_NLCStatus == "Available" || m_NLCStatus == "Unavailable")
-        {
-            Log::Status("TestNaturalLanguageClassifier", "Testing DeleteClassifier");
-            naturalLanguageClassifier.DeleteClassifer(m_NaturalLanguageClassifierId,DELEGATE(TestNaturalLanguageClassifier, OnDeleteClassifier, const Json::Value &, this));
-        
-            start = Time();
-            while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_DeleteTested)
-            {
-                pool.ProcessMainThread();
-                tthread::this_thread::yield();
-            }
-            Test(m_DeleteTested);
-        }
-    }
+				Spin( m_DeleteTested );
+				Test(m_DeleteTested);
+			}
+		}
+		else
+		{
+			Log::Status( "TestNaturalLanguageClassifier", "Skipping test." );
+		}
+	}
     
     void OnTrainClassifier(Classifier * a_pClassifier)
     {

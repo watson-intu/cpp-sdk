@@ -39,50 +39,53 @@ public:
 
 	virtual void RunTest()
 	{
-		Log::Status("TestVisualRecognition", "Starting TestVisualRecognition");
-		// read in all the file data..
-		std::ifstream input("./etc/tests/VisualRecognitionTest.jpg", std::ios::in | std::ios::binary);
-		Test(input.is_open());
-		std::string imageData;
-		imageData.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
-		input.close();
-
 		Config config;
 		Test(ISerializable::DeserializeFromFile("./etc/tests/unit_test_config.json", &config) != NULL);
-
 		ThreadPool pool(1);
 
-		VisualRecognition * visualRecognition = new VisualRecognition();
-		Test(visualRecognition->Start());
-
-		Log::Status("TestVisualRecognition", "Started VisualRecognition");
-		visualRecognition->DetectFaces(imageData,
-			DELEGATE(TestVisualRecognition, OnDetectFaces, const Json::Value &, this) );
-		visualRecognition->ClassifyImage(imageData, "default",
-			DELEGATE(TestVisualRecognition, OnClassifyImage, const Json::Value &, this) );
-		visualRecognition->IdentifyText(imageData,
-			DELEGATE(TestVisualRecognition, OnIdentifyText, const Json::Value &, this) );
-
-		Time start;
-		while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && (!m_bDetectFacesTested || !m_bClassifyImageTested) )
+		VisualRecognition vr;
+		if ( vr.Start() )
 		{
-			pool.ProcessMainThread();
-			tthread::this_thread::yield();
-		}
-		
-		if (m_bDetectFacesTested) {
-			Log::Status("TestVisualRecognition", "Successfully tested face detection");
-		}
-		if (m_bClassifyImageTested) {
-			Log::Status("TestVisualRecognition", "Successfully tested image classification");
-		}
-		if (m_bIdentifyTextTested) {
-			Log::Status("TestVisualRecognition", "Successfully tested text recognition");
-		}
+			// read in all the file data..
+			std::ifstream input("./etc/tests/VisualRecognitionTest.jpg", std::ios::in | std::ios::binary);
+			Test(input.is_open());
+			std::string imageData;
+			imageData.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
+			input.close();
 
-		Test(m_bDetectFacesTested);
-		Test(m_bClassifyImageTested);
-		Test(m_bIdentifyTextTested);
+			Log::Status("TestVisualRecognition", "Started VisualRecognition");
+			vr.DetectFaces(imageData,
+				DELEGATE(TestVisualRecognition, OnDetectFaces, const Json::Value &, this) );
+			vr.ClassifyImage(imageData, "default",
+				DELEGATE(TestVisualRecognition, OnClassifyImage, const Json::Value &, this) );
+			vr.IdentifyText(imageData,
+				DELEGATE(TestVisualRecognition, OnIdentifyText, const Json::Value &, this) );
+
+			Time start;
+			while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && (!m_bDetectFacesTested || !m_bClassifyImageTested) )
+			{
+				pool.ProcessMainThread();
+				tthread::this_thread::yield();
+			}
+		
+			if (m_bDetectFacesTested) {
+				Log::Status("TestVisualRecognition", "Successfully tested face detection");
+			}
+			if (m_bClassifyImageTested) {
+				Log::Status("TestVisualRecognition", "Successfully tested image classification");
+			}
+			if (m_bIdentifyTextTested) {
+				Log::Status("TestVisualRecognition", "Successfully tested text recognition");
+			}
+
+			Test(m_bDetectFacesTested);
+			Test(m_bClassifyImageTested);
+			Test(m_bIdentifyTextTested);
+		}
+		else
+		{
+			Log::Status( "TestVisualRecognition", "Skipping test." );
+		}
 	}
 
 	void OnDetectFaces(const Json::Value & json)

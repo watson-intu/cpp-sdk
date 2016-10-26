@@ -31,40 +31,26 @@ public:
 		ThreadPool pool(1);
 
 		TextToSpeech tts;
-		Test( tts.Start() );
-		tts.GetVoices( DELEGATE( TestTextToSpeech, OnGetVoices, Voices *, this ) );
-
-		Time start;
-		while( (Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_GetVoicesTested )
+		if ( tts.Start() )
 		{
-			pool.ProcessMainThread();
-			tthread::this_thread::yield();
+			tts.GetVoices( DELEGATE( TestTextToSpeech, OnGetVoices, Voices *, this ) );
+
+			Spin(m_GetVoicesTested );
+			Test(m_GetVoicesTested);
+
+			tts.GetServiceStatus(DELEGATE(TestTextToSpeech, OnGetServiceStatus, const IService::ServiceStatus &, this));
+			Spin(m_ServiceStatusTested);
+			Test(m_ServiceStatusTested);
+
+			tts.SetCacheEnabled(true);
+			tts.ToSound( "Hello World", DELEGATE( TestTextToSpeech, OnToSpeech, Sound *, this ));
+			Spin(m_ToSpeechTested);
+			Test(m_ToSpeechTested);
 		}
-
-		Test(m_GetVoicesTested);
-
-		tts.GetServiceStatus(DELEGATE(TestTextToSpeech, OnGetServiceStatus, const IService::ServiceStatus &, this));
-
-		start = Time();
-		while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_ServiceStatusTested)
+		else
 		{
-			pool.ProcessMainThread();
-			tthread::this_thread::yield();
+			Log::Status( "TestTextToSpeech", "Skipping tests." );
 		}
-
-		Test(m_ServiceStatusTested);
-
-		tts.SetCacheEnabled(true);
-		tts.ToSound( "Hello World", DELEGATE( TestTextToSpeech, OnToSpeech, Sound *, this ));
-
-		start = Time();
-		while( (Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_ToSpeechTested )
-		{
-			pool.ProcessMainThread();
-			tthread::this_thread::yield();
-		}
-
-		Test(m_ToSpeechTested);
 	}
 
 	void OnGetVoices( Voices * a_pVoices )

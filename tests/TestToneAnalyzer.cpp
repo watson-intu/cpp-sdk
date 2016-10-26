@@ -37,15 +37,20 @@ public:
         Test(ISerializable::DeserializeFromFile("./etc/tests/unit_test_config.json", &config) != NULL);
 
         ThreadPool pool(1);
-
         ToneAnalyzer tone;
 
-        Test(tone.Start());
-        tone.GetTone( "how is your day going?",
-                      DELEGATE(TestToneAnalyzer, OnTone, DocumentTones *, this));
+        if (tone.Start())
+		{
+			tone.GetTone( "how is your day going?",
+						  DELEGATE(TestToneAnalyzer, OnTone, DocumentTones *, this));
 
-        Spin(m_bToneTested);
-        Test(m_bToneTested);
+			Spin(m_bToneTested);
+			Test(m_bToneTested);
+		}
+		else
+		{
+			Log::Status( "TestToneAnalyzer", "Skipping test." );
+		}
     }
 
     void OnTone(DocumentTones * a_Callback)

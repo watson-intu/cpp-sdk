@@ -44,14 +44,20 @@ public:
         ThreadPool pool(1);
 
         RetrieveAndRank retrieve;
-        Test(retrieve.Start());
-        Log::Debug("TestRetrieveAndRank","Retrieve and Rank Started");
+        if (retrieve.Start())
+		{
+			Log::Debug("TestRetrieveAndRank","Retrieve and Rank Started");
 
-        Log::Debug("TestRetrieveAndRank","Testing TestRetrieveAndRank Response for input: %s", m_TestText.c_str());
-//        conversation.Message(m_WorkspaceId, m_Context, m_VersionId, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationMessageResponse *, this));
-        retrieve.Select(m_SolrId, m_WorkspaceId, m_TestText, DELEGATE(TestRetrieveAndRank, OnMessage, RetrieveAndRankResponse *, this));
-        Spin(m_bRetrieveAndRankTested);
-        Test(m_bRetrieveAndRankTested);
+			Log::Debug("TestRetrieveAndRank","Testing TestRetrieveAndRank Response for input: %s", m_TestText.c_str());
+	//        conversation.Message(m_WorkspaceId, m_Context, m_VersionId, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationMessageResponse *, this));
+			retrieve.Select(m_SolrId, m_WorkspaceId, m_TestText, DELEGATE(TestRetrieveAndRank, OnMessage, RetrieveAndRankResponse *, this));
+			Spin(m_bRetrieveAndRankTested);
+			Test(m_bRetrieveAndRankTested);
+		}
+		else
+		{
+			Log::Status( "TestRetrieveAndRank", "Skipping test." );
+		}
     }
 
     void OnMessage(RetrieveAndRankResponse * a_pRetrieveAndRankResponse)

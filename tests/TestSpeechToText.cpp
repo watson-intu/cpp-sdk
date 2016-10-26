@@ -15,12 +15,10 @@ public:
 	TestSpeechToText() 
 		: UnitTest( "TestSpeechToText" )
 		, m_GetModelsTested(false)
-		, m_RecognizeTested( false )
 		, m_ServiceStatusTested(false)
 	{}
 
 	bool m_GetModelsTested;
-	bool m_RecognizeTested;
 	bool m_ServiceStatusTested;
 
 	virtual void RunTest()
@@ -31,29 +29,20 @@ public:
 		ThreadPool pool(1);
 
 		SpeechToText stt;
-		Test( stt.Start() );
-		stt.GetModels( DELEGATE( TestSpeechToText, OnGetModels, SpeechModels *, this ) );
-
-		Time start;
-		while( (Time().GetEpochTime() - start.GetEpochTime()) < 300.0 && !m_GetModelsTested )
+		if ( stt.Start() )
 		{
-			pool.ProcessMainThread();
-			tthread::this_thread::yield();
+			stt.GetModels( DELEGATE( TestSpeechToText, OnGetModels, SpeechModels *, this ) );
+			Spin( m_GetModelsTested);
+			Test(m_GetModelsTested);
+
+			stt.GetServiceStatus(DELEGATE(TestSpeechToText, OnGetServiceStatus, const IService::ServiceStatus &, this));
+			Spin(m_ServiceStatusTested);
+			Test(m_ServiceStatusTested);
 		}
-
-		Test(m_GetModelsTested);
-		//Test(m_RecognizeTested); <-- this is never set to true. A mistake?
-
-		stt.GetServiceStatus(DELEGATE(TestSpeechToText, OnGetServiceStatus, const IService::ServiceStatus &, this));
-
-		start = Time();
-		while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_ServiceStatusTested)
+		else
 		{
-			pool.ProcessMainThread();
-			tthread::this_thread::yield();
+			Log::Status( "TestSpeechToText", "Skipping test." );
 		}
-
-		Test(m_ServiceStatusTested);
 	}
 
 	void OnGetServiceStatus(const IService::ServiceStatus & a_Status)

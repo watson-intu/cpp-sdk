@@ -21,7 +21,8 @@
 #include "utils/Config.h"
 #include "services/LanguageTranslation/LanguageTranslation.h"
 
-class TestLanguageTranslation : UnitTest {
+class TestLanguageTranslation : UnitTest 
+{
 public:
     //! Construction
     TestLanguageTranslation() : UnitTest("TestLanguageTranslation"),
@@ -42,23 +43,27 @@ public:
         Test(ISerializable::DeserializeFromFile("./etc/tests/unit_test_config.json", &config) != NULL);
 
         ThreadPool pool(1);
-        LanguageTranslation * language = new LanguageTranslation();
-        Test( language->Start() );
-        Log::Debug("TestLanguageTranslation", "Instantiated Service");
+        LanguageTranslation lt;
 
-        Test(language != NULL);
-        std::string target = "es";
-        std::string source = "en";
-        std::string text = "hello";
-        language->Translation(source, target, text, DELEGATE(TestLanguageTranslation, OnTranslate, Translations *, this));
-        language->IdentifiableLanguages(DELEGATE(TestLanguageTranslation, OnIdentifiedLanguages, Languages *, this));
-        language->Identify(text, DELEGATE(TestLanguageTranslation, OnIdentify, IdentifiedLanguages *, this ));
+        if ( lt.Start() )
+		{
+			std::string target = "es";
+			std::string source = "en";
+			std::string text = "hello";
+			lt.Translation(source, target, text, DELEGATE(TestLanguageTranslation, OnTranslate, Translations *, this));
+			lt.IdentifiableLanguages(DELEGATE(TestLanguageTranslation, OnIdentifiedLanguages, Languages *, this));
+			lt.Identify(text, DELEGATE(TestLanguageTranslation, OnIdentify, IdentifiedLanguages *, this ));
 
-        Spin(m_Counter, 3);
+			Spin(m_Counter, 3);
 
-        Test(m_bTranslate);
-        Test(m_bIdentifiedLanguages);
-        Test(m_bIdentifyText);
+			Test(m_bTranslate);
+			Test(m_bIdentifiedLanguages);
+			Test(m_bIdentifyText);
+		}
+		else
+		{
+			Log::Status( "TestLanguageTranslation", "Skipping test, no credentials." );
+		}
     }
 
     void OnTranslate(Translations * a_Callback)

@@ -47,28 +47,33 @@ public:
 		ThreadPool pool(1);
 
 		Alchemy alchemy;
-		Test(alchemy.Start());
+		if (alchemy.Start())
+		{
+			alchemy.GetPosTags( "can you wave to the crowd?",
+				DELEGATE(TestAlchemy, OnGetPosTags, const Json::Value &, this) );
+			Spin( m_bGetPosTagsTested );
 
-		alchemy.GetPosTags( "can you wave to the crowd?",
-			DELEGATE(TestAlchemy, OnGetPosTags, const Json::Value &, this) );
-		Spin( m_bGetPosTagsTested );
+			alchemy.GetChunkTags( "can you wave to the crowd?",
+				DELEGATE(TestAlchemy, OnGetChunkTags, const Json::Value &, this) );
+			Spin( m_bGetChunkTagsTested );
 
-		alchemy.GetChunkTags( "can you wave to the crowd?",
-			DELEGATE(TestAlchemy, OnGetChunkTags, const Json::Value &, this) );
-		Spin( m_bGetChunkTagsTested );
+			alchemy.GetEntities( "what is the weather like in Austin",
+				DELEGATE(TestAlchemy, OnGetEntities, const Json::Value &, this) );
+			Spin( m_bGetEntitiesTested );
 
-		alchemy.GetEntities( "what is the weather like in Austin",
-			DELEGATE(TestAlchemy, OnGetEntities, const Json::Value &, this) );
-		Spin( m_bGetEntitiesTested );
+			alchemy.GetNews("IBM", 1475193600, 1475881200, 10,
+				DELEGATE(TestAlchemy, OnGetNews, const Json::Value &, this));
+			Spin(m_bGetNewsTested);
 
-		alchemy.GetNews("IBM", 1475193600, 1475881200, 10,
-			DELEGATE(TestAlchemy, OnGetNews, const Json::Value &, this));
-		Spin(m_bGetNewsTested);
-
-		Test(m_bGetPosTagsTested);
-		Test(m_bGetChunkTagsTested);
-		Test(m_bGetEntitiesTested);
-		Test(m_bGetNewsTested);
+			Test(m_bGetPosTagsTested);
+			Test(m_bGetChunkTagsTested);
+			Test(m_bGetEntitiesTested);
+			Test(m_bGetNewsTested);
+		}
+		else
+		{
+			Log::Status( "TestAlchemy", "Skipping test." );
+		}
 	}
 
 	void OnGetPosTags(const Json::Value & json)

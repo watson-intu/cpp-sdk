@@ -41,18 +41,18 @@ public:
 		RelationshipExtraction re;
 		//re.SetCacheEnabled(false);		// turn off cache for unit tests
 
-		Test(re.Start());
-		Test(re.Parse( "Wave to the crowd", 
-			DELEGATE(TestRelationshipExtraction, OnParse, const Json::Value &, this)));
-
-		Time start;
-		while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && !m_bParseTested)
+		if (re.Start())
 		{
-			pool.ProcessMainThread();
-			tthread::this_thread::yield();
-		}
+			Test(re.Parse( "Wave to the crowd", 
+				DELEGATE(TestRelationshipExtraction, OnParse, const Json::Value &, this)));
 
-		Test(m_bParseTested);
+			Spin(m_bParseTested);
+			Test(m_bParseTested);
+		}
+		else
+		{
+			Log::Status( "TestRelationshipExtraction", "Skipping test." );
+		}
 	}
 
 	void OnParse(const Json::Value & value)
