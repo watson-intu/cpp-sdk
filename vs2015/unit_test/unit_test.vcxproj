@@ -121,12 +121,10 @@
     <ClCompile Include="..\..\tests\TestSecureWebServer.cpp" />
     <ClCompile Include="..\..\tests\TestSpeechToText.cpp" />
     <ClCompile Include="..\..\tests\TestStringUtil.cpp" />
-    <ClCompile Include="..\..\tests\TestSTTResponseTime.cpp" />
     <ClCompile Include="..\..\tests\TestTextToSpeech.cpp" />
     <ClCompile Include="..\..\tests\TestThreadPool.cpp" />
     <ClCompile Include="..\..\tests\TestTimerPool.cpp" />
     <ClCompile Include="..\..\tests\TestToneAnalyzer.cpp" />
-    <ClCompile Include="..\..\tests\TestUnityWebSocket.cpp" />
     <ClCompile Include="..\..\tests\TestURL.cpp" />
     <ClCompile Include="..\..\tests\TestVisualRecognition.cpp" />
     <ClCompile Include="..\..\tests\TestWebClient.cpp" />

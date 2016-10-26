@@ -56,6 +56,8 @@ public:
 
     void OnMessage(RetrieveAndRankResponse * a_pRetrieveAndRankResponse)
     {
+		Test( a_pRetrieveAndRankResponse != NULL );
+
         std::vector<Documents> m_Documents = a_pRetrieveAndRankResponse->m_Docs;
         std::string m_Body = m_Documents[0].m_Body;
         Log::Debug("TestRetrieveAndRank", "Received response from R&R Service: %s", m_Body.c_str());

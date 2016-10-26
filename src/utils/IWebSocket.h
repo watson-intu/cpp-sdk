@@ -48,6 +48,9 @@ public:
 
 	struct Frame
 	{
+		Frame() : m_Op( CONTINUATION ), m_pSocket( NULL )
+		{}
+
 		OpCode				m_Op;
 		std::string			m_Data;
 		IWebSocket *		m_pSocket;

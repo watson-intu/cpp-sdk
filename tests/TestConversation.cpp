@@ -27,7 +27,7 @@ public:
     //! Construction
     TestConversation() : UnitTest("TestConversation"),
         m_bConversationTested(false),
-        m_WorkspaceId("e8e888b1-5141-4747-9bbb-5a5440bae96a"),
+        m_WorkspaceId("0229768a-35af-4cfa-a989-d39376ce88d6"),
         m_ConversationId(""),
         m_TestText("please raise your right hand")
     {}
@@ -59,6 +59,8 @@ public:
 
     void OnMessage(ConversationResponse * a_pConversationResponse)
     {
+		Test( a_pConversationResponse != NULL );
+
         // Test that an Intent is returned
         std::vector<ConversationIntent> m_Intents = a_pConversationResponse->m_Intents;
         Test(m_Intents.size() > 0);
