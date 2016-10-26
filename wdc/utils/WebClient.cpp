@@ -710,7 +710,10 @@ void WebClient::WS_Read( RequestData * a_pReq, const boost::system::error_code &
 			else
 			{
 				Log::DebugLow("WebClient", "Error on WS_Read(): %s (%p)", error.message().c_str(), this );
-				ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+
+				m_SendError = true;
+				if ( m_SendCount == 0 )
+					ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
 				delete a_pReq;
 			}
 		}
@@ -883,6 +886,8 @@ void WebClient::OnDisconnected()
 		m_eState == CONNECTING || 
 		m_eState == CLOSING )
 	{
+		assert( m_SendCount == 0 );
+
 		Log::DebugLow( "WebClient", "OnDisconnected() closing socket. (%p)", this );
 		m_pSocket->close();
 
