@@ -24,7 +24,7 @@
 #include "boost/thread.hpp"
 #include "boost/thread/mutex.hpp"
 
-#if !defined(NO_OPENSSL_INCLUDES)
+#if defined(ENABLE_OPENSSL_INCLUDES)
 #include "boost/asio/ssl.hpp"
 #else
 

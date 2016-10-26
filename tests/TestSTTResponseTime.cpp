@@ -15,7 +15,9 @@
 *
 */
 
-#include "tests/UnitTest.h"
+#define _CRT_SECURE_NO_WARNINGS
+
+#include "utils/UnitTest.h"
 #include "utils/Log.h"
 #include "utils/Time.h"
 #include "utils/Config.h"
@@ -29,13 +31,14 @@
 #include <iostream>
 #include <fstream>
 
+const int CHUNK_SIZE = 4000;
+
 class TestSTTResponseTime : UnitTest
 {
 public:
 	//! Construction
 	TestSTTResponseTime() : 
 		UnitTest( "TestSTTResponseTime" ),
-		m_ChunkSz( 4000 ),
 		m_Bits( 16 ),
 		m_Channels( 1 ),
 		m_Rate( 16000 ),
@@ -45,7 +48,6 @@ public:
 		m_Samples( 20 )
 	{}
 
-	int						m_ChunkSz;
 	int						m_Bits;
 	int						m_Channels;
 	int						m_Rate;
@@ -57,7 +59,7 @@ public:
 	virtual void RunTest()
 	{
 		bool F = false;
-		double spin_time = float(m_ChunkSz) / ( float( sizeof(short) / sizeof(char) ) * float(m_Rate) );
+		double spin_time = float(CHUNK_SIZE) / ( float( sizeof(short) / sizeof(char) ) * float(m_Rate) );
 		Log::Debug("TestSTTResponseTime", "Will spin %.3f seconds per chunk", spin_time);
 
 		// Start STT service
@@ -129,7 +131,7 @@ public:
 				Log::Debug("TestSTTResponseTime", "Loading raw audio: %s, size: %d", fullPath.c_str(), sz );
 				
 				int i = 0;
-				char buffer[m_ChunkSz];
+				char buffer[CHUNK_SIZE];
 				while ( i < sz )
 				{
 					// Create SpeechAudioData chunk
@@ -142,14 +144,14 @@ public:
 					// Read from buffer
 					int read = fread(buffer, sizeof(char), sizeof(buffer) / sizeof(char) , pFile );
 
-					if (read == m_ChunkSz )
+					if (read == CHUNK_SIZE )
 					{
-						temp.m_PCM = std::string(buffer, m_ChunkSz);				
+						temp.m_PCM = std::string(buffer, CHUNK_SIZE);				
 					}
 					else if ( read > 0)
 					{
 						std::string pcm = std::string(buffer, read);
-						pcm.append(m_ChunkSz - read, '\0'); 
+						pcm.append(CHUNK_SIZE - read, '\0'); 
 						temp.m_PCM = pcm;                 
 					}
 					// Send to STT and spin
@@ -169,7 +171,7 @@ public:
 					temp.m_Channels = m_Channels;
 					temp.m_Rate = m_Rate;
 					temp.m_Level = 0.5;
-					temp.m_PCM = std::string(m_ChunkSz, '\0');
+					temp.m_PCM = std::string(CHUNK_SIZE, '\0');
 
 					stt.OnListen(temp);
 					Spin( F, spin_time );

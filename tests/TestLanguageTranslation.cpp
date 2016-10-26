@@ -15,7 +15,7 @@
 *
 */
 
-#include "tests/UnitTest.h"
+#include "utils/UnitTest.h"
 #include "utils/Log.h"
 #include "utils/ThreadPool.h"
 #include "utils/Config.h"
