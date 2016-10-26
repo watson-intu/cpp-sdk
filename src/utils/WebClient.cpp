@@ -15,6 +15,8 @@
 *
 */
 
+#define ENABLE_OPENSSL_INCLUDES
+
 //! Define to 1 to enable lots of debugging output
 #define ENABLE_DEBUGGING			0
 #define ENABLE_KEEP_ALIVE			0
