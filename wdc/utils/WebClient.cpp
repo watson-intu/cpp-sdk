@@ -505,20 +505,20 @@ void WebClient::HTTP_ReadHeaders( RequestData * a_pReq, const boost::system::err
 			if ( m_DataReceiver.IsValid() )
 				m_DataReceiver( a_pReq );
 
-			// send all pending packets now..
-			if ( m_Pending.begin() != m_Pending.end() )
-			{
-				Log::Debug( "WebClient", "Sending %u pending frames.", m_Pending.size() );
-				for (BufferList::iterator iSend = m_Pending.begin(); iSend != m_Pending.end(); ++iSend)
-					WS_QueueSend(*iSend);
-				m_Pending.clear();
-			}
-
 			// TODO: Should check the Sec-WebSocket-Accept hash using SHA1
 			Headers::iterator iWebSocket = a_pReq->m_Headers.find( "Upgrade" );
 			if ( a_pReq->m_StatusCode == 101 && 
 				iWebSocket != a_pReq->m_Headers.end() && _stricmp( iWebSocket->second.c_str(), "WebSocket" ) == 0 )
 			{
+				// send all pending packets now..
+				if ( m_Pending.begin() != m_Pending.end() )
+				{
+					Log::Debug( "WebClient", "Sending %u pending frames.", m_Pending.size() );
+					for (BufferList::iterator iSend = m_Pending.begin(); iSend != m_Pending.end(); ++iSend)
+						WS_QueueSend(*iSend);
+					m_Pending.clear();
+				}
+
 				// start reading WebSocket frames..
 				WS_Read( a_pReq, error, 0 );
 			}
@@ -526,7 +526,9 @@ void WebClient::HTTP_ReadHeaders( RequestData * a_pReq, const boost::system::err
 			{
 				Log::Error( "WebClient", "Websocket failed to connect, status code %u: %s", 
 					a_pReq->m_StatusCode, a_pReq->m_StatusMessage.c_str() );
-				ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+				m_SendError = true;
+				if ( m_SendCount == 0 )
+					ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
 				delete a_pReq;
 			}
 		}
@@ -781,6 +783,10 @@ void WebClient::WS_SendNext()
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred,
 					pFrame));
+
+			// we need to know how many outstanding sends we have..
+			m_SendCount += 1;
+			sm_BytesSent += pFrame->size();
 		}
 		else if (m_pSocket != NULL)
 		{
@@ -790,11 +796,11 @@ void WebClient::WS_SendNext()
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred,
 					pFrame));
-		}
 
-		// we need to know how many outstanding sends we have..
-		m_SendCount += 1;
-		sm_BytesSent += pFrame->size();
+			// we need to know how many outstanding sends we have..
+			m_SendCount += 1;
+			sm_BytesSent += pFrame->size();
+		}
 	}
 }
 
@@ -805,14 +811,14 @@ void WebClient::WS_Sent( const boost::system::error_code& error, size_t bytes_tr
 	m_SendCount -= 1;
 	if ( error || m_SendError )
 	{
-		Log::Error( "WebClient", "Error sending web socket frame : %s", error.message().c_str() );
-
-		// use a boolean here to check if we've already queued a call OnDisconnect() or not, this is needed
-		// because we may have many outstanding sends at any one time. 
-		if (! m_SendError )
+		if (!m_SendError )
+		{
+			Log::Error( "WebClient", "Error sending web socket frame : %s", error.message().c_str() );
 			m_SendError = true;
+		}
+
 		// once we number of outstanding sends is 0, then let the main thread know we've been disconnected.
-		if ( m_SendError && m_SendCount == 0 )
+		if ( m_SendCount == 0 )
 			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE(WebClient, OnDisconnected, this) );
 	}
 	else
