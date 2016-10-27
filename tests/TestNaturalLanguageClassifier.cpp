@@ -53,12 +53,13 @@ public:
     {
         Config config;
         Test(ISerializable::DeserializeFromFile("./etc/tests/unit_test_config.json", &config) != NULL);
-        
         ThreadPool pool(1);
 
         NaturalLanguageClassifier nlc;
-        if (nlc.Start())
+        if ( config.IsConfigured( nlc.GetServiceId() ) )
 		{
+			Test( nlc.Start() );
+
 			Log::Status("TestNaturalLanguageClassifier", "Testing GetServiceStatus");
 			nlc.GetServiceStatus(
 				DELEGATE(TestNaturalLanguageClassifier, OnGetServiceStatus, const IService::ServiceStatus &, this));
@@ -70,7 +71,7 @@ public:
 			Log::Status("TestNaturalLanguageClassifier", "Testing GetClassifiers");
 			nlc.GetClassifiers(DELEGATE(TestNaturalLanguageClassifier, OnGetClassifiers, Classifiers *, this));
         
-			Spin( m_GetClassifiersTested );
+			Spin(m_GetClassifiersTested);
 			Test(m_GetClassifiersTested);
         
 			// If there is at least one classifier, it will get it's Id and Status
@@ -81,9 +82,10 @@ public:
 				// If the classifier is not available, it will train another classifier.
 				// If the classifier is availble, it will test the ability to classify and delete
 				Log::Status("TestNaturalLanguageClassifier", "Testing GetClassifier");
-				nlc.GetClassifier(m_NaturalLanguageClassifierId,DELEGATE(TestNaturalLanguageClassifier, OnGetClassifier, Classifier *, this));
+				nlc.GetClassifier(m_NaturalLanguageClassifierId,
+					DELEGATE(TestNaturalLanguageClassifier, OnGetClassifier, Classifier *, this));
 
-				Spin( m_GetClassifiersTested );
+				Spin(m_GetClassifierTested);
 				Test(m_GetClassifierTested);
 			}
         
@@ -123,6 +125,8 @@ public:
 				Spin( m_DeleteTested );
 				Test(m_DeleteTested);
 			}
+
+			Test( nlc.Stop() );
 		}
 		else
 		{

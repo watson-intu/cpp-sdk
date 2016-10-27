@@ -45,8 +45,9 @@ public:
         ThreadPool pool(1);
         LanguageTranslation lt;
 
-        if ( lt.Start() )
+        if ( config.IsConfigured( lt.GetServiceId() ) )
 		{
+			Test( lt.Start() );
 			std::string target = "es";
 			std::string source = "en";
 			std::string text = "hello";
@@ -59,6 +60,7 @@ public:
 			Test(m_bTranslate);
 			Test(m_bIdentifiedLanguages);
 			Test(m_bIdentifyText);
+			Test( lt.Stop() );
 		}
 		else
 		{

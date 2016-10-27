@@ -44,8 +44,10 @@ public:
 		ThreadPool pool(1);
 
 		VisualRecognition vr;
-		if ( vr.Start() )
+		if ( config.IsConfigured( vr.GetServiceId() ) )
 		{
+			Test( vr.Start() );
+
 			// read in all the file data..
 			std::ifstream input("./etc/tests/VisualRecognitionTest.jpg", std::ios::in | std::ios::binary);
 			Test(input.is_open());
@@ -56,31 +58,20 @@ public:
 			Log::Status("TestVisualRecognition", "Started VisualRecognition");
 			vr.DetectFaces(imageData,
 				DELEGATE(TestVisualRecognition, OnDetectFaces, const Json::Value &, this) );
+			Spin( m_bDetectFacesTested );
+			Test( m_bDetectFacesTested );
+
 			vr.ClassifyImage(imageData, "default",
 				DELEGATE(TestVisualRecognition, OnClassifyImage, const Json::Value &, this) );
+			Spin( m_bClassifyImageTested );
+			Test( m_bClassifyImageTested );
+
 			vr.IdentifyText(imageData,
 				DELEGATE(TestVisualRecognition, OnIdentifyText, const Json::Value &, this) );
+			Spin( m_bIdentifyTextTested );
+			Test( m_bIdentifyTextTested );
 
-			Time start;
-			while ((Time().GetEpochTime() - start.GetEpochTime()) < 30.0 && (!m_bDetectFacesTested || !m_bClassifyImageTested) )
-			{
-				pool.ProcessMainThread();
-				tthread::this_thread::yield();
-			}
-		
-			if (m_bDetectFacesTested) {
-				Log::Status("TestVisualRecognition", "Successfully tested face detection");
-			}
-			if (m_bClassifyImageTested) {
-				Log::Status("TestVisualRecognition", "Successfully tested image classification");
-			}
-			if (m_bIdentifyTextTested) {
-				Log::Status("TestVisualRecognition", "Successfully tested text recognition");
-			}
-
-			Test(m_bDetectFacesTested);
-			Test(m_bClassifyImageTested);
-			Test(m_bIdentifyTextTested);
+			Test( vr.Stop() );
 		}
 		else
 		{

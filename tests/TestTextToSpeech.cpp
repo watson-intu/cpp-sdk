@@ -31,8 +31,10 @@ public:
 		ThreadPool pool(1);
 
 		TextToSpeech tts;
-		if ( tts.Start() )
+		if ( config.IsConfigured( tts.GetServiceId() ) )
 		{
+			Test( tts.Start() );
+
 			tts.GetVoices( DELEGATE( TestTextToSpeech, OnGetVoices, Voices *, this ) );
 
 			Spin(m_GetVoicesTested );
@@ -46,6 +48,8 @@ public:
 			tts.ToSound( "Hello World", DELEGATE( TestTextToSpeech, OnToSpeech, Sound *, this ));
 			Spin(m_ToSpeechTested);
 			Test(m_ToSpeechTested);
+
+			Test( tts.Stop() );
 		}
 		else
 		{

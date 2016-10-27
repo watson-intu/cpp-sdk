@@ -47,8 +47,9 @@ public:
 		ThreadPool pool(1);
 
 		Alchemy alchemy;
-		if (alchemy.Start())
+		if ( config.IsConfigured( alchemy.GetServiceId() ) )
 		{
+			Test( alchemy.Start() );
 			alchemy.GetPosTags( "can you wave to the crowd?",
 				DELEGATE(TestAlchemy, OnGetPosTags, const Json::Value &, this) );
 			Spin( m_bGetPosTagsTested );
@@ -69,6 +70,8 @@ public:
 			Test(m_bGetChunkTagsTested);
 			Test(m_bGetEntitiesTested);
 			Test(m_bGetNewsTested);
+
+			Test( alchemy.Stop() );
 		}
 		else
 		{

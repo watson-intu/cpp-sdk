@@ -29,8 +29,10 @@ public:
 		ThreadPool pool(1);
 
 		SpeechToText stt;
-		if ( stt.Start() )
+		if ( config.IsConfigured( stt.GetServiceId() ) )
 		{
+			Test( stt.Start() );
+
 			stt.GetModels( DELEGATE( TestSpeechToText, OnGetModels, SpeechModels *, this ) );
 			Spin( m_GetModelsTested);
 			Test(m_GetModelsTested);
@@ -38,6 +40,8 @@ public:
 			stt.GetServiceStatus(DELEGATE(TestSpeechToText, OnGetServiceStatus, const IService::ServiceStatus &, this));
 			Spin(m_ServiceStatusTested);
 			Test(m_ServiceStatusTested);
+
+			Test( stt.Stop() );
 		}
 		else
 		{

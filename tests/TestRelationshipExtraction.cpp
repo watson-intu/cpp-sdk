@@ -41,13 +41,15 @@ public:
 		RelationshipExtraction re;
 		//re.SetCacheEnabled(false);		// turn off cache for unit tests
 
-		if (re.Start())
+		if ( config.IsConfigured( re.GetServiceId() ) )
 		{
+			Test( re.Start() );
 			Test(re.Parse( "Wave to the crowd", 
 				DELEGATE(TestRelationshipExtraction, OnParse, const Json::Value &, this)));
 
 			Spin(m_bParseTested);
 			Test(m_bParseTested);
+			Test( re.Stop() );
 		}
 		else
 		{

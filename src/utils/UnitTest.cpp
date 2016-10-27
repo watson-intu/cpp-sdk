@@ -73,6 +73,8 @@ int UnitTest::RunTests( const std::vector<std::string> & a_Tests )
 #endif
 	}
 
+	Log::Status( "UnitTest", "Executed %d tests, %d tests failed.", executed, failed );
+
 	return failed;
 }
 

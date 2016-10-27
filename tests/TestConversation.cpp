@@ -45,8 +45,9 @@ public:
         ThreadPool pool(1);
 
         Conversation conversation;
-        if (conversation.Start())
+        if ( config.IsConfigured( conversation.GetServiceId() ) )
 		{
+			Test( conversation.Start() );
 			Log::Debug("TestConversation","Conversation Started");
 
 			Log::Debug("TestConversation","Testing Conversation Response for input: %s", m_TestText.c_str());
@@ -56,6 +57,7 @@ public:
 			Test(m_bConversationTested);
 
 			// TODO Add in other Conversation API Endpoints provided by Brandon W.
+			Test( conversation.Stop() );
 		}
 		else
 		{

@@ -19,9 +19,6 @@
     <ClCompile Include="..\..\tests\TestDelegate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\TestDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\tests\TestFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

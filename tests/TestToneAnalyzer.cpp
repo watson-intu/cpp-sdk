@@ -39,13 +39,17 @@ public:
         ThreadPool pool(1);
         ToneAnalyzer tone;
 
-        if (tone.Start())
+        if ( config.IsConfigured( tone.GetServiceId() ) )
 		{
+			Test( tone.Start() );
+
 			tone.GetTone( "how is your day going?",
 						  DELEGATE(TestToneAnalyzer, OnTone, DocumentTones *, this));
 
 			Spin(m_bToneTested);
 			Test(m_bToneTested);
+
+			Test( tone.Stop() );
 		}
 		else
 		{

@@ -107,7 +107,6 @@
     <ClCompile Include="..\..\tests\TestConversation.cpp" />
     <ClCompile Include="..\..\tests\TestDataCache.cpp" />
     <ClCompile Include="..\..\tests\TestDelegate.cpp" />
-    <ClCompile Include="..\..\tests\TestDialog.cpp" />
     <ClCompile Include="..\..\tests\TestFactory.cpp" />
     <ClCompile Include="..\..\tests\TestGetMac.cpp" />
     <ClCompile Include="..\..\tests\TestISerializable.cpp" />
