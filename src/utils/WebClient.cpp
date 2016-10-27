@@ -674,7 +674,7 @@ void WebClient::WS_Read( RequestData * a_pReq, const boost::system::error_code &
 		IWebSocket::Frame * pFrame = NULL;
 		while( m_WebSocket && (pFrame = WebSocketFramer::ParseFrame( m_Incoming )) != NULL )
 		{
-			pFrame->m_pSocket = this;
+			pFrame->m_wpSocket = shared_from_this();
 
 			bool bClose = pFrame->m_Op == CLOSE;
 			ThreadPool::Instance()->InvokeOnMain<IWebSocket::Frame *>(

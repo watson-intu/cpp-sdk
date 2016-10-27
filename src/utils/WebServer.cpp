@@ -292,7 +292,7 @@ public:
 				IWebSocket::Frame * pFrame = NULL;
 				while (!m_bClosed && (pFrame = WebSocketFramer::ParseFrame(m_Incoming)) != NULL)
 				{
-					pFrame->m_pSocket = this;
+					pFrame->m_wpSocket = shared_from_this();
 
 					if (m_OnFrame.IsValid())
 					{

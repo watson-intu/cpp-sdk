@@ -121,12 +121,18 @@ public:
 
 	void OnServerFrame(IWebSocket::FrameSP a_spFrame)
 	{
-		Log::Debug("TestSecureWebServer", "OnServerFrame() OpCode: %d, Data: %s", a_spFrame->m_Op,
-			a_spFrame->m_Op == IWebSocket::TEXT_FRAME ? a_spFrame->m_Data.c_str() : StringUtil::Format("%u bytes", a_spFrame->m_Data.size()).c_str());
-		if (a_spFrame->m_Op == IWebSocket::BINARY_FRAME && !m_bClientClosed)
-			a_spFrame->m_pSocket->SendBinary(a_spFrame->m_Data);
-		else if (a_spFrame->m_Op == IWebSocket::TEXT_FRAME && !m_bClientClosed)
-			a_spFrame->m_pSocket->SendText(a_spFrame->m_Data);
+		IWebSocket::SP spSocket = a_spFrame->m_wpSocket.lock();
+
+		Log::Debug("TestSecureWebServer", "OnServerFrame() OpCode: %d, Data: %s", a_spFrame->m_Op, 
+			a_spFrame->m_Op == IWebSocket::TEXT_FRAME ? a_spFrame->m_Data.c_str() : StringUtil::Format( "%u bytes", a_spFrame->m_Data.size()).c_str() );
+
+		if ( spSocket )
+		{
+			if (a_spFrame->m_Op == IWebSocket::BINARY_FRAME)
+				spSocket->SendBinary(a_spFrame->m_Data);
+			else if (a_spFrame->m_Op == IWebSocket::TEXT_FRAME)
+				spSocket->SendText(a_spFrame->m_Data);
+		}
 	}
 
 	void OnSecureClientFrame(IWebSocket::FrameSP a_spFrame)
