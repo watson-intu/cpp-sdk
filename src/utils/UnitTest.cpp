@@ -28,7 +28,7 @@ int UnitTest::RunTests( const std::vector<std::string> & a_Tests )
 	}
 
 	int executed = 0;
-	int failed = 0;
+	std::vector<std::string> failed;
 	for(size_t i=0;i<tests.size();++i)
 	{
 		UnitTest * pRunTest = NULL;
@@ -55,26 +55,28 @@ int UnitTest::RunTests( const std::vector<std::string> & a_Tests )
 			else
 			{
 				Log::Error( "UnitTest", "Failed to find test %s...", a_Tests[i].c_str() );
-				failed += 1;
+				failed.push_back( a_Tests[i] );
 			}
 #ifndef _DEBUG
 		}
 		catch( const std::exception & e )
 		{
 			Log::Error( "UnitTest", "Caught Exception: %s", e.what() );
-			failed += 1;
+			failed.push_back( pRunTest->GetName() );
 			Log::Error("UnitTest", "...Test %s FAILED.",  pRunTest->GetName().c_str());
 		}
 		catch(...)
 		{
-			failed += 1;
+			failed.push_back( pRunTest->GetName() );
 			Log::Error( "UnitTest", "...Test %s FAILED.", pRunTest->GetName().c_str() );
 		}
 #endif
 	}
 
-	Log::Status( "UnitTest", "Executed %d tests, %d tests failed.", executed, failed );
+	Log::Status( "UnitTest", "Executed %d tests, %u tests failed.", executed, failed.size() );
+	for(size_t i=0;i<failed.size();++i)
+		Log::Error( "UnitTest", "... %s failed.", failed[i].c_str() );
 
-	return failed;
+	return failed.size();
 }
 
