@@ -57,7 +57,8 @@ bool Conversation::Start()
 
 
 //! Send Question / Statement / Command
-void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value & a_Context, const std::string & a_Text, OnMessage a_Callback )
+void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value & a_Context,
+                            const std::string & a_Text, const std::string & a_IntentOverrideTag, OnMessage a_Callback )
 {
     Headers headers;
     headers["Content-Type"] = "application/json";
@@ -65,6 +66,7 @@ void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value
 
     Json::Value req;
     req["text"] = a_Text;
+    req["intentoverride"] = a_IntentOverrideTag;
 	Json::Value input;
 	input["input"] = req;
     if( !a_Context.isNull() )

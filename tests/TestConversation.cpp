@@ -29,6 +29,7 @@ public:
         m_bConversationTested(false),
         m_WorkspaceId("0229768a-35af-4cfa-a989-d39376ce88d6"),
         m_ConversationId(""),
+        m_IntentOverrideTag("m_IntentOverride"),
         m_TestText("please raise your right hand")
     {}
 
@@ -36,6 +37,7 @@ public:
     std::string m_WorkspaceId;
     std::string m_ConversationId;
     std::string m_TestText;
+    std::string m_IntentOverrideTag;
     Json::Value m_Context;
 
     virtual void RunTest() 
@@ -49,7 +51,7 @@ public:
         Log::Debug("TestConversation","Conversation Started");
 
         Log::Debug("TestConversation","Testing Conversation Response for input: %s", m_TestText.c_str());
-        conversation.Message(m_WorkspaceId, m_Context, m_TestText, DELEGATE(TestConversation, OnMessage, ConversationResponse *, this));
+        conversation.Message(m_WorkspaceId, m_Context, m_TestText, m_IntentOverrideTag, DELEGATE(TestConversation, OnMessage, ConversationResponse *, this));
 
         Spin(m_bConversationTested);
         Test(m_bConversationTested);
