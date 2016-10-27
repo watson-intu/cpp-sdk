@@ -91,6 +91,9 @@ struct WDC_API ConversationResponse : public ISerializable
         if( json.isMember("context") ) {
             m_Context = json["context"];
 
+            // Intent Override
+            // Looks for an intent override tag and if one exists and is in the context
+            // it will use that as the intent opposed to the intent from Conversation
             if (json.isMember("input") && json["input"].isMember("intentoverride")
                     && json["input"]["intentoverride"] != "" ) {
                 m_IntentOverrideTag = json["input"]["intentoverride"].asString();
