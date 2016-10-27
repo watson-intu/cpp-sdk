@@ -81,6 +81,14 @@ public:
 		return NULL;
 	}
 
+	bool IsConfigured( const std::string & a_ServiceId ) const
+	{
+		ServiceConfig * pConfig = FindServiceConfig( a_ServiceId );
+		if ( pConfig != NULL )
+			return pConfig->IsConfigured();
+		return false;
+	}
+
 	//! Returns the given service by it's type.
 	template<typename T>
 	T * FindService( const std::string & a_ServiceId = EMPTY_STRING ) const
