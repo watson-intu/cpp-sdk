@@ -39,8 +39,6 @@ public:
 		ThreadPool pool(1);
 
 		// test web requests
-		WebClient client;
-	
 		IWebServer * pSecureServer = IWebServer::Create("./etc/tests/server.crt",
 			"./etc/tests/server.key");
 		pSecureServer->AddEndpoint("/test_https", DELEGATE(TestSecureWebServer, OnTestHTTPS, IWebServer::RequestSP, this));
@@ -48,7 +46,9 @@ public:
 		Test(pSecureServer->Start());
 
 		m_bClientClosed = false;
-		client.Request("https://127.0.0.1/test_https", WebClient::Headers(), "GET", "",
+
+		IWebClient::SP spClient = IWebClient::Create();
+		spClient->Request("https://127.0.0.1/test_https", WebClient::Headers(), "GET", "",
 			DELEGATE(TestSecureWebServer, OnSecureResponse, WebClient::RequestData *, this),
 			DELEGATE(TestSecureWebServer, OnState, IWebClient *, this));
 
@@ -61,22 +61,22 @@ public:
 		Test(m_bHTTPSTested);
 
 		m_bClientClosed = false;
-		client.SetURL("wss://127.0.0.1/test_wss");
-		client.SetStateReceiver(DELEGATE(TestSecureWebServer, OnState, IWebClient *, this));
-		client.SetDataReceiver(DELEGATE(TestSecureWebServer, OnWebSocketResponse, WebClient::RequestData *, this));
-		client.SetFrameReceiver(DELEGATE(TestSecureWebServer, OnSecureClientFrame, IWebSocket::FrameSP, this));
-		Test(client.Send());
+		spClient->SetURL("wss://127.0.0.1/test_wss");
+		spClient->SetStateReceiver(DELEGATE(TestSecureWebServer, OnState, IWebClient *, this));
+		spClient->SetDataReceiver(DELEGATE(TestSecureWebServer, OnWebSocketResponse, WebClient::RequestData *, this));
+		spClient->SetFrameReceiver(DELEGATE(TestSecureWebServer, OnSecureClientFrame, IWebSocket::FrameSP, this));
+		Test(spClient->Send());
 
 		start = Time();
 		while ((Time().GetEpochTime() - start.GetEpochTime()) < 10.0)
 		{
-			client.SendText("Testing text");
-			client.SendBinary("Testing binary");
+			spClient->SendText("Testing text");
+			spClient->SendBinary("Testing binary");
 
 			pool.ProcessMainThread();
 			boost::this_thread::sleep(boost::posix_time::milliseconds(0));
 		}
-		Test(client.Close());
+		Test(spClient->Close());
 		Test(m_bWSSTested);
 
 		while (!m_bClientClosed)
@@ -85,6 +85,7 @@ public:
 			boost::this_thread::sleep(boost::posix_time::milliseconds(50));
 		}
 
+		spClient.reset();
 		delete pSecureServer;
 	}
 

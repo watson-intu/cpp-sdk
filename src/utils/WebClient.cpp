@@ -55,9 +55,9 @@ boost::atomic<unsigned int>		IWebClient::sm_BytesRecv;
 
 WebClientService * WebClientService::sm_pInstance = NULL;
 
-IWebClient * IWebClient::Create()
+IWebClient::SP IWebClient::Create()
 {
-	return new WebClient();
+	return SP( new WebClient() );
 }
 
 std::string WebClient::sm_ClientId;

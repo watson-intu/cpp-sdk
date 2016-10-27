@@ -35,7 +35,7 @@ IService::Request::Request(const std::string & a_URL,
 	ResponseCallback a_Callback,
 	float a_fTimeout /*= 30.0f*/ ) :
 	m_pService(NULL),
-	m_pClient( IWebClient::Create() ),
+	m_spClient( IWebClient::Create() ),
 	m_Body(a_Body),
 	m_Complete(false),
 	m_Error(false),
@@ -45,15 +45,15 @@ IService::Request::Request(const std::string & a_URL,
 	m_bDelete(false),
 	m_pCachedReq(NULL)
 {
-	m_pClient->SetURL( a_URL );
-	m_pClient->SetRequestType( a_RequestType );
-	m_pClient->SetStateReceiver( DELEGATE( Request, OnState, IWebClient *, this ) );
-	m_pClient->SetDataReceiver( DELEGATE( Request, OnResponseData, IWebClient::RequestData *, this ) );
-	m_pClient->SetHeaders( a_Headers );
-	m_pClient->SetBody( a_Body );
+	m_spClient->SetURL( a_URL );
+	m_spClient->SetRequestType( a_RequestType );
+	m_spClient->SetStateReceiver( DELEGATE( Request, OnState, IWebClient *, this ) );
+	m_spClient->SetDataReceiver( DELEGATE( Request, OnResponseData, IWebClient::RequestData *, this ) );
+	m_spClient->SetHeaders( a_Headers );
+	m_spClient->SetBody( a_Body );
 
 	//Log::Debug( "Request", "Sending request '%s'", a_URL.c_str() );
-	if (! m_pClient->Send() )
+	if (! m_spClient->Send() )
 	{
 		m_Error = true;
 		Log::Error("Request", "Failed to send web request.");
@@ -79,7 +79,7 @@ IService::Request::Request( IService * a_pService,
 	CacheRequest * a_CacheReq/* = NULL*/,
 	float a_fTimeout /*= 30.0f*/ ) :
 	m_pService( a_pService ),
-	m_pClient(NULL),
+	m_spClient(NULL),
 	m_Body( a_Body ),
 	m_Complete( false ),
 	m_Error( false ),
@@ -102,17 +102,17 @@ IService::Request::Request( IService * a_pService,
 		return;
 	}
 
-	m_pClient = IWebClient::Create();
-	m_pClient->SetURL( a_pService->GetConfig()->m_URL + a_EndPoint );
-	m_pClient->SetRequestType( a_RequestType );
-	m_pClient->SetStateReceiver( DELEGATE( Request, OnState, IWebClient *, this ) );
-	m_pClient->SetDataReceiver( DELEGATE( Request, OnResponseData, IWebClient::RequestData *, this ) );
-	m_pClient->SetHeaders( a_pService->GetHeaders() );
-	m_pClient->SetHeaders( a_Headers, true );
-	m_pClient->SetBody( a_Body );
+	m_spClient = IWebClient::Create();
+	m_spClient->SetURL( a_pService->GetConfig()->m_URL + a_EndPoint );
+	m_spClient->SetRequestType( a_RequestType );
+	m_spClient->SetStateReceiver( DELEGATE( Request, OnState, IWebClient *, this ) );
+	m_spClient->SetDataReceiver( DELEGATE( Request, OnResponseData, IWebClient::RequestData *, this ) );
+	m_spClient->SetHeaders( a_pService->GetHeaders() );
+	m_spClient->SetHeaders( a_Headers, true );
+	m_spClient->SetBody( a_Body );
 
 	//Log::Debug( "Request", "Sending request '%s'", a_pService->GetConfig()->m_URL + a_EndPoint.c_str() );
-	if (! m_pClient->Send() )
+	if (! m_spClient->Send() )
 	{
 		m_Error = true;
 		Log::Error( "Request", "Failed to send web request." );
@@ -171,7 +171,7 @@ void IService::Request::OnResponseData( IWebClient::RequestData * a_pResponse )
 
 		double end = Time().GetEpochTime();
 		Log::DebugMed( "Request", "REST request %s completed in %g seconds. Queued for %g seconds. Status: %d.", 
-			m_pClient->GetURL().GetURL().c_str(), end - m_StartTime, m_StartTime - m_CreateTime, a_pResponse->m_StatusCode );
+			m_spClient->GetURL().GetURL().c_str(), end - m_StartTime, m_StartTime - m_CreateTime, a_pResponse->m_StatusCode );
 
 		if (m_pCachedReq != NULL && m_pService != NULL && !m_Error)
 		{
@@ -214,7 +214,7 @@ void IService::Request::OnLocalResponse()
 
 void IService::Request::OnTimeout()
 {
-	Log::Error( "Request", "REST request %s timed out.", m_pClient->GetURL().GetURL().c_str() );
+	Log::Error( "Request", "REST request %s timed out.", m_spClient->GetURL().GetURL().c_str() );
 
 	sm_Timeouts += 1;
 	m_Complete = true;
@@ -222,7 +222,7 @@ void IService::Request::OnTimeout()
 	m_spTimeoutTimer.reset();
 
 	// closing will call OnState() which will actually take care of deleteing this object.
-	if ( m_pClient->Close() )
+	if ( m_spClient->Close() )
 	{
 		if (m_Callback.IsValid())
 		{

@@ -207,7 +207,7 @@ SpeechToText::Connection::Connection( SpeechToText * a_pSTT, const std::string &
 	m_pSTT( a_pSTT ), 
 	m_RecognizeModel( a_RecognizeModel ),
 	m_Language( m_RecognizeModel.substr( 0, m_RecognizeModel.find_first_of('_') ) ),
-	m_ListenSocket( NULL ),
+	m_spListenSocket( NULL ),
 	m_ListenActive( false ),
 	m_AudioSent( false ),
 	m_Connected( false ),
@@ -232,7 +232,7 @@ void SpeechToText::Connection::Refresh()
 {
 	m_Connected = false;
 	m_ListenActive = false;
-	m_ListenSocket->Close();
+	m_spListenSocket->Close();
 
 	CloseListenConnector();
 	if (! CreateListenConnector() )
@@ -251,7 +251,7 @@ void SpeechToText::Connection::SendAudio(const SpeechAudioData & clip)
 	{
 		if (m_ListenActive)
 		{
-			m_ListenSocket->SendBinary( clip.m_PCM );
+			m_spListenSocket->SendBinary( clip.m_PCM );
 			m_AudioSent = true;
 		}
 #if ENABLE_AUDIO_QUEUE
@@ -288,7 +288,7 @@ void SpeechToText::Connection::SendAudio(const SpeechAudioData & clip)
 	if (!m_ListenActive && (Time().GetEpochTime() - m_LastStartSent.GetEpochTime()) > LISTEN_TIMEOUT)
 	{
 		m_LastStartSent = Time();
-		m_ListenSocket->Close();		// close the socket, this will trigger the reconnect logic.
+		m_spListenSocket->Close();		// close the socket, this will trigger the reconnect logic.
 
 		Log::Error("SpeechToText", "Failed to enter listening state.");
 
@@ -299,21 +299,21 @@ void SpeechToText::Connection::SendAudio(const SpeechAudioData & clip)
 
 bool SpeechToText::Connection::CreateListenConnector()
 {
-	if (m_ListenSocket == NULL)
+	if (!m_spListenSocket)
 	{
 		std::string learningOptOut( m_pSTT->m_bLearningOptOut ? "1" : "0" );
 		std::string url = m_pSTT->GetConfig()->m_URL + "/v1/recognize?x-watson-learning-opt-out=" + learningOptOut + "&model=" + StringUtil::UrlEscape( m_RecognizeModel );
 		StringUtil::Replace(url, "https://", "wss://", true );
 		StringUtil::Replace(url, "http://", "ws://", true );
 
-		m_ListenSocket = IWebClient::Create();
-		m_ListenSocket->SetURL( url );
-		m_ListenSocket->SetHeaders(m_pSTT->m_Headers);
-		m_ListenSocket->SetFrameReceiver( DELEGATE( Connection, OnListenMessage, IWebSocket::FrameSP, this ) );
-		m_ListenSocket->SetStateReceiver( DELEGATE( Connection, OnListenState, IWebClient *, this ) );
-		m_ListenSocket->SetDataReceiver( DELEGATE( Connection, OnListenData, IWebClient::RequestData *, this ) );
+		m_spListenSocket = IWebClient::Create();
+		m_spListenSocket->SetURL( url );
+		m_spListenSocket->SetHeaders(m_pSTT->m_Headers);
+		m_spListenSocket->SetFrameReceiver( DELEGATE( Connection, OnListenMessage, IWebSocket::FrameSP, this ) );
+		m_spListenSocket->SetStateReceiver( DELEGATE( Connection, OnListenState, IWebClient *, this ) );
+		m_spListenSocket->SetDataReceiver( DELEGATE( Connection, OnListenData, IWebClient::RequestData *, this ) );
 
-		if (! m_ListenSocket->Send() )
+		if (! m_spListenSocket->Send() )
 		{
 			m_Connected = false;
 			Log::Error( "StreamSTT", "Failed to connect web socket to %s", url.c_str() );
@@ -330,28 +330,31 @@ bool SpeechToText::Connection::CreateListenConnector()
 
 void SpeechToText::Connection::CloseListenConnector()
 {
-	if (m_ListenSocket != NULL)
+	if (m_spListenSocket)
 	{
 		// only delete if we are in the close or disconnected state, if it's still connected then OnListenState()
 		// will delete the object when the state changes to disconnected or closed.
-		if( m_ListenSocket->GetState() == IWebClient::CLOSED || m_ListenSocket->GetState() == IWebClient::DISCONNECTED )
-			delete m_ListenSocket;
-		m_ListenSocket = NULL;
+		if( m_spListenSocket->GetState() != IWebClient::CLOSED && m_spListenSocket->GetState() != IWebClient::DISCONNECTED )
+		{
+			assert(! m_spPrevSocket );			// if you hit this, then we are trying to close a socket before the previous socket got closed even..
+			m_spPrevSocket = m_spListenSocket;
+		}
+		m_spListenSocket.reset();
 	}
 }
 
 void SpeechToText::Connection::Disconnected()
 {
-	if ( m_ListenSocket != NULL ) 
+	if ( m_spListenSocket ) 
 	{
 	    m_Connected = false;
-		m_ListenSocket->Close();
+		m_spListenSocket->Close();
 	}
 }
 
 void SpeechToText::Connection::SendStart()
 {
-	if (m_ListenSocket == NULL)
+	if (!m_spListenSocket)
 		throw WatsonException("SendStart() called with null connector.");
 
 	Json::Value start;
@@ -364,13 +367,13 @@ void SpeechToText::Connection::SendStart()
 	start["timestamps"] = m_pSTT->m_Timestamps;
 	start["inactivity_timeout"] = -1;
 
-	m_ListenSocket->SendText( Json::FastWriter().write( start ) );
+	m_spListenSocket->SendText( Json::FastWriter().write( start ) );
 	m_LastStartSent = Time();
 }
 
 void SpeechToText::Connection::SendStop()
 {
-	if (m_ListenSocket == NULL)
+	if (!m_spListenSocket)
 		throw WatsonException("SendStart() called with null connector.");
 
 	if (m_ListenActive)
@@ -378,7 +381,7 @@ void SpeechToText::Connection::SendStop()
 		Json::Value stop;
 		stop["action"] = "stop";
 
-		m_ListenSocket->SendText( Json::FastWriter().write( stop ) );
+		m_spListenSocket->SendText( Json::FastWriter().write( stop ) );
 		m_LastStartSent = Time();     // sending stop, will send the listening state again..
 		m_ListenActive = false;
 	}
@@ -387,13 +390,13 @@ void SpeechToText::Connection::SendStop()
 // This keeps the WebSocket connected when we are not sending any data.
 void SpeechToText::Connection::KeepAlive()
 {
-	if (m_ListenSocket != NULL)
+	if (m_spListenSocket)
 	{
 		Json::Value nop;
 		nop["action"] = "no-op";
 
 		Log::Debug( "SpeechToText", "Sending keep alive." );
-		m_ListenSocket->SendText( Json::FastWriter().write( nop ) );
+		m_spListenSocket->SendText( Json::FastWriter().write( nop ) );
 	}
 }
 
@@ -445,7 +448,7 @@ void SpeechToText::Connection::OnListenMessage( IWebSocket::FrameSP a_spFrame )
 							while (m_ListenRecordings.size() > 0)
 							{
 								const SpeechAudioData & clip = m_ListenRecordings.front();
-								m_ListenSocket->SendBinary( clip.m_PCM );
+								m_spListenSocket->SendBinary( clip.m_PCM );
 								m_ListenRecordings.pop_front();
 
 								m_AudioSent = true;
@@ -460,8 +463,8 @@ void SpeechToText::Connection::OnListenMessage( IWebSocket::FrameSP a_spFrame )
 				std::string error = json["error"].asString();
 				Log::Error("SpeechToText", "Error: %s", error.c_str() );
 
-				if ( m_ListenSocket != NULL )		// this may be NULL, since this callback can be invoked after we already called CloseListeningConnection().
-					m_ListenSocket->Close();
+				if ( m_spListenSocket )		// this may be NULL, since this callback can be invoked after we already called CloseListeningConnection().
+					m_spListenSocket->Close();
 				if (m_pSTT->m_OnError.IsValid())
 					m_pSTT->m_OnError(error);
 			}
@@ -479,7 +482,7 @@ void SpeechToText::Connection::OnListenMessage( IWebSocket::FrameSP a_spFrame )
 
 void SpeechToText::Connection::OnListenState( IWebClient * a_pClient )
 {
-	if ( a_pClient == m_ListenSocket )
+	if ( a_pClient == m_spListenSocket.get() )
 	{
 		if ( m_pSTT->m_IsListening )
 		{
@@ -496,13 +499,14 @@ void SpeechToText::Connection::OnListenState( IWebClient * a_pClient )
 			}
 		}
 	}
-	else 
+	else if ( a_pClient == m_spPrevSocket.get() )
 	{
 		// handle a removed client when it finally decides to invoke this callback.
-		if ( a_pClient->GetState() == IWebClient::DISCONNECTED || a_pClient->GetState() == IWebClient::CLOSED )
+		if ( a_pClient->GetState() == IWebClient::DISCONNECTED 
+			|| a_pClient->GetState() == IWebClient::CLOSED )
 		{
 			Log::DebugLow("SpeechToText", "Deleting previous WebClient." );
-			delete a_pClient;
+			m_spPrevSocket.reset();
 		}
 	}
 }
@@ -530,8 +534,8 @@ void SpeechToText::Connection::OnReconnect()
 			m_Connected = false;
 			m_ListenActive = false;
 		}
-		else if ( m_ListenSocket->GetState() == IWebClient::CLOSED 
-			|| m_ListenSocket->GetState() == IWebClient::DISCONNECTED )
+		else if ( m_spListenSocket->GetState() == IWebClient::CLOSED 
+			|| m_spListenSocket->GetState() == IWebClient::DISCONNECTED )
 		{
 			Log::Status( "SpeechToText", "Trying to reconnect." );
 
@@ -542,9 +546,9 @@ void SpeechToText::Connection::OnReconnect()
 			m_spReconnectTimer.reset();
 
 			// this may get recursive because it can call OnListenState()
-			if (!m_ListenSocket->Send())
+			if (!m_spListenSocket->Send())
 			{
-				Log::Error("SpeechToText", "Failed to connect web socket to %s", m_ListenSocket->GetURL().GetURL().c_str());
+				Log::Error("SpeechToText", "Failed to connect web socket to %s", m_spListenSocket->GetURL().GetURL().c_str());
 				OnReconnect();
 			}
 		}

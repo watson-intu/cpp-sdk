@@ -112,7 +112,8 @@ private:
 		SpeechToText *	m_pSTT;						
 		std::string		m_RecognizeModel;		 // ID of the model to use.
 		std::string		m_Language;
-		IWebClient *	m_ListenSocket;          // use to communicate with the server
+		IWebClient::SP	m_spListenSocket;          // use to communicate with the server
+		IWebClient::SP	m_spPrevSocket;
 		bool			m_ListenActive;
 		bool			m_AudioSent;
 		bool			m_Connected;

@@ -44,8 +44,8 @@ public:
 		Test(pServer->Start());
 
 		// test web requests
-		WebClient client;
-		client.Request("http://127.0.0.1/test_http", WebClient::Headers(), "GET", "",
+		IWebClient::SP spClient = IWebClient::Create();
+		spClient->Request("http://127.0.0.1/test_http", WebClient::Headers(), "GET", "",
 			DELEGATE(TestWebServer, OnResponse, WebClient::RequestData *, this),
 			DELEGATE(TestWebServer, OnState, IWebClient *, this));
 
@@ -58,29 +58,29 @@ public:
 		Test(m_bHTTPTested);
 
 		m_bClientClosed = false;
-		client.SetURL("ws://127.0.0.1/test_ws");
-		client.SetStateReceiver(DELEGATE(TestWebServer, OnState, IWebClient *, this));
-		client.SetDataReceiver(DELEGATE(TestWebServer, OnWebSocketResponse, WebClient::RequestData *, this));
-		client.SetFrameReceiver(DELEGATE(TestWebServer, OnClientFrame, IWebSocket::FrameSP, this));
-		Test(client.Send());
+		spClient->SetURL("ws://127.0.0.1/test_ws");
+		spClient->SetStateReceiver(DELEGATE(TestWebServer, OnState, IWebClient *, this));
+		spClient->SetDataReceiver(DELEGATE(TestWebServer, OnWebSocketResponse, WebClient::RequestData *, this));
+		spClient->SetFrameReceiver(DELEGATE(TestWebServer, OnClientFrame, IWebSocket::FrameSP, this));
+		Test(spClient->Send());
 
 		// test web sockets
 		start = Time();
 		while ((Time().GetEpochTime() - start.GetEpochTime()) < 10.0)
 		{
-			client.SendText("Testing text");
+			spClient->SendText("Testing text");
 
 			std::string sData;
 			sData.resize( rand() * 4 );
 			for(size_t i=0;i<sData.size();++i)
 				sData[i] = (char)(rand() % 255);
 
-			client.SendBinary(sData);
+			spClient->SendBinary(sData);
 
 			pool.ProcessMainThread();
 			boost::this_thread::sleep(boost::posix_time::milliseconds(0));
 		}
-		Test(client.Close());
+		Test(spClient->Close());
 		Test(m_bWSTested );
 
 		while (!m_bClientClosed)
@@ -89,6 +89,7 @@ public:
 			boost::this_thread::sleep(boost::posix_time::milliseconds(50));
 		}
 
+		spClient.reset();
 		delete pServer;
 	}
 

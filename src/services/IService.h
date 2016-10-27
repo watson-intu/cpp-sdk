@@ -98,7 +98,6 @@ public:
 
 		virtual ~Request()
 		{
-			delete m_pClient;
 			delete m_pCachedReq;
 		}
 
@@ -128,7 +127,7 @@ public:
 
 		//! Data
 		IService *			m_pService;
-		IWebClient *		m_pClient;
+		IWebClient::SP		m_spClient;
 		std::string			m_Body;
 		std::string			m_Response;
 		bool				m_Complete;
