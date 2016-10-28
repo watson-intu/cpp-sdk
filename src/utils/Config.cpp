@@ -63,7 +63,10 @@ bool Config::AddServiceConfig( const ServiceConfig & a_Credential, bool a_bUpdat
 				for( ServiceList::iterator iService = m_Services.begin(); 
 					iService != m_Services.end(); ++iService )
 				{
-					if ( (*iService)->GetServiceId() == a_Credential.m_ServiceId )
+					const IService::SP & spService = *iService;
+					if (! spService )
+						continue;
+					if ( spService->GetServiceId() == a_Credential.m_ServiceId )
 						(*iService)->OnConfigModified();
 				}
 				return true;
