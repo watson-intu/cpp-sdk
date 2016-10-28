@@ -207,7 +207,6 @@ SpeechToText::Connection::Connection( SpeechToText * a_pSTT, const std::string &
 	m_pSTT( a_pSTT ), 
 	m_RecognizeModel( a_RecognizeModel ),
 	m_Language( m_RecognizeModel.substr( 0, m_RecognizeModel.find_first_of('_') ) ),
-	m_spListenSocket( NULL ),
 	m_ListenActive( false ),
 	m_AudioSent( false ),
 	m_Connected( false ),
