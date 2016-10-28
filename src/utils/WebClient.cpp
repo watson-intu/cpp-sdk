@@ -703,7 +703,7 @@ void WebClient::WS_Read( RequestData * a_pReq, const boost::system::error_code &
 				Log::DebugLow("WebClient", "Error on WS_Read(): %s (%p)", error.message().c_str(), this );
 
 				m_SendError = true;
-				if ( m_SendCount == 0 )
+				if ( m_SendCount == 0 && ThreadPool::Instance() != NULL )
 					ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this()));
 				delete a_pReq;
 			}
@@ -807,7 +807,7 @@ void WebClient::WS_Sent( const boost::system::error_code& error, size_t bytes_tr
 		}
 
 		// once we number of outstanding sends is 0, then let the main thread know we've been disconnected.
-		if ( m_SendCount == 0 )
+		if ( m_SendCount == 0 && ThreadPool::Instance() != NULL )
 			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this()) );
 	}
 	else

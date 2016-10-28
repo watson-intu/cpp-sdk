@@ -40,28 +40,24 @@ public:
 	template<typename ARG>
 	void InvokeOnThread( Delegate<ARG> a_Callback, ARG a_Arg )
 	{
-		if ( this != NULL )
-			InvokeOnThread( new Callback<ARG>( a_Callback, a_Arg ) );
+		InvokeOnThread( new Callback<ARG>( a_Callback, a_Arg ) );
 	}
 
 	void InvokeOnThread( VoidDelegate a_Callback )
 	{
-		if ( this != NULL )
-			InvokeOnThread(new VoidCallback(a_Callback));
+		InvokeOnThread(new VoidCallback(a_Callback));
 	}
 
 	//! This function can be invoked from any thread to invoke a function on the main thread.
 	template<typename ARG>
 	void InvokeOnMain( Delegate<ARG> a_Callback, ARG a_Arg )
 	{
-		if ( this != NULL )
-			InvokeOnMain( new Callback<ARG>( a_Callback, a_Arg ) );
+		InvokeOnMain( new Callback<ARG>( a_Callback, a_Arg ) );
 	}
 
 	void InvokeOnMain( VoidDelegate a_Callback )
 	{
-		if ( this != NULL )
-			InvokeOnMain( new VoidCallback( a_Callback ) );
+		InvokeOnMain( new VoidCallback( a_Callback ) );
 	}
 
 	//! This function should be called by the main loop of the application to process any
