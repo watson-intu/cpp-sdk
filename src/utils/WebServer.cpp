@@ -466,6 +466,15 @@ public:
 			(*iThread)->join();
 		m_Threads.clear();
 
+		// unbind the port
+		try {
+			m_Acceptor.close();
+		}
+		catch(const std::exception & ex)
+		{
+			Log::Warning( "WebServer", "Caught Exception: %s", ex.what() );
+		}
+
 		return true;
 	}
 
