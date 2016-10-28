@@ -72,7 +72,6 @@ void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value
     if( !a_Context.isNull() )
         input["context"] = a_Context;
 
-
     new RequestObj<ConversationResponse>( this, params, "POST", headers, input.toStyledString(),  a_Callback );
 }
 

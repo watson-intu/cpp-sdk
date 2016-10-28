@@ -63,6 +63,10 @@ class WDC_API WebClient : public IWebClient
 public:
 	RTTI_DECL();
 
+	//! Types
+	typedef boost::shared_ptr<WebClient>		SP;
+	typedef boost::weak_ptr<WebClient>			WP;
+
 	//! Construction
 	WebClient();
 	~WebClient();
@@ -104,6 +108,11 @@ public:
 	static void SetClientId( const std::string & a_ClientId );
 	static const std::string & GetClientId();
 
+	SP shared_from_this()
+	{
+		return boost::static_pointer_cast<WebClient>( IWebClient::shared_from_this() );
+	}
+
 private:
 	//! Private Functions
 	void		SetState( SocketState a_eState );
@@ -132,6 +141,7 @@ private:
 	void		OnWebSocketFrame( IWebSocket::Frame * a_pData );
 	void		OnClose();
 	void		OnDisconnected();
+	void		Cleanup();
 
 	//! Types
 	typedef std::list<std::string *>		BufferList;

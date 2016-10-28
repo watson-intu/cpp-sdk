@@ -40,7 +40,7 @@ public:
 
 		// test web requests
 		IWebServer * pSecureServer = IWebServer::Create("./etc/tests/server.crt",
-			"./etc/tests/server.key");
+			"./etc/tests/server.key", "","", 8080 );
 		pSecureServer->AddEndpoint("/test_https", DELEGATE(TestSecureWebServer, OnTestHTTPS, IWebServer::RequestSP, this));
 		pSecureServer->AddEndpoint("/test_wss", DELEGATE(TestSecureWebServer, OnTestWSS, IWebServer::RequestSP, this));
 		Test(pSecureServer->Start());
@@ -48,7 +48,7 @@ public:
 		m_bClientClosed = false;
 
 		IWebClient::SP spClient = IWebClient::Create();
-		spClient->Request("https://127.0.0.1/test_https", WebClient::Headers(), "GET", "",
+		spClient->Request("https://127.0.0.1:8080/test_https", WebClient::Headers(), "GET", "",
 			DELEGATE(TestSecureWebServer, OnSecureResponse, WebClient::RequestData *, this),
 			DELEGATE(TestSecureWebServer, OnState, IWebClient *, this));
 
@@ -61,7 +61,7 @@ public:
 		Test(m_bHTTPSTested);
 
 		m_bClientClosed = false;
-		spClient->SetURL("wss://127.0.0.1/test_wss");
+		spClient->SetURL("wss://127.0.0.1:8080/test_wss");
 		spClient->SetStateReceiver(DELEGATE(TestSecureWebServer, OnState, IWebClient *, this));
 		spClient->SetDataReceiver(DELEGATE(TestSecureWebServer, OnWebSocketResponse, WebClient::RequestData *, this));
 		spClient->SetFrameReceiver(DELEGATE(TestSecureWebServer, OnSecureClientFrame, IWebSocket::FrameSP, this));

@@ -330,17 +330,7 @@ bool SpeechToText::Connection::CreateListenConnector()
 
 void SpeechToText::Connection::CloseListenConnector()
 {
-	if (m_spListenSocket)
-	{
-		// only delete if we are in the close or disconnected state, if it's still connected then OnListenState()
-		// will delete the object when the state changes to disconnected or closed.
-		if( m_spListenSocket->GetState() != IWebClient::CLOSED && m_spListenSocket->GetState() != IWebClient::DISCONNECTED )
-		{
-			assert(! m_spPrevSocket );			// if you hit this, then we are trying to close a socket before the previous socket got closed even..
-			m_spPrevSocket = m_spListenSocket;
-		}
-		m_spListenSocket.reset();
-	}
+	m_spListenSocket.reset();
 }
 
 void SpeechToText::Connection::Disconnected()
@@ -497,16 +487,6 @@ void SpeechToText::Connection::OnListenState( IWebClient * a_pClient )
 			{
 				m_Connected = true;
 			}
-		}
-	}
-	else if ( a_pClient == m_spPrevSocket.get() )
-	{
-		// handle a removed client when it finally decides to invoke this callback.
-		if ( a_pClient->GetState() == IWebClient::DISCONNECTED 
-			|| a_pClient->GetState() == IWebClient::CLOSED )
-		{
-			Log::DebugLow("SpeechToText", "Deleting previous WebClient." );
-			m_spPrevSocket.reset();
 		}
 	}
 }

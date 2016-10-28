@@ -79,15 +79,7 @@ WebClient::WebClient() :
 
 WebClient::~WebClient()
 {
-	// the user should wait until the state becomes closed or disconnected before trying to destroy, this object.
-	// IF you hit this assert, then you need to make sure to keep the WebClient object around until it's in the correct state
-	// because it's handling asynchronous callbacks.
-	if ( m_eState != CLOSED && m_eState != DISCONNECTED )
-		Log::Error( "WebClient", "WebClient in bad state when destroyed." );
-
-	assert( m_pSocket == NULL );
-	assert( m_pStream == NULL );
-	assert( m_pSSL == NULL );
+	Cleanup();
 }
 
 void WebClient::SetFrameReceiver( Delegate<FrameSP> a_Receiver )
@@ -165,12 +157,7 @@ bool WebClient::Send()
 		return false;
 	}
 
-	assert( m_pStream == NULL );
-	assert( m_pSocket == NULL );
-
-	m_SendError = false;
-	m_Pending.clear();
-	m_Send.clear();
+	Cleanup();
 	sm_RequestsSent++;
 
 	// make the socket..
@@ -201,7 +188,7 @@ bool WebClient::Send()
 	SetState(CONNECTING);
 
 	WebClientService::Instance()->GetService().post( 
-		boost::bind( &WebClient::BeginConnect, this ) );
+		boost::bind( &WebClient::BeginConnect, shared_from_this() ) );
 
 	return true;
 }
@@ -292,7 +279,7 @@ void WebClient::BeginConnect()
 	else
 	{
 		m_pSocket->async_connect(*i,
-			boost::bind(&WebClient::HandleConnect, this, boost::asio::placeholders::error, i));
+			boost::bind(&WebClient::HandleConnect, shared_from_this(), boost::asio::placeholders::error, i));
 	}
 }
 
@@ -330,7 +317,7 @@ void WebClient::HandleConnect(const boost::system::error_code & error,
 		try {
 			m_pSocket->close();
 			m_pSocket->async_connect( *i,
-				boost::bind(&WebClient::HandleConnect, this, boost::asio::placeholders::error, i));
+				boost::bind(&WebClient::HandleConnect, shared_from_this(), boost::asio::placeholders::error, i));
 		}
 		catch( const std::exception & ex )
 		{
@@ -422,7 +409,7 @@ void WebClient::OnConnected()
 		{
 			boost::asio::async_write(*m_pStream,
 				boost::asio::buffer(req.c_str(), req.length()),
-				boost::bind(&WebClient::HTTP_RequestSent, this, pResponse,
+				boost::bind(&WebClient::HTTP_RequestSent, shared_from_this(), pResponse,
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred));
 		}
@@ -430,7 +417,7 @@ void WebClient::OnConnected()
 		{
 			boost::asio::async_write(*m_pSocket,
 				boost::asio::buffer(req.c_str(), req.length()),
-				boost::bind(&WebClient::HTTP_RequestSent, this, pResponse,
+				boost::bind(&WebClient::HTTP_RequestSent, shared_from_this(), pResponse,
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred));
 		}
@@ -440,9 +427,9 @@ void WebClient::OnConnected()
 	{
 		Log::Debug( "WebClient", "State is not CONNECTING");
 		if ( m_eState == CLOSING )
-			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnClose, this));
+			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnClose, shared_from_this()));
 		else
-			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this()));
 	}
 }
 
@@ -456,7 +443,7 @@ void WebClient::HTTP_RequestSent( RequestData * a_pReq, const boost::system::err
 		{
 			boost::asio::async_read_until(*m_pStream,
 				m_Response, "\r\n\r\n",
-				boost::bind(&WebClient::HTTP_ReadHeaders, this, a_pReq,
+				boost::bind(&WebClient::HTTP_ReadHeaders, shared_from_this(), a_pReq,
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred));
 		}
@@ -464,7 +451,7 @@ void WebClient::HTTP_RequestSent( RequestData * a_pReq, const boost::system::err
 		{
 			boost::asio::async_read_until(*m_pSocket,
 				m_Response, "\r\n\r\n",
-				boost::bind(&WebClient::HTTP_ReadHeaders, this, a_pReq,
+				boost::bind(&WebClient::HTTP_ReadHeaders, shared_from_this(), a_pReq,
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred));
 		}
@@ -474,7 +461,7 @@ void WebClient::HTTP_RequestSent( RequestData * a_pReq, const boost::system::err
 		delete a_pReq;
 
 		Log::Error( "WebClient", "Error on RequestSent(): %s", error.message().c_str() );
-		ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+		ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this()));
 	}
 }
 
@@ -530,7 +517,7 @@ void WebClient::HTTP_ReadHeaders( RequestData * a_pReq, const boost::system::err
 					a_pReq->m_StatusCode, a_pReq->m_StatusMessage.c_str() );
 				m_SendError = true;
 				if ( m_SendCount == 0 )
-					ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+					ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this()));
 				delete a_pReq;
 			}
 		}
@@ -558,7 +545,7 @@ void WebClient::HTTP_ReadHeaders( RequestData * a_pReq, const boost::system::err
 	else 
 	{
 		Log::Error( "WebClient", "Error on ReadResponseHeaders(): %s", error.message().c_str() );
-		ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+		ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this()));
 		delete a_pReq;
 	}
 }
@@ -595,7 +582,7 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 			pNewReq->m_Headers = a_pReq->m_Headers;
 
 			ThreadPool::Instance()->InvokeOnMain<RequestData *>(
-				DELEGATE(WebClient, OnResponse, RequestData *, this), a_pReq);
+				DELEGATE(WebClient, OnResponse, RequestData *, shared_from_this()), a_pReq);
 			a_pReq = pNewReq;
 		}
 
@@ -603,7 +590,7 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 		{
 			boost::asio::async_read(*m_pStream, m_Response,
 				boost::asio::transfer_at_least(1),
-				boost::bind(&WebClient::HTTP_ReadContent, this, a_pReq,
+				boost::bind(&WebClient::HTTP_ReadContent, shared_from_this(), a_pReq,
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred));
 		}
@@ -611,7 +598,7 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 		{
 			boost::asio::async_read(*m_pSocket, m_Response,
 				boost::asio::transfer_at_least(1),
-				boost::bind(&WebClient::HTTP_ReadContent, this, a_pReq,
+				boost::bind(&WebClient::HTTP_ReadContent, shared_from_this(), a_pReq,
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred));
 		}
@@ -648,7 +635,7 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 
 		a_pReq->m_bDone = true;
 		ThreadPool::Instance()->InvokeOnMain<RequestData *>(
-			DELEGATE(WebClient, OnResponse, RequestData *, this), a_pReq);
+			DELEGATE(WebClient, OnResponse, RequestData *, shared_from_this()), a_pReq);
 	}
 }
 
@@ -683,7 +670,7 @@ void WebClient::WS_Read( RequestData * a_pReq, const boost::system::error_code &
 			if ( bClose )
 			{
 				Log::DebugLow( "WebClient", "Received close op: %s (%p)", pFrame->m_Data.c_str(), this );
-				ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClient, OnClose, this ) );
+				ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClient, OnClose, shared_from_this() ) );
 				m_WebSocket = false;
 				delete a_pReq;
 			}
@@ -698,7 +685,7 @@ void WebClient::WS_Read( RequestData * a_pReq, const boost::system::error_code &
 				{
 					boost::asio::async_read(*m_pStream, m_Response,
 						boost::asio::transfer_at_least(1),
-						boost::bind(&WebClient::WS_Read, this, a_pReq,
+						boost::bind(&WebClient::WS_Read, shared_from_this(), a_pReq,
 							boost::asio::placeholders::error,
 							boost::asio::placeholders::bytes_transferred));
 				}
@@ -706,7 +693,7 @@ void WebClient::WS_Read( RequestData * a_pReq, const boost::system::error_code &
 				{
 					boost::asio::async_read(*m_pSocket, m_Response,
 						boost::asio::transfer_at_least(1),
-						boost::bind(&WebClient::WS_Read, this, a_pReq,
+						boost::bind(&WebClient::WS_Read, shared_from_this(), a_pReq,
 							boost::asio::placeholders::error,
 							boost::asio::placeholders::bytes_transferred));
 				}
@@ -717,7 +704,7 @@ void WebClient::WS_Read( RequestData * a_pReq, const boost::system::error_code &
 
 				m_SendError = true;
 				if ( m_SendCount == 0 )
-					ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+					ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this()));
 				delete a_pReq;
 			}
 		}
@@ -781,7 +768,7 @@ void WebClient::WS_SendNext()
 		{
 			boost::asio::async_write(*m_pStream,
 				boost::asio::buffer(pFrame->c_str(), pFrame->size()),
-				boost::bind(&WebClient::WS_Sent, this,
+				boost::bind(&WebClient::WS_Sent, shared_from_this(),
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred,
 					pFrame));
@@ -794,7 +781,7 @@ void WebClient::WS_SendNext()
 		{
 			boost::asio::async_write(*m_pSocket,
 				boost::asio::buffer(pFrame->c_str(), pFrame->size()),
-				boost::bind(&WebClient::WS_Sent, this,
+				boost::bind(&WebClient::WS_Sent, shared_from_this(),
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred,
 					pFrame));
@@ -821,7 +808,7 @@ void WebClient::WS_Sent( const boost::system::error_code& error, size_t bytes_tr
 
 		// once we number of outstanding sends is 0, then let the main thread know we've been disconnected.
 		if ( m_SendCount == 0 )
-			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE(WebClient, OnDisconnected, this) );
+			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this()) );
 	}
 	else
 	{
@@ -867,23 +854,6 @@ void WebClient::OnClose()
 		m_eState == CLOSING )
 	{
 		Log::DebugLow( "WebClient", "OnClose() closing socket. (%p)", this );
-		m_pSocket->close();
-
-		if ( m_pStream != NULL )
-		{
-			delete m_pStream;
-			delete m_pSSL;
-			m_pStream = NULL;
-			m_pSocket = NULL;
-			m_pSSL = NULL;
-		}
-		if ( m_pSocket != NULL )
-		{
-			delete m_pSocket;
-			m_pSocket = NULL;
-		}
-
-		m_SendError = false;
 		SetState( CLOSED );
 	}
 }
@@ -895,25 +865,7 @@ void WebClient::OnDisconnected()
 		m_eState == CLOSING )
 	{
 		assert( m_SendCount == 0 );
-
 		Log::DebugLow( "WebClient", "OnDisconnected() closing socket. (%p)", this );
-		m_pSocket->close();
-
-		if (m_pStream != NULL)
-		{
-			delete m_pStream;
-			delete m_pSSL;
-			m_pStream = NULL;
-			m_pSocket = NULL;
-			m_pSSL = NULL;
-		}
-		if (m_pSocket != NULL)
-		{
-			delete m_pSocket;
-			m_pSocket = NULL;
-		}
-
-		m_SendError = false;
 
 		// if Close() is called, then we set the state to close and just close the socket. The async
 		// routines will think it's been disconnected and they will invoke OnDisconnected(), ignore
@@ -925,6 +877,25 @@ void WebClient::OnDisconnected()
 	}
 }
 
+void WebClient::Cleanup()
+{
+	if ( m_pStream != NULL )
+	{
+		delete m_pStream;
+		delete m_pSSL;
+		m_pStream = NULL;
+		m_pSocket = NULL;
+		m_pSSL = NULL;
+	}
+	if ( m_pSocket != NULL )
+	{
+		delete m_pSocket;
+		m_pSocket = NULL;
+	}
+	m_SendError = false;
+	m_Pending.clear();
+	m_Send.clear();
+}
 
 void WebClient::SetClientId( const std::string & a_ClientId )
 {

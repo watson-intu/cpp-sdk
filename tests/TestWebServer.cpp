@@ -38,14 +38,14 @@ public:
 
 		ThreadPool pool(1);
 
-		IWebServer * pServer = IWebServer::Create();
+		IWebServer * pServer = IWebServer::Create( "", 8080 );
 		pServer->AddEndpoint("/test_http", DELEGATE(TestWebServer, OnTestHTTP, IWebServer::RequestSP, this));
 		pServer->AddEndpoint("/test_ws", DELEGATE(TestWebServer, OnTestWS, IWebServer::RequestSP, this));
 		Test(pServer->Start());
 
 		// test web requests
 		IWebClient::SP spClient = IWebClient::Create();
-		spClient->Request("http://127.0.0.1/test_http", WebClient::Headers(), "GET", "",
+		spClient->Request("http://127.0.0.1:8080/test_http", WebClient::Headers(), "GET", "",
 			DELEGATE(TestWebServer, OnResponse, WebClient::RequestData *, this),
 			DELEGATE(TestWebServer, OnState, IWebClient *, this));
 
@@ -58,7 +58,7 @@ public:
 		Test(m_bHTTPTested);
 
 		m_bClientClosed = false;
-		spClient->SetURL("ws://127.0.0.1/test_ws");
+		spClient->SetURL("ws://127.0.0.1:8080/test_ws");
 		spClient->SetStateReceiver(DELEGATE(TestWebServer, OnState, IWebClient *, this));
 		spClient->SetDataReceiver(DELEGATE(TestWebServer, OnWebSocketResponse, WebClient::RequestData *, this));
 		spClient->SetFrameReceiver(DELEGATE(TestWebServer, OnClientFrame, IWebSocket::FrameSP, this));

@@ -24,8 +24,13 @@
 class TestWebClient : UnitTest
 {
 public:
+	bool m_bHTTPTested;
+	bool m_bHTTPSTested;
+	bool m_bWSTested;
+	bool m_bWSClosed;
+
 	//! Construction
-	TestWebClient() : UnitTest("TestWebClient"), m_bHTTPTested( false ), m_bHTTPSTested( false ), m_bWSTested( false )
+	TestWebClient() : UnitTest("TestWebClient"), m_bHTTPTested( false ), m_bHTTPSTested( false ), m_bWSTested( false ), m_bWSClosed( false )
 	{}
 
 	virtual void RunTest()
@@ -34,45 +39,33 @@ public:
 
 		ThreadPool pool(1);
 
-		WebClient client;
-		client.SetURL( "wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize" );
-		client.SetHeader( "Authorization", "Basic ZTZlNThlYjAtNWU5Mi00OGJmLTlkNjctYTAyYTE1ODA3ZGRmOnJOZGhOZUZwS0hGeA==" );
-		client.SetStateReceiver( DELEGATE( TestWebClient, OnState, IWebClient *, this ) );
-		client.SetDataReceiver( DELEGATE( TestWebClient, OnWebSocketResponse, WebClient::RequestData *, this ) );
-		client.SetFrameReceiver( DELEGATE( TestWebClient, OnFrameReceived, IWebSocket::FrameSP, this ) );
-		Test( client.Send() );
+		IWebClient::SP spClient = IWebClient::Create();
+		spClient->SetURL( "wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize" );
+		spClient->SetHeader( "Authorization", "Basic ZTZlNThlYjAtNWU5Mi00OGJmLTlkNjctYTAyYTE1ODA3ZGRmOnJOZGhOZUZwS0hGeA==" );
+		spClient->SetStateReceiver( DELEGATE( TestWebClient, OnState, IWebClient *, this ) );
+		spClient->SetDataReceiver( DELEGATE( TestWebClient, OnWebSocketResponse, WebClient::RequestData *, this ) );
+		spClient->SetFrameReceiver( DELEGATE( TestWebClient, OnFrameReceived, IWebSocket::FrameSP, this ) );
+		Test( spClient->Send() );
 
-		start = Time();
-		while(! m_bWSTested && (Time().GetEpochTime() - start.GetEpochTime()) < 300.0 )
-		{
-			pool.ProcessMainThread();
-			tthread::this_thread::yield();
-		}
+		Spin( m_bWSTested );
 		Test( m_bWSTested );
-		client.Close();			// make sure we are closed
+		spClient->Close();			// make sure we are closed
+		Spin( m_bWSClosed );
+		Test( m_bWSClosed );
 
-		client.Request( "http://www.boost.org/doc/libs/1_36_0/doc/html/boost_asio/example/http/client/async_client.cpp", WebClient::Headers(), "GET", "", 
+		spClient->Request( "http://www.google.com",
+			WebClient::Headers(), "GET", "", 
 			DELEGATE( TestWebClient, OnResponse, WebClient::RequestData *, this),
 			DELEGATE( TestWebClient, OnState, IWebClient *, this ) );
 
-		start = Time();
-		while(! m_bHTTPTested && (Time().GetEpochTime() - start.GetEpochTime()) < 15.0 )
-		{
-			pool.ProcessMainThread();
-			tthread::this_thread::yield();
-		}
+		Spin( m_bHTTPTested );
 		Test( m_bHTTPTested );
 
-		client.Request( "https://github.com/eidheim/Simple-Web-Server", WebClient::Headers(), "GET", "", 
+		spClient->Request( "https://www.google.com", WebClient::Headers(), "GET", "", 
 			DELEGATE(TestWebClient, OnSecureResponse, WebClient::RequestData *, this),
 			DELEGATE(TestWebClient, OnState, IWebClient *, this));
 
-		start = Time();
-		while (!m_bHTTPSTested && (Time().GetEpochTime() - start.GetEpochTime()) < 15.0)
-		{
-			pool.ProcessMainThread();
-			tthread::this_thread::yield();
-		}
+		Spin( m_bHTTPSTested );
 		Test(m_bHTTPSTested);
 	}
 	void OnWebSocketResponse( WebClient::RequestData * a_pResonse )
@@ -88,8 +81,10 @@ public:
 	void OnState( IWebClient * a_pConnector )
 	{
 		Log::Debug( "TestWebClient", "OnState(): %d", a_pConnector->GetState() );
-		if ( a_pConnector->GetState() == WebClient::CLOSED )
+		if ( a_pConnector->GetState() == WebClient::CONNECTED )
 			m_bWSTested = true;
+		else if ( a_pConnector->GetState() == WebClient::CLOSED || a_pConnector->GetState() == WebClient::DISCONNECTED )
+			m_bWSClosed = true;
 	}
 
 	void OnResponse( WebClient::RequestData * a_pResponse )
@@ -108,10 +103,6 @@ public:
 		if (a_pResponse->m_StatusCode == 200)
 			m_bHTTPSTested = true;
 	}
-
-	bool m_bHTTPTested;
-	bool m_bHTTPSTested;
-	bool m_bWSTested;
 };
 
 TestWebClient TEST_CONNECTOR;

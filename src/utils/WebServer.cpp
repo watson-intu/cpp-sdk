@@ -49,6 +49,10 @@ public:
 	class Connection : public IConnection
 	{
 	public:
+		//! Types
+		typedef boost::shared_ptr<Connection>			SP;
+		typedef boost::weak_ptr<Connection>				WP;
+
 		//! Construction
 		Connection(WebServerT * a_pServer, socket_type * a_pSocket) :
 			m_bClosed(false),
@@ -186,14 +190,14 @@ public:
 			{
 				boost::asio::async_read(*m_pSocket, *m_ReadBuffer,
 					boost::asio::transfer_at_least(a_Bytes - nBytesAvail),
-					boost::bind(&Connection::OnRead, this, this->shared_from_this(), a_ReadCallback,
+					boost::bind(&Connection::OnRead, shared_from_this(), a_ReadCallback,
 						boost::asio::placeholders::error,
 						boost::asio::placeholders::bytes_transferred ));
 			}
 			else
 			{
 				// we already have enough bytes in the buffer, return those bytes now..
-				OnRead( this->shared_from_this(), a_ReadCallback, boost::system::error_code(), nBytesAvail );
+				OnRead( a_ReadCallback, boost::system::error_code(), nBytesAvail );
 			}
 		}
 
@@ -244,7 +248,12 @@ public:
 			// which will keep this socket open until a read-fails or the user calls close.
 			boost::asio::async_read(*m_pSocket, *m_ReadBuffer,
 				boost::asio::transfer_at_least(1),
-				boost::bind(&Connection::OnReadWS, this, this->shared_from_this(), boost::asio::placeholders::error));
+				boost::bind(&Connection::OnReadWS, shared_from_this(), boost::asio::placeholders::error));
+		}
+
+		SP shared_from_this()
+		{
+			return boost::static_pointer_cast<Connection>( IWebSocket::shared_from_this() );
 		}
 
 	private:
@@ -272,7 +281,7 @@ public:
 		TimerPool::ITimer::SP
 						m_spTimeoutTimer;
 
-		void OnReadWS(SP a_spConnection, const boost::system::error_code& ec)
+		void OnReadWS(const boost::system::error_code& ec)
 		{
 			if (!ec)
 			{
@@ -304,7 +313,7 @@ public:
 				// continue reading from this socket..
 				boost::asio::async_read(*m_pSocket, *m_ReadBuffer,
 					boost::asio::transfer_at_least(1),
-					boost::bind(&Connection::OnReadWS, this, a_spConnection, boost::asio::placeholders::error));
+					boost::bind(&Connection::OnReadWS, shared_from_this(), boost::asio::placeholders::error));
 			}
 			else
 			{
@@ -312,8 +321,7 @@ public:
 			}
 		}
 
-		void OnRead(SP a_spConnection,
-			Delegate< std::string * > a_ReadCallback,
+		void OnRead( Delegate< std::string * > a_ReadCallback,
 			const boost::system::error_code& error,
 			size_t bytes_transferred )
 		{
@@ -342,7 +350,7 @@ public:
 			try {
 				boost::asio::async_write(*m_pSocket, 
 					boost::asio::buffer( m_Sending.front().data(), m_Sending.front().size() ),
-					boost::bind(&Connection::OnSent, this, this->shared_from_this(), boost::asio::placeholders::error));
+					boost::bind(&Connection::OnSent, shared_from_this(), boost::asio::placeholders::error));
 			}
 			catch (const std::exception & ex)
 			{
@@ -350,7 +358,7 @@ public:
 				OnError( boost::system::error_code() );
 			}
 		}
-		void OnSent(SP a_spConnection, const boost::system::error_code & ec)
+		void OnSent(const boost::system::error_code & ec)
 		{
 			m_SendLock.lock();
 
