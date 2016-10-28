@@ -158,6 +158,7 @@ private:
 	bool			m_DetectSilence;        // If true, then we will try not to record silence.
 	float			m_SilenceThreshold;     // If the audio level is below this value, then it's considered silent.
 	unsigned int	m_MaxAudioQueueSize;
+	int				m_Timeout;
 	bool 			m_bLearningOptOut;
 	ErrorEvent		m_OnError;
 	float			m_fResultDelay;			// how long do we wait for results from all streams before we return the final result

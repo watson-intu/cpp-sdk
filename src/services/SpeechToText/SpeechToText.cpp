@@ -47,6 +47,7 @@ SpeechToText::SpeechToText() : IService( "SpeechToTextV1" ),
 	m_WordConfidence( false ),
 	m_Continous( true ),
 	m_Interium( true ),
+	m_Timeout( 30 ),
 	m_DetectSilence( true ),
 	m_SilenceThreshold( 0.03f ),
 	m_MaxAudioQueueSize( 1024 * 1024 ),		// default to 1MB of audio data
@@ -72,6 +73,7 @@ void SpeechToText::Serialize(Json::Value & json)
 	json["m_MaxAudioQueueSize"] = m_MaxAudioQueueSize;
 	json["m_LearningOptOut"] = m_bLearningOptOut;
 	json["m_fResultDelay"] = m_fResultDelay;
+	json["m_Timeout"] = m_Timeout;
 }
 
 void SpeechToText::Deserialize(const Json::Value & json)
@@ -99,6 +101,8 @@ void SpeechToText::Deserialize(const Json::Value & json)
 		m_bLearningOptOut = json["m_LearningOptOut"].asBool();
 	if (json.isMember("m_fResultDelay"))
 		m_fResultDelay = json["m_fResultDelay"].asFloat();
+	if (json.isMember("m_Timeout"))
+		m_Timeout = json["m_Timeout"].asInt();
 
 	if ( m_Models.size() == 0 )
 		m_Models.push_back( "en-US_BroadbandModel" );
@@ -218,9 +222,6 @@ SpeechToText::Connection::Connection( SpeechToText * a_pSTT, const std::string &
 
 	if (! CreateListenConnector() )
 		OnReconnect();
-	if ( TimerPool::Instance() )
-		m_spKeepAliveTimer = TimerPool::Instance()->StartTimer( 
-			VOID_DELEGATE( Connection, KeepAlive, this ), WS_KEEP_ALIVE_TIME, true, true ); 
 }
 
 SpeechToText::Connection::~Connection()
@@ -362,7 +363,7 @@ void SpeechToText::Connection::SendStart()
 	start["interim_results"] = m_pSTT->m_Interium;
 	start["word_confidence"] = m_pSTT->m_WordConfidence;
 	start["timestamps"] = m_pSTT->m_Timestamps;
-	start["inactivity_timeout"] = -1;
+	start["inactivity_timeout"] = m_pSTT->m_Timeout;
 
 	m_ListenSocket->SendText( Json::FastWriter().write( start ) );
 	m_LastStartSent = Time();
