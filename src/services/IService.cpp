@@ -79,7 +79,6 @@ IService::Request::Request( IService * a_pService,
 	CacheRequest * a_CacheReq/* = NULL*/,
 	float a_fTimeout /*= 30.0f*/ ) :
 	m_pService( a_pService ),
-	m_spClient(NULL),
 	m_Body( a_Body ),
 	m_Complete( false ),
 	m_Error( false ),
