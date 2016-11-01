@@ -11,3 +11,6 @@ else()
 endif()
 qi_stage_lib(wdc)
 
+file(GLOB_RECURSE WDC_H RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
+qi_install_header(${WDC_H} KEEP_RELATIVE_PATHS)
+

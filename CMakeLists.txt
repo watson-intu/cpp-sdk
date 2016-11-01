@@ -10,6 +10,6 @@ file(GLOB_RECURSE WDC_TESTS_CPP RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "tests/*.cp
 qi_create_bin(unit_test ${WDC_TESTS_CPP})
 qi_use_lib(unit_test wdc)
 
-file(GLOB_RECURSE WDC_H RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*.h")
-qi_install_header(${WDC_H} KEEP_RELATIVE_PATHS)
+#file(GLOB_RECURSE WDC_H RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*.h")
+#qi_install_header(${WDC_H} KEEP_RELATIVE_PATHS)
 
