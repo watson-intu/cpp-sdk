@@ -57,6 +57,19 @@ private:
 
 	//!Data
 	std::vector<std::string>	m_ReturnParameters;
+
+	//! This class is responsible for checking whether the service is available or not
+	class ServiceStatusChecker
+	{
+	public:
+		ServiceStatusChecker(Alchemy* a_pDlgService, ServiceStatusCallback a_Callback);
+
+	private:
+		Alchemy* m_pAlchemyService;
+		IService::ServiceStatusCallback m_Callback;
+
+		void OnCheckService(const Json::Value & parsedResults);
+	};
 };
 
 #endif
