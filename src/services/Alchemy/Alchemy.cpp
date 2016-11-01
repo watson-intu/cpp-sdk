@@ -61,9 +61,31 @@ bool Alchemy::Start()
 	return true;
 }
 
-void Alchemy::GetServiceStatus(ServiceStatusCallback a_Callback)
+void Alchemy::GetServiceStatus( ServiceStatusCallback a_Callback )
 {
-	a_Callback(ServiceStatus(m_ServiceId, true));
+	if (m_pConfig != NULL)
+		new ServiceStatusChecker(this, a_Callback);
+	else
+		a_Callback(ServiceStatus(m_ServiceId, false));
+}
+
+//! Creates an object responsible for service status checking
+Alchemy::ServiceStatusChecker::ServiceStatusChecker(Alchemy* a_pAlchemyService, ServiceStatusCallback a_Callback)
+		: m_pAlchemyService(a_pAlchemyService), m_Callback(a_Callback)
+{
+	m_pAlchemyService->GetChunkTags("This is a test",
+	                                DELEGATE(ServiceStatusChecker, OnCheckService, const Json::Value &, this));
+}
+
+//! Callback function invoked when service status is checked
+void Alchemy::ServiceStatusChecker::OnCheckService(const Json::Value & parsedResults)
+{
+	if (m_Callback.IsValid())
+	{
+		bool success = !parsedResults.isNull();
+		m_Callback(ServiceStatus(m_pAlchemyService->m_ServiceId, success));
+	}
+	delete this;
 }
 
 void Alchemy::GetChunkTags(const std::string & a_Text,
