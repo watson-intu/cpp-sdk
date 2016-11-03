@@ -18,7 +18,12 @@
 #ifndef WDC_TIME_H
 #define WDC_TIME_H
 
+#ifdef _WIN32
 #include <sys/timeb.h>
+#else
+#include <sys/time.h>
+#endif
+
 #include <stdlib.h>
 #include <string>
 
@@ -30,7 +35,7 @@ public:
 	//! Construction
 	Time()
 	{
-		ftime( &m_tb );
+		GetTime( &m_tb );
 	}
 	Time( time_t a_Time )
 	{
@@ -43,7 +48,7 @@ public:
 	}
 	Time( double a_Time )
 	{
-		ftime( &m_tb );			// set the current time to get the dstflags and other variables set correctly.
+		GetTime( &m_tb );			// set the current time to get the dstflags and other variables set correctly.
 
 		m_tb.time = (time_t)a_Time;
 		m_tb.millitm = (unsigned short)((a_Time - m_tb.time) * 1000);
@@ -80,9 +85,44 @@ public:
 	static time_t GetFileModifyTime( const std::string & a_File );
 
 private:
+#ifndef _WIN32
+	//! Types
+	struct timeb {
+		time_t          time;
+		unsigned short  millitm;
+		short           timezone;
+		short           dstflag;
+	};
+
+	int GetTime(struct timeb *tb)
+	{
+		struct timeval  tv;
+		struct timezone tz;
+
+		if (gettimeofday (&tv, &tz) < 0)
+			return -1;
+
+		tb->time    = tv.tv_sec;
+		tb->millitm = (tv.tv_usec + 500) / 1000;
+
+		if (tb->millitm == 1000) {
+			++tb->time;
+			tb->millitm = 0;
+		}
+		tb->timezone = tz.tz_minuteswest;
+		tb->dstflag  = tz.tz_dsttime;
+
+		return 0;
+	}
+#else
+	void GetTime(struct timeb * tb )
+	{
+		ftime( tb );
+	}
+#endif
+
 	//! Data
 	timeb		m_tb;
-
 };
 
 #endif

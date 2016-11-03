@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2d7b531c-90e3-44ed-819e-1ab6944655b9}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>wdc_android</RootNamespace>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>2.0</ApplicationTypeRevision>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>-Wno-reorder -frtti -Wno-unknown-pragmas %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\android-ifaddrs;$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>-Wno-reorder -frtti -Wno-unknown-pragmas %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\android-ifaddrs;$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>-Wno-reorder -frtti -Wno-unknown-pragmas %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\android-ifaddrs;$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>-Wno-reorder -frtti -Wno-unknown-pragmas %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\android-ifaddrs;$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>-Wno-reorder -frtti -Wno-unknown-pragmas %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\android-ifaddrs;$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>-Wno-reorder -frtti -Wno-unknown-pragmas %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\android-ifaddrs;$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>-Wno-reorder -frtti -Wno-unknown-pragmas %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\android-ifaddrs;$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>-Wno-reorder -frtti -Wno-unknown-pragmas %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\android-ifaddrs;$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>Enabled</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\android-ifaddrs\ifaddrs.c" />
+    <ClCompile Include="..\..\lib\base64\cdecode.c" />
+    <ClCompile Include="..\..\lib\base64\cencode.c" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\filesystem\src\codecvt_error_category.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\filesystem\src\operations.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\filesystem\src\path.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\filesystem\src\path_traits.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\filesystem\src\portability.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\filesystem\src\unique_path.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\filesystem\src\utf8_codecvt_facet.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\filesystem\src\windows_file_codecvt.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\system\src\error_code.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\thread\src\future.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\thread\src\pthread\once.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x86'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\thread\src\pthread\once_atomic.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\thread\src\pthread\thread.cpp" />
+    <ClCompile Include="..\..\lib\boost_1_60_0\libs\thread\src\tss_null.cpp" />
+    <ClCompile Include="..\..\lib\crossguid\crossguid.cpp" />
+    <ClCompile Include="..\..\lib\jsoncpp\jsoncpp.cpp" />
+    <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
+    <ClCompile Include="..\..\lib\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="..\..\lib\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\lib\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\src\services\Alchemy\Alchemy.cpp" />
+    <ClCompile Include="..\..\src\services\Conversation\Conversation.cpp" />
+    <ClCompile Include="..\..\src\services\Dialog\Dialog.cpp" />
+    <ClCompile Include="..\..\src\services\IService.cpp" />
+    <ClCompile Include="..\..\src\services\LanguageTranslation\LanguageTranslation.cpp" />
+    <ClCompile Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp" />
+    <ClCompile Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.cpp" />
+    <ClCompile Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.cpp" />
+    <ClCompile Include="..\..\src\services\SpeechToText\SpeechToText.cpp" />
+    <ClCompile Include="..\..\src\services\TextToSpeech\TextToSpeech.cpp" />
+    <ClCompile Include="..\..\src\services\ToneAnalyzer\ToneAnalyzer.cpp" />
+    <ClCompile Include="..\..\src\services\VisualRecognition\VisualRecognition.cpp" />
+    <ClCompile Include="..\..\src\utils\Config.cpp" />
+    <ClCompile Include="..\..\src\utils\DataCache.cpp" />
+    <ClCompile Include="..\..\src\utils\Form.cpp" />
+    <ClCompile Include="..\..\src\utils\GetMac.cpp" />
+    <ClCompile Include="..\..\src\utils\IConditional.cpp" />
+    <ClCompile Include="..\..\src\utils\ISerializable.cpp" />
+    <ClCompile Include="..\..\src\utils\JsonHelpers.cpp" />
+    <ClCompile Include="..\..\src\utils\Library.cpp" />
+    <ClCompile Include="..\..\src\utils\Log.cpp" />
+    <ClCompile Include="..\..\src\utils\Logic.cpp" />
+    <ClCompile Include="..\..\src\utils\Sound.cpp" />
+    <ClCompile Include="..\..\src\utils\StringUtil.cpp" />
+    <ClCompile Include="..\..\src\utils\ThreadPool.cpp" />
+    <ClCompile Include="..\..\src\utils\Time.cpp" />
+    <ClCompile Include="..\..\src\utils\TimerPool.cpp" />
+    <ClCompile Include="..\..\src\utils\UniqueID.cpp" />
+    <ClCompile Include="..\..\src\utils\UnitTest.cpp" />
+    <ClCompile Include="..\..\src\utils\URL.cpp" />
+    <ClCompile Include="..\..\src\utils\WebClient.cpp" />
+    <ClCompile Include="..\..\src\utils\WebServer.cpp" />
+    <ClCompile Include="..\..\src\utils\WebSocketFramer.cpp" />
+    <ClCompile Include="wdc_android.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\android-ifaddrs\ifaddrs.h" />
+    <ClInclude Include="..\..\lib\base64\cdecode.h" />
+    <ClInclude Include="..\..\lib\base64\cencode.h" />
+    <ClInclude Include="..\..\lib\base64\decode.h" />
+    <ClInclude Include="..\..\lib\base64\encode.h" />
+    <ClInclude Include="..\..\lib\boost_1_60_0\libs\filesystem\src\windows_file_codecvt.hpp" />
+    <ClInclude Include="..\..\lib\crossguid\crossguid.h" />
+    <ClInclude Include="..\..\lib\jsoncpp\json\json-forwards.h" />
+    <ClInclude Include="..\..\lib\jsoncpp\json\json.h" />
+    <ClInclude Include="..\..\lib\tinythread++\tinythread.h" />
+    <ClInclude Include="..\..\lib\tinyxml\tinyxml.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h" />
+    <ClInclude Include="..\..\src\services\Alchemy\Alchemy.h" />
+    <ClInclude Include="..\..\src\services\Conversation\Conversation.h" />
+    <ClInclude Include="..\..\src\services\Conversation\DataModels.h" />
+    <ClInclude Include="..\..\src\services\Dialog\DataModels.h" />
+    <ClInclude Include="..\..\src\services\Dialog\Dialog.h" />
+    <ClInclude Include="..\..\src\services\IService.h" />
+    <ClInclude Include="..\..\src\services\LanguageTranslation\DataModels.h" />
+    <ClInclude Include="..\..\src\services\LanguageTranslation\LanguageTranslation.h" />
+    <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\DataModels.h" />
+    <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h" />
+    <ClInclude Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.h" />
+    <ClInclude Include="..\..\src\services\RetrieveAndRank\DataModels.h" />
+    <ClInclude Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.h" />
+    <ClInclude Include="..\..\src\services\SpeechToText\DataModels.h" />
+    <ClInclude Include="..\..\src\services\SpeechToText\SpeechToText.h" />
+    <ClInclude Include="..\..\src\services\TextToSpeech\DataModels.h" />
+    <ClInclude Include="..\..\src\services\TextToSpeech\TextToSpeech.h" />
+    <ClInclude Include="..\..\src\services\ToneAnalyzer\DataModels.h" />
+    <ClInclude Include="..\..\src\services\ToneAnalyzer\ToneAnalyzer.h" />
+    <ClInclude Include="..\..\src\services\VisualRecognition\VisualRecognition.h" />
+    <ClInclude Include="..\..\src\utils\Config.h" />
+    <ClInclude Include="..\..\src\utils\DataCache.h" />
+    <ClInclude Include="..\..\src\utils\Delegate.h" />
+    <ClInclude Include="..\..\src\utils\Factory.h" />
+    <ClInclude Include="..\..\src\utils\Form.h" />
+    <ClInclude Include="..\..\src\utils\GetMac.h" />
+    <ClInclude Include="..\..\src\utils\IConditional.h" />
+    <ClInclude Include="..\..\src\utils\ISerializable.h" />
+    <ClInclude Include="..\..\src\utils\IWebClient.h" />
+    <ClInclude Include="..\..\src\utils\IWebServer.h" />
+    <ClInclude Include="..\..\src\utils\IWebSocket.h" />
+    <ClInclude Include="..\..\src\utils\JsonHelpers.h" />
+    <ClInclude Include="..\..\src\utils\Library.h" />
+    <ClInclude Include="..\..\src\utils\Log.h" />
+    <ClInclude Include="..\..\src\utils\Logic.h" />
+    <ClInclude Include="..\..\src\utils\MD5.h" />
+    <ClInclude Include="..\..\src\utils\Path.h" />
+    <ClInclude Include="..\..\src\utils\RTTI.h" />
+    <ClInclude Include="..\..\src\utils\ServiceConfig.h" />
+    <ClInclude Include="..\..\src\utils\SHA1.h" />
+    <ClInclude Include="..\..\src\utils\Sound.h" />
+    <ClInclude Include="..\..\src\utils\StringHash.h" />
+    <ClInclude Include="..\..\src\utils\StringUtil.h" />
+    <ClInclude Include="..\..\src\utils\ThreadPool.h" />
+    <ClInclude Include="..\..\src\utils\Time.h" />
+    <ClInclude Include="..\..\src\utils\TimerPool.h" />
+    <ClInclude Include="..\..\src\utils\UniqueID.h" />
+    <ClInclude Include="..\..\src\utils\UnitTest.h" />
+    <ClInclude Include="..\..\src\utils\URL.h" />
+    <ClInclude Include="..\..\src\utils\WatsonException.h" />
+    <ClInclude Include="..\..\src\utils\WebClient.h" />
+    <ClInclude Include="..\..\src\utils\WebSocketFramer.h" />
+    <ClInclude Include="..\..\src\WDCLib.h" />
+    <ClInclude Include="..\wdc\Base36.h" />
+    <ClInclude Include="wdc_android.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\lib\android-ifaddrs\README.md" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\..\vs2015\packages\openssl-android.1.0.2.1\build\native\openssl-android.targets" Condition="Exists('..\..\..\vs2015\packages\openssl-android.1.0.2.1\build\native\openssl-android.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\vs2015\packages\openssl-android.1.0.2.1\build\native\openssl-android.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\vs2015\packages\openssl-android.1.0.2.1\build\native\openssl-android.targets'))" />
+  </Target>
+</Project>

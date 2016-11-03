@@ -59,6 +59,6 @@ time_t Time::GetFileModifyTime( const std::string & a_File )
 	if ( result != 0 )
 		return 0;
 
-	return mktime( gmtime( &s.st_mtime ) );
+	return mktime( gmtime( (time_t *)&s.st_mtime ) );
 }
 
