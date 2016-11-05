@@ -49,9 +49,12 @@ struct LogRecord
 };
 
 //! Abstract interface for any object that wants to hook into the LogSystem.
-class ILogReactor
+class WDC_API ILogReactor
 {
 public:
+	virtual ~ILogReactor()
+	{}
+
 	virtual void Process(const LogRecord & a_Record) = 0;
 };
 
@@ -84,6 +87,7 @@ class WDC_API Log
 public:
 	static void RegisterReactor(ILogReactor * a_pReactor);
 	static void RemoveReactor(ILogReactor * a_pReactor);
+	static void RemoveAllReactors();
 
 	static void DoLog(LogLevel a_Level, const char * a_pSub, const char * a_pFormat, va_list args );
 	static void ProcessRecord(const LogRecord & rec);

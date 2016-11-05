@@ -119,6 +119,18 @@ void Log::RemoveReactor(ILogReactor * a_pReactor)
 {
 	boost::lock_guard<boost::recursive_mutex> lock( GetReactorLock() );
 	GetReactorList().remove(a_pReactor);
+	delete a_pReactor;
+}
+
+void Log::RemoveAllReactors()
+{
+	boost::lock_guard<boost::recursive_mutex> lock( GetReactorLock() );
+	for (ReactorList::iterator iReactor = GetReactorList().begin();
+		iReactor != GetReactorList().end(); ++iReactor)
+	{
+		delete *iReactor;
+	}
+	GetReactorList().clear();
 }
 
 void Log::DoLog(LogLevel a_Level, const char * a_pSub, const char * a_pFormat, va_list args )
