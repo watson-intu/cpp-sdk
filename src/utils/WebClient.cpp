@@ -664,12 +664,14 @@ void WebClient::WS_Read( RequestData * a_pReq, const boost::system::error_code &
 			pFrame->m_wpSocket = shared_from_this();
 
 			bool bClose = pFrame->m_Op == CLOSE;
+			if ( bClose )
+				Log::DebugLow( "WebClient", "Received close op: %s (%p)", pFrame->m_Data.c_str(), this );
+
 			ThreadPool::Instance()->InvokeOnMain<IWebSocket::Frame *>(
 				DELEGATE( WebClient, OnWebSocketFrame, IWebSocket::Frame *, this ), pFrame );
 
 			if ( bClose )
 			{
-				Log::DebugLow( "WebClient", "Received close op: %s (%p)", pFrame->m_Data.c_str(), this );
 				ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClient, OnClose, shared_from_this() ) );
 				m_WebSocket = false;
 				delete a_pReq;
