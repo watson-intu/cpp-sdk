@@ -99,7 +99,8 @@ credentials; the library will get them for you by looking at the `VCAP_SERVICES`
 By default, [all requests are logged](http://www.ibm.com/watson/developercloud/doc/getting_started/gs-logging.shtml). This can be disabled of by setting the `X-Watson-Learning-Opt-Out` header when creating the service instance:
 
 ```
-GET CODE SAMPLE
+headers["x-watson-learning-opt-out"] = "1"
+
 ```
 
 ## Getting the Service Credentials
@@ -138,7 +139,51 @@ apps.
 Use the [Sentiment Analysis][sentiment_analysis] endpoint to identify positive/negative sentiment within a sample text document.
 
 ```
-GET CODE SAMPLE
+1. Create a json file named services.json
+{
+   "m_ServiceConfigs" : [
+        {
+            "m_Password" : "{password}",
+            "m_ServiceId" : "AlchemyV1",
+            "m_URL" : "http://gateway-a.watsonplatform.net/calls",
+            "m_User" : "{username}"
+        }
+   ],
+   "m_Services" : [
+        {
+            "Type_" : "Alchemy",
+            "m_MaxCacheAge" : 168,
+            "m_MaxCacheSize" : 5242880,
+            "m_RequestTimeout" : 30,
+            "m_ReturnParameters" : [ "enriched.url.title", "enriched.url.url", "enriched.url.text" ],
+            "m_ServiceId" : "AlchemyV1",
+            "m_bCacheEnabled" : true
+        }
+   ]
+}
+
+2. Create a class named TestAlchemyLanguage.cpp
+
+#include "services/Alchemy/Alchemy.h"
+#include "utils/Config.h"
+
+void ProcessText()
+{
+    Config config;
+    ISerializable::DeserializeFromFile("./services.json", &config);
+
+    Alchemy alchemy;
+    if ( config.IsConfigured( alchemy.GetServiceId() ) )
+    {
+        alchemy.Start() );
+        alchemy.GetPosTags( "can you wave to the crowd?", DELEGATE(TestAlchemyLanguage, OnGetPosTags, const Json::Value &, this) );
+    }
+}
+
+void OnGetPosTags(const Json::Value & json)
+{
+    // process POS tags stored in the json...
+}
 ```
 
 ### AlchemyVision
@@ -149,7 +194,52 @@ The AlchemyVision service has been replace by the [Visual Recognition](#visual-r
 Example: Get the volume data from the last 7 days using 12hs of time slice.
 
 ```
-GET CODE SAMPLE
+1. Create a json file named services.json
+{
+   "m_ServiceConfigs" : [
+        {
+            "m_Password" : "{password}",
+            "m_ServiceId" : "AlchemyV1",
+            "m_URL" : "http://gateway-a.watsonplatform.net/calls",
+            "m_User" : "{username}"
+        }
+   ],
+   "m_Services" : [
+        {
+            "Type_" : "Alchemy",
+            "m_MaxCacheAge" : 168,
+            "m_MaxCacheSize" : 5242880,
+            "m_RequestTimeout" : 30,
+            "m_ReturnParameters" : [ "enriched.url.title", "enriched.url.url", "enriched.url.text" ],
+            "m_ServiceId" : "AlchemyV1",
+            "m_bCacheEnabled" : true
+        }
+   ]
+}
+
+2. Create a class named TestAlchemyNews.cpp
+
+#include "services/Alchemy/Alchemy.h"
+#include "utils/Config.h"
+
+void GetNews()
+{
+    Config config;
+    ISerializable::DeserializeFromFile("./services.json", &config);
+
+    Alchemy alchemy;
+    if ( config.IsConfigured( alchemy.GetServiceId() ) )
+    {
+        alchemy.Start() );
+        alchemy.GetNews(companyName, startTime, endTime, numberOfArticles,
+                        DELEGATE(TestAlchemyNews, OnGetNews, const Json::Value &, this));
+    }
+}
+
+void OnGetNews(const Json::Value & json)
+{
+    // process news stored in the json...
+}
 ```
 
 ### Authorization
@@ -159,9 +249,6 @@ Tokens are valid for 1 hour and may be sent using the `X-Watson-Authorization-To
 
 Note that the token is supplied URL-encoded, and will not be accepted if it is double-encoded in a querystring.
 
-```
-GET CODE SAMPLE
-```
 
 ### Concept Insights
 
@@ -175,14 +262,57 @@ Use the [Conversation][conversation] service to determine the intent of a messag
 Note: you must first create a workspace via Bluemix. See [the documentation](http://www.ibm.com/watson/developercloud/doc/conversation/overview.shtml) for details.
 
 ```
-GET CODE SAMPLE
+1. Create a json file named services.json
+{
+   "m_ServiceConfigs" : [
+        {
+            "m_Password" : "{password}",
+            "m_ServiceId" : "ConversationV1",
+            "m_URL" : "https://gateway.watsonplatform.net/conversation/api",
+            "m_User" : "{username}"
+        }
+   ],
+   "m_Services" : [
+        {
+            "Type_" : "Conversation",
+            "m_APIVersion" : "2016-07-11",
+            "m_MaxCacheAge" : 168,
+            "m_MaxCacheSize" : 5242880,
+            "m_RequestTimeout" : 30,
+            "m_ServiceId" : "ConversationV1",
+            "m_bCacheEnabled" : true
+        }
+    ]
+}
+
+2. Create a class named TestConversation.cpp
+
+#include "services/Conversation/Conversation.h"
+#include "utils/Config.h"
+
+void GetMessage()
+{
+    Config config;
+    ISerializable::DeserializeFromFile("./services.json", &config);
+
+    Conversation conversation;
+    if ( config.IsConfigured( conversation.GetServiceId() ) )
+    {
+        conversation.Start() );
+        conversation.Message(m_WorkspaceId, m_Context, m_TestText, m_IntentOverrideTag, DELEGATE(TestConversation, OnMessage, ConversationResponse *, this));
+    }
+}
+
+void OnMessage(ConversationResponse * a_pConversationResponse)
+{
+    if ( a_pConversationResponse != NULL )
+    {
+        // process ConversationResponse to obtain m_Intents, m_Entities, m_Output, m_Context
+    }
+}
 ```
 
 ### Document Conversion
-
-```
-GET CODE SAMPLE
-```
 
 See the [Document Conversion integration example][document_conversion_integration_example] about how to integrate the Document Conversion service with the Retrieve and Rank service.
 
@@ -190,16 +320,58 @@ See the [Document Conversion integration example][document_conversion_integratio
 
 Translate text from one language to another or idenfity a language using the [Language Translator][language_translator] service.
 
-```
-GET CODE SAMPLE
-```
-
 ### Natural Language Classifier
 
 Use [Natural Language Classifier](http://www.ibm.com/watson/developercloud/doc/nl-classifier/) service to create a classifier instance by providing a set of representative strings and a set of one or more correct classes for each as training. Then use the trained classifier to classify your new question for best matching answers or to retrieve next actions for your application.
 
 ```
-GET CODE SAMPLE
+1. Create a json file named services.json
+{
+   "m_ServiceConfigs" : [
+        {
+            "m_Password" : "{password}",
+            "m_ServiceId" : "NaturalLanguageClassifierV1",
+            "m_URL" : "https://gateway.watsonplatform.net/natural-language-classifier/api",
+            "m_User" : "{username}"
+        }
+   ],
+   "m_Services" : [
+        {
+            "Type_" : "NaturalLanguageClassifier",
+            "m_MaxCacheAge" : 168,
+             "m_MaxCacheSize" : 5242880,
+             "m_RequestTimeout" : 30,
+             "m_ServiceId" : "NaturalLanguageClassifierV1",
+             "m_bCacheEnabled" : true
+        }
+   ]
+}
+
+2. Create a class named TestNaturalLanguageClassifier.cpp
+
+#include "services/NaturalLanguageClassifier/NaturalLanguageClassifier.h"
+#include "utils/Config.h"
+
+void GetClassifiers()
+{
+    Config config;
+    ISerializable::DeserializeFromFile("./services.json", &config);
+
+    NaturalLanguageClassifier nlc;
+    if ( config.IsConfigured( nlc.GetServiceId() ) )
+    {
+        nlc.Start() );
+		nlc.GetClassifiers(DELEGATE(TestNaturalLanguageClassifier, OnGetClassifiers, Classifiers *, this));
+    }
+}
+
+void OnGetClassifiers(Classifiers * a_pClassifiers)
+{
+    if ( a_pClassifiers != NULL )
+    {
+        // check classifiers returned
+    }
+}
 ```
 
 See this [example](https://github.com/watson-developer-cloud/node-sdk/blob/master/examples/natural_language_classifier.v1.js) to learn how to create a classifier.
@@ -208,9 +380,6 @@ See this [example](https://github.com/watson-developer-cloud/node-sdk/blob/maste
 Analyze text in english and get a personality profile by using the
 [Personality Insights][personality_insights] service.
 
-```
-GET CODE SAMPLE
-```
 
 **Important:** Don't forget to update the `text` variable.
 
@@ -223,21 +392,167 @@ Relationship Extraction has been deprecated. If you want to continue using Relat
 Use the [Retrieve and Rank][retrieve_and_rank] service to enhance search results with machine learning.
 
 ```
-GET CODE SAMPLE
+1. Create a json file named services.json
+{
+   "m_ServiceConfigs" : [
+        {
+            "m_Password" : "{password}",
+            "m_ServiceId" : "RetrieveAndRankV1",
+            "m_URL" : "https://gateway.watsonplatform.net/retrieve-and-rank/api",
+            "m_User" : "{username}"
+        }
+    ],
+    "m_Services" : [
+        {
+            "Type_" : "RetrieveAndRank",
+            "m_MaxCacheAge" : 168,
+            "m_MaxCacheSize" : 5242880,
+            "m_RequestTimeout" : 30,
+            "m_ServiceId" : "RetrieveAndRankV1",
+            "m_SolrId" : "",
+            "m_WorkspaceId" : "",
+            "m_bCacheEnabled" : true
+        }
+    ]
+}
+
+2. Create a class named TestRetrieveAndRank.cpp
+
+#include "services/RetrieveAndRank/RetrieveAndRank.h"
+#include "utils/Config.h"
+
+void GetRR()
+{
+    Config config;
+    ISerializable::DeserializeFromFile("./services.json", &config);
+
+    RetrieveAndRank rr;
+    if ( config.IsConfigured( rr.GetServiceId() ) )
+    {
+        rr.Start() );
+		rr.Select(m_SolrId, m_WorkspaceId, m_TestText, DELEGATE(TestRetrieveAndRank, OnMessage, RetrieveAndRankResponse *, this));
+    }
+}
+
+void OnMessage(RetrieveAndRankResponse * a_pRetrieveAndRankResponse)
+{
+    // process response
+}
 ```
 
 ### Speech to Text
 Use the [Speech to Text][speech_to_text] service to recognize the text from a .wav file.
 
 ```
-GET CODE SAMPLE
+1. Create a json file named services.json
+{
+   "m_ServiceConfigs" : [
+        {
+            "m_Password" : "{password}",
+             "m_ServiceId" : "SpeechToTextV1",
+             "m_URL" : "https://stream.watsonplatform.net/speech-to-text/api",
+             "m_User" : "{username}"
+        }
+    ],
+    "m_Services" : [
+        {
+             "Type_" : "SpeechToText",
+             "m_Continous" : true,
+             "m_DetectSilence" : false,
+             "m_Interium" : true,
+             "m_LearningOptOut" : true,
+             "m_MaxAlternatives" : 1,
+             "m_MaxAudioQueueSize" : 1048576,
+             "m_MaxCacheAge" : 168,
+             "m_MaxCacheSize" : 5242880,
+             "m_Models" : [ "en-US_BroadbandModel" ],
+             "m_RequestTimeout" : 30,
+             "m_ServiceId" : "SpeechToTextV1",
+             "m_SilenceThreshold" : 0.029999999329447746,
+             "m_Timestamps" : false,
+             "m_WordConfidence" : false,
+             "m_bCacheEnabled" : true,
+             "m_fResultDelay" : 0.25
+        }
+    ]
+}
+
+2. Create a class named TestSpeechToText.cpp
+
+#include "services/SpeechToText/SpeechToText.h"
+#include "utils/Config.h"
+
+void GetModels()
+{
+    Config config;
+    ISerializable::DeserializeFromFile("./services.json", &config);
+
+    SpeechToText stt;
+    if ( config.IsConfigured( stt.GetServiceId() ) )
+    {
+        stt.Start() );
+	    stt.GetModels( DELEGATE( TestSpeechToText, OnGetModels, SpeechModels *, this ) );
+    }
+}
+
+void OnGetModels( SpeechModels * a_pModels )
+{
+    if ( a_pModels != NULL )
+    {
+        // check classifiers returned
+    }
+}
 ```
 
 ### Text to Speech
 Use the [Text to Speech][text_to_speech] service to synthesize text into a .wav file.
 
 ```
-GET CODE SAMPLE
+1. Create a json file named services.json
+{
+   "m_ServiceConfigs" : [
+        {
+            "m_Password" : "{password}",
+            "m_ServiceId" : "TextToSpeechV1",
+            "m_URL" : "https://stream.watsonplatform.net/text-to-speech/api",
+            "m_User" : "{username}"
+        }
+    ],
+    "m_Services" : [
+        {
+            "Type_" : "TextToSpeech",
+            "m_MaxCacheAge" : 168,
+            "m_MaxCacheSize" : 5242880,
+            "m_RequestTimeout" : 30,
+            "m_ServiceId" : "TextToSpeechV1",
+            "m_Voice" : "en-US_MichaelVoice",
+            "m_bCacheEnabled" : true
+        }
+    ]
+}
+
+2. Create a class named TestTextToSpeech.cpp
+
+#include "services/TextToSpeech/TextToSpeech.h"
+#include "utils/Config.h"
+
+void GetSound()
+{
+    Config config;
+    ISerializable::DeserializeFromFile("./services.json", &config);
+
+    TextToSpeech tts;
+    if ( config.IsConfigured( tts.GetServiceId() ) )
+    {
+        tts.Start() );
+		tts.ToSound( "Hello World", DELEGATE( TestTextToSpeech, OnToSpeech, Sound *, this ));
+    }
+}
+
+void OnToSpeech( Sound * a_pSound )
+{
+    // process sound
+}
 ```
 
 ### Tone Analyzer
@@ -245,16 +560,57 @@ Use the [Tone Analyzer][tone_analyzer] service to analyze the
 emotion, writing and social tones of a text.
 
 ```
-GET CODE SAMPLE
+1. Create a json file named services.json
+{
+   "m_ServiceConfigs" : [
+        {
+             "m_Password" : "{password}",
+             "m_ServiceId" : "ToneAnalyzerV1",
+             "m_URL" : "https://gateway.watsonplatform.net/tone-analyzer/api",
+             "m_User" : "{username}"
+        }
+    ],
+    "m_Services" : [
+        {
+            "Type_" : "ToneAnalyzer",
+            "m_MaxCacheAge" : 720,
+            "m_MaxCacheSize" : 5242880,
+            "m_RequestTimeout" : 30,
+            "m_ServiceId" : "ToneAnalyzerV1",
+            "m_Version" : "2016-05-19",
+            "m_bCacheEnabled" : true
+        }
+    ]
+}
+
+2. Create a class named TestToneAnalyzer.cpp
+
+#include "services/ToneAnalyzer/ToneAnalyzer.h"
+#include "utils/Config.h"
+
+void AnalyzeTone()
+{
+    Config config;
+    ISerializable::DeserializeFromFile("./services.json", &config);
+
+    ToneAnalyzer tone;
+    if ( config.IsConfigured( tone.GetServiceId() ) )
+    {
+        tone.Start() );
+        tone.GetTone( "how is your day going?", DELEGATE(TestToneAnalyzer, OnTone, DocumentTones *, this));
+    }
+}
+
+void OnTone(DocumentTones * a_Callback)
+{
+    // process tones
+}
+
 ```
 
 ### Tradeoff Analytics
 Use the [Tradeoff Analytics][tradeoff_analytics] service to find the best
 phone that minimizes price and weight and maximizes screen size.
-
-```
-GET CODE SAMPLE
-```
 
 ### Visual Insights
 The Watson [Visual Insights][visual_insights] Service will be withdrawn. The Watson Visual Insights Service tile will be removed from the Bluemix catalog on July 3, 2016, after which you cannot provision new instances of this service.
@@ -266,7 +622,60 @@ following picture.
 <img src="https://visual-recognition-demo.mybluemix.net/images/samples/5.jpg" width="150" />
 
 ```
-GET CODE SAMPLE
+1. Create a json file named services.json
+{
+   "m_ServiceConfigs" : [
+        {
+            "m_Password" : "{password}",
+            "m_ServiceId" : "VisualRecognitionV1",
+            "m_URL" : "https://gateway-a.watsonplatform.net/visual-recognition/api",
+            "m_User" : "{username}"
+        }
+    ],
+    "m_Services" : [
+        {
+            "Type_" : "VisualRecognition",
+             "m_MaxCacheAge" : 168,
+             "m_MaxCacheSize" : 5242880,
+             "m_RequestTimeout" : 30,
+             "m_ServiceId" : "VisualRecognitionV1",
+             "m_bCacheEnabled" : true
+        }
+    ]
+}
+
+2. Create a class named TestVisualRecognition.cpp
+
+#include "services/VisualRecognition/VisualRecognition.h"
+#include "utils/Config.h"
+
+#include <fstream>
+
+void ProcessImage()
+{
+    Config config;
+    ISerializable::DeserializeFromFile("./services.json", &config);
+
+    VisualRecognition vr;
+    if ( config.IsConfigured( vr.GetServiceId() ) )
+    {
+        vr.Start() );
+        // read in all the file data..
+        std::ifstream input("./VisualRecognitionTest.jpg", std::ios::in | std::ios::binary);
+        std::string imageData;
+        imageData.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
+        input.close();
+
+        vr.DetectFaces(imageData,
+        			    DELEGATE(TestVisualRecognition, OnDetectFaces, const Json::Value &, this) );
+    }
+}
+
+void OnDetectFaces(const Json::Value & json)
+{
+    // process faces detected
+}
+
 ```
 
 ## Composing Services
@@ -282,10 +691,6 @@ with the Retrieve and Rank service.
 By default, the library tries to use Basic Auth and will ask for `api_key` or `username` and `password` and send an `Authorization: Basic XXXXXXX`. You can avoid this by using:
 
 `use_unauthenticated`.
-
-```
-GET CODE SAMPLE
-```
 
 ## Debug
 **DO WE NEED THIS SECTION?**
