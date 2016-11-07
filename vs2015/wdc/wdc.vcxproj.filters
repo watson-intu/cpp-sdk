@@ -93,9 +93,6 @@
     <ClCompile Include="..\..\lib\base64\cencode.c">
       <Filter>libs\base64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\utils\URL.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\utils\WebClient.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -169,6 +166,9 @@
       <Filter>services\VisualRecognition</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\UnitTest.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\_URL.cpp">
       <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
