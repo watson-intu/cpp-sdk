@@ -288,8 +288,13 @@ Guid GuidGenerator::newGuid()
 
 Guid GuidGenerator::newGuid()
 {
-    //TODO: Move the random init to the main function
-	//srand( (unsigned int)time(NULL) );
+	static bool bInitialized = false;
+	if (! bInitialized )
+	{
+		srand( (unsigned int)time(NULL) );
+		bInitialized =  true;
+	}
+
 	const unsigned char byteArray[16] =
 	{
 		(unsigned char)(rand() % 256),
