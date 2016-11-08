@@ -86,7 +86,7 @@ static int netlink_recv(int p_socket, void *p_buffer, size_t p_len)
     struct msghdr l_msg;
     struct iovec l_iov = { p_buffer, p_len };
     struct sockaddr_nl l_addr;
-    int l_result;
+    //int l_result;
 
     for(;;)
     {
@@ -288,7 +288,7 @@ static void interpretLink(struct nlmsghdr *p_hdr, struct ifaddrs **p_links, stru
     struct rtattr *l_rta;
     for(l_rta = (struct rtattr *)(((char *)l_info) + NLMSG_ALIGN(sizeof(struct ifinfomsg))); RTA_OK(l_rta, l_rtaSize); l_rta = RTA_NEXT(l_rta, l_rtaSize))
     {
-        void *l_rtaData = RTA_DATA(l_rta);
+        //void *l_rtaData = RTA_DATA(l_rta);
         size_t l_rtaDataSize = RTA_PAYLOAD(l_rta);
         switch(l_rta->rta_type)
         {
@@ -373,7 +373,7 @@ static void interpretAddr(struct nlmsghdr *p_hdr, struct ifaddrs **p_links, stru
     struct rtattr *l_rta;
     for(l_rta = (struct rtattr *)(((char *)l_info) + NLMSG_ALIGN(sizeof(struct ifaddrmsg))); RTA_OK(l_rta, l_rtaSize); l_rta = RTA_NEXT(l_rta, l_rtaSize))
     {
-        void *l_rtaData = RTA_DATA(l_rta);
+        //void *l_rtaData = RTA_DATA(l_rta);
         size_t l_rtaDataSize = RTA_PAYLOAD(l_rta);
         if(l_info->ifa_family == AF_PACKET)
         {

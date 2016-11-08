@@ -61,7 +61,7 @@ public:
 			m_pSocket(a_pSocket),
 			m_ReadBuffer(new StreamBuffer())
 		{}
-		~Connection()
+		virtual ~Connection()
 		{
 			Close();
 
