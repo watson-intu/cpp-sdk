@@ -130,7 +130,7 @@
     <ClCompile Include="..\..\src\utils\UnitTest.cpp" />
     <ClCompile Include="..\..\src\utils\WebServer.cpp" />
     <ClCompile Include="..\..\src\utils\WebSocketFramer.cpp" />
-    <ClCompile Include="..\..\src\utils\_URL.cpp" />
+    <ClCompile Include="..\..\src\utils\URL_.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\base64\cdecode.h" />

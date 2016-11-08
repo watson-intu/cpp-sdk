@@ -168,7 +168,7 @@
     <ClCompile Include="..\..\src\utils\UnitTest.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\utils\_URL.cpp">
+    <ClCompile Include="..\..\src\utils\URL_.cpp">
       <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
