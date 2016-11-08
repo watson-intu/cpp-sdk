@@ -86,8 +86,8 @@ class WDC_API Log
 {
 public:
 	static void RegisterReactor(ILogReactor * a_pReactor);
-	static void RemoveReactor(ILogReactor * a_pReactor);
-	static void RemoveAllReactors();
+	static void RemoveReactor(ILogReactor * a_pReactor, bool a_bDelete = true );
+	static void RemoveAllReactors( bool a_bDelete = true );
 
 	static void DoLog(LogLevel a_Level, const char * a_pSub, const char * a_pFormat, va_list args );
 	static void ProcessRecord(const LogRecord & rec);
