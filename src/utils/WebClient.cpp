@@ -668,7 +668,7 @@ void WebClient::WS_Read( RequestData * a_pReq, const boost::system::error_code &
 				Log::DebugLow( "WebClient", "Received close op: %s (%p)", pFrame->m_Data.c_str(), this );
 
 			ThreadPool::Instance()->InvokeOnMain<IWebSocket::Frame *>(
-				DELEGATE( WebClient, OnWebSocketFrame, IWebSocket::Frame *, this ), pFrame );
+				DELEGATE( WebClient, OnWebSocketFrame, IWebSocket::Frame *, shared_from_this() ), pFrame );
 
 			if ( bClose )
 			{
