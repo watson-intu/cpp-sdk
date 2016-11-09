@@ -18,22 +18,33 @@
 #include "VisualRecognition.h"
 #include "utils/Form.h"
 
+const std::string DEFAULT_CLASSIFIER( "default" );
+
 REG_SERIALIZABLE( VisualRecognition );
 RTTI_IMPL( VisualRecognition, IService );
 
 
-VisualRecognition::VisualRecognition() : IService("VisualRecognitionV1")
+VisualRecognition::VisualRecognition() : 
+	IService("VisualRecognitionV1"),
+	m_APIVersion( "2016-05-20" ),
+	m_ClassifyThreshold( 0.035f )
 {}
 
 //! ISerializable
 void VisualRecognition::Serialize(Json::Value & json)
 {
 	IService::Serialize(json);
+	json["m_APIVersion"] = m_APIVersion;
+	json["m_ClassifyThreshold"] = m_ClassifyThreshold;
 }
 
 void VisualRecognition::Deserialize(const Json::Value & json)
 {
 	IService::Deserialize(json);
+	if ( json["m_APIVersion"].isString() )
+		m_APIVersion = json["m_APIVersion"].asString();
+	if ( json["m_ClassifyThreshold"].isDouble() )
+		m_ClassifyThreshold = json["m_ClassifyThreshold"].asFloat();
 }
 
 //! IService interface
@@ -60,12 +71,14 @@ void VisualRecognition::GetServiceStatus(ServiceStatusCallback a_Callback)
 		a_Callback(ServiceStatus(m_ServiceId, false));
 }
 
-void VisualRecognition::ClassifyImage(const std::string & a_ImageData, const std::string & classifierId, OnClassifyImage a_Callback, bool a_bKnowledgeGraph )
+void VisualRecognition::ClassifyImage(const std::string & a_ImageData, 
+	const std::string & classifierId,
+	OnClassifyImage a_Callback, bool a_bKnowledgeGraph )
 {
 	std::string parameters = "/v3/classify";
 	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&version=2016-05-20";
-	parameters += "&threshold=0.035";
+	parameters += "&version=" + m_APIVersion;
+	parameters += "&threshold=" + StringUtil::Format( "%f", m_ClassifyThreshold );
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
@@ -87,7 +100,7 @@ void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFac
 {
 	std::string parameters = "/v3/detect_faces";
 	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&version=2016-05-20";
+	parameters += "&version=" + m_APIVersion;
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
@@ -97,11 +110,13 @@ void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFac
 	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
 }
 
-void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentifyText a_Callback, bool a_bKnowledgeGraph )
+void VisualRecognition::IdentifyText(const std::string & a_ImageData, 
+	OnIdentifyText a_Callback, 
+	bool a_bKnowledgeGraph )
 {
 	std::string parameters = "/v3/recognize_text";
 	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&version=2016-05-20";
+	parameters += "&version=" + m_APIVersion;
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
@@ -112,24 +127,24 @@ void VisualRecognition::IdentifyText(const std::string & a_ImageData, OnIdentify
 
 }
 
-void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, std::string & classifierId, std::string & classifierName, const std::string & imageClass, OnClassifierTrained a_Callback)
+void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, 
+	const std::string & a_classifierId, 
+	const std::string & a_imageClass, 
+	OnClassifierTrained a_Callback)
 {
-	if (classifierId == "")
-		classifierId = "default";
-	if (classifierName == "")
-		classifierName = "default";
+	std::string classifierId( a_classifierId.size() > 0 ? a_classifierId : DEFAULT_CLASSIFIER );
 
 	std::string parameters = "/v3/classifiers/";
 	parameters += classifierId;
 	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&version=2016-05-20";
+	parameters += "&version=" + m_APIVersion;
 
-	std::string className = imageClass + "_positive_examples";
-	std::string fileName = imageClass + "_positive_examples.jpg";
+	std::string className = a_imageClass + "_positive_examples";
+	std::string fileName = a_imageClass + "_positive_examples.jpg";
 	
 	Form form;
     form.AddFilePart(className, fileName, a_ImageData);
-	form.AddFormField("name", classifierName);
+	form.AddFormField("name", classifierId);
     form.Finish();
 
 	Headers headers;
@@ -139,24 +154,24 @@ void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData
 }
 
 // VisualRecognition as a service currently does not fully support this functionality. Leaving here until they do.
-void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData, std::string & classifierId, std::string & classifierName, const std::string & imageClass, OnClassifierTrained a_Callback)
+void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData,
+	const std::string & a_classifierId, 
+	const std::string & a_imageClass, 
+	OnClassifierTrained a_Callback)
 {
-	if (classifierId == "")
-		classifierId = "default";
-	if (classifierName == "")
-		classifierName = "default"; 
+	std::string classifierId( a_classifierId.size() > 0 ? a_classifierId : DEFAULT_CLASSIFIER );
 
 	std::string parameters = "/v3/classifiers/";
 	parameters += classifierId;
 	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&version=2016-05-20";
+	parameters += "&version=" + m_APIVersion;
 
-	std::string className = imageClass + "_negative_examples";
-	std::string fileName = imageClass + "_negative_examples.jpg";
+	std::string className = a_imageClass + "_negative_examples";
+	std::string fileName = a_imageClass + "_negative_examples.jpg";
 
 	Form form;
     form.AddFilePart(className, fileName, a_ImageData);
-	form.AddFormField("name", classifierName);
+	form.AddFormField("name", classifierId);
     form.Finish();
 
 	Headers headers;

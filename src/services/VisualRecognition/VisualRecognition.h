@@ -60,14 +60,12 @@ public:
 		bool a_bKnowledgeGraph = false );
 	//! Retrains the Image Classifier with positive examples
 	void TrainClassifierPositives(const std::string & a_ImageData,
-		std::string & classifierId,
-		std::string & classifierName,
+		const std::string & classifierId,
 		const std::string & imageClass,
 		OnClassifierTrained a_Callback);
 	//! Retrains the Image Classifier with negative examples
 	void TrainClassifierNegatives(const std::string & a_ImageData,
-		std::string & classifierId,
-		std::string & classifierName,
+		const std::string & classifierId,
 		const std::string & imageClass,
 		OnClassifierTrained a_Callback);
 
@@ -86,6 +84,9 @@ private:
 		void OnCheckService(const Json::Value &);
 	};
 
+	//! Data
+	std::string				m_APIVersion;
+	float					m_ClassifyThreshold;
 };
 
 #endif
