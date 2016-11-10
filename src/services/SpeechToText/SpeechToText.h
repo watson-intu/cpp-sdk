@@ -104,8 +104,11 @@ private:
 		void OnCheckService(SpeechModels* a_pSpeechModels);
 	};
 
-	struct Connection 
+	struct Connection : public boost::enable_shared_from_this<Connection>
 	{
+		typedef boost::shared_ptr<Connection>		SP;
+		typedef boost::weak_ptr<Connection>			WP;
+
 		Connection( SpeechToText * a_pSTT, const std::string & a_RecognizeModel = "en-US_BroadbandModel" );
 		~Connection();
 
@@ -126,6 +129,7 @@ private:
 		TimerPool::ITimer::SP
 						m_spReconnectTimer;
 
+		void Start();
 		void SendAudio(const SpeechAudioData & clip);
 
 		bool CreateListenConnector();
@@ -142,7 +146,7 @@ private:
 		void OnListenData( IWebClient::RequestData * );
 		void OnReconnect();
 	};
-	typedef std::list<Connection *>			Connectionlist;
+	typedef std::list<Connection::SP>		Connectionlist;
 	typedef std::list<RecognizeResults *>	ResultList;
 
 	//! Data
