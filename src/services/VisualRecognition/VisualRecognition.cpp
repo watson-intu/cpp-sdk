@@ -17,6 +17,7 @@
 
 #include "VisualRecognition.h"
 #include "utils/Form.h"
+#include "utils/Path.h"
 
 const std::string DEFAULT_CLASSIFIER( "default" );
 
@@ -69,6 +70,16 @@ void VisualRecognition::GetServiceStatus(ServiceStatusCallback a_Callback)
 		new ServiceStatusChecker(this, a_Callback);
 	else
 		a_Callback(ServiceStatus(m_ServiceId, false));
+}
+
+void VisualRecognition::GetClassifier( const std::string & a_ClassifierId,
+	OnGetClassifier a_Callback )
+{
+	std::string params = "/v3/classifiers/" + a_ClassifierId;
+	params += "?apikey=" + m_pConfig->m_User;
+	params += "&version=" + m_APIVersion;
+
+	new RequestJson(this, params, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback );
 }
 
 void VisualRecognition::ClassifyImage(const std::string & a_ImageData,
@@ -129,6 +140,27 @@ void VisualRecognition::IdentifyText(const std::string & a_ImageData,
 
 	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
 
+}
+
+void VisualRecognition::CreateClassifier( const std::string & a_ClassifierId,
+	const std::string & a_PositiveExamplesZip,
+	const std::string & a_NegExamplesZip,
+	OnCreateClassifier a_Callback )
+{
+	std::string parameters = "/v3/classifiers";
+	parameters += "?apikey=" + m_pConfig->m_User;
+	parameters += "&version=" + m_APIVersion;
+
+	Form form;
+	form.AddFilePartFromPath( Path( a_PositiveExamplesZip ).GetFile(), a_PositiveExamplesZip );
+	form.AddFilePartFromPath( Path( a_NegExamplesZip ).GetFile(), a_NegExamplesZip );
+	form.AddFormField("name", a_ClassifierId);
+	form.Finish();
+
+	Headers headers;
+	headers["Content-Type"] = form.GetContentType();
+
+	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
 }
 
 void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, 

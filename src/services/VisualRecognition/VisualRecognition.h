@@ -29,6 +29,8 @@ public:
 	RTTI_DECL();
 
 	//! Types
+	typedef Delegate<const Json::Value &>	OnGetClassifier;
+	typedef Delegate<const Json::Value &>	OnCreateClassifier;
 	typedef Delegate<const Json::Value &>	OnClassifyImage;
 	typedef Delegate<const Json::Value &>	OnDetectFaces;
 	typedef Delegate<const Json::Value &>   OnIdentifyText;
@@ -45,6 +47,9 @@ public:
 	virtual bool Start();
 	virtual void GetServiceStatus(ServiceStatusCallback a_Callback);
 
+	//! Check for a clasifier
+	void GetClassifier( const std::string & a_ClassifierId,
+		OnGetClassifier a_Callback );
 	//! Classify the given image and returns image tags for the image data.
 	void ClassifyImage(const std::string & a_ImageData,
 		const std::vector<std::string> & a_Classifiers,
@@ -58,7 +63,12 @@ public:
 	void IdentifyText(const std::string & a_ImageData,
 		OnIdentifyText a_Callback,
 		bool a_bKnowledgeGraph = false );
-	//! Retrains the Image Classifier with positive examples
+	//! Create a new custom classifier with the provided negative/positive examples
+	void CreateClassifier( const std::string & a_ClassifierId,
+		const std::string & a_PositiveExamplesZip,
+		const std::string & a_NegExamplesZip,
+		OnCreateClassifier a_Callback );
+		//! Retrains the Image Classifier with positive examples
 	void TrainClassifierPositives(const std::string & a_ImageData,
 		const std::string & classifierId,
 		const std::string & imageClass,
