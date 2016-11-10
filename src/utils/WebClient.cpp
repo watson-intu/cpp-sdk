@@ -274,7 +274,7 @@ void WebClient::BeginConnect()
 	if (i == boost::asio::ip::tcp::resolver::iterator())
 	{
 		Log::Error("WebClient", "Failed to resolve %s", m_URL.GetHost().c_str());
-		ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClient, OnDisconnected, this ) );
+		ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClient, OnDisconnected, shared_from_this() ) );
 	}
 	else
 	{
@@ -296,7 +296,7 @@ void WebClient::HandleConnect(const boost::system::error_code & error,
 		else
 		{
 			// no handshake needed for non-secure connections, go ahead and send the request
-			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClient, OnConnected, this ) );
+			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClient, OnConnected, shared_from_this() ) );
 		}
 
 #if ENABLE_KEEP_ALIVE
@@ -322,7 +322,7 @@ void WebClient::HandleConnect(const boost::system::error_code & error,
 		catch( const std::exception & ex )
 		{
 			Log::Error("WebClient", "Caught exception: %s", ex.what());
-			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this() ));
 		}
 	}
 	else
@@ -330,7 +330,7 @@ void WebClient::HandleConnect(const boost::system::error_code & error,
 		// set our state to disconnected..
 		Log::Error("WebClient", "Failed to connect to %s:%d: %s", 
 			m_URL.GetHost().c_str(), m_URL.GetPort(), error.message().c_str() );
-		ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+		ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this() ));
 	}
 }
 
@@ -338,13 +338,13 @@ void WebClient::HandleHandShake(const boost::system::error_code & error)
 {
 	if (! error )
 	{
-		ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClient, OnConnected, this ) );
+		ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClient, OnConnected, shared_from_this() ) );
 	}
 	else
 	{
 		Log::Error( "WebClient", "Handshake Failed with %s:%d: %s", 
 			m_URL.GetHost().c_str(), m_URL.GetPort(), error.message().c_str() );
-		ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, this));
+		ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnDisconnected, shared_from_this() ));
 	}
 }
 
@@ -403,7 +403,7 @@ void WebClient::OnConnected()
 			delete pResponse;
 
 			Log::Error( "WebClient", "Request is empty, closing connection." );
-			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnClose, this));
+			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClient, OnClose, shared_from_this() ));
 		}
 		else if (m_pStream != NULL)
 		{
