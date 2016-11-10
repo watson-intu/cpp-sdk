@@ -71,9 +71,10 @@ void VisualRecognition::GetServiceStatus(ServiceStatusCallback a_Callback)
 		a_Callback(ServiceStatus(m_ServiceId, false));
 }
 
-void VisualRecognition::ClassifyImage(const std::string & a_ImageData, 
-	const std::string & classifierId,
-	OnClassifyImage a_Callback, bool a_bKnowledgeGraph )
+void VisualRecognition::ClassifyImage(const std::string & a_ImageData,
+	const std::vector<std::string> & a_Classifiers,
+	OnClassifyImage a_Callback,
+	bool a_bKnowledgeGraph /*= false*/ )
 {
 	std::string parameters = "/v3/classify";
 	parameters += "?apikey=" + m_pConfig->m_User;
@@ -82,12 +83,14 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData,
 	if (a_bKnowledgeGraph)
 		parameters += "&knowledgeGraph=1";
 
-	std::string classifierParams = "{\"classifier_ids\": [\"" + classifierId + "\"]}";
+	Json::Value ids;
+	for(size_t i=0;i<a_Classifiers.size();++i)
+		ids["classifiers_ids"][0] = a_Classifiers[i];
 
 	Form form;
-    form.AddFilePart("images_file", "imageToClassify.jpg", a_ImageData);
-	form.AddFilePart("parameters", "myparams.json", classifierParams);
-    form.Finish();
+	form.AddFilePart("images_file", "imageToClassify.jpg", a_ImageData);
+	form.AddFilePart("parameters", "myparams.json", ids.toStyledString() );
+	form.Finish();
 
 	Headers headers;
 	headers["Content-Type"] = form.GetContentType();
@@ -95,6 +98,7 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData,
 
 	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
 }
+
 
 void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph )
 {
