@@ -25,6 +25,15 @@ qi_create_lib(crossguid STATIC
 		crossguid/crossguid.cpp)
 qi_stage_lib(crossguid)
 
+qi_create_lib(minizip STATIC
+		minizip/ioapi.c
+		minizip/ioapi_buf.c
+		minizip/ioapi_mem.c
+		minizip/unzip.c
+		minizip/zip.c)
+qi_use_lib(minizip zlib)
+qi_stage_lib(minizip)
+
 qi_create_lib(jsoncpp STATIC
 		jsoncpp/jsoncpp.cpp
 		jsoncpp/json/json-forwards.h
