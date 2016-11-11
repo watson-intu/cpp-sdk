@@ -96,7 +96,7 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData,
 
 	Json::Value ids;
 	for(size_t i=0;i<a_Classifiers.size();++i)
-		ids["classifiers_ids"][0] = a_Classifiers[i];
+		ids["classifiers_ids"][i] = a_Classifiers[i];
 
 	Form form;
 	form.AddFilePart("images_file", "imageToClassify.jpg", a_ImageData);
@@ -163,6 +163,17 @@ void VisualRecognition::CreateClassifier( const std::string & a_ClassifierId,
 	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
 }
 
+void VisualRecognition::DeleteClassifier( const std::string & a_ClassifierId,
+	OnCreateClassifier a_Callback )
+{
+	std::string parameters = "/v3/classifiers/";
+	parameters += a_ClassifierId;
+	parameters += "?apikey=" + m_pConfig->m_User;
+	parameters += "&version=" + m_APIVersion;
+
+	new RequestJson(this, parameters, "DELETE", NULL_HEADERS, EMPTY_STRING, a_Callback );
+}
+
 void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, 
 	const std::string & a_classifierId, 
 	const std::string & a_imageClass, 
@@ -202,7 +213,7 @@ void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=" + m_APIVersion;
 
-	std::string className = a_imageClass + "_negative_examples";
+	std::string className = "negative_examples";
 	std::string fileName = a_imageClass + "_negative_examples.jpg";
 
 	Form form;
