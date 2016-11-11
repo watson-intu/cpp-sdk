@@ -37,6 +37,8 @@ public:
 	typedef Delegate<const Json::Value &>   OnIdentifyText;
 	typedef Delegate<const Json::Value &>   OnClassifierTrained;
 
+	typedef std::map< std::string, std::string >	ZipMap;
+
 	//! Construction 
 	VisualRecognition();
 
@@ -68,25 +70,19 @@ public:
 		bool a_bKnowledgeGraph = false );
 	//! Create a new custom classifier with the provided negative/positive examples
 	void CreateClassifier( const std::string & a_ClassiferName,
-		const std::vector<std::string> & a_PositiveExamplesZip,
-		const std::string & a_NegExamplesZip,
+		const std::vector<std::string> & a_PositiveExamples,
+		const std::string & a_NegativeExamples,
 		OnCreateClassifier a_Callback );
+	//! Retrains the Image Classifier with positive examples
+	void UpdateClassifier(
+		const std::string & a_ClassifierId,
+		const std::string & a_ClassifierName,
+		const std::vector< std::string > & a_PositiveExamples,
+		const std::string & a_NegativeExamples,
+		OnClassifierTrained a_Callback);
+	//! Delete the specified classifier
 	void DeleteClassifier( const std::string & a_ClassifierId,
 		OnDeleteClassifier a_Callback );
-		//! Retrains the Image Classifier with positive examples
-	void TrainClassifierPositives(
-		const std::string & a_ZipArchive,
-		const std::string & a_ClassifierName,
-		const std::string & a_ClassifierId,
-		const std::string & a_Class,
-		OnClassifierTrained a_Callback);
-	//! Retrains the Image Classifier with negative examples
-	void TrainClassifierNegatives(
-		const std::string & a_ZipArchive,
-		const std::string & a_ClassifierName,
-		const std::string & a_ClassifierId,
-		const std::string & imageClass,
-		OnClassifierTrained a_Callback);
 
 private:
 	//! Types

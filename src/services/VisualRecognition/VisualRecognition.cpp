@@ -151,9 +151,10 @@ void VisualRecognition::IdentifyText(const std::string & a_ImageData,
 
 }
 
-void VisualRecognition::CreateClassifier( const std::string & a_ClassifierName,
-	const std::vector<std::string> & a_PositiveExamplesZip,
-	const std::string & a_NegExamplesZip,
+void VisualRecognition::CreateClassifier( 
+	const std::string & a_ClassifierName,
+	const std::vector<std::string> & a_PositiveExamples,
+	const std::string & a_NegativeExamples,
 	OnCreateClassifier a_Callback )
 {
 	std::string parameters = "/v3/classifiers";
@@ -162,12 +163,42 @@ void VisualRecognition::CreateClassifier( const std::string & a_ClassifierName,
 
 	Form form;
 	form.AddFormField("name", a_ClassifierName );
-	for(size_t i=0;i<a_PositiveExamplesZip.size();++i)
+	for(size_t i=0;i<a_PositiveExamples.size();++i)
 	{
-		if (! form.AddFilePartFromPath( Path( a_PositiveExamplesZip[i] ).GetFile(), a_PositiveExamplesZip[i] ) )
+		if (! form.AddFilePartFromPath( Path( a_PositiveExamples[i] ).GetFile(), a_PositiveExamples[i] ) )
 			Log::Error( "VisualRecognition", "Failed to load positive examples." );
 	}
-	form.AddFilePartFromPath( Path( a_NegExamplesZip ).GetFile(), a_NegExamplesZip );
+	if ( a_NegativeExamples.size() > 0 )
+		form.AddFilePartFromPath( Path( a_NegativeExamples ).GetFile(), a_NegativeExamples );
+	form.Finish();
+
+	Headers headers;
+	headers["Content-Type"] = form.GetContentType();
+
+	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
+}
+
+void VisualRecognition::UpdateClassifier(
+	const std::string & a_ClassifierId,
+	const std::string & a_ClassifierName,
+	const std::vector<std::string> & a_PositiveExamples,
+	const std::string & a_NegativeExamples,
+	OnClassifierTrained a_Callback)
+{
+	std::string parameters = "/v3/classifiers/";
+	parameters += a_ClassifierId;
+	parameters += "?apikey=" + m_pConfig->m_User;
+	parameters += "&version=" + m_APIVersion;
+
+	Form form;
+	form.AddFormField("name", a_ClassifierName );
+	for(size_t i=0;i<a_PositiveExamples.size();++i)
+	{
+		if (! form.AddFilePartFromPath( Path( a_PositiveExamples[i] ).GetFile(), a_PositiveExamples[i] ) )
+			Log::Error( "VisualRecognition", "Failed to load positive examples." );
+	}
+	if ( a_NegativeExamples.size() > 0 )
+		form.AddFilePartFromPath( Path( a_NegativeExamples ).GetFile(), a_NegativeExamples );
 	form.Finish();
 
 	Headers headers;
@@ -187,57 +218,6 @@ void VisualRecognition::DeleteClassifier( const std::string & a_ClassifierId,
 	new Request(this, parameters, "DELETE", NULL_HEADERS, EMPTY_STRING, a_Callback );
 }
 
-void VisualRecognition::TrainClassifierPositives(const std::string & a_ZipArchive, 
-	const std::string & a_ClassifierName,
-	const std::string & a_ClassifierId, 
-	const std::string & a_Class, 
-	OnClassifierTrained a_Callback)
-{
-	std::string parameters = "/v3/classifiers/";
-	parameters += a_ClassifierId;
-	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&version=" + m_APIVersion;
-
-	std::string className = a_Class + "_positive_examples";
-	std::string fileName = className + ".zip";
-	
-	Form form;
-	form.AddFormField("name", a_ClassifierName );
-	form.AddFilePart(className, fileName, a_ZipArchive );
-    form.Finish();
-
-	Headers headers;
-	headers["Content-Type"] = form.GetContentType();
-
-	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
-}
-
-// VisualRecognition as a service currently does not fully support this functionality. Leaving here until they do.
-void VisualRecognition::TrainClassifierNegatives(
-	const std::string & a_ZipArchive,
-	const std::string & a_ClassifierName,
-	const std::string & a_ClassifierId, 
-	const std::string & a_Class, 
-	OnClassifierTrained a_Callback)
-{
-	std::string parameters = "/v3/classifiers/";
-	parameters += a_ClassifierId;
-	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&version=" + m_APIVersion;
-
-	std::string className = a_Class + "_negative_examples";
-	std::string fileName = className + ".zip";
-
-	Form form;
-	form.AddFormField("name", a_ClassifierName );
-	form.AddFilePart(className, fileName, a_ZipArchive );
-    form.Finish();
-
-	Headers headers;
-	headers["Content-Type"] = form.GetContentType();
-
-	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
-}
 
 VisualRecognition::ServiceStatusChecker::ServiceStatusChecker(VisualRecognition * a_pService, ServiceStatusCallback a_Callback)
 	: m_pService(a_pService), m_Callback(a_Callback)
