@@ -51,7 +51,10 @@ void Form::AddFormField(const std::string & name, const std::string & value,
     std::stringstream part;
     part << "--" << m_boundary << m_lineFeed;
     part << "Content-Disposition: form-data; name=\"" << name << "\"" << m_lineFeed;
-    part << m_lineFeed << value << m_lineFeed;
+	part << "Content-Type: text/plain; charset=" << a_CharSet << m_lineFeed;
+	part << "Content-Transfer-Encoding: quoted-printable" << m_lineFeed;
+
+	part << m_lineFeed << value << m_lineFeed;
 	m_Parts.push_back( part.str() );
 }
 

@@ -95,6 +95,12 @@
     <ClCompile Include="..\..\lib\base64\cdecode.c" />
     <ClCompile Include="..\..\lib\base64\cencode.c" />
     <ClCompile Include="..\..\lib\crossguid\crossguid.cpp" />
+    <ClCompile Include="..\..\lib\minizip\ioapi.c" />
+    <ClCompile Include="..\..\lib\minizip\ioapi_buf.c" />
+    <ClCompile Include="..\..\lib\minizip\ioapi_mem.c" />
+    <ClCompile Include="..\..\lib\minizip\iowin32.c" />
+    <ClCompile Include="..\..\lib\minizip\unzip.c" />
+    <ClCompile Include="..\..\lib\minizip\zip.c" />
     <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
     <ClCompile Include="..\..\src\services\Alchemy\Alchemy.cpp" />
     <ClCompile Include="..\..\src\services\Conversation\Conversation.cpp" />
@@ -131,6 +137,7 @@
     <ClCompile Include="..\..\src\utils\WebServer.cpp" />
     <ClCompile Include="..\..\src\utils\WebSocketFramer.cpp" />
     <ClCompile Include="..\..\src\utils\URL_.cpp" />
+    <ClCompile Include="..\..\src\utils\ZipFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\base64\cdecode.h" />
@@ -138,6 +145,13 @@
     <ClInclude Include="..\..\lib\base64\decode.h" />
     <ClInclude Include="..\..\lib\base64\encode.h" />
     <ClInclude Include="..\..\lib\crossguid\crossguid.h" />
+    <ClInclude Include="..\..\lib\minizip\crypt.h" />
+    <ClInclude Include="..\..\lib\minizip\ioapi.h" />
+    <ClInclude Include="..\..\lib\minizip\ioapi_buf.h" />
+    <ClInclude Include="..\..\lib\minizip\ioapi_mem.h" />
+    <ClInclude Include="..\..\lib\minizip\iowin32.h" />
+    <ClInclude Include="..\..\lib\minizip\unzip.h" />
+    <ClInclude Include="..\..\lib\minizip\zip.h" />
     <ClInclude Include="..\..\lib\tinythread++\tinythread.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h" />
@@ -195,6 +209,7 @@
     <ClInclude Include="..\..\src\utils\URL.h" />
     <ClInclude Include="..\..\src\utils\WatsonException.h" />
     <ClInclude Include="..\..\src\utils\WebSocketFramer.h" />
+    <ClInclude Include="..\..\src\utils\ZipFile.h" />
     <ClInclude Include="..\..\src\WDCLib.h" />
     <ClInclude Include="Base36.h" />
   </ItemGroup>
@@ -212,7 +227,19 @@
       <Project>{7e45de27-419e-469c-affa-f669750d6338}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\..\vs2015\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('..\..\..\vs2015\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets')" />
+    <Import Project="..\..\..\vs2015\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('..\..\..\vs2015\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\vs2015\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\vs2015\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
+    <Error Condition="!Exists('..\..\..\vs2015\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\vs2015\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
+  </Target>
 </Project>

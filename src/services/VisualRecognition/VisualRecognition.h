@@ -32,6 +32,7 @@ public:
 	typedef Delegate<const Json::Value &>	OnGetClassifier;
 	typedef Delegate<const Json::Value &>	OnCreateClassifier;
 	typedef Delegate<const Json::Value &>	OnClassifyImage;
+	typedef Delegate<IService::Request *>	OnDeleteClassifier;
 	typedef Delegate<const Json::Value &>	OnDetectFaces;
 	typedef Delegate<const Json::Value &>   OnIdentifyText;
 	typedef Delegate<const Json::Value &>   OnClassifierTrained;
@@ -47,6 +48,8 @@ public:
 	virtual bool Start();
 	virtual void GetServiceStatus(ServiceStatusCallback a_Callback);
 
+	//! Get a list of classifiers
+	void GetClassifiers( OnGetClassifier a_Callback );
 	//! Check for a clasifier
 	void GetClassifier( const std::string & a_ClassifierId,
 		OnGetClassifier a_Callback );
@@ -64,20 +67,24 @@ public:
 		OnIdentifyText a_Callback,
 		bool a_bKnowledgeGraph = false );
 	//! Create a new custom classifier with the provided negative/positive examples
-	void CreateClassifier( const std::string & a_ClassifierId,
-		const std::string & a_PositiveExamplesZip,
+	void CreateClassifier( const std::string & a_ClassiferName,
+		const std::vector<std::string> & a_PositiveExamplesZip,
 		const std::string & a_NegExamplesZip,
 		OnCreateClassifier a_Callback );
 	void DeleteClassifier( const std::string & a_ClassifierId,
-		OnCreateClassifier a_Callback );
+		OnDeleteClassifier a_Callback );
 		//! Retrains the Image Classifier with positive examples
-	void TrainClassifierPositives(const std::string & a_ImageData,
-		const std::string & classifierId,
-		const std::string & imageClass,
+	void TrainClassifierPositives(
+		const std::string & a_ZipArchive,
+		const std::string & a_ClassifierName,
+		const std::string & a_ClassifierId,
+		const std::string & a_Class,
 		OnClassifierTrained a_Callback);
 	//! Retrains the Image Classifier with negative examples
-	void TrainClassifierNegatives(const std::string & a_ImageData,
-		const std::string & classifierId,
+	void TrainClassifierNegatives(
+		const std::string & a_ZipArchive,
+		const std::string & a_ClassifierName,
+		const std::string & a_ClassifierId,
 		const std::string & imageClass,
 		OnClassifierTrained a_Callback);
 

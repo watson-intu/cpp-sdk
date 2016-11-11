@@ -58,6 +58,9 @@
     <Filter Include="services\ToneAnalyzer">
       <UniqueIdentifier>{4cf044ce-bce8-4e59-8335-85c158919fb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="libs\minizip">
+      <UniqueIdentifier>{57e421d3-0397-4e13-82ef-75834ae9e355}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\ISerializable.cpp">
@@ -170,6 +173,27 @@
     </ClCompile>
     <ClCompile Include="..\..\src\utils\URL_.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\ZipFile.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\ioapi.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\ioapi_buf.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\ioapi_mem.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\iowin32.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\unzip.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\zip.c">
+      <Filter>libs\minizip</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -363,8 +387,35 @@
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\WDCLib.h" />
+    <ClInclude Include="..\..\src\utils\ZipFile.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\crypt.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\ioapi.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\ioapi_buf.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\ioapi_mem.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\iowin32.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\unzip.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\zip.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

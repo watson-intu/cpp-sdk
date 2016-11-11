@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Zlib">
+      <UniqueIdentifier>{1a5ed1c3-c893-492a-bcdb-5b991fcb64db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AES">
+      <UniqueIdentifier>{70f1f418-491c-4688-8fc1-ee8f9dd804f1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ioapi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="iowin32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="miniunz.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unzip.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\adler32.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\compress.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crc32.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deflate.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\infback.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\inffast.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\inflate.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\inftrees.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\trees.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\uncompr.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\zutil.c">
+      <Filter>Zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="aes\aescrypt.c">
+      <Filter>AES</Filter>
+    </ClCompile>
+    <ClCompile Include="aes\aeskey.c">
+      <Filter>AES</Filter>
+    </ClCompile>
+    <ClCompile Include="aes\aestab.c">
+      <Filter>AES</Filter>
+    </ClCompile>
+    <ClCompile Include="aes\entropy.c">
+      <Filter>AES</Filter>
+    </ClCompile>
+    <ClCompile Include="aes\fileenc.c">
+      <Filter>AES</Filter>
+    </ClCompile>
+    <ClCompile Include="aes\hmac.c">
+      <Filter>AES</Filter>
+    </ClCompile>
+    <ClCompile Include="aes\prng.c">
+      <Filter>AES</Filter>
+    </ClCompile>
+    <ClCompile Include="aes\pwd2key.c">
+      <Filter>AES</Filter>
+    </ClCompile>
+    <ClCompile Include="aes\sha1.c">
+      <Filter>AES</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="crypt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ioapi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="iowin32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="unzip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crc32.h">
+      <Filter>Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\deflate.h">
+      <Filter>Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inffast.h">
+      <Filter>Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inffixed.h">
+      <Filter>Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inflate.h">
+      <Filter>Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inftrees.h">
+      <Filter>Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\trees.h">
+      <Filter>Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\zconf.h">
+      <Filter>Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\zlib.h">
+      <Filter>Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\zutil.h">
+      <Filter>Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\aes.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\aes_via_ace.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\aesopt.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\aestab.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\brg_endian.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\brg_types.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\entropy.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\fileenc.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\hmac.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\prng.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\pwd2key.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+    <ClInclude Include="aes\sha1.h">
+      <Filter>AES</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

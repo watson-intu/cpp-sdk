@@ -72,6 +72,15 @@ void VisualRecognition::GetServiceStatus(ServiceStatusCallback a_Callback)
 		a_Callback(ServiceStatus(m_ServiceId, false));
 }
 
+void VisualRecognition::GetClassifiers( OnGetClassifier a_Callback )
+{
+	std::string params = "/v3/classifiers";
+	params += "?apikey=" + m_pConfig->m_User;
+	params += "&version=" + m_APIVersion;
+
+	new RequestJson(this, params, "GET", NULL_HEADERS, EMPTY_STRING, a_Callback );
+}
+
 void VisualRecognition::GetClassifier( const std::string & a_ClassifierId,
 	OnGetClassifier a_Callback )
 {
@@ -96,11 +105,11 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData,
 
 	Json::Value ids;
 	for(size_t i=0;i<a_Classifiers.size();++i)
-		ids["classifiers_ids"][i] = a_Classifiers[i];
+		ids["classifier_ids"][i] = a_Classifiers[i];
 
 	Form form;
-	form.AddFilePart("images_file", "imageToClassify.jpg", a_ImageData);
 	form.AddFilePart("parameters", "myparams.json", ids.toStyledString() );
+	form.AddFilePart("images_file", "imageToClassify.jpg", a_ImageData);
 	form.Finish();
 
 	Headers headers;
@@ -142,8 +151,8 @@ void VisualRecognition::IdentifyText(const std::string & a_ImageData,
 
 }
 
-void VisualRecognition::CreateClassifier( const std::string & a_ClassifierId,
-	const std::string & a_PositiveExamplesZip,
+void VisualRecognition::CreateClassifier( const std::string & a_ClassifierName,
+	const std::vector<std::string> & a_PositiveExamplesZip,
 	const std::string & a_NegExamplesZip,
 	OnCreateClassifier a_Callback )
 {
@@ -152,9 +161,13 @@ void VisualRecognition::CreateClassifier( const std::string & a_ClassifierId,
 	parameters += "&version=" + m_APIVersion;
 
 	Form form;
-	form.AddFilePartFromPath( Path( a_PositiveExamplesZip ).GetFile(), a_PositiveExamplesZip );
+	form.AddFormField("name", a_ClassifierName );
+	for(size_t i=0;i<a_PositiveExamplesZip.size();++i)
+	{
+		if (! form.AddFilePartFromPath( Path( a_PositiveExamplesZip[i] ).GetFile(), a_PositiveExamplesZip[i] ) )
+			Log::Error( "VisualRecognition", "Failed to load positive examples." );
+	}
 	form.AddFilePartFromPath( Path( a_NegExamplesZip ).GetFile(), a_NegExamplesZip );
-	form.AddFormField("name", a_ClassifierId);
 	form.Finish();
 
 	Headers headers;
@@ -164,34 +177,33 @@ void VisualRecognition::CreateClassifier( const std::string & a_ClassifierId,
 }
 
 void VisualRecognition::DeleteClassifier( const std::string & a_ClassifierId,
-	OnCreateClassifier a_Callback )
+	OnDeleteClassifier a_Callback )
 {
 	std::string parameters = "/v3/classifiers/";
 	parameters += a_ClassifierId;
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=" + m_APIVersion;
 
-	new RequestJson(this, parameters, "DELETE", NULL_HEADERS, EMPTY_STRING, a_Callback );
+	new Request(this, parameters, "DELETE", NULL_HEADERS, EMPTY_STRING, a_Callback );
 }
 
-void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData, 
-	const std::string & a_classifierId, 
-	const std::string & a_imageClass, 
+void VisualRecognition::TrainClassifierPositives(const std::string & a_ZipArchive, 
+	const std::string & a_ClassifierName,
+	const std::string & a_ClassifierId, 
+	const std::string & a_Class, 
 	OnClassifierTrained a_Callback)
 {
-	std::string classifierId( a_classifierId.size() > 0 ? a_classifierId : DEFAULT_CLASSIFIER );
-
 	std::string parameters = "/v3/classifiers/";
-	parameters += classifierId;
+	parameters += a_ClassifierId;
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=" + m_APIVersion;
 
-	std::string className = a_imageClass + "_positive_examples";
-	std::string fileName = a_imageClass + "_positive_examples.jpg";
+	std::string className = a_Class + "_positive_examples";
+	std::string fileName = className + ".zip";
 	
 	Form form;
-    form.AddFilePart(className, fileName, a_ImageData);
-	form.AddFormField("name", classifierId);
+	form.AddFormField("name", a_ClassifierName );
+	form.AddFilePart(className, fileName, a_ZipArchive );
     form.Finish();
 
 	Headers headers;
@@ -201,24 +213,24 @@ void VisualRecognition::TrainClassifierPositives(const std::string & a_ImageData
 }
 
 // VisualRecognition as a service currently does not fully support this functionality. Leaving here until they do.
-void VisualRecognition::TrainClassifierNegatives(const std::string & a_ImageData,
-	const std::string & a_classifierId, 
-	const std::string & a_imageClass, 
+void VisualRecognition::TrainClassifierNegatives(
+	const std::string & a_ZipArchive,
+	const std::string & a_ClassifierName,
+	const std::string & a_ClassifierId, 
+	const std::string & a_Class, 
 	OnClassifierTrained a_Callback)
 {
-	std::string classifierId( a_classifierId.size() > 0 ? a_classifierId : DEFAULT_CLASSIFIER );
-
 	std::string parameters = "/v3/classifiers/";
-	parameters += classifierId;
+	parameters += a_ClassifierId;
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=" + m_APIVersion;
 
-	std::string className = "negative_examples";
-	std::string fileName = a_imageClass + "_negative_examples.jpg";
+	std::string className = a_Class + "_negative_examples";
+	std::string fileName = className + ".zip";
 
 	Form form;
-    form.AddFilePart(className, fileName, a_ImageData);
-	form.AddFormField("name", classifierId);
+	form.AddFormField("name", a_ClassifierName );
+	form.AddFilePart(className, fileName, a_ZipArchive );
     form.Finish();
 
 	Headers headers;
