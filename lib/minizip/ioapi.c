@@ -11,6 +11,8 @@
    See the accompanying LICENSE file for the full text of the license.
 */
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -20,7 +22,7 @@
 #  define snprintf _snprintf
 #endif
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__GNUC__)
 /* In darwin and perhaps other BSD variants off_t is a 64 bit value, hence no need for specific 64 bit functions */
 #  define FOPEN_FUNC(filename, mode) fopen(filename, mode)
 #  define FTELLO_FUNC(stream) ftello(stream)

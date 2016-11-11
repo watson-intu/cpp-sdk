@@ -18,6 +18,7 @@
    with.
 */
 
+#pragma warning(disable:4028)
 
 #include <stdio.h>
 #include <stdlib.h>

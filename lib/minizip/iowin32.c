@@ -12,6 +12,9 @@
    See the accompanying LICENSE file for the full text of the license.
 */
 
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable:4028)
+
 #include <stdlib.h>
 #include <tchar.h>
 

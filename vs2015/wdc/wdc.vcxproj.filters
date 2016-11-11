@@ -61,6 +61,9 @@
     <Filter Include="libs\minizip">
       <UniqueIdentifier>{57e421d3-0397-4e13-82ef-75834ae9e355}</UniqueIdentifier>
     </Filter>
+    <Filter Include="libs\zlib">
+      <UniqueIdentifier>{6dcb82e8-71fd-4942-95e2-0af58e3d3b50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\ISerializable.cpp">
@@ -194,6 +197,51 @@
     </ClCompile>
     <ClCompile Include="..\..\lib\minizip\zip.c">
       <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\adler32.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\compress.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\crc32.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\deflate.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\gzclose.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\gzlib.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\gzread.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\gzwrite.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\infback.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\inffast.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\inflate.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\inftrees.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\trees.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\uncompr.c">
+      <Filter>libs\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zlib-1.2.8\zutil.c">
+      <Filter>libs\zlib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -411,11 +459,41 @@
     <ClInclude Include="..\..\lib\minizip\zip.h">
       <Filter>libs\minizip</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\crc32.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\deflate.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\gzguts.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\inffast.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\inffixed.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\inflate.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\inftrees.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\trees.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\zconf.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\zlib.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zlib-1.2.8\zutil.h">
+      <Filter>libs\zlib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -57,7 +57,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;_DEBUG;_WINDOWS;_USRDLL;WDC_SERVICES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;..\..\lib\zlib-1.2.8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -78,7 +78,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;NDEBUG;_WINDOWS;_USRDLL;WDC_SERVICES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;..\..\lib\zlib-1.2.8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -102,6 +102,21 @@
     <ClCompile Include="..\..\lib\minizip\unzip.c" />
     <ClCompile Include="..\..\lib\minizip\zip.c" />
     <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\adler32.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\compress.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\crc32.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\deflate.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\gzclose.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\gzlib.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\gzread.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\gzwrite.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\infback.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\inffast.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\inflate.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\inftrees.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\trees.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\uncompr.c" />
+    <ClCompile Include="..\..\lib\zlib-1.2.8\zutil.c" />
     <ClCompile Include="..\..\src\services\Alchemy\Alchemy.cpp" />
     <ClCompile Include="..\..\src\services\Conversation\Conversation.cpp" />
     <ClCompile Include="..\..\src\services\Dialog\Dialog.cpp" />
@@ -157,6 +172,17 @@
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\crc32.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\deflate.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\gzguts.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\inffast.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\inffixed.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\inflate.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\inftrees.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\trees.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\zconf.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\zlib.h" />
+    <ClInclude Include="..\..\lib\zlib-1.2.8\zutil.h" />
     <ClInclude Include="..\..\src\services\Alchemy\Alchemy.h" />
     <ClInclude Include="..\..\src\services\Conversation\Conversation.h" />
     <ClInclude Include="..\..\src\services\Conversation\DataModels.h" />
@@ -227,19 +253,6 @@
       <Project>{7e45de27-419e-469c-affa-f669750d6338}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\..\vs2015\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('..\..\..\vs2015\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets')" />
-    <Import Project="..\..\..\vs2015\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('..\..\..\vs2015\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\vs2015\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\vs2015\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
-    <Error Condition="!Exists('..\..\..\vs2015\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\vs2015\packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
-  </Target>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>
