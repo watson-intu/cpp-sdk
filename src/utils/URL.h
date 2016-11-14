@@ -114,8 +114,9 @@ public:
 		m_Port = GetProtocolPort( m_Protocol );
 
 		// look for the start of a port		
+		size_t firstSeperator = m_Host.find( SEPERATOR );
 		size_t portStart = m_Host.find( PORT_BEGIN );
-		if ( portStart != std::string::npos )
+		if ( portStart != std::string::npos && portStart < firstSeperator )
 		{
 			size_t portEnd = m_Host.find( SEPERATOR, portStart );
 			if ( portEnd == std::string::npos )		// if no slash found, then go up to the end of the string..
