@@ -33,9 +33,11 @@ DataCache::DataCache() : m_bInitialized(false), m_MaxCacheSize( 0 ), m_MaxCacheA
 
 bool DataCache::Initialize(const std::string & a_CachePath, 
 	unsigned int maxCacheSize /* = 1024 * 1024 * 50*/,
-	double maxCacheAge /*= 24 * 7*/)
+	double maxCacheAge /*= 24 * 7*/,
+	const std::string & a_Extention /*= ".bytes"*/ )
 {
 	m_bInitialized = true;
+	m_Extension = a_Extention;
 	m_CachePath = a_CachePath;
 	m_MaxCacheSize =  maxCacheSize;
 	m_MaxCacheAge = maxCacheAge;
@@ -83,6 +85,9 @@ bool DataCache::Initialize(const std::string & a_CachePath,
 
 	// flush old items from cache..
 	FlushAged();
+	// flush data until we are under our max size
+	while( m_CurrentCacheSize > m_MaxCacheSize )
+		FlushOldest();
 
 	return true;
 }
@@ -95,7 +100,7 @@ void DataCache::Uninitialize()
 }
 
 //! Find data in this cache by ID, returns a NULL if object is not found in this cache.
-DataCache::CacheItem * DataCache::Find(const std::string & a_ID)
+DataCache::CacheItem * DataCache::Find(const std::string & a_ID, bool a_bLoadIntoMemory /*= true*/ )
 {
 	std::string id = a_ID;
 	StringUtil::Replace( id, "/", "_" );
@@ -104,7 +109,7 @@ DataCache::CacheItem * DataCache::Find(const std::string & a_ID)
 	if ( iFind != m_Cache.end() )
 	{
 		CacheItem * pItem  = &iFind->second;
-		if (! pItem->m_bLoaded )
+		if ( a_bLoadIntoMemory && !pItem->m_bLoaded )
 		{
 			// load the file from disk into memory now..
 			try {
@@ -138,7 +143,7 @@ DataCache::CacheItem * DataCache::Find(const std::string & a_ID)
 	return NULL;
 }
 
-bool DataCache::Save(const std::string & a_ID, const std::string & a_Data)
+bool DataCache::Save(const std::string & a_ID, const std::string & a_Data, bool a_bKeepInMemory/* = true*/ )
 {
 	std::string id = a_ID;
 	StringUtil::Replace(id, "/", "_");
@@ -155,12 +160,16 @@ bool DataCache::Save(const std::string & a_ID, const std::string & a_Data)
 	}
 
 	CacheItem & item = m_Cache[ id ];
-	item.m_Path = m_CachePath + id + ".bytes";
+	item.m_Path = m_CachePath + id + m_Extension;
 	item.m_Id = id;
 	item.m_Time = Time().GetEpochTime();
 	item.m_Size = a_Data.size();
-	item.m_bLoaded = true;
-	item.m_Data = a_Data;
+
+	if ( a_bKeepInMemory )
+	{
+		item.m_bLoaded = true;
+		item.m_Data = a_Data;
+	}
 
 	try {
 		std::ofstream output(item.m_Path.c_str(), std::ios::out | std::ios::binary);
@@ -207,19 +216,22 @@ bool DataCache::Flush(const std::string & a_ID)
 
 bool DataCache::FlushAged()
 {
-	Time now;
-
-	std::list<std::string> flush;
-	for( CacheItemMap::iterator iItem = m_Cache.begin(); iItem != m_Cache.end(); ++iItem )
-	{
-		double age = (now.GetEpochTime() - iItem->second.m_Time) / 3600.0;
-		if ( age > m_MaxCacheAge )
-			flush.push_back( iItem->second.m_Id );
-	}
-
 	bool bFlushed = false;
-	for( std::list<std::string>::iterator iFlush = flush.begin(); iFlush != flush.end(); ++iFlush )
-		bFlushed |= Flush( *iFlush );
+	if ( m_MaxCacheAge > 0 )
+	{
+		Time now;
+
+		std::list<std::string> flush;
+		for( CacheItemMap::iterator iItem = m_Cache.begin(); iItem != m_Cache.end(); ++iItem )
+		{
+			double age = (now.GetEpochTime() - iItem->second.m_Time) / 3600.0;
+			if ( age > m_MaxCacheAge )
+				flush.push_back( iItem->second.m_Id );
+		}
+
+		for( std::list<std::string>::iterator iFlush = flush.begin(); iFlush != flush.end(); ++iFlush )
+			bFlushed |= Flush( *iFlush );
+	}
 
 	return bFlushed;
 }
