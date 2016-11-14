@@ -3,6 +3,7 @@
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
+#pragma warning(disable:4996)
 #include "gzguts.h"
 
 /* Local functions */
