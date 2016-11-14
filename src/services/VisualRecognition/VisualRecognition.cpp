@@ -169,7 +169,7 @@ void VisualRecognition::CreateClassifier(
 			Log::Error( "VisualRecognition", "Failed to load positive examples." );
 	}
 	if ( a_NegativeExamples.size() > 0 )
-		form.AddFilePartFromPath( Path( a_NegativeExamples ).GetFile(), a_NegativeExamples );
+		form.AddFilePartFromPath( "negative_examples", a_NegativeExamples );
 	form.Finish();
 
 	Headers headers;
@@ -198,7 +198,7 @@ void VisualRecognition::UpdateClassifier(
 			Log::Error( "VisualRecognition", "Failed to load positive examples." );
 	}
 	if ( a_NegativeExamples.size() > 0 )
-		form.AddFilePartFromPath( Path( a_NegativeExamples ).GetFile(), a_NegativeExamples );
+		form.AddFilePartFromPath( "negative_examples", a_NegativeExamples );
 	form.Finish();
 
 	Headers headers;
