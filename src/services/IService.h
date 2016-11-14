@@ -113,6 +113,10 @@ public:
 		{
 			return m_Error;
 		}
+		const Headers & GetResponseHeaders() const
+		{
+			return m_ResponseHeaders;
+		}
 		const std::string & GetResponse() const
 		{
 			return m_Response;
@@ -129,6 +133,7 @@ public:
 		IService *			m_pService;
 		IWebClient::SP		m_spClient;
 		std::string			m_Body;
+		Headers				m_ResponseHeaders;
 		std::string			m_Response;
 		bool				m_Complete;
 		bool				m_Error;

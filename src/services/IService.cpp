@@ -167,6 +167,7 @@ void IService::Request::OnResponseData( IWebClient::RequestData * a_pResponse )
 	{
 		m_Complete = true;
 		m_Error = a_pResponse->m_StatusCode < 200 || a_pResponse->m_StatusCode >= 300;
+		m_ResponseHeaders = a_pResponse->m_Headers;
 
 		double end = Time().GetEpochTime();
 		Log::DebugMed( "Request", "REST request %s completed in %g seconds. Queued for %g seconds. Status: %d.", 
