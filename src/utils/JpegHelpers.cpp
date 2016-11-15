@@ -25,12 +25,20 @@ static void stbi_write( void *context, void *data, int size)
 }
 
 bool JpegHelpers::ExtractImage( const std::string & a_ImageJpeg, int a_X, int a_Y, int a_Width, int a_Height, 
-	std::string & a_ExtractedJpeg )
+	std::string & a_ExtractedJpeg, std::vector<float> * a_pCenter /*= NULL*/ )
 {
 	int img_width, img_height, img_depth;
 	stbi_uc * pDecoded = stbi_load_from_memory( (stbi_uc *)a_ImageJpeg.data(), a_ImageJpeg.size(), &img_width, &img_height, &img_depth, 0 );
 	if ( pDecoded == NULL )
 		return false;
+
+	if ( a_pCenter != NULL )
+	{
+		a_pCenter->clear();
+		a_pCenter->push_back( (a_X + (a_Width * 0.5f)) / (float)img_width );
+		a_pCenter->push_back( (a_Y + (a_Height * 0.5f)) / (float)img_height );
+	}
+
 	if ( a_X < 0 || (a_X + a_Width) >= img_width || a_Y < 0 || (a_Y + a_Height) >= img_height )
 	{
 		stbi_image_free( pDecoded );
