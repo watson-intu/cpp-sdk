@@ -243,6 +243,9 @@
     <ClCompile Include="..\..\lib\zlib-1.2.8\zutil.c">
       <Filter>libs\zlib</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\utils\JpegHelpers.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\services\IService.h">
@@ -491,6 +494,9 @@
     </ClInclude>
     <ClInclude Include="..\..\lib\zlib-1.2.8\zutil.h">
       <Filter>libs\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\JpegHelpers.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -21,6 +21,7 @@
 #include "boost/enable_shared_from_this.hpp"
 #include "boost/shared_ptr.hpp"
 #include "boost/atomic.hpp"
+#include "tinyxml/tinyxml.h"
 
 #include "utils/DataCache.h"
 #include "utils/ISerializable.h"
@@ -50,8 +51,10 @@ public:
 	typedef boost::weak_ptr<IService>		WP;
 
 	typedef IWebClient::Headers				Headers;
+	typedef IWebClient::Cookies				Cookies;
 	typedef Delegate<Request *>				ResponseCallback;
 	typedef Delegate<const Json::Value &>	JsonResponseCallback;
+	typedef Delegate<const TiXmlDocument &>	XmlResponseCallback;
 	typedef Delegate<const std::string &>	DataResponseCallback;
 
 	//! Callback function type invoked after service status check
@@ -113,9 +116,13 @@ public:
 		{
 			return m_Error;
 		}
+		const Cookies & GetCookies() const
+		{
+			return m_SetCookies;
+		}
 		const Headers & GetResponseHeaders() const
 		{
-			return m_ResponseHeaders;
+			return m_RespHeaders;
 		}
 		const std::string & GetResponse() const
 		{
@@ -133,7 +140,8 @@ public:
 		IService *			m_pService;
 		IWebClient::SP		m_spClient;
 		std::string			m_Body;
-		Headers				m_ResponseHeaders;
+		Cookies				m_SetCookies;
+		Headers				m_RespHeaders;
 		std::string			m_Response;
 		bool				m_Complete;
 		bool				m_Error;
@@ -196,6 +204,55 @@ public:
 			}
 		}
 		JsonResponseCallback	m_Callback;
+	};
+
+	//! This class can be used when the expected response will be XML..
+	class RequestXml : public Request
+	{
+	public:
+		RequestXml(const std::string & a_URL,
+			const std::string & a_RequestType,		// type of request GET, POST, DELETE
+			const Headers & a_Headers,				// additional headers to add to the request
+			const std::string & a_Body,				// the body to send if any
+			XmlResponseCallback a_Callback,
+			float a_fTimeout = 30.0f ) :
+			m_Callback( a_Callback ),
+			Request( a_URL, a_RequestType, a_Headers, a_Body, 
+				DELEGATE(RequestXml, OnResponse, Request *, this ), a_fTimeout)
+		{}
+
+		RequestXml(IService * a_pService,
+			const std::string & a_Parameters,		// additional data to append onto the endpoint
+			const std::string & a_RequestType,		// type of request GET, POST, DELETE
+			const Headers & a_Headers,				// additional headers to add to the request
+			const std::string & a_Body,				// the body to send if any
+			XmlResponseCallback a_Callback,
+			CacheRequest * a_CacheReq = NULL,
+			float a_fTimeout = 30.0f ) :
+			m_Callback(a_Callback),
+			Request(a_pService, a_Parameters, a_RequestType, a_Headers, a_Body,
+				DELEGATE(RequestXml, OnResponse, Request *, this), a_CacheReq, a_fTimeout )
+		{}
+
+	private:
+		void OnResponse(IService::Request * a_pRequest)
+		{
+			TiXmlDocument xml;
+			if (! a_pRequest->IsError() )
+			{
+				xml.Parse( m_Response.c_str() );
+
+				if ( xml.Error() )
+					Log::Error("RequestXml", "Failed to parse XML response: %s", m_Response.c_str());
+			}
+
+			if (m_Callback.IsValid())
+			{
+				m_Callback(xml);
+				m_Callback.Reset();
+			}
+		}
+		XmlResponseCallback	m_Callback;
 	};
 
 	//! This request is used to retrieve raw byte data from the server.

@@ -137,6 +137,7 @@
     <ClCompile Include="..\..\src\utils\Form.cpp" />
     <ClCompile Include="..\..\src\utils\GetMac.cpp" />
     <ClCompile Include="..\..\src\utils\IConditional.cpp" />
+    <ClCompile Include="..\..\src\utils\JpegHelpers.cpp" />
     <ClCompile Include="..\..\src\utils\JsonHelpers.cpp" />
     <ClCompile Include="..\..\src\utils\Logic.cpp" />
     <ClCompile Include="..\..\src\utils\Time.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="..\..\src\utils\IWebClient.h" />
     <ClInclude Include="..\..\src\utils\IWebServer.h" />
     <ClInclude Include="..\..\src\utils\IWebSocket.h" />
+    <ClInclude Include="..\..\src\utils\JpegHelpers.h" />
     <ClInclude Include="..\..\src\utils\JsonHelpers.h" />
     <ClInclude Include="..\..\src\utils\Logic.h" />
     <ClInclude Include="..\..\src\utils\MD5.h" />

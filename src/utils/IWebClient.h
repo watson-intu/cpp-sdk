@@ -42,6 +42,7 @@ public:
 
 	//! Types
 	typedef std::map< std::string, std::string, StringUtil::ci_less >	Headers;
+	typedef std::multimap< std::string, std::string >					Cookies;
 	typedef boost::shared_ptr<IWebClient>	SP;
 	typedef boost::weak_ptr<IWebClient>		WP;
 
@@ -53,6 +54,7 @@ public:
 		std::string		m_Version;
 		unsigned int	m_StatusCode;
 		std::string		m_StatusMessage;
+		Cookies			m_SetCookies;
 		Headers			m_Headers;
 		std::string		m_Content;
 		bool			m_bDone;			// set to true if the socket has been closed and this is the last RequestData object

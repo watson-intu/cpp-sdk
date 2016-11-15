@@ -483,7 +483,12 @@ void WebClient::HTTP_ReadHeaders( RequestData * a_pReq, const boost::system::err
 				continue;
 			std::string key = StringUtil::Trim(header.substr(0, seperator), " \r\n");
 			std::string value = StringUtil::Trim(header.substr(seperator + 1), " \r\n");
-			a_pReq->m_Headers[key] = value;
+
+			// handle cookies differently, since we will received multiple Set-Cookie headers for each cookie..
+			if ( StringUtil::Compare( "Set-Cookie", key, true ) == 0 )
+				a_pReq->m_SetCookies.insert( Cookies::value_type( key, value ) );
+			else
+				a_pReq->m_Headers[key] = value;
 		}
 
 		// if this is a web socket then we follow a different path at this point..
@@ -580,6 +585,7 @@ void WebClient::HTTP_ReadContent( RequestData * a_pReq, const boost::system::err
 			pNewReq->m_StatusCode = a_pReq->m_StatusCode;
 			pNewReq->m_StatusMessage = a_pReq->m_StatusMessage;
 			pNewReq->m_Headers = a_pReq->m_Headers;
+			pNewReq->m_SetCookies = a_pReq->m_SetCookies;
 
 			ThreadPool::Instance()->InvokeOnMain<RequestData *>(
 				DELEGATE(WebClient, OnResponse, RequestData *, shared_from_this()), a_pReq);

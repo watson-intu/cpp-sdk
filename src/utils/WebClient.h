@@ -220,8 +220,7 @@ inline void WebClient::SetDataReceiver(Delegate<RequestData *> a_Receiver)
 	m_DataReceiver = a_Receiver;
 }
 
-inline void WebClient::SetHeader(const std::string & a_Key,
-	const std::string & a_Value)
+inline void WebClient::SetHeader(const std::string & a_Key, const std::string & a_Value)
 {
 	m_Headers[ a_Key ] = a_Value;
 }
