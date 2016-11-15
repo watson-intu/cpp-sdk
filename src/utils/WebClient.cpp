@@ -291,7 +291,7 @@ void WebClient::HandleConnect(const boost::system::error_code & error,
 		if ( m_pStream != NULL )
 		{
 			m_pStream->async_handshake( boost::asio::ssl::stream_base::client, 
-				boost::bind( &WebClient::HandleHandShake, this, boost::asio::placeholders::error ) );
+				boost::bind( &WebClient::HandleHandShake, shared_from_this(), boost::asio::placeholders::error ) );
 		}
 		else
 		{
