@@ -39,11 +39,14 @@ bool JpegHelpers::ExtractImage( const std::string & a_ImageJpeg, int a_X, int a_
 		a_pCenter->push_back( (a_Y + (a_Height * 0.5f)) / (float)img_height );
 	}
 
-	if ( a_X < 0 || (a_X + a_Width) >= img_width || a_Y < 0 || (a_Y + a_Height) >= img_height )
-	{
-		stbi_image_free( pDecoded );
-		return false;		// rect is out of bounds
-	}
+	if ( a_X < 0 )
+		a_X = 0;
+	if ( (a_X + a_Width) >= img_width )
+		a_Width = (img_width - a_X) - 1;
+	if ( a_Y < 0 )
+		a_Y = 0;
+	if ( (a_Y + a_Height) >= img_height )
+		a_Height = (img_height - a_Y) - 1;
 
 	unsigned char * pUpperLeft = pDecoded + (a_X * img_depth) + (a_Y * img_width * img_depth);
 	unsigned char * pCroppedImage = new unsigned char[ a_Width * a_Height * img_depth ];
