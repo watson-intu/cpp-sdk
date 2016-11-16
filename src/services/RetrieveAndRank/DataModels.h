@@ -81,12 +81,14 @@ struct WDC_API RetrieveAndRankResponse : public ISerializable
     std::vector<Documents>  m_Docs;
     int                     m_NumFound;
     int                     m_Start;
+	double					m_MaxScore;
 
     virtual void Serialize(Json::Value & json)
     {
         json["response"] = m_Response;
         m_Response["numFound"] = m_NumFound;
         m_Response["start"] = m_Start;
+		m_Response["maxScore"] = m_MaxScore;
         SerializeVector("docs", m_Docs, m_Response);
     }
 
@@ -101,6 +103,9 @@ struct WDC_API RetrieveAndRankResponse : public ISerializable
 
         if( m_Response.isMember("docs"))
             DeserializeVector("docs", m_Response, m_Docs);
+
+		if (m_Response.isMember("maxScore"))
+			m_MaxScore = m_Response["maxScore"].asDouble();
     }
 
 
