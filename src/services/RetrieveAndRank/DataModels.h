@@ -22,6 +22,9 @@
 
 struct WDC_API Documents : public ISerializable
 {
+	Documents() : m_TextSize(0), m_Sequence(0)
+	{}
+
     std::string                 m_Id;
     std::string                 m_Title;
     std::string                 m_ContentHTML;
@@ -76,6 +79,9 @@ struct WDC_API Documents : public ISerializable
 struct WDC_API RetrieveAndRankResponse : public ISerializable
 {
     RTTI_DECL();
+
+	RetrieveAndRankResponse() : m_MaxScore(0.0), m_Start(0), m_NumFound(0)
+	{}
 
     Json::Value   m_Response;
     std::vector<Documents>  m_Docs;
