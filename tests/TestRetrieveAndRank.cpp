@@ -27,12 +27,14 @@ class TestRetrieveAndRank : UnitTest
 public:
     TestRetrieveAndRank() : UnitTest("TestRetrieveAndRank"),
                             m_bRetrieveAndRankTested( false ),
+							m_bRetreiveAndRankQuestionTested( false ),
                             m_WorkspaceId( "Version1" ),
                             m_SolrId( "scf30e777d_3f30_46ea_850b_0b1433f56fd0" ),
                             m_TestText( "Location_Gym_3" )
     {}
 
     bool m_bRetrieveAndRankTested;
+	bool m_bRetreiveAndRankQuestionTested;
     std::string m_WorkspaceId;
     std::string m_SolrId;
     std::string m_TestText;
@@ -44,9 +46,11 @@ public:
         ThreadPool pool(1);
 
         RetrieveAndRank rr;
-        if ( config.IsConfigured( rr.GetServiceId() ) )
+		RetrieveAndRank rr2("RetrieveAndRankV2");
+        if ( config.IsConfigured( rr.GetServiceId() ) && config.IsConfigured( rr2.GetServiceId() ) )
 		{
 			Test( rr.Start() );
+			Test( rr2.Start() );
 
 			Log::Debug("TestRetrieveAndRank","Retrieve and Rank Started");
 
@@ -56,7 +60,12 @@ public:
 			Spin(m_bRetrieveAndRankTested);
 			Test(m_bRetrieveAndRankTested);
 
+			rr2.Ask("scb5b04486_beb0_4a5c_8e45_442d089a94ad", "Samsung1", "tell me about battery", "unranked",
+				DELEGATE(TestRetrieveAndRank, OnAskMessage, RetrieveAndRankResponse *, this ) );
+			Spin(m_bRetreiveAndRankQuestionTested);
+			Test(m_bRetreiveAndRankQuestionTested);
 			Test( rr.Stop() );
+			Test( rr2.Stop() );
 		}
 		else
 		{
@@ -74,6 +83,13 @@ public:
 
         m_bRetrieveAndRankTested = true;
     }
+
+	void OnAskMessage(RetrieveAndRankResponse * a_pRetreiveAndRankResponse)
+	{
+		Test( a_pRetreiveAndRankResponse != NULL );
+		Log::Debug("TestRetreiveAndRank", "Received response with confidence %f", a_pRetreiveAndRankResponse->m_MaxScore);
+		m_bRetreiveAndRankQuestionTested = true;
+	}
 };
 
 TestRetrieveAndRank TEST_RETRIEVE_AND_RANK;

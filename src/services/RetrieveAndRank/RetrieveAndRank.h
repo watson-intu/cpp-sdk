@@ -36,6 +36,9 @@ public:
     //! Construction
     RetrieveAndRank();
 
+	RetrieveAndRank::RetrieveAndRank(const std::string & a_ServiceId) : IService(a_ServiceId)
+	{}
+
     //! ISerializable
     virtual void Serialize(Json::Value & json);
     virtual void Deserialize(const Json::Value & json);
@@ -48,6 +51,10 @@ public:
                  OnMessage a_Callback );
 
     void Select( const std::string & a_Text, OnMessage a_Callback );
+
+	//! Natural Language Question interface
+	void Ask(const std::string & a_SolrId, const std::string & a_WorkspaceId, const std::string & a_Text,
+		const std::string & a_Source, OnMessage a_Callback);
 
 private:
 
