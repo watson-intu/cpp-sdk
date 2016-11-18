@@ -34,9 +34,9 @@ public:
     typedef Delegate<RetrieveAndRankResponse *>	OnMessage;
 
     //! Construction
-    RetrieveAndRank();
-
-	RetrieveAndRank::RetrieveAndRank(const std::string & a_ServiceId) : IService(a_ServiceId)
+	RetrieveAndRank::RetrieveAndRank() : IService("RetrieveAndRankV1")
+	{}
+	RetrieveAndRank(const std::string & a_ServiceId) : IService(a_ServiceId)
 	{}
 
     //! ISerializable

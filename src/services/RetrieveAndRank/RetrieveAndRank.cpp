@@ -21,9 +21,6 @@ REG_SERIALIZABLE( RetrieveAndRank );
 RTTI_IMPL( RetrieveAndRankResponse, ISerializable );
 RTTI_IMPL( RetrieveAndRank, IService );
 
-RetrieveAndRank::RetrieveAndRank() : IService("RetrieveAndRankV1")
-{}
-
 void RetrieveAndRank::Serialize(Json::Value & json)
 {
     IService::Serialize(json);
