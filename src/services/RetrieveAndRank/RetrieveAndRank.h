@@ -34,7 +34,7 @@ public:
     typedef Delegate<RetrieveAndRankResponse *>	OnMessage;
 
     //! Construction
-	RetrieveAndRank::RetrieveAndRank() : IService("RetrieveAndRankV1")
+	RetrieveAndRank() : IService("RetrieveAndRankV1")
 	{}
 	RetrieveAndRank(const std::string & a_ServiceId) : IService(a_ServiceId)
 	{}
