@@ -203,7 +203,7 @@ void JsonHelpers::Merge(Json::Value & a_MergeInto, const Json::Value & a_Merge, 
 		if (a_bReplace && a_MergeInto.size() > a_Merge.size())
 			a_MergeInto.resize(a_Merge.size());
 	}
-	else
+	else if(! a_Merge.isNull() )
 		a_MergeInto = a_Merge;
 }
 
