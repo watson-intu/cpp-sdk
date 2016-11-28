@@ -58,11 +58,10 @@ ThreadPool::~ThreadPool()
 
 void ThreadPool::ProcessMainThread()
 {
-	// make a copy of our delegate list to invoke, clean the main queue while it's locked then invoke the 
-	// delegates with no lock..
+	// transfer our list to a local copy so we don't block for that long..
 	m_MainQueueLock.lock();
-	DelegateList invoke( m_MainQueue );
-	m_MainQueue.clear();
+	DelegateList invoke;
+	invoke.splice( invoke.begin(), m_MainQueue );
 	m_MainQueueLock.unlock();
 
 	for( DelegateList::iterator iDelegate = invoke.begin(); iDelegate != invoke.end(); ++iDelegate )

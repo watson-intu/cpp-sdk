@@ -29,6 +29,8 @@
 
 #include "Log.h"
 #include "StringUtil.h"
+#include "ThreadPool.h"
+#include "WatsonException.h"
 
 void ConsoleReactor::Process(const LogRecord & a_Record)
 {
@@ -62,7 +64,10 @@ void ConsoleReactor::Process(const LogRecord & a_Record)
 
 FileReactor::FileReactor(const char * a_pLogFile, LogLevel a_MinLevel /*= DEBUG*/, int a_LogHistory /*= 5*/) :
 	m_LogFile(a_pLogFile),
-	m_MinLevel(a_MinLevel)
+	m_MinLevel(a_MinLevel),
+	m_pThread( NULL ),
+	m_bStopThread(false),
+	m_bThreadStopped(false)
 {
 	// rotate log files...
 	try {
@@ -82,19 +87,72 @@ FileReactor::FileReactor(const char * a_pLogFile, LogLevel a_MinLevel /*= DEBUG*
 	}
 	catch( const std::exception & )
 	{}
+
+	// start our thread for writing to files..
+	m_pThread = new boost::thread( boost::bind( &FileReactor::WriteThread, this ) );
+}
+
+FileReactor::~FileReactor()
+{
+	if ( m_pThread != NULL )
+	{
+		m_bStopThread = true;
+		while(! m_bThreadStopped )
+			boost::this_thread::yield();
+
+		delete m_pThread;
+		m_pThread = NULL;
+	}
 }
 
 void FileReactor::Process(const LogRecord & a_Record)
 {
 	if (a_Record.m_Level >= m_MinLevel)
 	{
-		FILE * f = fopen(m_LogFile.c_str(), "a+");
-		if (f != NULL)
+		std::string log( StringUtil::Format( "[%s][%s][%s] %s\n", 
+			a_Record.m_Time.c_str(), Log::LevelText( a_Record.m_Level ), a_Record.m_SubSystem.c_str(), a_Record.m_Message.c_str() ) );
+
+		m_OutputLock.lock();
+		m_Output.push_back( log );
+		m_OutputLock.unlock();
+	}
+}
+
+void FileReactor::WriteThread()
+{
+	while(! m_bStopThread )
+	{
+		boost::this_thread::sleep( boost::posix_time::milliseconds( 250 ) );
+
+		m_OutputLock.lock();
+		if ( m_Output.begin() != m_Output.end() )
 		{
-			fprintf(f, "[%s][%s][%s] %s\n", a_Record.m_Time.c_str(), Log::LevelText( a_Record.m_Level ), a_Record.m_SubSystem.c_str(), a_Record.m_Message.c_str());
-			fclose(f);
+			// transfer data into a local list so we don't block the main thread for long..
+			LogList output;
+			output.splice( output.begin(), m_Output );
+			m_OutputLock.unlock();
+
+			FILE * f = fopen(m_LogFile.c_str(), "a+");
+			if ( f != NULL )
+			{
+				for( LogList::const_iterator iLog = output.begin(); 
+					iLog != output.end(); ++iLog )
+				{
+					const std::string & log = *iLog;
+					fwrite( log.c_str(), sizeof(char), log.size(), f );
+				}
+
+				fclose( f );
+			}
+		}
+		else
+		{
+			// nothing to do..
+			m_OutputLock.unlock();
 		}
 	}
+
+	m_bThreadStopped = true;
 }
 
 Log::ReactorList & Log::GetReactorList()

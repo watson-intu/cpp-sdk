@@ -74,12 +74,26 @@ class WDC_API FileReactor : public ILogReactor
 {
 public:
 	FileReactor(const char * a_pLogFile, LogLevel a_MinLevel = LL_STATUS, int a_LogHistory = 5 );
+	~FileReactor();
 
 	virtual void Process(const LogRecord & a_Record);
 
 private:
+	//! Types
+	typedef std::list<std::string>			LogList;
+
+	//! Data
 	std::string			m_LogFile;
 	LogLevel			m_MinLevel;
+
+	bool				m_bStopThread;
+	bool				m_bThreadStopped;
+	boost::thread *		m_pThread;
+	boost::recursive_mutex
+						m_OutputLock;
+	LogList				m_Output;
+
+	void WriteThread();
 };
 
 class WDC_API Log
