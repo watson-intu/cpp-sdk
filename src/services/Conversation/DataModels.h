@@ -88,18 +88,25 @@ struct WDC_API ConversationResponse : public ISerializable
         if( json.isMember("output") && json["output"].isMember("text") )
             DeserializeVector("text", json["output"], m_Output);
 
-        if( json.isMember("context") ) {
+        if( json.isMember("context") ) 
+		{
             m_Context = json["context"];
 
             // Intent Override
             // Looks for an intent override tag and if one exists and is in the context
             // it will use that as the intent opposed to the intent from Conversation
-            if (json.isMember("input") && json["input"].isMember("intentoverride")
-                    && json["input"]["intentoverride"] != "" ) {
+            if (json.isMember("input") && json["input"].isMember("intentoverride") ) 
+			{
                 m_IntentOverrideTag = json["input"]["intentoverride"].asString();
-                if (m_Context.isMember(m_IntentOverrideTag) && m_Context[m_IntentOverrideTag] != ""
-                        && m_Intents.size() > 0 )
-                    m_Intents[0].m_Intent = m_Context[m_IntentOverrideTag].asString();
+				if ( m_IntentOverrideTag.size() > 0 )
+				{
+					if (m_Context.isMember(m_IntentOverrideTag) && m_Intents.size() > 0 )
+					{
+						const std::string & override = m_Context[m_IntentOverrideTag].asString();
+						if ( override.size() > 0 )
+							m_Intents[0].m_Intent = override;
+					}
+				}
             }
         }
 

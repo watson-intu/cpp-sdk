@@ -18,10 +18,30 @@
 #include "stb/stb_image.h"
 #include "jo/jo_jpeg.h"
 
-static void stbi_write( void *context, void *data, int size)
+bool JpegHelpers::EncodeImage( const void * a_RGB, int a_Width, int a_Height, int a_Depth,
+	std::string & a_EncodedJpeg )
 {
-	std::stringstream * ss = (std::stringstream *)context;
-	ss->write( (const char *)data, size );
+	std::stringstream ss;
+	if ( jo_write_jpg( ss, a_RGB, a_Width, a_Height, a_Depth, 90 ) )
+	{
+		a_EncodedJpeg = ss.str();
+		return true;
+	}
+
+	return false;
+}
+
+bool JpegHelpers::DecodeImage( const void * a_JPEG, int a_Bytes, int & a_Width, int & a_Height, int & a_Depth,
+	std::string & a_DecodedJpeg )
+{
+	stbi_uc * pDecoded = stbi_load_from_memory( (stbi_uc *)a_JPEG, a_Bytes, &a_Width, &a_Height, &a_Depth, 0 );
+	if ( pDecoded == NULL )
+		return false;
+
+	a_DecodedJpeg = std::string( (const char *)pDecoded, (a_Width * a_Depth) * a_Height );
+	stbi_image_free( pDecoded );
+
+	return true;
 }
 
 bool JpegHelpers::ExtractImage( const std::string & a_ImageJpeg, int a_X, int a_Y, int a_Width, int a_Height, 

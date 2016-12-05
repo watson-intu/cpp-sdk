@@ -23,6 +23,12 @@
 class WDC_API JpegHelpers
 {
 public:
+	//! encode the given raw RGB data into a JPEG encoded image.
+	static bool EncodeImage( const void * a_RGB, int a_Width, int a_Height, int a_Depth,
+		std::string & a_EncodedJpeg );
+	//! Decode the given JPEG data into raw image
+	static bool DecodeImage( const void * a_JPEG, int a_Bytes, int & a_Width, int & a_Height, int & a_Depth,
+		std::string & a_DecodedJpeg );
 	static bool ExtractImage( const std::string & a_ImageJpeg, int a_X, int a_Y, int a_Width, int a_Height, 
 		std::string & a_ExtractedJpeg, std::vector<float> * a_pCenter = NULL );
 };
