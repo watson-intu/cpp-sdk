@@ -124,6 +124,7 @@
     <ClCompile Include="..\..\tests\TestThreadPool.cpp" />
     <ClCompile Include="..\..\tests\TestTimerPool.cpp" />
     <ClCompile Include="..\..\tests\TestToneAnalyzer.cpp" />
+    <ClCompile Include="..\..\tests\TestUniqueID.cpp" />
     <ClCompile Include="..\..\tests\TestURL.cpp" />
     <ClCompile Include="..\..\tests\TestVisualRecognition.cpp" />
     <ClCompile Include="..\..\tests\TestWebClient.cpp" />
