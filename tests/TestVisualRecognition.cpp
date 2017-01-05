@@ -69,11 +69,6 @@ public:
 			Spin( m_bClassifyImageTested );
 			Test( m_bClassifyImageTested );
 
-			vr.IdentifyText(imageData,
-				DELEGATE(TestVisualRecognition, OnIdentifyText, const Json::Value &, this) );
-			Spin( m_bIdentifyTextTested );
-			Test( m_bIdentifyTextTested );
-
 			Test( vr.Stop() );
 		}
 		else

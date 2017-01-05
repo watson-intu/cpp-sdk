@@ -120,35 +120,21 @@ void VisualRecognition::ClassifyImage(const std::string & a_ImageData,
 }
 
 
-void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callback, bool a_bKnowledgeGraph )
+void VisualRecognition::DetectFaces(const std::string & a_ImageData, OnDetectFaces a_Callback )
 {
 	std::string parameters = "/v3/detect_faces";
 	parameters += "?apikey=" + m_pConfig->m_User;
 	parameters += "&version=" + m_APIVersion;
-	if (a_bKnowledgeGraph)
-		parameters += "&knowledgeGraph=1";
+
+	Form form;
+	form.AddFilePart("images_file", "imageToClassify.jpg", a_ImageData);
+	form.Finish();
 
 	Headers headers;
-	headers["Content-Type"] = "application/x-www-form-urlencoded";
+	headers["Content-Type"] = form.GetContentType();
+	headers["Accept-Language"] = "en";
 
-	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
-}
-
-void VisualRecognition::IdentifyText(const std::string & a_ImageData, 
-	OnIdentifyText a_Callback, 
-	bool a_bKnowledgeGraph )
-{
-	std::string parameters = "/v3/recognize_text";
-	parameters += "?apikey=" + m_pConfig->m_User;
-	parameters += "&version=" + m_APIVersion;
-	if (a_bKnowledgeGraph)
-		parameters += "&knowledgeGraph=1";
-
-	Headers headers;
-	headers["Content-Type"] = "application/x-www-form-urlencoded";
-
-	new RequestJson(this, parameters, "POST", headers, a_ImageData, a_Callback);
-
+	new RequestJson(this, parameters, "POST", headers, form.GetBody(), a_Callback);
 }
 
 void VisualRecognition::CreateClassifier( 

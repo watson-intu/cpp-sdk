@@ -62,12 +62,8 @@ public:
 		bool a_bKnowledgeGraph = false );
 	//! Detect faces in the provided image 
 	void DetectFaces(const std::string & a_ImageData,
-		OnDetectFaces a_Callback, 
-		bool a_bKnowledgeGraph = false );
-	//! Identify the Text within a provided image
-	void IdentifyText(const std::string & a_ImageData,
-		OnIdentifyText a_Callback,
-		bool a_bKnowledgeGraph = false );
+		OnDetectFaces a_Callback );
+
 	//! Create a new custom classifier with the provided negative/positive examples
 	void CreateClassifier( const std::string & a_ClassiferName,
 		const std::vector<std::string> & a_PositiveExamples,
