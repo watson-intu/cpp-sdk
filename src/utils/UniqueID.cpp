@@ -25,56 +25,39 @@ const std::string & UniqueID::Generate()
 {
 	static GuidGenerator generator;
 	generator.newGuid().GetString(m_GUID);
+	m_eType = STRING;
 	return m_GUID;
 }
 
-const std::string & UniqueID::ToBinary()
+const UniqueID & UniqueID::ToBinary()
 {
-	// "a6c045e7-2751-407a-88bc-2067f05424a3"
-	StringUtil::Replace( m_GUID, "-", "" );
-
-	std::string encoded;
-	for(size_t i=0;i<m_GUID.size(); i += 2)
+	if ( m_eType == ENCODED )
+		Decode();
+	if ( m_eType == STRING )
 	{
-		unsigned int c = HexToByte(m_GUID[i]) << 4;
-		c |= HexToByte( m_GUID[i+1] );
-		encoded += (char)c;
-	}
+		// covert 36-character GUID "a6c045e7-2751-407a-88bc-2067f05424a3" into 16-byte binary GUID
+		StringUtil::Replace( m_GUID, "-", "" );
 
-	m_GUID = encoded;
-	return m_GUID;
-}
-
-const std::string & UniqueID::Encode()
-{
-	// "a6c045e7-2751-407a-88bc-2067f05424a3"
-	std::string encoded;
-	unsigned int fragment = 0;
-	unsigned int bits = 0;
-	for(size_t i=0;i<m_GUID.size();++i)
-	{
-		unsigned int c = ((unsigned int)m_GUID[i]) & 0xff;
-		fragment = (c << bits) | fragment;
-		bits += 8;
-
-		while( bits >= 6 )
+		std::string encoded;
+		for(size_t i=0;i<m_GUID.size(); i += 2)
 		{
-			encoded += Encode64( fragment & 0x3f );
-			fragment = fragment >> 6;
-			bits -= 6;
+			unsigned int c = HexToByte(m_GUID[i]) << 4;
+			c |= HexToByte( m_GUID[i+1] );
+			encoded += (char)c;
 		}
+
+		m_GUID = encoded;
+		m_eType = BINARY;
 	}
 
-	if ( bits > 0 )
-		encoded += Encode64( fragment & 0x3f );
-
-	m_GUID = encoded;
-	return m_GUID;
+	return *this;
 }
 
-const std::string & UniqueID::FromBinary()
+const UniqueID & UniqueID::ToString()
 {
-	if ( m_GUID.size() == 16 )
+	if ( m_eType == ENCODED )
+		Decode();
+	if ( m_eType == BINARY )
 	{
 		std::string decoded;
 		for(size_t i=0;i<m_GUID.size();++i)
@@ -85,14 +68,48 @@ const std::string & UniqueID::FromBinary()
 		}
 
 		m_GUID = decoded;
+		m_eType = STRING;
 	}
 
-	return m_GUID;
+	return *this;
 }
 
-const std::string & UniqueID::Decode()
+const UniqueID & UniqueID::Encode()
 {
-	if ( m_GUID.size() == 22 )
+	if ( m_eType != BINARY )
+		ToBinary();
+	if ( m_eType == BINARY )
+	{
+		std::string encoded;
+		unsigned int fragment = 0;
+		unsigned int bits = 0;
+		for(size_t i=0;i<m_GUID.size();++i)
+		{
+			unsigned int c = ((unsigned int)m_GUID[i]) & 0xff;
+			fragment = (c << bits) | fragment;
+			bits += 8;
+
+			while( bits >= 6 )
+			{
+				encoded += Encode64( fragment & 0x3f );
+				fragment = fragment >> 6;
+				bits -= 6;
+			}
+		}
+
+		if ( bits > 0 )
+			encoded += Encode64( fragment & 0x3f );
+
+		m_GUID = encoded;
+		m_eType = ENCODED;
+	}
+
+	return *this;
+}
+
+const UniqueID & UniqueID::Decode()
+{
+	if ( m_eType == ENCODED )
 	{
 		std::string decoded;
 
@@ -115,10 +132,10 @@ const std::string & UniqueID::Decode()
 		}
 
 		m_GUID = decoded;
-		FromBinary();
+		m_eType = BINARY;
 	}
 
-	return m_GUID;
+	return *this;
 }
 
 char UniqueID::Encode64( unsigned int v )

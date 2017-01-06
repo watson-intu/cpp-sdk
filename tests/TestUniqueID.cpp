@@ -36,12 +36,19 @@ public:
 		// test that the IDs are unique
 		Test( id1.Get() != id2.Get() );			
 
-		// test encoding & decoding of IDs to binary
-		UniqueID id4( id2 );
-		UniqueID id3( id4.Encode() );
-		id3.Decode();
+		// test binary encoding
+		UniqueID id3( id2 );
+		UniqueID id4( id3.ToBinary() );
+		id4.ToString();
 
-		Test( id3.Get() == id2.Get() );
+		Test( id4.Get() == id2.Get() );
+
+		// test base64 encoding
+		UniqueID id5( id2 );
+		UniqueID id6( id5.Encode() );
+		id6.ToString();
+
+		Test( id6.Get() == id2.Get() );
 	}
 
 };
