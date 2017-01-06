@@ -21,12 +21,21 @@
 
 #include <assert.h>
 
-const std::string & UniqueID::Generate()
+const UniqueID & UniqueID::Generate()
 {
 	static GuidGenerator generator;
 	generator.newGuid().GetString(m_GUID);
 	m_eType = STRING;
-	return m_GUID;
+
+	return *this;
+}
+
+const UniqueID & UniqueID::GenerateShort()
+{
+	Generate();
+	m_GUID = m_GUID.substr( 0, 18 );			// truncate to the first 18 characters, which halves the GUID
+
+	return *this;
 }
 
 const UniqueID & UniqueID::ToBinary()

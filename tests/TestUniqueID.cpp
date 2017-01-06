@@ -38,17 +38,37 @@ public:
 
 		// test binary encoding
 		UniqueID id3( id2 );
-		UniqueID id4( id3.ToBinary() );
-		id4.ToString();
+		id3.ToBinary();
+		id3.ToString();
 
-		Test( id4.Get() == id2.Get() );
+		Test( id3.Get() == id2.Get() );
 
 		// test base64 encoding
-		UniqueID id5( id2 );
-		UniqueID id6( id5.Encode() );
-		id6.ToString();
+		id3.Encode();
+		id3.Decode();
+		id3.ToString();
 
-		Test( id6.Get() == id2.Get() );
+		Test( id3.Get() == id2.Get() );
+
+		// test short GUIDs
+		id1.GenerateShort();
+		id2.GenerateShort();
+		Test( id1.Get() != id2.Get() );			
+
+		id3 = id2;
+
+		// test binary encoding
+		id3.ToBinary();
+		id3.ToString();
+
+		Test( id3.Get() == id2.Get() );
+
+		// test base64 encoding
+		id3.Encode();
+		id3.Decode();
+		id3.ToString();
+
+		Test( id3.Get() == id2.Get() );
 	}
 
 };

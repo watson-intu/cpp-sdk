@@ -33,9 +33,12 @@ public:
 	};
 
 	//! Construction
-	UniqueID() : m_eType( STRING )
+	UniqueID( bool a_bGenerateShortGUID = false ) : m_eType( STRING )
 	{
-		Generate();
+		if ( a_bGenerateShortGUID )
+			GenerateShort();
+		else
+			Generate();
 	}
 	UniqueID( const UniqueID & a_Copy ) : m_GUID( a_Copy.m_GUID ), m_eType( a_Copy.m_eType )
 	{}
@@ -51,8 +54,11 @@ public:
 		return m_eType;
 	}
 
-	//! Generate a new ID, returns a const reference to the ID contained by this object.
-	const std::string & Generate();
+	//! Generate a new ID, returns a const reference to the ID contained by this object. (128-bits)
+	const UniqueID & Generate();
+	//! Generate a short GUID (64-bits)
+	const UniqueID & GenerateShort();
+
 	//! Convert to binary 
 	const UniqueID & ToBinary();
 	//! Convert to string
