@@ -38,17 +38,10 @@ public:
 
 		// test encoding & decoding of IDs to binary
 		UniqueID id4( id2 );
-		UniqueID id3( id4.ToBinary() );
-		id3.FromBinary();
+		UniqueID id3( id4.Encode() );
+		id3.Decode();
 
 		Test( id3.Get() == id2.Get() );
-
-		// test encoding & decoding of ID's into base64 values
-		UniqueID id5( id2 );
-		UniqueID id6( id5.Encode64() );
-		id6.Decode64();
-
-		Test( id6.Get() == id2.Get() );
 	}
 
 };

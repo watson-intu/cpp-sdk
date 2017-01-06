@@ -39,17 +39,21 @@ public:
 
 	//! Generate a new ID, returns a const reference to the ID contained by this object.
 	const std::string & Generate();
-	//! encode this ID into a binary string
+	//! Convert to binary 
 	const std::string & ToBinary();
-	//! encode this ID into a base64 string
-	const std::string & Encode64();
-	//! decode from a binary string
+	//! encode into base64 ID
+	const std::string & Encode();
+	//! Convert from binary
 	const std::string & FromBinary();
-	//! Decode this ID from a base64 string
-	const std::string & Decode64();
+	//! decode from base64 ID
+	const std::string & Decode();
 private:
 	//! Data
 	std::string		m_GUID;
+
+	static char Encode64( unsigned int v );
+	static int Decode64( char c );
+	static unsigned int HexToByte( char c );
 };
 
 #endif
