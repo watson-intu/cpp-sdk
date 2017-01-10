@@ -33,7 +33,11 @@ public:
 	};
 
 	//! Construction
-	UniqueID( bool a_bGenerateShortGUID = false ) : m_eType( STRING )
+	UniqueID() : m_eType( STRING )
+	{
+		Generate();
+	}
+	UniqueID( bool a_bGenerateShortGUID ) : m_eType( STRING )
 	{
 		if ( a_bGenerateShortGUID )
 			GenerateShort();
