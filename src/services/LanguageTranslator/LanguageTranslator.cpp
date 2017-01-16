@@ -15,47 +15,47 @@
 *
 */
 
-#include "LanguageTranslation.h"
+#include "LanguageTranslator.h"
 #include "utils/Form.h"
 
-REG_SERIALIZABLE( LanguageTranslation );
+REG_SERIALIZABLE( LanguageTranslator );
 RTTI_IMPL( Translations, ISerializable );
 RTTI_IMPL( Translation, ISerializable );
 RTTI_IMPL( Languages, ISerializable );
 RTTI_IMPL( Language, ISerializable );
 RTTI_IMPL( IdentifiedLanguages, ISerializable );
 RTTI_IMPL( IdentifiedLanguage, ISerializable );
-RTTI_IMPL( LanguageTranslation, IService );
+RTTI_IMPL( LanguageTranslator, IService );
 
-LanguageTranslation::LanguageTranslation() : IService("LanguageTranslation")
+LanguageTranslator::LanguageTranslator() : IService("LanguageTranslator")
 {}
 
-void LanguageTranslation::Serialize(Json::Value & json)
+void LanguageTranslator::Serialize(Json::Value & json)
 {
     IService::Serialize(json);
 }
 
-void LanguageTranslation::Deserialize(const Json::Value & json)
+void LanguageTranslator::Deserialize(const Json::Value & json)
 {
     IService::Deserialize(json);
 }
 
 //! IService interface
-bool LanguageTranslation::Start()
+bool LanguageTranslator::Start()
 {
     if (! IService::Start() )
         return false;
 
-    if (! StringUtil::EndsWith( m_pConfig->m_URL, "language-translation/api" ) )
+    if (! StringUtil::EndsWith( m_pConfig->m_URL, "language-translator/api" ) )
     {
-        Log::Error( "LanguageTranslation", "Configured URL not ended with language-translation/api" );
+        Log::Error( "LanguageTranslator", "Configured URL not ended with language-translatore/api" );
         return false;
     }
 
     return true;
 }
 
-void LanguageTranslation::GetServiceStatus( ServiceStatusCallback a_Callback )
+void LanguageTranslator::GetServiceStatus( ServiceStatusCallback a_Callback )
 {
     if (m_pConfig != NULL)
         new ServiceStatusChecker(this, a_Callback);
@@ -64,15 +64,15 @@ void LanguageTranslation::GetServiceStatus( ServiceStatusCallback a_Callback )
 }
 
 //! Creates an object responsible for service status checking
-LanguageTranslation::ServiceStatusChecker::ServiceStatusChecker
-        (LanguageTranslation* a_pLTService, ServiceStatusCallback a_Callback)
+LanguageTranslator::ServiceStatusChecker::ServiceStatusChecker
+        (LanguageTranslator* a_pLTService, ServiceStatusCallback a_Callback)
         : m_pLTService(a_pLTService), m_Callback(a_Callback)
 {
     m_pLTService->IdentifiableLanguages(DELEGATE(ServiceStatusChecker, OnCheckService, Languages*, this));
 }
 
 //! Callback function invoked when service status is checked
-void LanguageTranslation::ServiceStatusChecker::OnCheckService(Languages* a_pLanguages)
+void LanguageTranslator::ServiceStatusChecker::OnCheckService(Languages* a_pLanguages)
 {
     if (m_Callback.IsValid())
         m_Callback(ServiceStatus(m_pLTService->m_ServiceId, a_pLanguages != NULL));
@@ -82,7 +82,7 @@ void LanguageTranslation::ServiceStatusChecker::OnCheckService(Languages* a_pLan
 }
 
 
-void LanguageTranslation::Translation(const std::string & a_Source,
+void LanguageTranslator::Translation(const std::string & a_Source,
                                       const std::string & a_Target,
                                       const std::string & a_Text,
                                       OnTranslation a_Callback)
@@ -100,12 +100,12 @@ void LanguageTranslation::Translation(const std::string & a_Source,
 		new CacheRequest( a_Source + "_" + a_Target, StringHash::DJB(a_Text.c_str()) ) );
 }
 
-void LanguageTranslation::IdentifiableLanguages(OnLanguage a_Callback)
+void LanguageTranslator::IdentifiableLanguages(OnLanguage a_Callback)
 {
     new RequestObj<Languages>( this, "/v2/identifiable_languages", "GET", NULL_HEADERS, EMPTY_STRING, a_Callback );
 }
 
-void LanguageTranslation::Identify(const std::string & a_Text,
+void LanguageTranslator::Identify(const std::string & a_Text,
                                    OnIdentifiedLanguages a_Callback)
 {
     Headers headers;

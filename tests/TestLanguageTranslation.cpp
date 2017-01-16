@@ -19,13 +19,13 @@
 #include "utils/Log.h"
 #include "utils/ThreadPool.h"
 #include "utils/Config.h"
-#include "services/LanguageTranslation/LanguageTranslation.h"
+#include "services/LanguageTranslator/LanguageTranslator.h"
 
-class TestLanguageTranslation : UnitTest 
+class TestLanguageTranslator : UnitTest 
 {
 public:
     //! Construction
-    TestLanguageTranslation() : UnitTest("TestLanguageTranslation"),
+    TestLanguageTranslator() : UnitTest("TestLanguageTranslator"),
                       m_bTranslate(false),
                       m_bIdentifiedLanguages(false),
                       m_bIdentifyText(false),
@@ -43,7 +43,7 @@ public:
         Test(ISerializable::DeserializeFromFile("./etc/tests/unit_test_config.json", &config) != NULL);
 
         ThreadPool pool(1);
-        LanguageTranslation lt;
+        LanguageTranslator lt;
 
         if ( config.IsConfigured( lt.GetServiceId() ) )
 		{
@@ -51,9 +51,9 @@ public:
 			std::string target = "es";
 			std::string source = "en";
 			std::string text = "hello";
-			lt.Translation(source, target, text, DELEGATE(TestLanguageTranslation, OnTranslate, Translations *, this));
-			lt.IdentifiableLanguages(DELEGATE(TestLanguageTranslation, OnIdentifiedLanguages, Languages *, this));
-			lt.Identify(text, DELEGATE(TestLanguageTranslation, OnIdentify, IdentifiedLanguages *, this ));
+			lt.Translation(source, target, text, DELEGATE(TestLanguageTranslator, OnTranslate, Translations *, this));
+			lt.IdentifiableLanguages(DELEGATE(TestLanguageTranslator, OnIdentifiedLanguages, Languages *, this));
+			lt.Identify(text, DELEGATE(TestLanguageTranslator, OnIdentify, IdentifiedLanguages *, this ));
 
 			Spin(m_Counter, 3);
 
@@ -64,7 +64,7 @@ public:
 		}
 		else
 		{
-			Log::Status( "TestLanguageTranslation", "Skipping test, no credentials." );
+			Log::Status( "TestLanguageTranslator", "Skipping test, no credentials." );
 		}
     }
 
@@ -74,7 +74,7 @@ public:
         m_bTranslate = true;
         Translation translation = a_Callback->m_Translations[0];
         std::string a_Translation = translation.m_Translation;
-        Log::Debug("TestLanguageTranslation", "Found translation: %s", a_Translation.c_str());
+        Log::Debug("TestLanguageTranslator", "Found translation: %s", a_Translation.c_str());
     }
 
     void OnIdentifiedLanguages(Languages * a_Callback)
@@ -90,4 +90,4 @@ public:
     }
 };
 
-TestLanguageTranslation TEST_LANGUAGE_TRANSLATION;
+TestLanguageTranslator TEST_LANGUAGE_TRANSLATION;
