@@ -296,7 +296,6 @@ void TextToSpeech::Connection::OnListenState(IWebClient * a_pClient)
 			}
 			m_AudioFrames.clear();
 			Sound * pSound = new Sound();
-			Log::Debug("TextToSpeech", "a_Data is: %s", a_Data.c_str());
 			if (!pSound->Load(a_Data))
 			{
 				Log::Error("RequestSound", "Failed to parse sound.");
