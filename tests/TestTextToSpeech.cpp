@@ -51,7 +51,7 @@ public:
 			Spin(m_ToSpeechTested);
 			Test(m_ToSpeechTested);
 
-			tts.ToSound("Hello everyone!", DELEGATE(TestTextToSpeech, OnToStreamSpeech, Sound *, this), true);
+			tts.ToSound("I have a pet bird", DELEGATE(TestTextToSpeech, OnToStreamSpeech, Sound *, this), true);
 			Spin(m_ToStreamSpeechTested);
 			Test(m_ToStreamSpeechTested);
 

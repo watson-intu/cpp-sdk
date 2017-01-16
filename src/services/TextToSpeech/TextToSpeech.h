@@ -110,6 +110,7 @@ private:
 		bool			m_Connected;
 		ToSoundCallback m_Callback;
 		FramesList		m_AudioFrames;
+		std::vector<Words::SP>	m_Words;
 
 		void Start();
 		void SendText();

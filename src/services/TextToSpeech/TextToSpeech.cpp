@@ -261,6 +261,10 @@ void TextToSpeech::Connection::SendText()
 	Json::Value root;
 	root["text"] = m_Text;
 	root["accept"] = "audio/wav";
+	std::vector<std::string> words;
+	words.push_back("words");
+	SerializeVector("timings", words, root);
+	Log::Debug("TextToSpeech", "Sending the following payload: %s", root.toStyledString().c_str());
 	m_spSocket->SendText(Json::FastWriter().write(root));
 }
 
@@ -273,6 +277,14 @@ void TextToSpeech::Connection::OnListenMessage(IWebSocket::FrameSP a_spFrame)
 		if (reader.parse(a_spFrame->m_Data, json))
 		{
 			Log::Debug("TextToSpeech", "Received text message from TTS Service: %s", json.toStyledString().c_str());
+			if (json.isMember("words")) 
+			{
+				Json::Value value = json["words"][0];
+				std::string word = value[0].asString();
+				double startTime = value[1].asDouble();
+				double endTime = value[2].asDouble();
+				m_Words.push_back(Words::SP(new Words(word, startTime, endTime)));
+			}
 		}
 	}
 	else if (a_spFrame->m_Op == IWebSocket::BINARY_FRAME)
@@ -294,7 +306,7 @@ void TextToSpeech::Connection::OnListenState(IWebClient * a_pClient)
 			{	
 				a_Data += iFrame->get()->m_Data;
 			}
-			m_AudioFrames.clear();
+			
 			Sound * pSound = new Sound();
 			if (!pSound->Load(a_Data))
 			{
@@ -302,7 +314,9 @@ void TextToSpeech::Connection::OnListenState(IWebClient * a_pClient)
 				delete pSound;
 				pSound = NULL;
 			}
-
+			pSound->SetWords(m_Words);
+			m_AudioFrames.clear();
+			m_Words.clear();
 			if (m_Callback.IsValid())
 				m_Callback(pSound);
 
