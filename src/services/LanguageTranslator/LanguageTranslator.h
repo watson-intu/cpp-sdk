@@ -24,7 +24,7 @@
 #include "DataModels.h"
 #include "WDCLib.h"		// include last always
 
-class WDC_API LanguageTranslation : public IService
+class WDC_API LanguageTranslator : public IService
 {
 public:
 
@@ -36,7 +36,7 @@ public:
     typedef Delegate<IdentifiedLanguages *>	OnIdentifiedLanguages;
 
     //! Construction
-    LanguageTranslation();
+    LanguageTranslator();
 
     //! ISerializable
     virtual void Serialize(Json::Value & json);
@@ -65,10 +65,10 @@ private:
     //! This class is responsible for checking whether the service is available or not
     class ServiceStatusChecker {
         public:
-            ServiceStatusChecker(LanguageTranslation *a_pLTService, ServiceStatusCallback a_Callback);
+            ServiceStatusChecker(LanguageTranslator *a_pLTService, ServiceStatusCallback a_Callback);
 
         private:
-            LanguageTranslation *m_pLTService;
+            LanguageTranslator *m_pLTService;
             IService::ServiceStatusCallback m_Callback;
 
             void OnCheckService(Languages *a_pLanguages);
