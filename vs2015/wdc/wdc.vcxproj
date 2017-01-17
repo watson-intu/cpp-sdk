@@ -121,7 +121,7 @@
     <ClCompile Include="..\..\src\services\Conversation\Conversation.cpp" />
     <ClCompile Include="..\..\src\services\Dialog\Dialog.cpp" />
     <ClCompile Include="..\..\src\services\IService.cpp" />
-    <ClCompile Include="..\..\src\services\LanguageTranslation\LanguageTranslation.cpp" />
+    <ClCompile Include="..\..\src\services\LanguageTranslator\LanguageTranslator.cpp" />
     <ClCompile Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp" />
     <ClCompile Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.cpp" />
     <ClCompile Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.cpp" />
@@ -190,8 +190,8 @@
     <ClInclude Include="..\..\src\services\Dialog\DataModels.h" />
     <ClInclude Include="..\..\src\services\Dialog\Dialog.h" />
     <ClInclude Include="..\..\src\services\IService.h" />
-    <ClInclude Include="..\..\src\services\LanguageTranslation\DataModels.h" />
-    <ClInclude Include="..\..\src\services\LanguageTranslation\LanguageTranslation.h" />
+    <ClInclude Include="..\..\src\services\LanguageTranslator\DataModels.h" />
+    <ClInclude Include="..\..\src\services\LanguageTranslator\LanguageTranslator.h" />
     <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\DataModels.h" />
     <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h" />
     <ClInclude Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.h" />
