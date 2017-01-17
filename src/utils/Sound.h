@@ -70,7 +70,7 @@ public:
 		m_Words = a_Words;
 	}
 
-	const std::vector<Words::SP> GetWords()
+	const std::vector<Words::SP> & GetWords() const
 	{
 		return m_Words;
 	}

@@ -89,7 +89,7 @@ struct Words : public boost::enable_shared_from_this<Words>
 	double		m_StartTime;
 	double		m_EndTime;
 
-	const std::string & GetWord()
+	const std::string & GetWord() const
 	{
 		return m_Word;
 	}

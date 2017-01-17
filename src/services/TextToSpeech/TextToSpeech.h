@@ -69,10 +69,10 @@ public:
 	void GetVoices( GetVoicesCallback a_Callback );
 	//! Request the audio data in the specified format for the provided text.
 	void Synthesis( const std::string & a_Text, AudioFormatType a_eFormat, 
-		Delegate<const std::string &> a_Callback, const bool a_IsStreaming = false );
+		Delegate<const std::string &> a_Callback, bool a_IsStreaming = false );
 	//! Request a conversion of text to speech, note if the speech is in the local cache
 	//! then the callback will be invoked and NULL will be returned.
-	void ToSound( const std::string & a_Text, ToSoundCallback a_Callback, const bool a_IsStreaming = false );
+	void ToSound( const std::string & a_Text, ToSoundCallback a_Callback, bool a_IsStreaming = false );
 
 	//! Static
 	static std::string & GetFormatName( AudioFormatType a_eFormat );
@@ -112,7 +112,7 @@ private:
 		FramesList		m_AudioFrames;
 		std::vector<Words::SP>	m_Words;
 
-		void Start();
+		bool Start();
 		void SendText();
 		bool CreateConnector();
 		void CloseConnector();

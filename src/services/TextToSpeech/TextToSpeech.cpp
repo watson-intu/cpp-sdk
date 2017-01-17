@@ -123,7 +123,7 @@ private:
 };
 
 void TextToSpeech::Synthesis( const std::string & a_Text, AudioFormatType a_eFormat, Delegate<const std::string &> a_Callback, 
-	const bool a_isStreaming /* = false */ )
+	bool a_isStreaming /* = false */ )
 {
 	if (!a_isStreaming)
 	{
@@ -140,7 +140,7 @@ void TextToSpeech::Synthesis( const std::string & a_Text, AudioFormatType a_eFor
 	}
 }
 
-void TextToSpeech::ToSound( const std::string & a_Text, ToSoundCallback a_Callback, const bool a_isStreaming /* = false */)
+void TextToSpeech::ToSound( const std::string & a_Text, ToSoundCallback a_Callback, bool a_isStreaming /* = false */)
 {
 	if (!a_isStreaming)
 	{
@@ -158,8 +158,10 @@ void TextToSpeech::ToSound( const std::string & a_Text, ToSoundCallback a_Callba
 	else
 	{
 		Connection::SP spConnection(new Connection(this, a_Text, a_Callback, m_Voice));
-		spConnection->Start();
-		m_Connections.push_back(spConnection);
+		if (!spConnection->Start())
+			Log::Error("TextToSpeech", "Failed to start streaming Text To Speech service. Can't continue..");
+		else
+			m_Connections.push_back(spConnection);
 	}
 }
 
@@ -210,13 +212,16 @@ TextToSpeech::Connection::~Connection()
 	CloseConnector();
 }
 
-void TextToSpeech::Connection::Start()
+bool TextToSpeech::Connection::Start()
 {
 	if (!CreateConnector())
-		Log::Error("TextToSpeech", "Could not connect to TTS service over web socket...");
+	{
+		return false;
+	}
 	else
 	{
 		SendText();
+		return true;
 	}
 }
 
@@ -277,7 +282,7 @@ void TextToSpeech::Connection::OnListenMessage(IWebSocket::FrameSP a_spFrame)
 		if (reader.parse(a_spFrame->m_Data, json))
 		{
 			Log::Debug("TextToSpeech", "Received text message from TTS Service: %s", json.toStyledString().c_str());
-			if (json.isMember("words")) 
+			if (json.isMember("words"))
 			{
 				Json::Value value = json["words"][0];
 				std::string word = value[0].asString();
@@ -286,6 +291,8 @@ void TextToSpeech::Connection::OnListenMessage(IWebSocket::FrameSP a_spFrame)
 				m_Words.push_back(Words::SP(new Words(word, startTime, endTime)));
 			}
 		}
+		else
+			Log::Error("TextToSpeech", "Failed to parse response from TTS service: %s", a_spFrame->m_Data.c_str());
 	}
 	else if (a_spFrame->m_Op == IWebSocket::BINARY_FRAME)
 	{
@@ -300,21 +307,24 @@ void TextToSpeech::Connection::OnListenState(IWebClient * a_pClient)
 		if (a_pClient->GetState() == IWebClient::DISCONNECTED || a_pClient->GetState() == IWebClient::CLOSED)
 		{
 			m_Connected = false;
-			std::string a_Data;
+			std::string data;
 
 			for (FramesList::iterator iFrame = m_AudioFrames.begin(); iFrame != m_AudioFrames.end(); ++iFrame)
 			{	
-				a_Data += iFrame->get()->m_Data;
+				data += iFrame->get()->m_Data;
 			}
 			
 			Sound * pSound = new Sound();
-			if (!pSound->Load(a_Data))
+			if (!pSound->Load(data))
 			{
 				Log::Error("RequestSound", "Failed to parse sound.");
 				delete pSound;
 				pSound = NULL;
 			}
-			pSound->SetWords(m_Words);
+			else
+			{
+				pSound->SetWords(m_Words);
+			}		
 			m_AudioFrames.clear();
 			m_Words.clear();
 			if (m_Callback.IsValid())
