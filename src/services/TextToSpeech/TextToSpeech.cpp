@@ -107,6 +107,7 @@ private:
 	void OnResponse( const std::string & a_Data )
 	{
 		Sound * pSound = new Sound();
+		Log::Debug("TextToSpeech", "a_Data is: %s", a_Data.c_str());
 		if (! pSound->Load( a_Data ) )
 		{
 			Log::Error( "RequestSound", "Failed to parse sound." );
@@ -121,32 +122,47 @@ private:
 	TextToSpeech::ToSoundCallback	m_Callback;
 };
 
-void TextToSpeech::Synthesis( const std::string & a_Text, AudioFormatType a_eFormat, Delegate<const std::string &> a_Callback )
+void TextToSpeech::Synthesis( const std::string & a_Text, AudioFormatType a_eFormat, Delegate<const std::string &> a_Callback, 
+	bool a_isStreaming /* = false */ )
 {
-	Json::Value json;
-	json["text"] = a_Text;
-	Headers headers;
-	headers["Content-Type"] = "application/json";
+	if (!a_isStreaming)
+	{
+		Json::Value json;
+		json["text"] = a_Text;
+		Headers headers;
+		headers["Content-Type"] = "application/json";
 
-	std::string cacheName( m_Voice + "_" + GetFormatName( a_eFormat ) );
+		std::string cacheName(m_Voice + "_" + GetFormatName(a_eFormat));
 
-	new RequestData( this, "/v1/synthesize?accept=" + GetFormatId( a_eFormat ) + "&voice=" + m_Voice,
-		"POST", headers, json.toStyledString(), a_Callback, 
-		new IService::CacheRequest( cacheName, StringHash::DJB( a_Text.c_str() ) ) );
+		new RequestData(this, "/v1/synthesize?accept=" + GetFormatId(a_eFormat) + "&voice=" + m_Voice,
+			"POST", headers, json.toStyledString(), a_Callback,
+			new IService::CacheRequest(cacheName, StringHash::DJB(a_Text.c_str())));
+	}
 }
 
-void TextToSpeech::ToSound( const std::string & a_Text, ToSoundCallback a_Callback )
+void TextToSpeech::ToSound( const std::string & a_Text, ToSoundCallback a_Callback, bool a_isStreaming /* = false */)
 {
-	Json::Value json;
-	json["text"] = a_Text;
-	Headers headers;
-	headers["Content-Type"] = "application/json";
+	if (!a_isStreaming)
+	{
+		Json::Value json;
+		json["text"] = a_Text;
+		Headers headers;
+		headers["Content-Type"] = "application/json";
 
-	std::string cacheName( m_Voice + "_" + GetFormatName( AF_WAV ) );
+		std::string cacheName(m_Voice + "_" + GetFormatName(AF_WAV));
 
-	new RequestSound( this, "/v1/synthesize?accept=audio/wav&voice=" + m_Voice,
-		"POST", headers, json.toStyledString(), a_Callback, 
-		new IService::CacheRequest( cacheName, StringHash::DJB( a_Text.c_str() ) ) );
+		new RequestSound(this, "/v1/synthesize?accept=audio/wav&voice=" + m_Voice,
+			"POST", headers, json.toStyledString(), a_Callback,
+			new IService::CacheRequest(cacheName, StringHash::DJB(a_Text.c_str())));
+	}
+	else
+	{
+		Connection::SP spConnection(new Connection(this, a_Text, a_Callback, m_Voice));
+		if (!spConnection->Start())
+			Log::Error("TextToSpeech", "Failed to start streaming Text To Speech service. Can't continue..");
+		else
+			m_Connections.push_back(spConnection);
+	}
 }
 
 std::string & TextToSpeech::GetFormatName(AudioFormatType a_eFormat)
@@ -179,4 +195,152 @@ std::string & TextToSpeech::GetFormatId(AudioFormatType a_eFormat)
 	return map[a_eFormat];
 }
 
+// ----------------------------
+
+TextToSpeech::Connection::Connection(TextToSpeech * a_pTTS, const std::string & a_Text, ToSoundCallback a_Callback,
+	const std::string & a_Voice /*= "en-GB_KateVoice*/) :
+	m_pTTS(a_pTTS),
+	m_Text(a_Text),
+	m_Callback(a_Callback),
+	m_Voice(a_Voice),
+	m_Connected(false)
+{}
+
+TextToSpeech::Connection::~Connection()
+{
+	Log::Debug("TextToSpeech", "Deleting Connection Object");
+	CloseConnector();
+}
+
+bool TextToSpeech::Connection::Start()
+{
+	if (!CreateConnector())
+	{
+		return false;
+	}
+	else
+	{
+		SendText();
+		return true;
+	}
+}
+
+bool TextToSpeech::Connection::CreateConnector()
+{
+	if (!m_spSocket)
+	{
+		std::string url = m_pTTS->GetConfig()->m_URL + "/v1/synthesize?voice=" + m_Voice;
+		StringUtil::Replace(url, "https://", "wss://", true);
+		StringUtil::Replace(url, "http://", "ws://", true);
+
+		m_spSocket = IWebClient::Create();
+		m_spSocket->SetURL(url);
+		m_spSocket->SetHeaders(m_pTTS->m_Headers);
+		m_spSocket->SetFrameReceiver(DELEGATE(Connection, OnListenMessage, IWebSocket::FrameSP, shared_from_this()));
+		m_spSocket->SetStateReceiver(DELEGATE(Connection, OnListenState, IWebClient *, shared_from_this()));
+		m_spSocket->SetDataReceiver(DELEGATE(Connection, OnListenData, IWebClient::RequestData *, shared_from_this()));
+
+		if (!m_spSocket->Send())
+		{
+			m_Connected = false;
+			Log::Error("TextToSpeech", "Failed to connect web socket to %s", url.c_str());
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void TextToSpeech::Connection::CloseConnector()
+{
+	m_spSocket.reset();
+}
+
+void TextToSpeech::Connection::SendText()
+{
+	if (!m_spSocket)
+	{
+		throw WatsonException("SendText() called with null connector.");
+	}
+
+	Json::Value root;
+	root["text"] = m_Text;
+	root["accept"] = "audio/wav";
+	std::vector<std::string> words;
+	words.push_back("words");
+	SerializeVector("timings", words, root);
+	Log::Debug("TextToSpeech", "Sending the following payload: %s", root.toStyledString().c_str());
+	m_spSocket->SendText(Json::FastWriter().write(root));
+}
+
+void TextToSpeech::Connection::OnListenMessage(IWebSocket::FrameSP a_spFrame)
+{
+	if (a_spFrame->m_Op == IWebSocket::TEXT_FRAME)
+	{
+		Json::Value json;
+		Json::Reader reader(Json::Features::strictMode());
+		if (reader.parse(a_spFrame->m_Data, json))
+		{
+			Log::Debug("TextToSpeech", "Received text message from TTS Service: %s", json.toStyledString().c_str());
+			if (json.isMember("words"))
+			{
+				Json::Value value = json["words"][0];
+				std::string word = value[0].asString();
+				double startTime = value[1].asDouble();
+				double endTime = value[2].asDouble();
+				m_Words.push_back(Words::SP(new Words(word, startTime, endTime)));
+			}
+		}
+		else
+			Log::Error("TextToSpeech", "Failed to parse response from TTS service: %s", a_spFrame->m_Data.c_str());
+	}
+	else if (a_spFrame->m_Op == IWebSocket::BINARY_FRAME)
+	{
+		m_AudioFrames.push_back(a_spFrame);
+	}
+}
+
+void TextToSpeech::Connection::OnListenState(IWebClient * a_pClient)
+{
+	if (a_pClient == m_spSocket.get())
+	{
+		if (a_pClient->GetState() == IWebClient::DISCONNECTED || a_pClient->GetState() == IWebClient::CLOSED)
+		{
+			m_Connected = false;
+			std::string data;
+
+			for (FramesList::iterator iFrame = m_AudioFrames.begin(); iFrame != m_AudioFrames.end(); ++iFrame)
+			{	
+				data += iFrame->get()->m_Data;
+			}
+			
+			Sound * pSound = new Sound();
+			if (!pSound->Load(data))
+			{
+				Log::Error("RequestSound", "Failed to parse sound.");
+				delete pSound;
+				pSound = NULL;
+			}
+			else
+			{
+				pSound->SetWords(m_Words);
+			}		
+			m_AudioFrames.clear();
+			m_Words.clear();
+			if (m_Callback.IsValid())
+				m_Callback(pSound);
+
+			m_pTTS->m_Connections.remove(shared_from_this());
+		}
+		else if (a_pClient->GetState() == IWebClient::CONNECTED)
+		{
+			m_Connected = true;
+		}
+	}
+}
+
+void TextToSpeech::Connection::OnListenData(IWebClient::RequestData * a_pData)
+{
+
+}
 

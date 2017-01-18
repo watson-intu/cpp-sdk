@@ -69,10 +69,10 @@ public:
 	void GetVoices( GetVoicesCallback a_Callback );
 	//! Request the audio data in the specified format for the provided text.
 	void Synthesis( const std::string & a_Text, AudioFormatType a_eFormat, 
-		Delegate<const std::string &> a_Callback );
+		Delegate<const std::string &> a_Callback, bool a_IsStreaming = false );
 	//! Request a conversion of text to speech, note if the speech is in the local cache
 	//! then the callback will be invoked and NULL will be returned.
-	void ToSound( const std::string & a_Text, ToSoundCallback a_Callback );
+	void ToSound( const std::string & a_Text, ToSoundCallback a_Callback, bool a_IsStreaming = false );
 
 	//! Static
 	static std::string & GetFormatName( AudioFormatType a_eFormat );
@@ -92,8 +92,43 @@ private:
 		void OnCheckService(Voices* a_pVoices);
 	};
 
+	struct Connection : public boost::enable_shared_from_this<Connection>
+	{
+		//! Types
+		typedef boost::shared_ptr<Connection>		SP;
+		typedef boost::weak_ptr<Connection>			WP;
+		typedef std::list<IWebSocket::FrameSP>	FramesList;
+
+		Connection(TextToSpeech * a_pTTS, const std::string & a_Text, ToSoundCallback a_Callback,
+			const std::string & a_Voice = "en-GB_KateVoice");
+		~Connection();
+
+		TextToSpeech *	m_pTTS;
+		std::string		m_Voice;
+		std::string		m_Text;
+		IWebClient::SP	m_spSocket;          // use to communicate with the server
+		bool			m_Connected;
+		ToSoundCallback m_Callback;
+		FramesList		m_AudioFrames;
+		std::vector<Words::SP>	m_Words;
+
+		bool Start();
+		void SendText();
+		bool CreateConnector();
+		void CloseConnector();
+
+		void OnListenMessage(IWebSocket::FrameSP a_spFrame);
+		void OnListenState(IWebClient *);
+		void OnListenData(IWebClient::RequestData *);
+
+	};
+
+	//! Types
+	typedef std::list<Connection::SP>		Connectionlist;
+
 	//! Data
 	std::string		m_Voice;
+	Connectionlist	m_Connections;
 };
 
 #endif
