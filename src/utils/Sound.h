@@ -19,6 +19,7 @@
 #define WDC_SOUND_H
 
 #include "ISerializable.h"
+#include "services\TextToSpeech\DataModels.h"
 #include "WDCLib.h"
 
 class WDC_API Sound : public ISerializable
@@ -64,6 +65,16 @@ public:
 		return(float(m_WaveData.size()) / bytesPerSecond);
 	}
 
+	void SetWords(const std::vector<Words::SP> & a_Words)
+	{
+		m_Words = a_Words;
+	}
+
+	const std::vector<Words::SP> & GetWords() const
+	{
+		return m_Words;
+	}
+
 	// Mutators
 	void InitializeSound(int a_Rate, int a_Channels, int a_Bits, const std::string & a_WaveData);
 	void Release();
@@ -87,6 +98,8 @@ private:
 	int					m_Channels;			// number of channels
 	int					m_Bits;				// bits per sample
 	std::string			m_WaveData;
+	std::vector<Words::SP>	
+		m_Words;
 };
 
 
