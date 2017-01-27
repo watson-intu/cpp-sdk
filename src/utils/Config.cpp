@@ -114,7 +114,7 @@ bool Config::StartServices()
 		return false;
 
 	m_bServicesActive = true;
-	for (ServiceList::const_iterator iService = m_Services.begin(); iService != m_Services.end(); )
+	for (ServiceList::iterator iService = m_Services.begin(); iService != m_Services.end(); )
 	{
 		IService * pService = (*iService).get();
 		if (pService == NULL)
