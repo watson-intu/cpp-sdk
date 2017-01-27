@@ -55,8 +55,8 @@ bool JpegHelpers::ExtractImage( const std::string & a_ImageJpeg, int a_X, int a_
 	if ( a_pCenter != NULL )
 	{
 		a_pCenter->clear();
-		a_pCenter->push_back( (a_X + (a_Width * 0.5f)) / (float)img_width );
-		a_pCenter->push_back( (a_Y + (a_Height * 0.5f)) / (float)img_height );
+		a_pCenter->push_back( ((a_X + (a_Width * 0.5f)) / (float)img_width) - 0.5f );
+		a_pCenter->push_back( ((a_Y + (a_Height * 0.5f)) / (float)img_height) - 0.5f );
 	}
 
 	if ( a_X < 0 )
