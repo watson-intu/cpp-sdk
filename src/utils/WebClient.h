@@ -50,7 +50,7 @@ namespace boost {
 #include "IWebClient.h"
 #include "WebSocketFramer.h"
 #include "TimerPool.h"
-#include "WDCLib.h"		// include last always
+#include "WDCLib.h"		
 
 
 //! Connector object for abstracting a socket connection through boost::asio,
