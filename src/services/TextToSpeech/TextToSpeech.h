@@ -109,7 +109,6 @@ private:
 		typedef std::list<IWebSocket::FrameSP>	FramesList;
 
 		Connection(TextToSpeech * a_pTTS, const std::string & a_Text, StreamCallback a_Callback, WordsCallback a_WordsCallback );
-		~Connection();
 
 		TextToSpeech *	m_pTTS;
 		std::string		m_Text;
