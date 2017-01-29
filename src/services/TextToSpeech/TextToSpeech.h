@@ -32,6 +32,8 @@ public:
 	//! Types
 	typedef Delegate<Sound *>				ToSoundCallback;
 	typedef Delegate<Voices *>				GetVoicesCallback;
+	typedef Delegate<Words *>				WordsCallback;
+	typedef Delegate<std::string *>			StreamCallback;
 
 	//! Construction
 	TextToSpeech();
@@ -72,7 +74,14 @@ public:
 		Delegate<const std::string &> a_Callback, bool a_IsStreaming = false );
 	//! Request a conversion of text to speech, note if the speech is in the local cache
 	//! then the callback will be invoked and NULL will be returned.
-	void ToSound( const std::string & a_Text, ToSoundCallback a_Callback, bool a_IsStreaming = false );
+	void ToSound( const std::string & a_Text, ToSoundCallback a_Callback );
+	//! Request a conversion of text to speech with a web-socket, invoking the callbacks 
+	//! as the data is received.
+	//! a_Callback will be invoked with the received waveform data in chunks. This callback
+	//! is invoked with NULL when the stream is closed or disconnected.
+	//! a_WordsCallback if provided will be invoked with word information as received.
+	void ToSound( const std::string & a_Text, StreamCallback a_Callback, 
+		WordsCallback a_WordsCallback = WordsCallback() );
 
 	//! Static
 	static std::string & GetFormatName( AudioFormatType a_eFormat );
@@ -99,28 +108,18 @@ private:
 		typedef boost::weak_ptr<Connection>			WP;
 		typedef std::list<IWebSocket::FrameSP>	FramesList;
 
-		Connection(TextToSpeech * a_pTTS, const std::string & a_Text, ToSoundCallback a_Callback,
-			const std::string & a_Voice = "en-GB_KateVoice");
-		~Connection();
+		Connection(TextToSpeech * a_pTTS, const std::string & a_Text, StreamCallback a_Callback, WordsCallback a_WordsCallback );
 
 		TextToSpeech *	m_pTTS;
-		std::string		m_Voice;
 		std::string		m_Text;
 		IWebClient::SP	m_spSocket;          // use to communicate with the server
-		bool			m_Connected;
-		ToSoundCallback m_Callback;
-		FramesList		m_AudioFrames;
-		std::vector<Words::SP>	m_Words;
+		StreamCallback	m_Callback;
+		WordsCallback	m_WordsCallback;
 
 		bool Start();
-		void SendText();
-		bool CreateConnector();
-		void CloseConnector();
 
 		void OnListenMessage(IWebSocket::FrameSP a_spFrame);
 		void OnListenState(IWebClient *);
-		void OnListenData(IWebClient::RequestData *);
-
 	};
 
 	//! Types
