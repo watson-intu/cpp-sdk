@@ -25,10 +25,10 @@
 
 RTTI_IMPL(Sound, ISerializable);
 
-Sound::Sound() : m_Rate(-1), m_Channels(-1), m_Bits(-1)
+Sound::Sound() : m_Rate(-1), m_Channels(-1), m_Bits(-1), m_bHeaderStreamed( false )
 {}
 
-Sound::Sound(const std::string & a_WaveData) : m_Rate(-1), m_Channels(-1), m_Bits(-1)
+Sound::Sound(const std::string & a_WaveData) : m_Rate(-1), m_Channels(-1), m_Bits(-1), m_bHeaderStreamed( false )
 {
 	if (! LoadWave( a_WaveData, m_Rate, m_Channels, m_Bits, m_WaveData ) )
 		throw WatsonException( "LoadWave() failed." );
@@ -73,6 +73,8 @@ void Sound::Release()
 	m_Rate = -1;
 	m_Channels = -1;
 	m_Bits = -1;
+	m_StreamData.clear();
+	m_bHeaderStreamed = false;
 }
 
 bool Sound::Load( const std::string & a_WaveData )
@@ -112,6 +114,32 @@ bool Sound::SaveToFile(const std::string & a_FileName) const
 		return false;
 	}
 
+	return true;
+}
+
+bool Sound::LoadFromStream(const std::string & a_StreamData)
+{
+	if ( m_bHeaderStreamed )
+	{
+		// we have already read the header, just append any additional data as PCM data
+		m_WaveData += a_StreamData;
+		return true;
+	}
+
+	m_StreamData += a_StreamData;
+	if ( LoadWave( m_StreamData, m_Rate, m_Channels, m_Bits, m_WaveData ) )
+	{
+		m_bHeaderStreamed = true;
+		m_StreamData.clear();
+	}
+
+	return true;
+}
+
+bool Sound::ResetLoadFromStream()
+{
+	m_StreamData.clear();
+	m_bHeaderStreamed = false;
 	return true;
 }
 
@@ -203,6 +231,8 @@ bool Sound::LoadWave( const std::string & a_FileData, int & a_Rate, int & a_Chan
 	const BYTE * pFile = (const BYTE *)&a_FileData[0];
 
 	IFF_FORM_CHUNK	*pForm = (IFF_FORM_CHUNK *)pFile;
+	if ( (((BYTE *)pForm) + sizeof(IFF_FORM_CHUNK)) > (BYTE *)&a_FileData[ a_FileData.size() - 1 ] )
+		return false;
 	if (pForm->form_id != CHUNKID("RIFF") || pForm->id != CHUNKID("WAVE"))
 	{
 		Log::Error( "Sound", "RIFF/WAVE header not found." );
@@ -214,6 +244,8 @@ bool Sound::LoadWave( const std::string & a_FileData, int & a_Rate, int & a_Chan
 
 	while (pChunk < pEnd)
 	{
+		if ( (((BYTE *)pChunk) + sizeof(IFF_CHUNK)) > (BYTE *)pEnd )
+			return false;		
 		int chunkLength = pChunk->length;
 		if ( chunkLength < 0 )		// handle -1 chunk lengths passed down by TTS service..
 			chunkLength = (BYTE *)pEnd - (BYTE *)(pChunk + 1);
@@ -223,6 +255,8 @@ bool Sound::LoadWave( const std::string & a_FileData, int & a_Rate, int & a_Chan
 		case IDTAG('f', 'm', 't', ' '):
 		{
 			WAV_PCM *pPCM = (WAV_PCM *)(pChunk + 1);
+			if ( (((BYTE *)pPCM) + sizeof(WAV_PCM)) > (BYTE *)pEnd )
+				return false;
 
 			a_Rate = pPCM->sample_rate;
 			a_Channels = pPCM->channels;
