@@ -127,7 +127,7 @@ void Conversation::MessageReq::OnResponse(ConversationResponse * a_pResponse)
 			if (pItem != NULL)
 			{
 				if (!Json::Reader(Json::Features::strictMode()).parse(pItem->m_Data, items))
-					Log::Warning("Dialog", "Failed to parse dialog cache item %8.8x.", m_InputHash);
+					Log::Warning("Dialog", "Failed to parse dialog cache item %8.8x.", m_InputHash.c_str() );
 
 				// check for an existing match, if found then don't push it..
 				for (size_t i = 0; i < items.size(); ++i)
