@@ -15,10 +15,8 @@
 *
 */
 
-#include <fstream>
-
 #include "Conversation.h"
-#include "utils/Form.h"
+#include "utils/JsonHelpers.h"
 
 REG_SERIALIZABLE( Conversation );
 RTTI_IMPL( ConversationResponse, ISerializable );
@@ -58,20 +56,121 @@ bool Conversation::Start()
 
 //! Send Question / Statement / Command
 void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value & a_Context,
-                            const std::string & a_Text, const std::string & a_IntentOverrideTag, OnMessage a_Callback )
+                            const std::string & a_Text, const std::string & a_IntentOverrideTag, OnMessage a_Callback,
+							bool a_bUseCache /*= true*/ )
 {
-    Headers headers;
-    headers["Content-Type"] = "application/json";
-    std::string params = "/v1/workspaces/" + a_WorkspaceId + "/message?version=" + m_APIVersion;
+	new MessageReq( this, a_WorkspaceId, a_Context, a_Text, a_IntentOverrideTag, a_Callback, a_bUseCache );
+}
 
-    Json::Value req;
-    req["text"] = a_Text;
-    req["intentoverride"] = a_IntentOverrideTag;
+Conversation::MessageReq::MessageReq(Conversation * a_pConversation, 
+		const std::string & a_WorkspaceId,
+		const Json::Value & a_Context,
+		const std::string & a_Text,
+		const std::string & a_IntentOverrideTag,
+		OnMessage a_Callback,
+		bool a_bUseCache ) : 
+			m_pConversation( a_pConversation ), 
+			m_WorkspaceId( a_WorkspaceId ),
+			m_Callback( a_Callback ), 
+			m_bUseCache( a_bUseCache )
+{
+	Json::Value req;
+	req["text"] = a_Text;
+	req["intentoverride"] = a_IntentOverrideTag;
 	Json::Value input;
 	input["input"] = req;
-    if( !a_Context.isNull() )
-        input["context"] = a_Context;
+	if( !a_Context.isNull() )
+		input["context"] = a_Context;
 
-    new RequestObj<ConversationResponse>( this, params, "POST", headers, input.toStyledString(),  a_Callback );
+	m_InputHash = JsonHelpers::Hash( input );
+
+	std::string response;
+	if (a_bUseCache && m_pConversation->GetCachedResponse(a_WorkspaceId, m_InputHash, response))
+	{
+		Json::Value items;
+		if (Json::Reader(Json::Features::strictMode()).parse(response, items) && items.size() > 0)
+		{
+			ConversationResponse * pResponse = ISerializable::DeserializeObject<ConversationResponse>( items[rand() % items.size()] );
+			if ( pResponse != NULL )
+			{
+				// pick a random result and provide that via the callback..
+				m_Callback(pResponse);
+				// reset now, so the OnResponse() callback doesn't provide a 2nd result..
+				m_Callback.Reset();		
+			}
+		}
+	}
+
+	Headers headers;
+	headers["Content-Type"] = "application/json";
+
+	std::string params = "/v1/workspaces/" + a_WorkspaceId + "/message?version=" + m_pConversation->m_APIVersion;
+	new RequestObj<ConversationResponse>( m_pConversation, params, "POST", headers, input.toStyledString(),
+		DELEGATE( MessageReq, OnResponse, ConversationResponse *, this) );
+}
+
+void Conversation::MessageReq::OnResponse(ConversationResponse * a_pResponse)
+{
+	if ( a_pResponse != NULL && m_bUseCache )
+	{
+		DataCache * pCache = m_pConversation->GetDataCache(m_WorkspaceId);
+		if (pCache != NULL)
+		{
+			bool bAppend = true;
+
+			Json::Value response = ISerializable::SerializeObject( a_pResponse );
+			std::string responseHash = JsonHelpers::Hash( response );
+
+			Time now;
+			Json::Value items;
+			DataCache::CacheItem * pItem = pCache->Find(m_InputHash);
+			if (pItem != NULL)
+			{
+				if (!Json::Reader(Json::Features::strictMode()).parse(pItem->m_Data, items))
+					Log::Warning("Dialog", "Failed to parse dialog cache item %8.8x.", m_InputHash);
+
+				// check for an existing match, if found then don't push it..
+				for (size_t i = 0; i < items.size(); ++i)
+				{
+					if ( JsonHelpers::Hash( items[i] ) == responseHash )
+					{
+						items[i]["timestamp"] = now.GetEpochTime();
+						bAppend = false;
+						break;
+					}
+				}
+
+				// remove expired items..
+				for (size_t i = 0; i < items.size();)
+				{
+					double age = (now.GetEpochTime() - items[i]["timestamp"].asDouble()) / 3600.0;
+					if (age > m_pConversation->m_MaxCacheAge)
+					{
+						// swap with the end, this avoids moving all the elements down..
+						if (i < (items.size() - 1))
+							items[i] = items[items.size() - 1];
+						items.resize(items.size() - 1);
+					}
+					else
+						i += 1;		// next item..
+				}
+			}
+
+			if (bAppend)
+			{
+				items.append(response);
+				items[items.size() - 1]["timestamp"] = now.GetEpochTime();
+			}
+
+			pCache->Save(m_InputHash, items.toStyledString());
+		}
+	}
+
+	if ( m_Callback.IsValid() )
+		m_Callback(a_pResponse);
+	else
+		delete a_pResponse;		// if no callback, then we need to delete the response
+
+	delete this;
 }
 
