@@ -192,16 +192,14 @@ void JsonHelpers::Merge(Json::Value & a_MergeInto, const Json::Value & a_Merge, 
 	}
 	else if (a_Merge.isArray())
 	{
-		for (size_t i = 0; i < a_Merge.size(); ++i)
+		if ( a_MergeInto.isArray() )
 		{
-			if (!a_bReplace && a_MergeInto.size() >= i)
-				continue;
-			Merge(a_MergeInto[i], a_Merge[i], a_bReplace);
+			// append our array onto the existing array
+			for(size_t i=0;i<a_Merge.size();++i)
+				Merge( a_MergeInto[ a_MergeInto.size() ], a_Merge[i], a_bReplace );
 		}
-
-		// if a_bReplace is true, then remove array elements if needed..
-		if (a_bReplace && a_MergeInto.size() > a_Merge.size())
-			a_MergeInto.resize(a_Merge.size());
+		else
+			a_MergeInto = a_Merge;
 	}
 	else if(! a_Merge.isNull() )
 		a_MergeInto = a_Merge;
