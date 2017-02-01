@@ -43,9 +43,9 @@ struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared
 	std::string							m_Password;
 	CustomMap							m_CustomMap;
 
-	bool IsConfigured() const
+	bool IsConfigured( bool a_bNoCredentialsReq = false ) const
 	{
-		return m_ServiceId.size() > 0 && m_URL.size() > 0 && (m_User.size() > 0 || m_Password.size() > 0);
+		return m_ServiceId.size() > 0 && m_URL.size() > 0 && (m_User.size() > 0 || m_Password.size() > 0 || a_bNoCredentialsReq);
 	}
 
 	//! ISerializable interface

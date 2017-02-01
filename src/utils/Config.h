@@ -81,11 +81,11 @@ public:
 		return NULL;
 	}
 
-	bool IsConfigured( const std::string & a_ServiceId ) const
+	bool IsConfigured( const std::string & a_ServiceId, bool a_bNoCredentialsReq = false ) const
 	{
 		ServiceConfig * pConfig = FindServiceConfig( a_ServiceId );
 		if ( pConfig != NULL )
-			return pConfig->IsConfigured();
+			return pConfig->IsConfigured( a_bNoCredentialsReq );
 		return false;
 	}
 
