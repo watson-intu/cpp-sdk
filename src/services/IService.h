@@ -238,7 +238,7 @@ public:
 		void OnResponse(IService::Request * a_pRequest)
 		{
 			TiXmlDocument xml;
-			if (! a_pRequest->IsError() )
+			if (! a_pRequest->IsError() && m_Response.size() > 0 )
 			{
 				xml.Parse( m_Response.c_str() );
 
