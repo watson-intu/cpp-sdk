@@ -16,7 +16,7 @@
 */
 
 //! Define to 1 to protect thread calls against a crash..
-#define ENABLE_THREAD_TRY_CATCH					0
+#define ENABLE_THREAD_TRY_CATCH					1
 //! Define to 1 to enable main delegate timing for finding and fixing callbacks that block the main thread
 #define MEASURE_MAIN_DELEGATE_TIMES				1
 //! maximum amount of time to spend in a single delegate before we throw an error
@@ -147,11 +147,6 @@ void ThreadPool::ThreadMain( void * arg )
 			catch( WatsonException ex )
 			{
 				Log::Error( "ThreadPool", "Caught Exception: %s", ex.Message() );
-			}
-			catch( ... )
-			{
-				Log::Error( "ThreadPool", "Unhanded Exception on thread %u", 
-					(unsigned int)tthread::this_thread::get_id().GetId() );
 			}
 #endif
 			pCallback->Destroy();
