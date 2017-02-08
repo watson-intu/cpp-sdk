@@ -55,6 +55,12 @@
      "m_Password": "",
      "m_ServiceId": "NaturalLanguageClassifierV1",
      "m_User": ""
-   }
+   },
+    {
+      "m_URL": "https://gateway.watsonplatform.net/personality-insights/api",
+      "m_Password": "MHWGZqTi8dHS",
+      "m_ServiceId": "PersonalityInsightsV1",
+      "m_User": "6d2142ad-fb98-4fa0-be6c-174cc8aced50"
+    }
   ]
 }

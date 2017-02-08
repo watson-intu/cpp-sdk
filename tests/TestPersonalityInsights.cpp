@@ -44,36 +44,20 @@ public:
 		{
 			Test( profile.Start() );
 
-            profile.GetProfile( "Well, thank you very much, Jim, for this opportunity. I want to thank Governor Romney and the University\n"
-                                        "of Denver for your hospitality.\n"
-                                        "\n"
-                                        "There are a lot of points I want to make tonight, but the most important one is that 20 years ago I\n"
-                                        "became the luckiest man on Earth because Michelle Obama agreed to marry me.\n"
-                                        "\n"
-                                        "And so I just want to wish, Sweetie, you happy anniversary and let you know that a year from\n"
-                                        "now we will not be celebrating it in front of 40 million people.\n"
-                                        "\n"
-                                        "You know, four years ago we went through the worst financial crisis since the Great Depression.\n"
+            profile.GetProfile( "Well thank you very much, Jim, for this opportunity. I want to thank Governor Romney and the University\n"
+                                        "of Denver for your hospitality.There are a lot of points I want to make tonight, but the most important one is that 20 years ago I\n"
+                                        "became the luckiest man on Earth because Michelle Obama agreed to marry me.And so I just want to wish, Sweetie, you happy anniversary and let you know that a year from\n"
+                                        "now we will not be celebrating it in front of 40 million people.You know, four years ago we went through the worst financial crisis since the Great Depression.\n"
                                         "Millions of jobs were lost, the auto industry was on the brink of collapse. The financial system\n"
-                                        "had frozen up.\n"
-                                        "\n"
-                                        "And because of the resilience and the determination of the American people, we've begun to\n"
+                                        "had frozen up.And because of the resilience and the determination of the American people, we've begun to\n"
                                         "fight our way back. Over the last 30 months, we've seen 5 million jobs in the private sector\n"
-                                        "created. The auto industry has come roaring back. And housing has begun to rise.\n"
-                                        "\n"
-                                        "But we all know that we've still got a lot of work to do. And so the question here tonight is not\n"
-                                        "where we've been, but where we're going.\n"
-                                        "\n"
-                                        "Governor Romney has a perspective that says if we cut taxes, skewed towards the wealthy, and\n"
-                                        "roll back regulations, that we'll be better off. I've got a different view.\n"
-                                        "\n"
-                                        "I think we've got to invest in education and training. I think it's important for us to develop new\n"
+                                        "created. The auto industry has come roaring back. And housing has begun to rise.But we all know that we've still got a lot of work to do. And so the question here tonight is not\n"
+                                        "where we've been, but where we're going.Governor Romney has a perspective that says if we cut taxes, skewed towards the wealthy, and\n"
+                                        "roll back regulations, that we'll be better off. I've got a different view.I think we've got to invest in education and training. I think it's important for us to develop new\n"
                                         "sources of energy here in America, that we change our tax code to make sure that we're helping\n"
                                         "small businesses and companies that are investing here in the United States, that we take some of\n"
                                         "the money that we're saving as we wind down two wars to rebuild America and that we reduce\n"
-                                        "our deficit in a balanced way that allows us to make these critical investments.\n"
-                                        "\n"
-                                        "Now, it ultimately is going to be up to the voters — to you — which path we should take. Are we\n"
+                                        "our deficit in a balanced way that allows us to make these critical investments.Now, it ultimately is going to be up to the voters — to you — which path we should take. Are we\n"
                                         "going to double on top-down economic policies that helped to get us into this mess or do we\n"
                                         "embrace a new economic patriotism that says America does best when the middle class does\n"
                                         "best? And I'm looking forward to having that debate.",
@@ -93,8 +77,11 @@ public:
     void OnGetProfile(Profile * a_Callback)
     {
         Log::Debug("TestPersonalityInsights", "Word count is: %f", a_Callback->m_WordCount);
-        Personality personality = a_Callback->m_Personality[0];
-        Log::Debug("TestPersonalityInsights", "Found top trait as: %s", personality.m_TraitId.c_str());
+        Trait trait = a_Callback->m_Personality[0];
+        Log::Debug("TestPersonalityInsights", "Found top trait id is: %s", trait.m_TraitId.c_str());
+        Log::Debug("TestPersonalityInsights", "Found top trait name is: %s", trait.m_Name.c_str());
+        Log::Debug("TestPersonalityInsights", "Category is: %s", trait.m_Category.c_str());
+        Log::Debug("TestPersonalityInsights", "Percentile is: %f", trait.m_Percentile);
         m_bProfileTested = true;
     }
 };
