@@ -140,6 +140,26 @@ public:
 
 		return pService;
 	}
+	bool AddService( IService * a_pService )
+	{
+		return AddServiceInternal( a_pService );
+	}
+	bool RemoveService( IService * a_pService )
+	{
+		for(ServiceList::iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService )
+		{
+			if ( (*iService).get() == a_pService )
+			{
+				if (! a_pService->Stop() )
+					return false;
+
+				m_Services.erase( iService );
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	//! Mutators
 	bool AddServiceConfig( const ServiceConfig & a_Credential, bool a_bUpdateOnly = false );
