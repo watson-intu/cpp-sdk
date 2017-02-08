@@ -43,6 +43,10 @@ public:
     //! IService interface
     virtual bool Start();
 
+    /**
+     * This function infers individuals' intrinsic personality characteristics based on the email, tweets or blogs.
+     * It outputs the person's personality in a list of top traits like anger, hatred, etc.
+     */
     void GetProfile( const std::string & a_Text, OnMessage a_Callback );
 
 private:
