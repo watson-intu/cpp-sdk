@@ -23,13 +23,14 @@ RTTI_IMPL( Conversation, IService );
 REG_SERIALIZABLE( ConversationResponse );
 RTTI_IMPL( ConversationResponse, ISerializable );
 
-Conversation::Conversation() : IService("ConversationV1"), m_APIVersion( "2016-07-11" )
+Conversation::Conversation() : IService("ConversationV1"), m_APIVersion( "2016-07-11" ), m_NoCacheTag( "[nocache]" )
 {}
 
 void Conversation::Serialize(Json::Value & json)
 {
     IService::Serialize(json);
 	json["m_APIVersion"] = m_APIVersion;
+	json["m_NoCacheTag"] = m_NoCacheTag;
 }
 
 void Conversation::Deserialize(const Json::Value & json)
@@ -37,6 +38,8 @@ void Conversation::Deserialize(const Json::Value & json)
     IService::Deserialize(json);
 	if ( json.isMember("m_APIVersion") )
 		m_APIVersion = json["m_APIVersion"].asString();
+	if ( json.isMember("m_NoCacheTag") )
+		m_NoCacheTag = json["m_NoCacheTag"].asString();
 }
 
 //! IService interface
@@ -56,9 +59,12 @@ bool Conversation::Start()
 
 
 //! Send Question / Statement / Command
-void Conversation::Message( const std::string & a_WorkspaceId, const Json::Value & a_Context,
-                            const std::string & a_Text, const std::string & a_IntentOverrideTag, OnMessage a_Callback,
-							bool a_bUseCache /*= true*/ )
+void Conversation::Message( const std::string & a_WorkspaceId, 
+	const Json::Value & a_Context,
+	const std::string & a_Text, 
+	const std::string & a_IntentOverrideTag, 
+	OnMessage a_Callback,
+	bool a_bUseCache /*= true*/ )
 {
 	new MessageReq( this, a_WorkspaceId, a_Context, a_Text, a_IntentOverrideTag, a_Callback, a_bUseCache );
 }
@@ -80,10 +86,11 @@ Conversation::MessageReq::MessageReq(Conversation * a_pConversation,
 	req["intentoverride"] = a_IntentOverrideTag;
 	Json::Value input;
 	input["input"] = req;
+
+	m_InputHash = JsonHelpers::Hash( input );			// hash before we add the context
+
 	if( !a_Context.isNull() )
 		input["context"] = a_Context;
-
-	m_InputHash = JsonHelpers::Hash( input );
 
 	std::string response;
 	if (a_bUseCache && m_pConversation->GetCachedResponse(a_WorkspaceId, m_InputHash, response))
@@ -110,19 +117,28 @@ Conversation::MessageReq::MessageReq(Conversation * a_pConversation,
 		DELEGATE( MessageReq, OnResponse, ConversationResponse *, this) );
 }
 
+static bool ContainsText( const std::vector<std::string> & a_Responses, const std::string & a_Text )
+{
+	for(size_t i=0;i<a_Responses.size();++i)
+		if ( a_Responses[i].find( a_Text ) != std::string::npos )
+			return true;
+
+	return false;
+}
+
 void Conversation::MessageReq::OnResponse(ConversationResponse * a_pResponse)
 {
-	if ( a_pResponse != NULL && m_bUseCache )
+	if ( a_pResponse != NULL && m_bUseCache && !ContainsText( a_pResponse->m_Output, m_pConversation->m_NoCacheTag ) )
 	{
 		DataCache * pCache = m_pConversation->GetDataCache(m_WorkspaceId);
 		if (pCache != NULL)
 		{
+			Time now;
 			bool bAppend = true;
 
 			Json::Value response = ISerializable::SerializeObject( a_pResponse );
 			std::string responseHash = JsonHelpers::Hash( response );
 
-			Time now;
 			Json::Value items;
 			DataCache::CacheItem * pItem = pCache->Find(m_InputHash);
 			if (pItem != NULL)
