@@ -28,6 +28,7 @@
 #include <time.h>
 
 #include "Log.h"
+#include "Time.h"
 #include "StringUtil.h"
 #include "ThreadPool.h"
 #include "WatsonException.h"
@@ -206,12 +207,9 @@ void Log::DoLog(LogLevel a_Level, const char * a_pSub, const char * a_pFormat, v
 	rec.m_Level = a_Level;
 	rec.m_SubSystem = a_pSub;
 
-	time_t now;
-	time(&now);
-
-	strftime(buffer, sizeof(buffer), "%x %X", localtime(&now));
-	rec.m_Time = buffer;
-	rec.m_TimeEpoch = now;
+	Time now;
+	rec.m_Time = now.GetFormattedTime( "%x %X" ) + StringUtil::Format(".%0.3d", (int)now.GetMilliseconds()); 
+	rec.m_TimeEpoch = now.GetTime();
 
 	vsnprintf(buffer, sizeof(buffer) - 1, a_pFormat, args);
 	rec.m_Message = buffer;
