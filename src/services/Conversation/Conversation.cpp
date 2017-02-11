@@ -87,6 +87,7 @@ Conversation::MessageReq::MessageReq(Conversation * a_pConversation,
 	Json::Value input;
 	input["input"] = req;
 
+	//Log::Status( "Conversation", "Context: %s", a_Context.toStyledString().c_str() );
 	// we want to hash in parts of the context to generate a hashID
 	if (! a_Context.isNull() && a_Context["system"].isMember( "dialog_stack" ) )
 		input["context"]["system"]["dialog_stack"] = a_Context["system"]["dialog_stack"];
@@ -147,7 +148,7 @@ void Conversation::MessageReq::OnResponse(ConversationResponse * a_pResponse)
 			response.removeMember( "context" );
 			response["context"]["system"]["dialog_stack"] = dialog_stack;
 
-			Log::Status( "Conversation", "Caching Response: %s", response.toStyledString().c_str() );
+			//Log::Status( "Conversation", "Caching Response: %s", response.toStyledString().c_str() );
 			std::string responseHash( JsonHelpers::Hash( response ) );
 
 			Json::Value items;
