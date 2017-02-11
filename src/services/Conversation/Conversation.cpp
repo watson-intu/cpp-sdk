@@ -87,8 +87,12 @@ Conversation::MessageReq::MessageReq(Conversation * a_pConversation,
 	Json::Value input;
 	input["input"] = req;
 
-	m_InputHash = JsonHelpers::Hash( input );			// hash before we add the context
-
+	// we want to hash in parts of the context to generate a hashID
+	if (! a_Context.isNull() && a_Context["system"].isMember( "dialog_stack" ) )
+		input["context"]["system"]["dialog_stack"] = a_Context["system"]["dialog_stack"];
+	// hash before we add the full context
+	m_InputHash = JsonHelpers::Hash( input );			
+	// now add in the full context
 	if( !a_Context.isNull() )
 		input["context"] = a_Context;
 
@@ -98,7 +102,7 @@ Conversation::MessageReq::MessageReq(Conversation * a_pConversation,
 		Json::Value items;
 		if (Json::Reader(Json::Features::strictMode()).parse(response, items) && items.size() > 0)
 		{
-			ConversationResponse * pResponse = ISerializable::DeserializeObject<ConversationResponse>( items[rand() % items.size()] );
+			ConversationResponse * pResponse = ISerializable::DeserializeObject<ConversationResponse>( items[rand() % items.size()]["response"] );
 			if ( pResponse != NULL )
 			{
 				// pick a random result and provide that via the callback..
@@ -120,7 +124,7 @@ Conversation::MessageReq::MessageReq(Conversation * a_pConversation,
 static bool ContainsText( const std::vector<std::string> & a_Responses, const std::string & a_Text )
 {
 	for(size_t i=0;i<a_Responses.size();++i)
-		if ( a_Responses[i].find( a_Text ) != std::string::npos )
+		if ( StringUtil::Find( a_Responses[i], a_Text, 0, true ) != std::string::npos )
 			return true;
 
 	return false;
@@ -136,8 +140,15 @@ void Conversation::MessageReq::OnResponse(ConversationResponse * a_pResponse)
 			Time now;
 			bool bAppend = true;
 
-			Json::Value response = ISerializable::SerializeObject( a_pResponse );
-			std::string responseHash = JsonHelpers::Hash( response );
+			Json::Value response( ISerializable::SerializeObject( a_pResponse ) );
+			// save the dialog_stack from the context
+			Json::Value dialog_stack( response["context"]["system"]["dialog_stack"] );
+			// remove the context then re-add the dialog stack
+			response.removeMember( "context" );
+			response["context"]["system"]["dialog_stack"] = dialog_stack;
+
+			Log::Status( "Conversation", "Caching Response: %s", response.toStyledString().c_str() );
+			std::string responseHash( JsonHelpers::Hash( response ) );
 
 			Json::Value items;
 			DataCache::CacheItem * pItem = pCache->Find(m_InputHash);
@@ -149,7 +160,7 @@ void Conversation::MessageReq::OnResponse(ConversationResponse * a_pResponse)
 				// check for an existing match, if found then don't push it..
 				for (size_t i = 0; i < items.size(); ++i)
 				{
-					if ( JsonHelpers::Hash( items[i] ) == responseHash )
+					if ( JsonHelpers::Hash( items[i]["response"] ) == responseHash )
 					{
 						items[i]["timestamp"] = now.GetEpochTime();
 						bAppend = false;
@@ -175,8 +186,10 @@ void Conversation::MessageReq::OnResponse(ConversationResponse * a_pResponse)
 
 			if (bAppend)
 			{
-				items.append(response);
-				items[items.size() - 1]["timestamp"] = now.GetEpochTime();
+				Json::Value newItem;
+				newItem["response"] = response;
+				newItem["timestamp"] = now.GetEpochTime();
+				items.append( newItem );
 			}
 
 			pCache->Save(m_InputHash, items.toStyledString());
