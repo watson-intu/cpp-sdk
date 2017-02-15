@@ -18,6 +18,9 @@
 #ifndef ISERVICE_H
 #define ISERVICE_H
 
+#define WARNING_DELEGATE_TIME (0.1)
+#define ERROR_DELEGATE_TIME	(0.5)
+
 #include "boost/enable_shared_from_this.hpp"
 #include "boost/shared_ptr.hpp"
 #include "boost/atomic.hpp"
@@ -199,7 +202,22 @@ public:
 
 			if (m_Callback.IsValid())
 			{
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double startTime = Time().GetEpochTime();
+#endif
 				m_Callback(root);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double elapsed = Time().GetEpochTime() - startTime;
+				if(elapsed > WARNING_DELEGATE_TIME)
+				{
+					if ( elapsed > ERROR_DELEGATE_TIME )
+						Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+					else
+						Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+				}
+#endif
 				m_Callback.Reset();
 			}
 		}
@@ -248,7 +266,22 @@ public:
 
 			if (m_Callback.IsValid())
 			{
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double startTime = Time().GetEpochTime();
+#endif
 				m_Callback(xml);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double elapsed = Time().GetEpochTime() - startTime;
+				if(elapsed > WARNING_DELEGATE_TIME)
+				{
+					if ( elapsed > ERROR_DELEGATE_TIME )
+						Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+					else
+						Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+				}
+#endif
 				m_Callback.Reset();
 			}
 		}
@@ -286,21 +319,28 @@ public:
 	private:
 		void OnResponse(IService::Request * a_pRequest)
 		{
-			if (! a_pRequest->IsError() )
+			if ( a_pRequest->IsError() )
+				m_Response.clear();
+
+			if (m_Callback.IsValid())
 			{
-				if (m_Callback.IsValid())
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double startTime = Time().GetEpochTime();
+#endif
+				m_Callback(m_Response);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double elapsed = Time().GetEpochTime() - startTime;
+				if(elapsed > WARNING_DELEGATE_TIME)
 				{
-					m_Callback(m_Response);
-					m_Callback.Reset();
+					if ( elapsed > ERROR_DELEGATE_TIME )
+						Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+					else
+						Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
 				}
-			}
-			else
-			{
-				if (m_Callback.IsValid())
-				{
-					m_Callback("");
-					m_Callback.Reset();
-				}
+#endif
+				m_Callback.Reset();
 			}
 		}
 		DataResponseCallback	m_Callback;
@@ -353,7 +393,22 @@ public:
 
 			if (m_Callback.IsValid())
 			{
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double startTime = Time().GetEpochTime();
+#endif
 				m_Callback(pObject);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double elapsed = Time().GetEpochTime() - startTime;
+				if(elapsed > WARNING_DELEGATE_TIME)
+				{
+					if ( elapsed > ERROR_DELEGATE_TIME )
+						Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+					else
+						Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+				}
+#endif
 				m_Callback.Reset();
 			}
 		}

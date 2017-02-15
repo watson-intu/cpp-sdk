@@ -16,6 +16,8 @@
 */
 
 #define ENABLE_OPENSSL_INCLUDES
+#define WARNING_DELEGATE_TIME (0.1)
+#define ERROR_DELEGATE_TIME	(0.5)
 
 //! Define to 1 to enable lots of debugging output
 #define ENABLE_DEBUGGING			0
@@ -838,8 +840,23 @@ void WebClient::OnResponse(RequestData * a_pData)
 	if ( iConnection != a_pData->m_Headers.end() )
 		bClose = _stricmp( iConnection->second.c_str(), "close") == 0;
 
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+	double startTime = Time().GetEpochTime();
+#endif
 	if ( m_DataReceiver.IsValid() )
 		m_DataReceiver( a_pData );
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+	double elapsed = Time().GetEpochTime() - startTime;
+	if(elapsed > WARNING_DELEGATE_TIME)
+	{
+		if ( elapsed > ERROR_DELEGATE_TIME )
+			Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+				m_DataReceiver.GetFile(), m_DataReceiver.GetLine(), elapsed );
+		else
+			Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+				m_DataReceiver.GetFile(), m_DataReceiver.GetLine(), elapsed );
+	}
+#endif
 
 	// close the socket afterwards, only if 
 	if ( bClose && a_pData->m_bDone )

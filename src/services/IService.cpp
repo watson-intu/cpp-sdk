@@ -190,7 +190,22 @@ void IService::Request::OnResponseData( IWebClient::RequestData * a_pResponse )
 
 		if ( m_Callback.IsValid() )
 		{
-			m_Callback( this );
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+			double startTime = Time().GetEpochTime();
+#endif
+			m_Callback(this);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+			double elapsed = Time().GetEpochTime() - startTime;
+			if(elapsed > WARNING_DELEGATE_TIME)
+			{
+				if ( elapsed > ERROR_DELEGATE_TIME )
+					Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+						m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+				else
+					Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+						m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+			}
+#endif
 			m_Callback.Reset();
 			if ( m_pService != NULL )
 				m_pService->m_RequestsPending -= 1;
@@ -204,7 +219,22 @@ void IService::Request::OnLocalResponse()
 	m_Complete = true;
 	if (m_Callback.IsValid())
 	{
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+		double startTime = Time().GetEpochTime();
+#endif
 		m_Callback(this);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+		double elapsed = Time().GetEpochTime() - startTime;
+		if(elapsed > WARNING_DELEGATE_TIME)
+		{
+			if ( elapsed > ERROR_DELEGATE_TIME )
+				Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+					m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+			else
+				Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+					m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+		}
+#endif
 		m_Callback.Reset();
 
 		if ( m_pService != NULL )
