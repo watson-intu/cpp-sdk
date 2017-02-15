@@ -16,8 +16,11 @@
 */
 
 #define ENABLE_OPENSSL_INCLUDES
+
+#if ENABLE_DELEGATE_DEBUG
 #define WARNING_DELEGATE_TIME (0.1)
 #define ERROR_DELEGATE_TIME	(0.5)
+#endif
 
 //! Define to 1 to enable lots of debugging output
 #define ENABLE_DEBUGGING			0

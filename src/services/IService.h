@@ -18,8 +18,10 @@
 #ifndef ISERVICE_H
 #define ISERVICE_H
 
+#if ENABLE_DELEGATE_DEBUG
 #define WARNING_DELEGATE_TIME (0.1)
 #define ERROR_DELEGATE_TIME	(0.5)
+#endif
 
 #include "boost/enable_shared_from_this.hpp"
 #include "boost/shared_ptr.hpp"

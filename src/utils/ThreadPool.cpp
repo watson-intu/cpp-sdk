@@ -17,11 +17,12 @@
 
 //! Define to 1 to protect thread calls against a crash..
 #define ENABLE_THREAD_TRY_CATCH					1
-//! Define to 1 to enable main delegate timing for finding and fixing callbacks that block the main thread
-#define MEASURE_MAIN_DELEGATE_TIMES				1
+
 //! maximum amount of time to spend in a single delegate before we throw an error
-const double WARNING_DELEGATE_TIME	= 0.1;
-const double ERROR_DELEGATE_TIME	= 0.5;
+#if ENABLE_DELEGATE_DEBUG
+#define WARNING_DELEGATE_TIME		(0.1)
+#define ERROR_DELEGATE_TIME			(0.5)
+#endif
 
 #include "ThreadPool.h"
 #include "WatsonException.h"
@@ -66,12 +67,12 @@ void ThreadPool::ProcessMainThread()
 
 	for( DelegateList::iterator iDelegate = invoke.begin(); iDelegate != invoke.end(); ++iDelegate )
 	{
-#if MEASURE_MAIN_DELEGATE_TIMES && ENABLE_DELEGATE_DEBUG
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
         double startTime = Time().GetEpochTime();
 #endif
 		(*iDelegate)->Invoke();
 
-#if MEASURE_MAIN_DELEGATE_TIMES && ENABLE_DELEGATE_DEBUG
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
         double elapsed = Time().GetEpochTime() - startTime;
 		if(elapsed > WARNING_DELEGATE_TIME)
 		{
