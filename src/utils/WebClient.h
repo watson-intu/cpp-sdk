@@ -49,6 +49,7 @@ namespace boost {
 #include "URL.h"
 #include "IWebClient.h"
 #include "WebSocketFramer.h"
+#include "WebClientService.h"
 #include "TimerPool.h"
 #include "WDCLib.h"		
 
@@ -245,35 +246,6 @@ inline void WebClient::SetBody( const std::string & a_Body )
 {
 	m_Body = a_Body;
 }
-
-//----------------------------------------------------
-
-class WDC_API WebClientService
-{
-public:
-	static WebClientService * Instance();
-
-	WebClientService();
-	~WebClientService();
-
-	boost::asio::io_service & GetService()
-	{
-		return m_Service;
-	}
-
-private:
-	boost::asio::io_service	m_Service;
-	boost::asio::io_service::work
-							m_Work;
-	boost::thread			m_ServiceThread;
-	TimerPool::ITimer::SP	m_spStatsTimer;
-
-	static WebClientService *
-							sm_pInstance;
-
-	void OnDumpStats();
-};
-
 
 #endif
 
