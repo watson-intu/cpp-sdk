@@ -106,6 +106,7 @@ public:
 
 		virtual ~Request()
 		{
+			IWebClient::Free( m_spClient );
 			delete m_pCachedReq;
 		}
 

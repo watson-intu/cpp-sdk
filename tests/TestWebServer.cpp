@@ -16,7 +16,7 @@
 */
 
 #include "UnitTest.h"
-#include "utils/WebClient.h"
+#include "utils/IWebClient.h"
 #include "utils/IWebServer.h"
 #include "utils/Log.h"
 #include "utils/ThreadPool.h"
@@ -44,9 +44,8 @@ public:
 		Test(pServer->Start());
 
 		// test web requests
-		IWebClient::SP spClient = IWebClient::Create();
-		spClient->Request("http://127.0.0.1:8080/test_http", WebClient::Headers(), "GET", "",
-			DELEGATE(TestWebServer, OnResponse, WebClient::RequestData *, this),
+		IWebClient::SP spClient = IWebClient::Request("http://127.0.0.1:8080/test_http", IWebClient::Headers(), "GET", "",
+			DELEGATE(TestWebServer, OnResponse, IWebClient::RequestData *, this),
 			DELEGATE(TestWebServer, OnState, IWebClient *, this));
 
 		start = Time();
@@ -60,7 +59,7 @@ public:
 		m_bClientClosed = false;
 		spClient->SetURL("ws://127.0.0.1:8080/test_ws");
 		spClient->SetStateReceiver(DELEGATE(TestWebServer, OnState, IWebClient *, this));
-		spClient->SetDataReceiver(DELEGATE(TestWebServer, OnWebSocketResponse, WebClient::RequestData *, this));
+		spClient->SetDataReceiver(DELEGATE(TestWebServer, OnWebSocketResponse, IWebClient::RequestData *, this));
 		spClient->SetFrameReceiver(DELEGATE(TestWebServer, OnClientFrame, IWebSocket::FrameSP, this));
 		Test(spClient->Send());
 
@@ -118,7 +117,7 @@ public:
 		//a_spRequest->m_spConnection->SendAsync("HTTP/1.1 200 Hello World\r\nConnection: close\r\n\r\n");
 	}
 
-	void OnWebSocketResponse(WebClient::RequestData * a_pResonse)
+	void OnWebSocketResponse(IWebClient::RequestData * a_pResonse)
 	{
 		Log::Debug("TestWebServer", "WebSocket response, status code %u : %s", 
 			a_pResonse->m_StatusCode, a_pResonse->m_StatusMessage.c_str());
@@ -156,11 +155,11 @@ public:
 	void OnState(IWebClient * a_pConnector)
 	{
 		Log::Debug("TestWebServer", "OnState(): %d", a_pConnector->GetState());
-		if (a_pConnector->GetState() == WebClient::CLOSED || a_pConnector->GetState() == IWebClient::DISCONNECTED)
+		if (a_pConnector->GetState() == IWebClient::CLOSED || a_pConnector->GetState() == IWebClient::DISCONNECTED)
 			m_bClientClosed = true;
 	}
 
-	void OnResponse(WebClient::RequestData * a_pResponse)
+	void OnResponse(IWebClient::RequestData * a_pResponse)
 	{
 		Log::Debug("TestWebServer", "OnResponse(): Version: %s, Status: %u, Content: %s",
 			a_pResponse->m_Version.c_str(), a_pResponse->m_StatusCode, a_pResponse->m_Content.c_str());

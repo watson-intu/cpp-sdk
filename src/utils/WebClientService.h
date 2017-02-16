@@ -44,11 +44,6 @@ namespace boost {
 #endif
 #include "boost/atomic.hpp"
 
-#include "Delegate.h"
-#include "StringUtil.h"
-#include "URL.h"
-#include "IWebClient.h"
-#include "WebSocketFramer.h"
 #include "TimerPool.h"
 #include "WDCLib.h"		
 
@@ -66,20 +61,8 @@ public:
 		return m_Service;
 	}
 
-    //! Base class for all connections
-    class IConnection : public boost::enable_shared_from_this<IConnection>
-    {
-        public:
-        
-    };
-
-    template<typename socket_type>
-    class Connection
-    {
-
-    };
-
 private:
+	//! Data
 	boost::asio::io_service	m_Service;
 	boost::asio::io_service::work
 							m_Work;

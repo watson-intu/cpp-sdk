@@ -709,7 +709,6 @@ public:
 		delete m_pSSL;
 	}
 
-
 protected:
 	//! WebServerT interface
 	virtual void Accept()

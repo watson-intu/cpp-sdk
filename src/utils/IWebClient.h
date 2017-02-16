@@ -28,6 +28,7 @@
 #include "URL.h"
 #include "IWebSocket.h"
 #include "WDCLib.h"		
+#include "Factory.h"
 
 //! Abstract interface for a web client class
 class WDC_API IWebClient : public IWebSocket
@@ -43,8 +44,9 @@ public:
 	//! Types
 	typedef std::map< std::string, std::string, StringUtil::ci_less >	Headers;
 	typedef std::multimap< std::string, std::string >					Cookies;
-	typedef boost::shared_ptr<IWebClient>	SP;
-	typedef boost::weak_ptr<IWebClient>		WP;
+
+	typedef boost::shared_ptr<IWebClient>								SP;
+	typedef boost::weak_ptr<IWebClient>									WP;
 
 	struct RequestData
 	{
@@ -71,9 +73,15 @@ public:
 		DISCONNECTED	// connection has been lost
 	};
 
+	typedef std::list< SP >								ConnectionList;
+	typedef std::map< std::string, ConnectionList >		ConnectionMap;
+
 	//! Static function for creating a concrete WebClient class.
-	static SP Create();
-	
+	static ConnectionMap & GetConnectionMap();
+	static Factory<IWebClient> & GetFactory();
+	static SP Create( const URL & a_URL );
+	static void Free( const SP & a_spClient );
+
 	//! Destruction
 	virtual ~IWebClient()
 	{}
@@ -104,17 +112,41 @@ public:
 	virtual bool Shutdown() = 0;
 
 	//! High-level interface for making a single HTTP/HTTPS request.
-	virtual bool Request(const URL & a_URL,
+	static SP Request(const URL & a_URL,
 		const Headers & a_Headers,
 		const std::string & a_RequestType,
 		const std::string & a_Body,
 		Delegate<RequestData *> a_DataReceiver,
-		Delegate<IWebClient *> a_StateReceiver) = 0;
+		Delegate<IWebClient *> a_StateReceiver)
+	{
+		SP spClient = IWebClient::Create( a_URL );
+		spClient->SetHeaders( a_Headers );
+		spClient->SetRequestType( a_RequestType );
+		spClient->SetBody( a_Body );
+		spClient->SetDataReceiver( a_DataReceiver );
+		spClient->SetStateReceiver( a_StateReceiver );
+		spClient->Send();
+
+		return spClient;
+	}
 
 	SP shared_from_this()
 	{
 		return boost::static_pointer_cast<IWebClient>(IWebSocket::shared_from_this());
 	}
+
+	static void SetClientId( const std::string & a_ClientId )
+	{
+		sm_ClientId = a_ClientId;
+	}
+
+	static const std::string & GetClientId()
+	{
+		return sm_ClientId;
+	}
+protected:
+	//! Data
+	static std::string		sm_ClientId;
 };
 
 #endif

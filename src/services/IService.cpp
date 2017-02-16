@@ -20,6 +20,7 @@
 #include "utils/Config.h"
 #include "utils/StringUtil.h"
 #include "utils/Time.h"
+#include "utils/WebClientService.h"
 
 #undef MAX
 #define MAX(a,b)		((a) > (b) ? (a) : (b))
@@ -35,7 +36,7 @@ IService::Request::Request(const std::string & a_URL,
 	ResponseCallback a_Callback,
 	float a_fTimeout /*= 30.0f*/ ) :
 	m_pService(NULL),
-	m_spClient( IWebClient::Create() ),
+	m_spClient( IWebClient::Create( a_URL ) ),
 	m_Body(a_Body),
 	m_Complete(false),
 	m_Error(false),
@@ -101,8 +102,7 @@ IService::Request::Request( IService * a_pService,
 		return;
 	}
 
-	m_spClient = IWebClient::Create();
-	m_spClient->SetURL( a_pService->GetConfig()->m_URL + a_EndPoint );
+	m_spClient = IWebClient::Create( a_pService->GetConfig()->m_URL + a_EndPoint );
 	m_spClient->SetRequestType( a_RequestType );
 	m_spClient->SetStateReceiver( DELEGATE( Request, OnState, IWebClient *, this ) );
 	m_spClient->SetDataReceiver( DELEGATE( Request, OnResponseData, IWebClient::RequestData *, this ) );
