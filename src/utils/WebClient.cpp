@@ -463,7 +463,6 @@ protected:
 
 		sm_RequestsSent++;
 
-		m_Request.clear();
 		std::string & req = m_Request;
 		if ( !m_WebSocket )
 		{
@@ -512,7 +511,7 @@ protected:
 			Log::Error( "WebClientT", "Request is empty, closing connection." );
 			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnClose, shared_from_this() ));
 		}
-		else if (m_pSocket != NULL)
+		else 
 		{
 			boost::asio::async_write(*m_pSocket,
 				boost::asio::buffer(req.c_str(), req.length()),
@@ -529,14 +528,11 @@ protected:
 		if (!error) 
 		{
 			// read the first line containing the status..
-			if ( m_pSocket != NULL )
-			{
-				boost::asio::async_read_until(*m_pSocket,
-					m_Response, "\r\n\r\n",
-					boost::bind(&WebClientT::HTTP_ReadHeaders, shared_from_this(), a_pReq,
-						boost::asio::placeholders::error,
-						boost::asio::placeholders::bytes_transferred));
-			}
+			boost::asio::async_read_until(*m_pSocket,
+				m_Response, "\r\n\r\n",
+				boost::bind(&WebClientT::HTTP_ReadHeaders, shared_from_this(), a_pReq,
+					boost::asio::placeholders::error,
+					boost::asio::placeholders::bytes_transferred));
 		}
 		else 
 		{
@@ -608,6 +604,17 @@ protected:
 					delete a_pReq;
 				}
 			}
+			else if ( a_pReq->m_StatusCode == 100 )
+			{
+				Log::Status( "WebClient", "Status code 100: %s", a_pReq->m_StatusMessage.c_str() );
+
+				// got a 100 Continue, go ahead and read the next header..
+				boost::asio::async_read_until(*m_pSocket,
+					m_Response, "\r\n\r\n",
+					boost::bind(&WebClientT::HTTP_ReadHeaders, shared_from_this(), a_pReq,
+						boost::asio::placeholders::error,
+						boost::asio::placeholders::bytes_transferred));			
+			}
 			else
 			{
 				Headers::iterator iTransferEnc = a_pReq->m_Headers.find("Transfer-Encoding");
@@ -640,6 +647,70 @@ protected:
 		}
 	}
 
+	void HTTP_ReadChunkEnding( RequestData * a_pReq )
+	{
+		boost::asio::async_read_until(*m_pSocket,
+			m_Response, "\r\n",
+			boost::bind(&WebClientT::HTTP_OnChunkEnding, shared_from_this(), a_pReq,
+				boost::asio::placeholders::error,
+				boost::asio::placeholders::bytes_transferred));
+	}
+
+	void HTTP_OnChunkEnding( RequestData * a_pReq, const boost::system::error_code & error, size_t bytes_transferred )
+	{
+		if (! error )
+		{
+			std::istream input(&m_Response);
+			std::string chunk_ending;
+			std::getline(input,chunk_ending);
+			assert( chunk_ending == "\r" );
+
+			HTTP_ReadChunkLength( a_pReq );
+		}
+		else
+		{
+			Log::Error( "WebClientT", "HTTP_OnChunkEnding: %s", error.message().c_str() );
+			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()));
+			delete a_pReq;
+		}
+	}
+
+	void HTTP_ReadChunkFooter( RequestData * a_pReq )
+	{
+		boost::asio::async_read_until(*m_pSocket,
+			m_Response, "\r\n\r\n",
+			boost::bind(&WebClientT::HTTP_OnChunkFooter, shared_from_this(), a_pReq,
+				boost::asio::placeholders::error,
+				boost::asio::placeholders::bytes_transferred));
+	}
+
+	void HTTP_OnChunkFooter( RequestData * a_pReq, const boost::system::error_code & error, size_t bytes_transferred )
+	{
+		std::istream input( &m_Response );
+
+		std::string header;
+		while( std::getline( input, header) )
+		{
+			size_t seperator = header.find_first_of( ':' );
+			if (seperator == std::string::npos)
+				continue;
+			std::string key = StringUtil::Trim(header.substr(0, seperator), " \r\n");
+			std::string value = StringUtil::Trim(header.substr(seperator + 1), " \r\n");
+
+			// handle cookies differently, since we will received multiple Set-Cookie headers for each cookie..
+			if ( StringUtil::Compare( "Set-Cookie", key, true ) == 0 )
+				a_pReq->m_SetCookies.insert( Cookies::value_type( key, value ) );
+			else
+				a_pReq->m_Headers[key] = value;
+		}
+		assert( m_Response.in_avail() == 0 );
+
+		// end of chunked content
+		a_pReq->m_bDone = true;
+		ThreadPool::Instance()->InvokeOnMain<RequestData *>(
+			DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
+	}
+
 	void HTTP_ReadChunkLength( RequestData * a_pReq )
 	{
 		// read the chunk length... 
@@ -659,27 +730,22 @@ protected:
 			std::getline(input,chunk_length);
 
 			//Log::Status( "WebClient", "Read Chunk Len: %s", chunk_length.c_str() );
-			if ( chunk_length == "\r" )
-			{
-				// empty line, read the next line..
-				HTTP_ReadChunkLength( a_pReq );
-			}
-			else if ( chunk_length == "0\r" )
+			if ( chunk_length == "0\r" )
 			{
 				// end of chunked content
-				a_pReq->m_bDone = true;
-				ThreadPool::Instance()->InvokeOnMain<RequestData *>(
-					DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
+				HTTP_ReadChunkFooter( a_pReq );
 			}
 			else
 			{
 				m_ContentLen = strtoul( chunk_length.c_str(), NULL, 16 );
+				assert( m_ContentLen > 0 );
+
 				HTTP_ReadContent( a_pReq, error, 0 );
 			}
 		}
 		else
 		{
-			Log::Error( "WebClientT", "Error on HTTP_OnChunkLength(): %s", error.message().c_str() );
+			Log::Error( "WebClientT", "HTTP_OnChunkLength: %s", error.message().c_str() );
 			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()));
 			delete a_pReq;
 		}
@@ -732,8 +798,8 @@ protected:
 					DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
 				a_pReq = pNewReq;
 
-				// read the next chunk length..
-				HTTP_ReadChunkLength( a_pReq );
+				// read the chunk ending...
+				HTTP_ReadChunkEnding( a_pReq );
 			}
 			else
 			{
@@ -800,14 +866,11 @@ protected:
 				if (!error)
 				{
 					// continue reading from the web socket..
-					if (m_pSocket != NULL)
-					{
-						boost::asio::async_read(*m_pSocket, m_Response,
-							boost::asio::transfer_at_least(1),
-							boost::bind(&WebClientT::WS_Read, shared_from_this(), a_pReq,
-								boost::asio::placeholders::error,
-								boost::asio::placeholders::bytes_transferred));
-					}
+					boost::asio::async_read(*m_pSocket, m_Response,
+						boost::asio::transfer_at_least(1),
+						boost::bind(&WebClientT::WS_Read, shared_from_this(), a_pReq,
+							boost::asio::placeholders::error,
+							boost::asio::placeholders::bytes_transferred));
 				}
 				else
 				{
@@ -875,19 +938,16 @@ protected:
 			Log::Debug("WebClientT", "Sending %u bytes (%p).", pFrame->size(), pFrame);
 	#endif
 
-			if (m_pSocket != NULL)
-			{
-				boost::asio::async_write(*m_pSocket,
-					boost::asio::buffer(pFrame->c_str(), pFrame->size()),
-					boost::bind(&WebClientT::WS_Sent, shared_from_this(),
-						boost::asio::placeholders::error,
-						boost::asio::placeholders::bytes_transferred,
-						pFrame));
+			boost::asio::async_write(*m_pSocket,
+				boost::asio::buffer(pFrame->c_str(), pFrame->size()),
+				boost::bind(&WebClientT::WS_Sent, shared_from_this(),
+					boost::asio::placeholders::error,
+					boost::asio::placeholders::bytes_transferred,
+					pFrame));
 
-				// we need to know how many outstanding sends we have..
-				m_SendCount += 1;
-				sm_BytesSent += pFrame->size();
-			}
+			// we need to know how many outstanding sends we have..
+			m_SendCount += 1;
+			sm_BytesSent += pFrame->size();
 		}
 	}
 
