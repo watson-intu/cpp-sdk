@@ -131,12 +131,7 @@ IService::Request::Request( IService * a_pService,
 
 void IService::Request::OnState( IWebClient * a_pClient )
 {
-	if ( a_pClient->GetState() == IWebClient::CLOSED )
-	{
-		//Log::Debug( "Request", "Request closed, delete this." );
-		m_bDelete = true;
-	}
-	else if ( a_pClient->GetState() == IWebClient::CONNECTING )
+	if ( a_pClient->GetState() == IWebClient::CONNECTING )
 	{
 		//Log::Debug( "Request", "Request connecting." );
 		m_StartTime = Time().GetEpochTime();
@@ -210,7 +205,8 @@ void IService::Request::OnResponseData( IWebClient::RequestData * a_pResponse )
 			if ( m_pService != NULL )
 				m_pService->m_RequestsPending -= 1;
 		}
-		// note the OnState() change will take care of deleting this object.
+
+		delete this;
 	}
 }
 

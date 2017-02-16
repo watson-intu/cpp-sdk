@@ -92,6 +92,11 @@ public:
 		}
 
 		//! IWebSocket interface
+		virtual void ClearDelegates()
+		{
+			m_OnFrame.Reset();
+			m_OnError.Reset();
+		}
 		virtual void SetFrameReceiver(Delegate<FrameSP> a_Receiver)
 		{
 			m_OnFrame = a_Receiver;

@@ -17,11 +17,6 @@
 
 #define ENABLE_OPENSSL_INCLUDES
 
-#if ENABLE_DELEGATE_DEBUG
-#define WARNING_DELEGATE_TIME (0.1)
-#define ERROR_DELEGATE_TIME	(0.5)
-#endif
-
 //! Define to 1 to enable lots of debugging output
 #define ENABLE_DEBUGGING			0
 #define ENABLE_KEEP_ALIVE			0
@@ -44,6 +39,11 @@
 #include "WebClientService.h"
 
 #include <string>
+
+#if ENABLE_DELEGATE_DEBUG
+#define WARNING_DELEGATE_TIME (0.1)
+#define ERROR_DELEGATE_TIME	(0.5)
+#endif
 
 RTTI_IMPL( IWebClient, IWebSocket );
 
@@ -79,20 +79,22 @@ IWebClient::SP IWebClient::Create( const URL & a_URL )
 {
 	std::string hashId = StringUtil::Format( "%s://%s:%d", 
 		a_URL.GetProtocol().c_str(), a_URL.GetHost().c_str(), a_URL.GetPort() );
+
 	ConnectionMap::iterator iConnections = GetConnectionMap().find( hashId );
 	while( iConnections != GetConnectionMap().end() )
 	{
-		IWebClient::SP spConnection = iConnections->second.front();
-		iConnections->second.pop_front();
+		ConnectionList & connections = iConnections->second;
+		IWebClient::SP spConnection = connections.front();
+		connections.pop_front();
+
+		if ( connections.begin() == connections.end() )
+		{
+			GetConnectionMap().erase( iConnections );
+			iConnections = GetConnectionMap().end();
+		}
 
 		if ( spConnection->GetState() == IWebClient::CONNECTED )
 			return spConnection;
-
-		if ( iConnections->second.begin() == iConnections->second.end() )
-		{
-			GetConnectionMap().erase( iConnections );
-			break;		// no more connections available, break out..
-		}
 	}
 
 	bool bSecure = (_stricmp( a_URL.GetProtocol().c_str(), "https" ) == 0 || 
@@ -108,10 +110,15 @@ void IWebClient::Free( const SP & a_spClient )
 {
 	if ( a_spClient )
 	{
-		const URL & url = a_spClient->GetURL();
-		std::string hashId = StringUtil::Format( "%s://%s:%d", 
-			url.GetProtocol().c_str(), url.GetHost().c_str(), url.GetPort() );
-		GetConnectionMap()[ hashId ].push_back( a_spClient );
+		a_spClient->ClearDelegates();
+
+		if ( a_spClient->GetState() == CONNECTED )
+		{
+			const URL & url = a_spClient->GetURL();
+			std::string hashId = StringUtil::Format( "%s://%s:%d", 
+				url.GetProtocol().c_str(), url.GetHost().c_str(), url.GetPort() );
+			GetConnectionMap()[ hashId ].push_back( a_spClient );
+		}
 	}
 }
 
@@ -278,6 +285,14 @@ public:
 	}
 
 	//! IWebSocket interface
+	virtual void ClearDelegates()
+	{
+		m_StateReceiver.Reset();
+		m_DataReceiver.Reset();
+		m_OnFrame.Reset();
+		m_OnError.Reset();
+	}
+
 	virtual void SendBinary(const std::string & a_BinaryData)
 	{
 		if (m_eState != CONNECTED && m_eState != CONNECTING)
@@ -448,6 +463,7 @@ protected:
 
 		sm_RequestsSent++;
 
+		m_Request.clear();
 		std::string & req = m_Request;
 		if ( !m_WebSocket )
 		{
@@ -456,7 +472,7 @@ protected:
 			if ( m_Headers.find( "Host" ) == m_Headers.end() )
 				m_Headers["Host"] = m_URL.GetHost();
 			m_Headers["User-Agent"] = "SelfWebClient";
-			m_Headers["Connection"] = "Keep-Alive";
+			m_Headers["Connection"] = "Keep-Alive";			// change to close to avoid reusing connections
 			if ( sm_ClientId.size() > 0 )
 				m_Headers["ClientId"] = sm_ClientId;
 
@@ -618,7 +634,7 @@ protected:
 		}
 		else 
 		{
-			Log::Error( "WebClientT", "Error on ReadResponseHeaders(): %s", error.message().c_str() );
+			Log::Error( "WebClientT", "HTTP_ReadHeaders: %s", error.message().c_str() );
 			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()));
 			delete a_pReq;
 		}
@@ -640,9 +656,15 @@ protected:
 		{
 			std::istream input(&m_Response);
 			std::string chunk_length;
-			input >> chunk_length;
+			std::getline(input,chunk_length);
 
-			if ( chunk_length == "0" )
+			//Log::Status( "WebClient", "Read Chunk Len: %s", chunk_length.c_str() );
+			if ( chunk_length == "\r" )
+			{
+				// empty line, read the next line..
+				HTTP_ReadChunkLength( a_pReq );
+			}
+			else if ( chunk_length == "0\r" )
 			{
 				// end of chunked content
 				a_pReq->m_bDone = true;
@@ -667,44 +689,42 @@ protected:
 	{
 		sm_BytesRecv += bytes_transferred;
 		
-		size_t max_read = (size_t)m_Response.in_avail();
-		size_t bytes_remaining = m_ContentLen - a_pReq->m_Content.size();
-		if ( max_read > bytes_remaining )
-			max_read = bytes_remaining;
-
-		std::istream input(&m_Response);
-		if ( max_read > 0 )
+		if (! error )
 		{
-			std::string content;
-			content.resize( max_read );
-			input.read( &content[0], max_read );
+			size_t max_read = (size_t)m_Response.in_avail();
+			if ( max_read > m_ContentLen )
+				max_read = m_ContentLen;
 
-			a_pReq->m_Content += content;
-			m_ContentLen -= content.size();
-		}
-
-		if (!error && bytes_remaining > 0) 
-		{
-			// if we are not chunked and we have no content len, then go ahead and start piping 
-			// data to the user 4k at a time.
-			if (!m_bChunked && m_ContentLen == 0xffffffff 
-				&& a_pReq->m_Content.size() >= (4 * 1024))
+			std::istream input(&m_Response);
+			if ( max_read > 0 )
 			{
-				RequestData * pNewReq = new RequestData( *a_pReq );
-				ThreadPool::Instance()->InvokeOnMain<RequestData *>(
-					DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
-				a_pReq = pNewReq;
+				std::string content;
+				content.resize( max_read );
+				input.read( &content[0], max_read );
+
+				a_pReq->m_Content += content;
+				m_ContentLen -= max_read;
 			}
 
-			boost::asio::async_read(*m_pSocket, m_Response,
-				boost::asio::transfer_at_least(1),
-				boost::bind(&WebClientT::HTTP_ReadContent, shared_from_this(), a_pReq,
-					boost::asio::placeholders::error,
-					boost::asio::placeholders::bytes_transferred));
-		}
-		else 
-		{
-			if ( m_bChunked )
+			if (m_ContentLen > 0) 
+			{
+				//// if we are not chunked and we have no content len, then go ahead and start piping 
+				//// data to the user 4k at a time.
+				//if (!m_bChunked && a_pReq->m_Content.size() >= (4 * 1024))
+				//{
+				//	RequestData * pNewReq = new RequestData( *a_pReq );
+				//	ThreadPool::Instance()->InvokeOnMain<RequestData *>(
+				//		DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
+				//	a_pReq = pNewReq;
+				//}
+
+				boost::asio::async_read(*m_pSocket, m_Response,
+					boost::asio::transfer_exactly(m_ContentLen),
+					boost::bind(&WebClientT::HTTP_ReadContent, shared_from_this(), a_pReq,
+						boost::asio::placeholders::error,
+						boost::asio::placeholders::bytes_transferred));
+			}
+			else if ( m_bChunked )
 			{
 				// send the chunk, then go try to read the next chunk length..
 				RequestData * pNewReq = new RequestData( *a_pReq );
@@ -712,19 +732,8 @@ protected:
 					DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
 				a_pReq = pNewReq;
 
-				if ( m_ContentLen > 0 )
-				{
-					boost::asio::async_read(*m_pSocket, m_Response,
-						boost::asio::transfer_at_least(1),
-						boost::bind(&WebClientT::HTTP_ReadContent, shared_from_this(), a_pReq,
-							boost::asio::placeholders::error,
-							boost::asio::placeholders::bytes_transferred));
-				}
-				else
-				{
-					// we may need to read an additional \r\n between chunks.
-					HTTP_ReadChunkLength( a_pReq );
-				}
+				// read the next chunk length..
+				HTTP_ReadChunkLength( a_pReq );
 			}
 			else
 			{
@@ -732,6 +741,18 @@ protected:
 				ThreadPool::Instance()->InvokeOnMain<RequestData *>(
 					DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
 			}
+		}
+		else if ( error == boost::asio::error::eof )
+		{
+			a_pReq->m_bDone = true;
+			ThreadPool::Instance()->InvokeOnMain<RequestData *>(
+				DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
+		}
+		else
+		{
+			Log::Error( "WebClientT", "Error on HTTP_ReadContent(): %s", error.message().c_str() );
+			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()));
+			delete a_pReq;
 		}
 	}
 
@@ -927,7 +948,7 @@ protected:
 
 		// close the socket afterwards, only if 
 		if ( bClose && a_pData->m_bDone )
-			OnClose();
+			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClientT, OnClose, shared_from_this() ) );
 
 		delete a_pData;
 	}
