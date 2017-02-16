@@ -77,6 +77,7 @@ public:
 		CONNECTED,		// connection established, ready to send/receive data
 		CLOSING,		// set when Close() is invoked and before it's really closed
 		CLOSED,			// connection has been closed gracefully
+		RETRY,			// something failed, we are retrying to sends
 		DISCONNECTED	// connection has been lost
 	};
 
