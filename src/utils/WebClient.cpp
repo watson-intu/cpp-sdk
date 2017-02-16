@@ -142,7 +142,7 @@ public:
 		m_pSocket(NULL),
 		m_WebSocket(false),
 		m_RequestType("GET"),
-		m_ContentLen( 0xffffffff ), 
+		m_ContentLen( 0 ), 
 		m_bChunked( false ),
 		m_SendError( false ),
 		m_SendCount( 0 )
@@ -463,6 +463,7 @@ protected:
 
 		sm_RequestsSent++;
 
+		m_LastRequest = m_Request;
 		std::string & req = m_Request;
 		if ( !m_WebSocket )
 		{
@@ -479,8 +480,8 @@ protected:
 			for( Headers::iterator iHeader = m_Headers.begin(); iHeader != m_Headers.end(); ++iHeader )
 				req += iHeader->first + ": " + iHeader->second + "\r\n";
 			if ( m_RequestType == "POST" || m_RequestType == "PUT" )
-				req += StringUtil::Format( "Content-Length: %u", m_Body.size() );
-			req += "\r\n\r\n";
+				req += StringUtil::Format( "Content-Length: %u\r\n", m_Body.size() );
+			req += "\r\n";		// blank line
 			if ( m_RequestType == "POST" || m_RequestType == "PUT" )
 				req += m_Body;
 		}
@@ -647,34 +648,6 @@ protected:
 		}
 	}
 
-	void HTTP_ReadChunkEnding( RequestData * a_pReq )
-	{
-		boost::asio::async_read_until(*m_pSocket,
-			m_Response, "\r\n",
-			boost::bind(&WebClientT::HTTP_OnChunkEnding, shared_from_this(), a_pReq,
-				boost::asio::placeholders::error,
-				boost::asio::placeholders::bytes_transferred));
-	}
-
-	void HTTP_OnChunkEnding( RequestData * a_pReq, const boost::system::error_code & error, size_t bytes_transferred )
-	{
-		if (! error )
-		{
-			std::istream input(&m_Response);
-			std::string chunk_ending;
-			std::getline(input,chunk_ending);
-			assert( chunk_ending == "\r" );
-
-			HTTP_ReadChunkLength( a_pReq );
-		}
-		else
-		{
-			Log::Error( "WebClientT", "HTTP_OnChunkEnding: %s", error.message().c_str() );
-			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()));
-			delete a_pReq;
-		}
-	}
-
 	void HTTP_ReadChunkFooter( RequestData * a_pReq )
 	{
 		boost::asio::async_read_until(*m_pSocket,
@@ -730,7 +703,11 @@ protected:
 			std::getline(input,chunk_length);
 
 			//Log::Status( "WebClient", "Read Chunk Len: %s", chunk_length.c_str() );
-			if ( chunk_length == "0\r" )
+			if ( chunk_length == "\r" )
+			{
+				HTTP_ReadChunkLength( a_pReq );
+			}
+			else if ( chunk_length == "0\r" )
 			{
 				// end of chunked content
 				HTTP_ReadChunkFooter( a_pReq );
@@ -799,7 +776,7 @@ protected:
 				a_pReq = pNewReq;
 
 				// read the chunk ending...
-				HTTP_ReadChunkEnding( a_pReq );
+				HTTP_ReadChunkLength( a_pReq );
 			}
 			else
 			{
@@ -1089,6 +1066,7 @@ protected:
 	socket_type *	m_pSocket;
 
 	std::string		m_Request;				// the sent request 
+	std::string		m_LastRequest;			// previous request, for debugging
 	boost::asio::streambuf
 					m_Response;				// response buffer
 	std::string		m_Incoming;				// received web socket data
