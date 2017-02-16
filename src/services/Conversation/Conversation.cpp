@@ -23,7 +23,9 @@ RTTI_IMPL( Conversation, IService );
 REG_SERIALIZABLE( ConversationResponse );
 RTTI_IMPL( ConversationResponse, ISerializable );
 
-Conversation::Conversation() : IService("ConversationV1"), m_APIVersion( "2016-07-11" ), m_NoCacheTag( "[nocache]" )
+Conversation::Conversation() : IService("ConversationV1"), 
+	m_APIVersion( "2016-07-11" ),
+	m_NoCacheTag( "[nocache]" )
 {}
 
 void Conversation::Serialize(Json::Value & json)

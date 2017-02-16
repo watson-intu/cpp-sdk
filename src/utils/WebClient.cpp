@@ -456,7 +456,7 @@ protected:
 			if ( m_Headers.find( "Host" ) == m_Headers.end() )
 				m_Headers["Host"] = m_URL.GetHost();
 			m_Headers["User-Agent"] = "SelfWebClient";
-			m_Headers["Connection"] = "close";
+			m_Headers["Connection"] = "Keep-Alive";
 			if ( sm_ClientId.size() > 0 )
 				m_Headers["ClientId"] = sm_ClientId;
 
