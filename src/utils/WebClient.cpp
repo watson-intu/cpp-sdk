@@ -77,7 +77,7 @@ Factory<IWebClient> & IWebClient::GetFactory()
 
 IWebClient::SP IWebClient::Create( const URL & a_URL )
 {
-	std::string hashId = StringUtil::Format( "%s%s:%d", 
+	std::string hashId = StringUtil::Format( "%s://%s:%d", 
 		a_URL.GetProtocol().c_str(), a_URL.GetHost().c_str(), a_URL.GetPort() );
 	ConnectionMap::iterator iConnections = GetConnectionMap().find( hashId );
 	while( iConnections != GetConnectionMap().end() )
@@ -109,7 +109,7 @@ void IWebClient::Free( const SP & a_spClient )
 	if ( a_spClient )
 	{
 		const URL & url = a_spClient->GetURL();
-		std::string hashId = StringUtil::Format( "%s%s:%d", 
+		std::string hashId = StringUtil::Format( "%s://%s:%d", 
 			url.GetProtocol().c_str(), url.GetHost().c_str(), url.GetPort() );
 		GetConnectionMap()[ hashId ].push_back( a_spClient );
 	}
