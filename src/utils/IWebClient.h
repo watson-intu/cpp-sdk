@@ -52,6 +52,13 @@ public:
 	{
 		RequestData() : m_StatusCode(0), m_bDone( false )
 		{}
+		RequestData( const RequestData & a_Copy ) : 
+			m_Version( a_Copy.m_Version ),
+			m_StatusCode( a_Copy.m_StatusCode ),
+			m_StatusMessage( a_Copy.m_StatusMessage ),
+			m_SetCookies( a_Copy.m_SetCookies ),
+			m_Headers( a_Copy.m_Headers )
+		{}
 
 		std::string		m_Version;
 		unsigned int	m_StatusCode;

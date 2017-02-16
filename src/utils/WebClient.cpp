@@ -610,7 +610,10 @@ protected:
 					}
 				}
 
-				HTTP_ReadContent( a_pReq, error, 0 );
+				if ( m_bChunked )
+					HTTP_ReadChunkLength( a_pReq );
+				else
+					HTTP_ReadContent( a_pReq, error, 0 );
 			}
 		}
 		else 
@@ -621,9 +624,49 @@ protected:
 		}
 	}
 
+	void HTTP_ReadChunkLength( RequestData * a_pReq )
+	{
+		// read the chunk length... 
+		boost::asio::async_read_until(*m_pSocket,
+			m_Response, "\r\n",
+			boost::bind(&WebClientT::HTTP_OnChunkLength, shared_from_this(), a_pReq,
+				boost::asio::placeholders::error,
+				boost::asio::placeholders::bytes_transferred));
+	}
+
+	void HTTP_OnChunkLength( RequestData * a_pReq, const boost::system::error_code & error, size_t bytes_transferred )
+	{
+		if (! error )
+		{
+			std::istream input(&m_Response);
+			std::string chunk_length;
+			input >> chunk_length;
+
+			if ( chunk_length == "0" )
+			{
+				// end of chunked content
+				a_pReq->m_bDone = true;
+				ThreadPool::Instance()->InvokeOnMain<RequestData *>(
+					DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
+			}
+			else
+			{
+				m_ContentLen = strtoul( chunk_length.c_str(), NULL, 16 );
+				HTTP_ReadContent( a_pReq, error, 0 );
+			}
+		}
+		else
+		{
+			Log::Error( "WebClientT", "Error on HTTP_OnChunkLength(): %s", error.message().c_str() );
+			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()));
+			delete a_pReq;
+		}
+	}
+
 	void HTTP_ReadContent( RequestData * a_pReq, const boost::system::error_code& error, size_t bytes_transferred)
 	{
 		sm_BytesRecv += bytes_transferred;
+		
 		size_t max_read = (size_t)m_Response.in_avail();
 		size_t bytes_remaining = m_ContentLen - a_pReq->m_Content.size();
 		if ( max_read > bytes_remaining )
@@ -637,6 +680,7 @@ protected:
 			input.read( &content[0], max_read );
 
 			a_pReq->m_Content += content;
+			m_ContentLen -= content.size();
 		}
 
 		if (!error && bytes_remaining > 0) 
@@ -646,60 +690,48 @@ protected:
 			if (!m_bChunked && m_ContentLen == 0xffffffff 
 				&& a_pReq->m_Content.size() >= (4 * 1024))
 			{
-				RequestData * pNewReq = new RequestData();
-				pNewReq->m_Version = a_pReq->m_Version;
-				pNewReq->m_StatusCode = a_pReq->m_StatusCode;
-				pNewReq->m_StatusMessage = a_pReq->m_StatusMessage;
-				pNewReq->m_Headers = a_pReq->m_Headers;
-				pNewReq->m_SetCookies = a_pReq->m_SetCookies;
-
+				RequestData * pNewReq = new RequestData( *a_pReq );
 				ThreadPool::Instance()->InvokeOnMain<RequestData *>(
 					DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
 				a_pReq = pNewReq;
 			}
 
-			if (m_pSocket != NULL)
-			{
-				boost::asio::async_read(*m_pSocket, m_Response,
-					boost::asio::transfer_at_least(1),
-					boost::bind(&WebClientT::HTTP_ReadContent, shared_from_this(), a_pReq,
-						boost::asio::placeholders::error,
-						boost::asio::placeholders::bytes_transferred));
-			}
+			boost::asio::async_read(*m_pSocket, m_Response,
+				boost::asio::transfer_at_least(1),
+				boost::bind(&WebClientT::HTTP_ReadContent, shared_from_this(), a_pReq,
+					boost::asio::placeholders::error,
+					boost::asio::placeholders::bytes_transferred));
 		}
 		else 
 		{
 			if ( m_bChunked )
 			{
-				std::string & content = a_pReq->m_Content;
+				// send the chunk, then go try to read the next chunk length..
+				RequestData * pNewReq = new RequestData( *a_pReq );
+				ThreadPool::Instance()->InvokeOnMain<RequestData *>(
+					DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
+				a_pReq = pNewReq;
 
-				size_t offset = 0;
-				while( offset < content.size() )
+				if ( m_ContentLen > 0 )
 				{
-					size_t eof = content.find_first_of( "\r\n", offset );
-					std::string length = content.substr( offset, eof - offset );
-					// remove the chunk line from the content..
-					content.erase( content.begin() + offset, content.begin() + eof + 2 );
-					size_t chunk_len = strtoul( length.c_str(), NULL, 16 );
-					offset += chunk_len;
-
-					if ( length == "0" )
-					{
-						// TODO: parse trailing headers, for now just strip out the rest..
-						if ( offset < content.size() )
-							content.erase( content.begin() + offset, content.end() );
-						break;
-					}
-				
-					// after each chunk should be a \r\n, remove it..
-					if ( offset < content.size() )
-						content.erase( content.begin() + offset, content.begin() + offset + 2 );
+					boost::asio::async_read(*m_pSocket, m_Response,
+						boost::asio::transfer_at_least(1),
+						boost::bind(&WebClientT::HTTP_ReadContent, shared_from_this(), a_pReq,
+							boost::asio::placeholders::error,
+							boost::asio::placeholders::bytes_transferred));
+				}
+				else
+				{
+					// we may need to read an additional \r\n between chunks.
+					HTTP_ReadChunkLength( a_pReq );
 				}
 			}
-
-			a_pReq->m_bDone = true;
-			ThreadPool::Instance()->InvokeOnMain<RequestData *>(
-				DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
+			else
+			{
+				a_pReq->m_bDone = true;
+				ThreadPool::Instance()->InvokeOnMain<RequestData *>(
+					DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), a_pReq);
+			}
 		}
 	}
 
