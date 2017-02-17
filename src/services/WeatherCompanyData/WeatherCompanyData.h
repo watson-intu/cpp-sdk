@@ -26,36 +26,36 @@
 class WDC_API WeatherCompanyData : public IService
 {
 public:
-RTTI_DECL();
+    RTTI_DECL();
 
-//! Types
-typedef Delegate<const Json::Value &>			SendCallback;
+    //! Types
+    typedef Delegate<const Json::Value &>			SendCallback;
 
-//! Construction
-WeatherCompanyData();
+    //! Construction
+    WeatherCompanyData();
 
-//! ISerializable interface
-virtual void Serialize(Json::Value & json);
-virtual void Deserialize(const Json::Value & json);
+    //! ISerializable interface
+    virtual void Serialize(Json::Value & json);
+    virtual void Deserialize(const Json::Value & json);
 
-//! IService interface
-virtual bool Start();
+    //! IService interface
+    virtual bool Start();
 
-void GetCurrentConditions( SendCallback a_Callback );
-void GetCurrentConditions(const std::string & a_Lat, const std::string & a_Long, SendCallback a_Callback);
-void GetHourlyForecast( SendCallback a_Callback );
-void GetTenDayForecast( SendCallback a_Callback );
-void GetTenDayForecast(const std::string & a_Lat, const std::string & a_Long, SendCallback a_Callback);
-void GetLocation( const std::string & a_Location, Delegate<const Json::Value &> a_Callback);
-void GetTimeZone(const double & a_Latitude, const double & a_Longitude, Delegate<const Json::Value &> a_Callback);
-static void CelsiusToFahrenheit( const float & a_Celsius, float & a_Fahrenheit);
+    void GetCurrentConditions( SendCallback a_Callback );
+    void GetCurrentConditions(const std::string & a_Lat, const std::string & a_Long, SendCallback a_Callback);
+    void GetHourlyForecast( SendCallback a_Callback );
+    void GetTenDayForecast( SendCallback a_Callback );
+    void GetTenDayForecast(const std::string & a_Lat, const std::string & a_Long, SendCallback a_Callback);
+    void GetLocation( const std::string & a_Location, Delegate<const Json::Value &> a_Callback);
+    void GetTimeZone(const double & a_Latitude, const double & a_Longitude, Delegate<const Json::Value &> a_Callback);
+    static void CelsiusToFahrenheit( const float & a_Celsius, float & a_Fahrenheit);
 
 private:
 
-float m_Latitude;
-float m_Longitude;
-std::string m_Units;
-std::string m_Language;
+    float m_Latitude;
+    float m_Longitude;
+    std::string m_Units;
+    std::string m_Language;
 
 };
 
