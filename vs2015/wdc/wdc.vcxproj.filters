@@ -64,6 +64,12 @@
     <Filter Include="services\LanguageTranslator">
       <UniqueIdentifier>{94dc1953-6304-4a3e-bcef-e4e3b619c1b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="services\WeatherCompanyData">
+      <UniqueIdentifier>{67a1d550-9b8a-425c-a0a9-8c9320285756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\PersonalityInsights">
+      <UniqueIdentifier>{c6bd5e82-c450-44b9-86aa-2ea06fd8dd13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\ISerializable.cpp">
@@ -245,6 +251,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\services\LanguageTranslator\LanguageTranslator.cpp">
       <Filter>services\LanguageTranslator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.cpp">
+      <Filter>services\WeatherCompanyData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\PersonalityInsights\PersonalityInsights.cpp">
+      <Filter>services\PersonalityInsights</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\WebClientService.cpp">
       <Filter>utils</Filter>
@@ -494,6 +506,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\services\LanguageTranslator\LanguageTranslator.h">
       <Filter>services\LanguageTranslator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.h">
+      <Filter>services\WeatherCompanyData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\PersonalityInsights\DataModels.h">
+      <Filter>services\PersonalityInsights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\PersonalityInsights\PersonalityInsights.h">
+      <Filter>services\PersonalityInsights</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\utils\WebClientService.h">
       <Filter>utils</Filter>
