@@ -123,6 +123,7 @@
     <ClCompile Include="..\..\src\services\IService.cpp" />
     <ClCompile Include="..\..\src\services\LanguageTranslator\LanguageTranslator.cpp" />
     <ClCompile Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp" />
+    <ClCompile Include="..\..\src\services\PersonalityInsights\PersonalityInsights.cpp" />
     <ClCompile Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.cpp" />
     <ClCompile Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.cpp" />
     <ClCompile Include="..\..\src\services\SpeechToText\SpeechToText.cpp">
@@ -132,6 +133,7 @@
     <ClCompile Include="..\..\src\services\TextToSpeech\TextToSpeech.cpp" />
     <ClCompile Include="..\..\src\services\ToneAnalyzer\ToneAnalyzer.cpp" />
     <ClCompile Include="..\..\src\services\VisualRecognition\VisualRecognition.cpp" />
+    <ClCompile Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.cpp" />
     <ClCompile Include="..\..\src\utils\Config.cpp" />
     <ClCompile Include="..\..\src\utils\DataCache.cpp" />
     <ClCompile Include="..\..\src\utils\Form.cpp" />
@@ -194,6 +196,8 @@
     <ClInclude Include="..\..\src\services\LanguageTranslator\LanguageTranslator.h" />
     <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\DataModels.h" />
     <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h" />
+    <ClInclude Include="..\..\src\services\PersonalityInsights\DataModels.h" />
+    <ClInclude Include="..\..\src\services\PersonalityInsights\PersonalityInsights.h" />
     <ClInclude Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.h" />
     <ClInclude Include="..\..\src\services\RetrieveAndRank\DataModels.h" />
     <ClInclude Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.h" />
@@ -204,6 +208,7 @@
     <ClInclude Include="..\..\src\services\ToneAnalyzer\DataModels.h" />
     <ClInclude Include="..\..\src\services\ToneAnalyzer\ToneAnalyzer.h" />
     <ClInclude Include="..\..\src\services\VisualRecognition\VisualRecognition.h" />
+    <ClInclude Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.h" />
     <ClInclude Include="..\..\src\utils\Config.h" />
     <ClInclude Include="..\..\src\utils\DataCache.h" />
     <ClInclude Include="..\..\src\utils\Form.h" />
