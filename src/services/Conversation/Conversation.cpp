@@ -23,7 +23,8 @@ RTTI_IMPL( Conversation, IService );
 REG_SERIALIZABLE( ConversationResponse );
 RTTI_IMPL( ConversationResponse, ISerializable );
 
-Conversation::Conversation() : IService("ConversationV1"), m_APIVersion( "2016-07-11" ), m_NoCacheTag( "[nocache]" )
+Conversation::Conversation() : IService("ConversationV1"), m_APIVersion( "2016-07-11" ),
+							   m_NoCacheTag( "[nocache]" ), m_CacheTag( "[cache]" )
 {}
 
 void Conversation::Serialize(Json::Value & json)
@@ -31,6 +32,7 @@ void Conversation::Serialize(Json::Value & json)
     IService::Serialize(json);
 	json["m_APIVersion"] = m_APIVersion;
 	json["m_NoCacheTag"] = m_NoCacheTag;
+	json["m_CacheTag"] = m_CacheTag;
 }
 
 void Conversation::Deserialize(const Json::Value & json)
@@ -40,6 +42,8 @@ void Conversation::Deserialize(const Json::Value & json)
 		m_APIVersion = json["m_APIVersion"].asString();
 	if ( json.isMember("m_NoCacheTag") )
 		m_NoCacheTag = json["m_NoCacheTag"].asString();
+	if ( json.isMember("m_CacheTag") )
+		m_CacheTag = json["m_CacheTag"].asString();
 }
 
 //! IService interface
@@ -133,7 +137,9 @@ static bool ContainsText( const std::vector<std::string> & a_Responses, const st
 
 void Conversation::MessageReq::OnResponse(ConversationResponse * a_pResponse)
 {
-	if ( a_pResponse != NULL && m_bUseCache && !ContainsText( a_pResponse->m_Output, m_pConversation->m_NoCacheTag ) )
+	// Cache only if m_bUseCache is true AND the response contains the m_CacheTag
+	// Only responses explicitly tagged will be cached
+	if ( a_pResponse != NULL && m_bUseCache && ContainsText( a_pResponse->m_Output, m_pConversation->m_CacheTag ) )
 	{
 		DataCache * pCache = m_pConversation->GetDataCache(m_WorkspaceId);
 		if (pCache != NULL)
