@@ -98,7 +98,10 @@ IWebClient::SP IWebClient::Create( const URL & a_URL )
 		}
 
 		if ( spConnection->GetState() == IWebClient::CONNECTED )
+		{
+			spConnection->SetURL( a_URL );
 			return spConnection;
+		}
 	}
 
 	bool bSecure = (_stricmp( a_URL.GetProtocol().c_str(), "https" ) == 0 || 
@@ -165,6 +168,7 @@ public:
 		m_bChunked( false ),
 		m_SendError( false ),
 		m_SendCount( 0 ),
+		m_RequestsSent( 0 ),
 		m_RetryAttempts( 0 ),
 		m_pResponse( NULL )
 	{}
@@ -246,12 +250,16 @@ public:
 		if ( pService == NULL )
 			return false;		// this would only happen if we are in the middle of shutting down..
 
+		// reset retry attempts when Send() is invoked.
+		m_RetryAttempts = 0;
+
 		bool bWebSocket = _stricmp( m_URL.GetProtocol().c_str(), "ws" ) == 0 
 			|| _stricmp( m_URL.GetProtocol().c_str(), "wss" ) == 0;
 		if ( m_eState != CONNECTED || !m_URL.CanUseConnection( m_ConnectedURL ) || bWebSocket )
 		{
 			m_WebSocket = bWebSocket;
 			m_ConnectedURL = m_URL;
+			m_RequestsSent = 0;			// reset each time we re-connect
 
 			Cleanup();
 			CreateSocket();
@@ -498,6 +506,7 @@ protected:
 
 		sm_RequestsSent++;
 
+		m_RequestsSent += 1;
 		m_eInternalState = SENDING_REQUEST;
 		m_LastRequest = m_Request;
 		m_ContentLen = 0;
@@ -567,7 +576,7 @@ protected:
 	{
 		if (!error) 
 		{
-			// read the first line containing the status..
+			// Read the response headers..
 			m_eInternalState = READING_RESPONSE;
 			boost::asio::async_read_until(*m_pSocket,
 				m_RecvBuffer, "\r\n\r\n",
@@ -1093,8 +1102,8 @@ protected:
 			{
 				if ( m_RetryAttempts++ < MAX_ATTEMPTS )
 				{
-					Log::Warning( "WebClientT", "Retrying send %d of %d: %s", 
-						m_RetryAttempts, MAX_ATTEMPTS, m_URL.GetURL().c_str() );
+					Log::DebugMed( "WebClientT", "Resending (Sent: %d, Retry %d of %d): %s", 
+						m_RequestsSent, m_RetryAttempts, MAX_ATTEMPTS, m_URL.GetURL().c_str() );
 
 					SetState( RETRY );
 					if (! Send() )
@@ -1158,9 +1167,10 @@ protected:
 	std::string		m_Incoming;				// received web socket data
 	BufferList		m_Pending;				// pending sends
 	BufferList		m_Send;					// send queue
-	bool			m_bChunked;
-	size_t			m_ContentLen;
-	int				m_RetryAttempts;
+	bool			m_bChunked;				// is the response chunked
+	size_t			m_ContentLen;			// length of the content from the response
+	int				m_RequestsSent;			// number of requests sent on this connection so far
+	int				m_RetryAttempts;		// number of retries
 
 	volatile bool	m_SendError;			// set to true when a send fails
 	boost::atomic<size_t>

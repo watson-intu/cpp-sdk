@@ -103,7 +103,6 @@ void Form::Finish()
 		body << m_Parts[i];
 	// write out footer..
 	body << m_lineFeed << "--" << m_boundary << "--" << m_lineFeed;
-
 	m_Body = body.str();
 }
 
