@@ -57,7 +57,8 @@ public:
 			m_StatusCode( a_Copy.m_StatusCode ),
 			m_StatusMessage( a_Copy.m_StatusMessage ),
 			m_SetCookies( a_Copy.m_SetCookies ),
-			m_Headers( a_Copy.m_Headers )
+			m_Headers( a_Copy.m_Headers ),
+			m_bDone( false )
 		{}
 
 		std::string		m_Version;
