@@ -79,8 +79,7 @@ Factory<IWebClient> & IWebClient::GetFactory()
 
 IWebClient::SP IWebClient::Create( const URL & a_URL )
 {
-	std::string hashId = StringUtil::Format( "%s://%s:%d/%s", 
-		a_URL.GetProtocol().c_str(), a_URL.GetHost().c_str(), a_URL.GetPort(), a_URL.GetEndPoint().c_str() );
+	std::string hashId( a_URL.GetURL() );
 	size_t nArgs = hashId.find_first_of( '?' );
 	if ( nArgs != std::string::npos )
 		hashId = hashId.substr( 0, nArgs );
@@ -120,8 +119,7 @@ void IWebClient::Free( const SP & a_spClient )
 		if ( a_spClient->GetState() == CONNECTED )
 		{
 			const URL & url = a_spClient->GetURL();
-			std::string hashId = StringUtil::Format( "%s://%s:%d/%s", 
-				url.GetProtocol().c_str(), url.GetHost().c_str(), url.GetPort(), url.GetEndPoint() );
+			std::string hashId( url.GetURL() );
 			size_t nArgs = hashId.find_first_of( '?' );
 			if ( nArgs != std::string::npos )
 				hashId = hashId.substr( 0, nArgs );
