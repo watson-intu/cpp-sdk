@@ -181,7 +181,10 @@ void IService::Request::OnResponseData( IWebClient::RequestData * a_pResponse )
 		}
 
 		if ( m_Error )
-			Log::Error( "Request", "Request Error %u: %s", a_pResponse->m_StatusCode, m_Response.c_str() );
+		{
+			Log::Error( "Request", "Request Error %u: %s, URL: %s", 
+				a_pResponse->m_StatusCode, m_Response.c_str(), m_spClient->GetURL().GetURL().c_str() );
+		}
 
 		if ( m_Callback.IsValid() )
 		{
