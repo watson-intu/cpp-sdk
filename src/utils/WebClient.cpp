@@ -79,11 +79,7 @@ Factory<IWebClient> & IWebClient::GetFactory()
 
 IWebClient::SP IWebClient::Create( const URL & a_URL )
 {
-	std::string hashId( a_URL.GetURL() );
-	size_t nArgs = hashId.find_first_of( '?' );
-	if ( nArgs != std::string::npos )
-		hashId = hashId.substr( 0, nArgs );
-
+	std::string hashId( a_URL.GetProtocol() + "." + a_URL.GetHost() + "." + StringUtil::Format( "%d", a_URL.GetPort() ) );
 	ConnectionMap::iterator iConnections = GetConnectionMap().find( hashId );
 	while( iConnections != GetConnectionMap().end() )
 	{
@@ -122,11 +118,7 @@ void IWebClient::Free( const SP & a_spClient )
 		if ( a_spClient->GetState() == CONNECTED )
 		{
 			const URL & url = a_spClient->GetURL();
-			std::string hashId( url.GetURL() );
-			size_t nArgs = hashId.find_first_of( '?' );
-			if ( nArgs != std::string::npos )
-				hashId = hashId.substr( 0, nArgs );
-
+			std::string hashId( url.GetProtocol() + "." + url.GetHost() + "." + StringUtil::Format( "%d", url.GetPort() ) );
 			GetConnectionMap()[ hashId ].push_back( a_spClient );
 		}
 	}
@@ -1045,6 +1037,8 @@ protected:
 
 	#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
 		double startTime = Time().GetEpochTime();
+		const char * pFile = m_DataReceiver.GetFile();
+		int nLine = m_DataReceiver.GetLine();
 	#endif
 		if ( m_DataReceiver.IsValid() )
 			m_DataReceiver( a_pData );
@@ -1054,10 +1048,10 @@ protected:
 		{
 			if ( elapsed > ERROR_DELEGATE_TIME )
 				Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
-					m_DataReceiver.GetFile(), m_DataReceiver.GetLine(), elapsed );
+					pFile, nLine, elapsed );
 			else
 				Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
-					m_DataReceiver.GetFile(), m_DataReceiver.GetLine(), elapsed );
+					pFile, nLine, elapsed );
 		}
 	#endif
 
