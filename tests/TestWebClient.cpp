@@ -39,8 +39,22 @@ public:
 
 		ThreadPool pool(1);
 
+		IWebClient::SP spClient = IWebClient::Request( "http://news.google.com/news",
+			IWebClient::Headers(), "GET", "", 
+			DELEGATE( TestWebClient, OnResponse, IWebClient::RequestData *, this),
+			DELEGATE( TestWebClient, OnState, IWebClient *, this ) );
+
+		Spin( m_bHTTPTested, 300.0f );
+		Test( m_bHTTPTested );
+
+		// test pipelining by sending another GET request
+		m_bHTTPTested = false;
+		Test( spClient->Send() );
+		Spin( m_bHTTPTested );
+		Test( m_bHTTPTested );
+
 		URL url( "wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize" );
-		IWebClient::SP spClient = IWebClient::Create( url );
+		spClient->SetURL( url );
 		spClient->SetHeader( "Authorization", "Basic ZTZlNThlYjAtNWU5Mi00OGJmLTlkNjctYTAyYTE1ODA3ZGRmOnJOZGhOZUZwS0hGeA==" );
 		spClient->SetStateReceiver( DELEGATE( TestWebClient, OnState, IWebClient *, this ) );
 		spClient->SetDataReceiver( DELEGATE( TestWebClient, OnWebSocketResponse, IWebClient::RequestData *, this ) );
@@ -53,18 +67,16 @@ public:
 		Spin( m_bWSClosed );
 		Test( m_bWSClosed );
 
-		spClient->Request( "http://www.google.com",
-			IWebClient::Headers(), "GET", "", 
-			DELEGATE( TestWebClient, OnResponse, IWebClient::RequestData *, this),
-			DELEGATE( TestWebClient, OnState, IWebClient *, this ) );
-
-		Spin( m_bHTTPTested );
-		Test( m_bHTTPTested );
-
-		spClient->Request( "https://www.google.com", IWebClient::Headers(), "GET", "", 
+		spClient = IWebClient::Request( "https://news.google.com/news", IWebClient::Headers(), "GET", "", 
 			DELEGATE(TestWebClient, OnSecureResponse, IWebClient::RequestData *, this),
 			DELEGATE(TestWebClient, OnState, IWebClient *, this));
 
+		Spin( m_bHTTPSTested, 300.0f );
+		Test(m_bHTTPSTested);
+		m_bHTTPSTested = false;
+
+		// test pipelining a 2nd HTTPS request
+		spClient->Send();
 		Spin( m_bHTTPSTested );
 		Test(m_bHTTPSTested);
 	}
@@ -89,10 +101,10 @@ public:
 
 	void OnResponse( IWebClient::RequestData * a_pResponse )
 	{
-		Log::Debug( "TestWebClient", "OnResponse(): Version: %s, Status: %u, Content: %s",
-			a_pResponse->m_Version.c_str(), a_pResponse->m_StatusCode, a_pResponse->m_Content.c_str() );
+		Log::Debug( "TestWebClient", "OnResponse(): Version: %s, Status: %u, Content: %s, Done: %s",
+			a_pResponse->m_Version.c_str(), a_pResponse->m_StatusCode, a_pResponse->m_Content.c_str(), a_pResponse->m_bDone ? "True" : "False" );
 
-		if ( a_pResponse->m_StatusCode == 200 )
+		if ( a_pResponse->m_bDone )
 			m_bHTTPTested = true;
 	}
 	void OnSecureResponse( IWebClient::RequestData * a_pResponse )
@@ -100,7 +112,7 @@ public:
 		Log::Debug("TestWebClient", "OnSecureResponse(): Version: %s, Status: %u, Content: %s",
 			a_pResponse->m_Version.c_str(), a_pResponse->m_StatusCode, a_pResponse->m_Content.c_str());
 
-		if (a_pResponse->m_StatusCode == 200)
+		if ( a_pResponse->m_bDone )
 			m_bHTTPSTested = true;
 	}
 };

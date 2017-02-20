@@ -52,6 +52,7 @@ class WDC_API WebClientService
 {
 public:
 	static WebClientService * Instance();
+	static int sm_ThreadCount;					// how many threads to start for the WebClient
 
 	WebClientService();
 	~WebClientService();
@@ -62,11 +63,18 @@ public:
 	}
 
 private:
+	//! Types
+	typedef boost::asio::io_service::work	Work;
+	typedef boost::thread					Thread;
+	typedef boost::shared_ptr<Thread>		ThreadSP;
+	typedef std::list<ThreadSP>				ThreadList;
+
 	//! Data
 	boost::asio::io_service	m_Service;
 	boost::asio::io_service::work
 							m_Work;
-	boost::thread			m_ServiceThread;
+	ThreadList				m_Threads;
+
 	TimerPool::ITimer::SP	m_spStatsTimer;
 
 	static WebClientService *

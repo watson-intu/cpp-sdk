@@ -134,6 +134,17 @@ public:
 	typedef boost::shared_ptr<WebClientT>			SP;
 	typedef boost::weak_ptr<WebClientT>				WP;
 
+	enum InternalState {
+		INVALID_INTERNAL = -1,
+		RESOLVING_DNS,
+		ASYNC_CONNECT,
+		SENDING_REQUEST,
+		READING_RESPONSE,
+		READING_CONTENT,
+		READING_CHUNK_LENGTH,
+		READING_CHUNK_FOOTER
+	};
+
 	SP shared_from_this()
 	{
 		return boost::static_pointer_cast<WebClientT>( IWebClient::shared_from_this() );
@@ -141,6 +152,7 @@ public:
 
 	WebClientT() :
 		m_eState(CLOSED),
+		m_eInternalState(INVALID_INTERNAL),
 		m_pSocket(NULL),
 		m_WebSocket(false),
 		m_RequestType("GET"),
@@ -240,8 +252,9 @@ public:
 			CreateSocket();
 			SetState(CONNECTING);
 
-			Log::DebugMed("WebClientT", "Connecting to %s:%u", m_URL.GetHost().c_str(), m_URL.GetPort());
+			//Log::DebugMed("WebClientT", "Connecting to %s:%u", m_URL.GetHost().c_str(), m_URL.GetPort());
 
+			m_eInternalState = RESOLVING_DNS;
 			WebClientService::Instance()->GetService().post( 
 				boost::bind( &WebClientT::BeginConnect, shared_from_this() ) );
 		}
@@ -267,8 +280,11 @@ public:
 		// just set the state and close the socket, the routines in the other thread
 		// will invoke OnDisconnected() which will ignore the state change.
 		SetState( CLOSING );
+		m_eInternalState = INVALID_INTERNAL;
+
 		Log::DebugLow( "WebClientT", "Closing socket. (%p)", this );
 		m_pSocket->lowest_layer().close();
+
 		return true;
 	}
 
@@ -386,6 +402,9 @@ protected:
 		}
 		else
 		{
+			m_eInternalState = ASYNC_CONNECT;
+			Log::DebugLow( "WebClientT", "Connecting to %s:%s", (*i).host_name().c_str(), (*i).service_name().c_str() );
+			m_pSocket->lowest_layer().close();
 			m_pSocket->lowest_layer().async_connect(*i,
 				boost::bind(&WebClientT::HandleConnect, shared_from_this(), boost::asio::placeholders::error, i));
 		}
@@ -420,32 +439,38 @@ protected:
 			}
 	#endif
 		}
-		else if ( ++i != boost::asio::ip::tcp::resolver::iterator() )
+		else 
 		{
-			// try the next end-point in DNS..
-			try {
-				m_pSocket->lowest_layer().close();
-				m_pSocket->lowest_layer().async_connect( *i,
-					boost::bind(&WebClientT::HandleConnect, shared_from_this(), boost::asio::placeholders::error, i));
-			}
-			catch( const std::exception & ex )
+			Log::DebugLow( "WebClientT", "Failed to connect to %s:%s", (*i).host_name().c_str(), (*i).service_name().c_str() );
+			if ( ++i != boost::asio::ip::tcp::resolver::iterator() )
 			{
-				Log::DebugLow("WebClientT", "Caught exception: %s", ex.what());
+				// try the next end-point in DNS..
+				try {
+					m_pSocket->lowest_layer().close();
+					Log::DebugLow( "WebClientT", "Connecting to %s:%s", (*i).host_name().c_str(), (*i).service_name().c_str() );
+					m_pSocket->lowest_layer().async_connect( *i,
+						boost::bind(&WebClientT::HandleConnect, shared_from_this(), boost::asio::placeholders::error, i));
+				}
+				catch( const std::exception & ex )
+				{
+					Log::DebugLow("WebClientT", "Caught exception: %s", ex.what());
+					ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this() ));
+				}
+			}
+			else
+			{
+				// set our state to disconnected..
+				Log::DebugLow("WebClientT", "Failed to connect to %s:%d: %s", 
+					m_URL.GetHost().c_str(), m_URL.GetPort(), error.message().c_str() );
 				ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this() ));
 			}
-		}
-		else
-		{
-			// set our state to disconnected..
-			Log::DebugLow("WebClientT", "Failed to connect to %s:%d: %s", 
-				m_URL.GetHost().c_str(), m_URL.GetPort(), error.message().c_str() );
-			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this() ));
 		}
 	}
 
 	//! Invoked on main thread.
-	virtual void OnConnected()
+	void OnConnected()
 	{
+		Log::DebugLow( "WebClientT", "OnConnected" );
 		if ( m_eState == CONNECTING )
 		{
 			SetState( CONNECTED );
@@ -468,7 +493,10 @@ protected:
 
 		sm_RequestsSent++;
 
+		m_eInternalState = SENDING_REQUEST;
 		m_LastRequest = m_Request;
+		m_ContentLen = 0;
+
 		std::string & req = m_Request;
 		if ( !m_WebSocket )
 		{
@@ -535,6 +563,7 @@ protected:
 		if (!error) 
 		{
 			// read the first line containing the status..
+			m_eInternalState = READING_RESPONSE;
 			boost::asio::async_read_until(*m_pSocket,
 				m_RecvBuffer, "\r\n\r\n",
 				boost::bind(&WebClientT::HTTP_ReadHeaders, shared_from_this(), 
@@ -659,8 +688,9 @@ protected:
 
 	void HTTP_ReadChunkFooter()
 	{
+		m_eInternalState = READING_CHUNK_FOOTER;
 		boost::asio::async_read_until(*m_pSocket,
-			m_RecvBuffer, "\r\n\r\n",
+			m_RecvBuffer, "\r\n",
 			boost::bind(&WebClientT::HTTP_OnChunkFooter, shared_from_this(), 
 				boost::asio::placeholders::error,
 				boost::asio::placeholders::bytes_transferred));
@@ -670,9 +700,17 @@ protected:
 	{
 		std::istream input( &m_RecvBuffer );
 
+		bool bDone = false;
+
 		std::string header;
 		while( std::getline( input, header) )
 		{
+			if (header == "\r" )
+			{
+				bDone = true;
+				break;
+			}
+
 			size_t seperator = header.find_first_of( ':' );
 			if (seperator == std::string::npos)
 				continue;
@@ -685,18 +723,26 @@ protected:
 			else
 				m_pResponse->m_Headers[key] = value;
 		}
-		assert( m_RecvBuffer.in_avail() == 0 );
 
-		// end of chunked content
-		m_pResponse->m_bDone = true;
-		ThreadPool::Instance()->InvokeOnMain<RequestData *>(
-			DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), m_pResponse);
-		m_pResponse = NULL;
+		if ( bDone )
+		{
+			// end of chunked content
+			m_pResponse->m_bDone = true;
+			ThreadPool::Instance()->InvokeOnMain<RequestData *>(
+				DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), m_pResponse);
+			m_pResponse = NULL;
+		}
+		else
+		{
+			// not done yet, read more footer until we get an empty line
+			HTTP_ReadChunkFooter();
+		}
 	}
 
 	void HTTP_ReadChunkLength()
 	{
 		// read the chunk length... 
+		m_eInternalState = READING_CHUNK_LENGTH;
 		boost::asio::async_read_until(*m_pSocket,
 			m_RecvBuffer, "\r\n",
 			boost::bind(&WebClientT::HTTP_OnChunkLength, shared_from_this(), 
@@ -747,7 +793,7 @@ protected:
 		if (! error )
 		{
 			size_t max_read = (size_t)m_RecvBuffer.in_avail();
-			if ( max_read > m_ContentLen )
+			if ( m_ContentLen > 0 && max_read > m_ContentLen )
 				max_read = m_ContentLen;
 
 			std::istream input(&m_RecvBuffer);
@@ -773,6 +819,7 @@ protected:
 				//	m_pResponse = pNewReq;
 				//}
 
+				m_eInternalState = READING_CONTENT;
 				boost::asio::async_read(*m_pSocket, m_RecvBuffer,
 					boost::asio::transfer_exactly(m_ContentLen),
 					boost::bind(&WebClientT::HTTP_ReadContent, shared_from_this(), 
@@ -1025,8 +1072,9 @@ protected:
 		}
 	}
 
-	virtual void OnDisconnected()
+	void OnDisconnected()
 	{
+		Log::DebugLow( "WebClientT", "OnDisconnected");
 		if ( m_eState == CONNECTED || 
 			m_eState == CONNECTING || 
 			m_eState == CLOSING )
@@ -1040,7 +1088,7 @@ protected:
 			{
 				if ( m_RetryAttempts++ < MAX_ATTEMPTS )
 				{
-					Log::Warning( "WebClient", "Retrying send %d of %d: %s", 
+					Log::Warning( "WebClientT", "Retrying send %d of %d: %s", 
 						m_RetryAttempts, MAX_ATTEMPTS, m_URL.GetURL().c_str() );
 
 					SetState( RETRY );
@@ -1049,7 +1097,7 @@ protected:
 				}
 				else
 				{
-					Log::Error( "WebClient", "Failed send: %s", m_URL.GetURL().c_str() );
+					Log::Error( "WebClientT", "Failed send: %s", m_URL.GetURL().c_str() );
 					SetState(DISCONNECTED);
 				}
 			}
@@ -1076,7 +1124,8 @@ protected:
 	typedef std::list<std::string *>		BufferList;
 
 	//! Data
-	SocketState		m_eState;
+	SocketState		m_eState;				// state of connection
+	InternalState	m_eInternalState;		// internal state for debugging purposes
 	URL				m_URL;					// URL we want to connect toos
 	URL				m_ConnectedURL;			// URL we are actually connected too
 	Headers			m_Headers;
@@ -1114,6 +1163,7 @@ protected:
 	boost::recursive_mutex
 					m_SendLock;
 
+	friend class SecureWebClient;
 };
 
 class WebClient : public WebClientT<boost::asio::ip::tcp::socket>
@@ -1180,26 +1230,17 @@ public:
 		}
 	}
 protected:
-	virtual void OnConnected()
-	{
-		WebClientT::OnConnected();
-	}
-	virtual void OnDisconnected()
-	{
-		WebClientT::OnDisconnected();
-	}
-
 	void HandleHandShake(const boost::system::error_code & error)
 	{
 		if (! error )
 		{
-			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( SecureWebClient, OnConnected, shared_from_this() ) );
+			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClientT, OnConnected, shared_from_this() ) );
 		}
 		else
 		{
 			Log::DebugLow( "WebClientT", "Handshake Failed with %s:%d: %s", 
 				m_URL.GetHost().c_str(), m_URL.GetPort(), error.message().c_str() );
-			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( SecureWebClient, OnDisconnected, shared_from_this() ) );
+			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClientT, OnDisconnected, shared_from_this() ) );
 		}
 	}
 private:

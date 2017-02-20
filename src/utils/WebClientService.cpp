@@ -20,6 +20,7 @@
 #include "IWebClient.h"
 
 WebClientService * WebClientService::sm_pInstance = NULL;
+int WebClientService::sm_ThreadCount = 1;					// how many threads to start for the WebClient
 
 //! This internal singleton class runs the io service for all Socket objects.
 WebClientService * WebClientService::Instance()
@@ -40,9 +41,10 @@ WebClientService * WebClientService::Instance()
 }
 
 WebClientService::WebClientService() :
-	m_Work(m_Service),											// this prevents the IO service from stopping on it's own
-	m_ServiceThread(boost::bind(&boost::asio::io_service::run, &m_Service))	// start a thread to run our io service
+	m_Work(m_Service)										// this prevents the IO service from stopping on it's own
 {
+	for(int i=0;i<sm_ThreadCount;++i)
+		m_Threads.push_back(ThreadSP( new Thread(boost::bind(&boost::asio::io_service::run, &m_Service) ) ) );
 	if (TimerPool::Instance() != NULL)
 		m_spStatsTimer = TimerPool::Instance()->StartTimer(VOID_DELEGATE(WebClientService, OnDumpStats, this), 60.0, true, true);
 }
@@ -52,8 +54,11 @@ WebClientService::~WebClientService()
 	if (sm_pInstance == this)
 		sm_pInstance = NULL;
 	m_spStatsTimer.reset();
+
 	m_Service.stop();
-	m_ServiceThread.join();
+	for (ThreadList::iterator iThread = m_Threads.begin(); iThread != m_Threads.end(); ++iThread)
+		(*iThread)->join();
+	m_Threads.clear();
 }
 
 void WebClientService::OnDumpStats()
