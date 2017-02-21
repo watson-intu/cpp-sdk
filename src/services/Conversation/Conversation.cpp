@@ -23,15 +23,13 @@ RTTI_IMPL( Conversation, IService );
 REG_SERIALIZABLE( ConversationResponse );
 RTTI_IMPL( ConversationResponse, ISerializable );
 
-Conversation::Conversation() : IService("ConversationV1"), m_APIVersion( "2016-07-11" ),
-							   m_NoCacheTag( "[nocache]" ), m_CacheTag( "[cache]" )
+Conversation::Conversation() : IService("ConversationV1"), m_APIVersion( "2016-07-11" ), m_CacheTag( "[cache]" )
 {}
 
 void Conversation::Serialize(Json::Value & json)
 {
     IService::Serialize(json);
 	json["m_APIVersion"] = m_APIVersion;
-	json["m_NoCacheTag"] = m_NoCacheTag;
 	json["m_CacheTag"] = m_CacheTag;
 }
 
@@ -40,8 +38,6 @@ void Conversation::Deserialize(const Json::Value & json)
     IService::Deserialize(json);
 	if ( json.isMember("m_APIVersion") )
 		m_APIVersion = json["m_APIVersion"].asString();
-	if ( json.isMember("m_NoCacheTag") )
-		m_NoCacheTag = json["m_NoCacheTag"].asString();
 	if ( json.isMember("m_CacheTag") )
 		m_CacheTag = json["m_CacheTag"].asString();
 }

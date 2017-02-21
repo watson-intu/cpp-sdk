@@ -79,7 +79,6 @@ private:
 
 	//! Data
 	std::string		m_APIVersion;
-	std::string		m_NoCacheTag;
 	std::string		m_CacheTag;
 };
 
