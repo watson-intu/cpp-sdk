@@ -131,6 +131,7 @@ class WDC_API WebClientT : public IWebClient
 {
 public:
 	//! Types
+	typedef socket_type								SocketType;
 	typedef boost::shared_ptr<WebClientT>			SP;
 	typedef boost::weak_ptr<WebClientT>				WP;
 
@@ -1199,7 +1200,7 @@ public:
 	RTTI_DECL();
 
 	//! Types
-	typedef boost::shared_ptr<SecureWebClient>			SP;
+	typedef boost::shared_ptr<SecureWebClient>				SP;
 	typedef boost::weak_ptr<SecureWebClient>				WP;
 
 	SP shared_from_this()
@@ -1230,7 +1231,7 @@ public:
 	}
 	virtual void Cleanup()
 	{
-		WebClientT::Cleanup();
+		WebClientT<SocketType>::Cleanup();
 
 		if ( m_pSSL != NULL )
 		{
@@ -1243,13 +1244,13 @@ protected:
 	{
 		if (! error )
 		{
-			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClientT, OnConnected, shared_from_this() ) );
+			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClientT<SocketType>, OnConnected, shared_from_this() ) );
 		}
 		else
 		{
 			Log::DebugLow( "WebClientT", "Handshake Failed with %s:%d: %s", 
 				m_URL.GetHost().c_str(), m_URL.GetPort(), error.message().c_str() );
-			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClientT, OnDisconnected, shared_from_this() ) );
+			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClientT<SocketType>, OnDisconnected, shared_from_this() ) );
 		}
 	}
 private:
