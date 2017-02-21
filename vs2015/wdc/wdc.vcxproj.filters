@@ -258,6 +258,9 @@
     <ClCompile Include="..\..\src\services\PersonalityInsights\PersonalityInsights.cpp">
       <Filter>services\PersonalityInsights</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\utils\WebClientService.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\services\IService.h">
@@ -332,9 +335,6 @@
     <ClInclude Include="..\..\src\utils\URL.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utils\WebClient.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\UniqueID.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -399,9 +399,6 @@
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\utils\Path.h">
-      <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Base36.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\crossguid\crossguid.h">
@@ -518,6 +515,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\services\PersonalityInsights\PersonalityInsights.h">
       <Filter>services\PersonalityInsights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\WebClientService.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

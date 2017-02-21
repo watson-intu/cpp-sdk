@@ -54,6 +54,14 @@ public:
 		m_EndPoint( a_Copy.m_EndPoint )
 	{}
 
+	//! Compares 
+	bool CanUseConnection( const URL & a_Compare ) const
+	{
+		return m_Protocol == a_Compare.m_Protocol &&
+			m_Host == a_Compare.m_Host &&
+			m_Port == a_Compare.m_Port;
+	}
+
 	//! e.g. http, https, wss, ws, tcp, etc..
 	const std::string & GetProtocol() const
 	{

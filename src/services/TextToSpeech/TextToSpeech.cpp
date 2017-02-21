@@ -209,8 +209,7 @@ bool TextToSpeech::Connection::Start()
 	StringUtil::Replace(url, "https://", "wss://", true);
 	StringUtil::Replace(url, "http://", "ws://", true);
 
-	m_spSocket = IWebClient::Create();
-	m_spSocket->SetURL(url);
+	m_spSocket = IWebClient::Create( url );
 	m_spSocket->SetHeaders(m_pTTS->m_Headers);
 	m_spSocket->SetFrameReceiver(DELEGATE(Connection, OnListenMessage, IWebSocket::FrameSP, shared_from_this()));
 	m_spSocket->SetStateReceiver(DELEGATE(Connection, OnListenState, IWebClient *, shared_from_this()));

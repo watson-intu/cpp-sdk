@@ -32,7 +32,13 @@
 ThreadPool * ThreadPool::sm_pInstance = NULL;
 
 //! Construction
-ThreadPool::ThreadPool( int a_Threads /*= 10*/ ) : m_ExitCode(0), m_StopMain( false ), m_ThreadCount( a_Threads ), m_ActiveThreads( 0 ), m_BusyThreads( 0 ), m_Shutdown( false )
+ThreadPool::ThreadPool( int a_Threads /*= 10*/ ) : 
+	m_ExitCode(0), 
+	m_StopMain( false ),
+	m_ThreadCount( a_Threads ), 
+	m_ActiveThreads( 0 ), 
+	m_BusyThreads( 0 ), 
+	m_Shutdown( false )
 {
 	if ( sm_pInstance != NULL )
 		throw WatsonException( "ThreadPool already exists." );

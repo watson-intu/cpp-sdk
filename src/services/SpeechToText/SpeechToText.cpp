@@ -310,8 +310,7 @@ bool SpeechToText::Connection::CreateListenConnector()
 		StringUtil::Replace(url, "https://", "wss://", true );
 		StringUtil::Replace(url, "http://", "ws://", true );
 
-		m_spListenSocket = IWebClient::Create();
-		m_spListenSocket->SetURL( url );
+		m_spListenSocket = IWebClient::Create( url );
 		m_spListenSocket->SetHeaders(m_pSTT->m_Headers);
 		m_spListenSocket->SetFrameReceiver( DELEGATE( Connection, OnListenMessage, IWebSocket::FrameSP, shared_from_this() ) );
 		m_spListenSocket->SetStateReceiver( DELEGATE( Connection, OnListenState, IWebClient *, shared_from_this() ) );

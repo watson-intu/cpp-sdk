@@ -63,7 +63,7 @@ public:
 		while( (Time().GetEpochTime() - start.GetEpochTime()) < a_Timeout && a_Count < a_Amount )
 		{
 			ThreadPool::Instance()->ProcessMainThread();
-			boost::this_thread::sleep( boost::posix_time::milliseconds(1) );
+			boost::this_thread::sleep( boost::posix_time::milliseconds(5) );
 		}
 	}
 
@@ -73,7 +73,7 @@ public:
 		while( (Time().GetEpochTime() - start.GetEpochTime()) < a_Timeout && !a_TestCondition )
 		{
 			ThreadPool::Instance()->ProcessMainThread();
-			boost::this_thread::sleep( boost::posix_time::milliseconds(1) );
+			boost::this_thread::sleep( boost::posix_time::milliseconds(5) );
 		}
 	}
 

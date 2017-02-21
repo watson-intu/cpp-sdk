@@ -152,6 +152,7 @@
     <ClCompile Include="..\..\src\utils\ThreadPool.cpp" />
     <ClCompile Include="..\..\src\utils\TimerPool.cpp" />
     <ClCompile Include="..\..\src\utils\UnitTest.cpp" />
+    <ClCompile Include="..\..\src\utils\WebClientService.cpp" />
     <ClCompile Include="..\..\src\utils\WebServer.cpp" />
     <ClCompile Include="..\..\src\utils\WebSocketFramer.cpp" />
     <ClCompile Include="..\..\src\utils\URL_.cpp" />
@@ -225,7 +226,6 @@
     <ClInclude Include="..\..\src\utils\SHA1.h" />
     <ClInclude Include="..\..\src\utils\UniqueID.h" />
     <ClInclude Include="..\..\src\utils\UnitTest.h" />
-    <ClInclude Include="..\..\src\utils\WebClient.h" />
     <ClInclude Include="..\..\src\utils\ServiceConfig.h" />
     <ClInclude Include="..\..\src\utils\Delegate.h" />
     <ClInclude Include="..\..\src\utils\Factory.h" />
@@ -241,10 +241,10 @@
     <ClInclude Include="..\..\src\utils\TimerPool.h" />
     <ClInclude Include="..\..\src\utils\URL.h" />
     <ClInclude Include="..\..\src\utils\WatsonException.h" />
+    <ClInclude Include="..\..\src\utils\WebClientService.h" />
     <ClInclude Include="..\..\src\utils\WebSocketFramer.h" />
     <ClInclude Include="..\..\src\utils\ZipFile.h" />
     <ClInclude Include="..\..\src\WDCLib.h" />
-    <ClInclude Include="Base36.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\CMakeLists.txt" />
