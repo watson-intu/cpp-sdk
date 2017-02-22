@@ -189,6 +189,7 @@ public:
 	virtual void SetURL(const URL & a_URL)
 	{
 		m_URL = a_URL;
+		m_RetryAttempts = 0;
 	}
 
 	virtual void SetStateReceiver(Delegate<IWebClient *> a_StateReceiver)
@@ -243,9 +244,6 @@ public:
 		if ( pService == NULL )
 			return false;		// this would only happen if we are in the middle of shutting down..
 
-		// reset retry attempts when Send() is invoked.
-		m_RetryAttempts = 0;
-
 		bool bWebSocket = _stricmp( m_URL.GetProtocol().c_str(), "ws" ) == 0 
 			|| _stricmp( m_URL.GetProtocol().c_str(), "wss" ) == 0;
 		if ( m_eState != CONNECTED || !m_URL.CanUseConnection( m_ConnectedURL ) || bWebSocket )
@@ -287,6 +285,7 @@ public:
 		// will invoke OnDisconnected() which will ignore the state change.
 		SetState( CLOSING );
 		m_eInternalState = INVALID_INTERNAL;
+		m_RetryAttempts = 0;
 
 		Log::DebugLow( "WebClientT", "Closing socket. (%p)", this );
 		m_pSocket->lowest_layer().close();
@@ -399,6 +398,7 @@ protected:
 		catch (const std::exception & ex)
 		{
 			Log::Error("WebClientT", "Caught exception: %s", ex.what());
+			i = boost::asio::ip::tcp::resolver::iterator();
 		}
 
 		if (i == boost::asio::ip::tcp::resolver::iterator())
