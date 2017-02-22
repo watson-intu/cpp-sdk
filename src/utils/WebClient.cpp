@@ -816,16 +816,6 @@ protected:
 
 			if (m_ContentLen > 0) 
 			{
-				//// if we are not chunked and we have no content len, then go ahead and start piping 
-				//// data to the user 4k at a time.
-				//if (!m_bChunked && m_pResponse->m_Content.size() >= (4 * 1024))
-				//{
-				//	RequestData * pNewReq = new RequestData( *m_pResponse );
-				//	ThreadPool::Instance()->InvokeOnMain<RequestData *>(
-				//		DELEGATE(WebClientT, OnResponse, RequestData *, shared_from_this()), m_pResponse);
-				//	m_pResponse = pNewReq;
-				//}
-
 				m_eInternalState = READING_CONTENT;
 				boost::asio::async_read(*m_pSocket, m_RecvBuffer,
 					boost::asio::transfer_exactly(m_ContentLen),
