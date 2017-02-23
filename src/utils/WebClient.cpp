@@ -511,7 +511,8 @@ protected:
 				m_Headers["Accept"] = "*/*";
 			if ( m_Headers.find( "Host" ) == m_Headers.end() )
 				m_Headers["Host"] = m_URL.GetHost();
-			m_Headers["User-Agent"] = "SelfWebClient";
+			if ( m_Headers.find( "User-Agent") == m_Headers.end() )
+				m_Headers["User-Agent"] = "SelfWebClient";
 			m_Headers["Connection"] = "Keep-Alive";			// change to close to avoid reusing connections
 			if ( sm_ClientId.size() > 0 )
 				m_Headers["ClientId"] = sm_ClientId;
@@ -534,7 +535,8 @@ protected:
 			m_Headers["Connection"] = "Upgrade";
 			m_Headers["Sec-WebSocket-Key"] = "x3JJHMbDL1EzLkh9GBhXDw==";
 			m_Headers["Sec-WebSocket-Version"] = "13";
-			m_Headers["User-Agent"] = "SelfWebClient";
+			if ( m_Headers.find( "User-Agent") == m_Headers.end() )
+				m_Headers["User-Agent"] = "SelfWebClient";
 			if ( sm_ClientId.size() > 0 )
 				m_Headers["ClientId"] = sm_ClientId;
 			//m_Headers["Sec-WebSocket-Protocol"] = "chat";

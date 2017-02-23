@@ -479,6 +479,8 @@ public:
 	virtual void GetServiceStatus(ServiceStatusCallback a_Callback);
 	//! This is invoked when the ServiceConfig object has been modified for this service
 	virtual void OnConfigModified();
+	//! This adds the basic authentication header to this services headers
+	void AddAuthenticationHeader();
 
 protected:
 	//! Types

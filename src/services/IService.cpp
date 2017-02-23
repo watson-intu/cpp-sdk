@@ -291,13 +291,7 @@ bool IService::Start()
 		return false;
 	}
 
-	if ( m_pConfig->m_User.size() > 0 && m_pConfig->m_Password.size() > 0 )
-	{
-		// add the Authorization header..
-		m_Headers["Authorization"] = StringUtil::Format( "Basic %s", 
-			StringUtil::EncodeBase64( m_pConfig->m_User + ":" + m_pConfig->m_Password).c_str() );
-	}
-
+	AddAuthenticationHeader();
 	return true;
 }
 
@@ -353,14 +347,21 @@ void IService::OnConfigModified()
 	if ( pConfig != NULL )
 	{
 		m_pConfig = pConfig;
+		AddAuthenticationHeader();
+	}
+}
 
-		if ( m_pConfig->m_User.size() > 0 && 
-			m_pConfig->m_Password.size() > 0 )
-		{
-			// add the Authorization header..
-			m_Headers["Authorization"] = StringUtil::Format( "Basic %s", 
-				StringUtil::EncodeBase64( m_pConfig->m_User + ":" + m_pConfig->m_Password).c_str() );
-		}
+void IService::AddAuthenticationHeader()
+{
+	if ( m_pConfig != NULL &&
+		m_pConfig->m_User.size() > 0 && 
+		m_pConfig->m_Password.size() > 0 )
+	{
+		// add the Authorization header..
+		std::string encoded( StringUtil::EncodeBase64( m_pConfig->m_User + ":" + m_pConfig->m_Password) );
+		StringUtil::Replace( encoded, "\n", "" );		// remove any newlines otherwise they will mess up the headers
+
+		m_Headers["Authorization"] = StringUtil::Format( "Basic %s", encoded.c_str() );
 	}
 }
 
