@@ -648,6 +648,7 @@ protected:
 					if ( m_SendCount == 0 )
 						ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()));
 					delete m_pResponse;
+					m_pResponse = NULL;
 				}
 			}
 			else if ( m_pResponse->m_StatusCode == 100 )
@@ -1006,7 +1007,11 @@ protected:
 
 			// once we number of outstanding sends is 0, then let the main thread know we've been disconnected.
 			if ( m_SendCount == 0 && ThreadPool::Instance() != NULL )
+			{
 				ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()) );
+				delete m_pResponse;
+				m_pResponse = NULL;
+			}
 		}
 		else
 		{
