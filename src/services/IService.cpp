@@ -110,6 +110,10 @@ IService::Request::Request( IService * a_pService,
 	m_spClient->SetHeaders( a_Headers, true );
 	m_spClient->SetBody( a_Body );
 
+	// if our connection is already connected, then go ahead and set the start time to now..
+	if ( m_spClient->GetState() == IWebClient::CONNECTED )
+		m_StartTime = Time().GetEpochTime();
+
 	//Log::Debug( "Request", "Sending request '%s'", a_pService->GetConfig()->m_URL + a_EndPoint.c_str() );
 	if (! m_spClient->Send() )
 	{
@@ -133,7 +137,6 @@ void IService::Request::OnState( IWebClient * a_pClient )
 {
 	if ( a_pClient->GetState() == IWebClient::CONNECTING )
 	{
-		//Log::Debug( "Request", "Request connecting." );
 		m_StartTime = Time().GetEpochTime();
 	}
 	else if ( a_pClient->GetState() == IWebClient::DISCONNECTED )
