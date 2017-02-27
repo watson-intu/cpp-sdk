@@ -20,6 +20,8 @@
 
 #include <openssl/md5.h>
 #include <stdio.h>						// sprintf
+#include <string>
+
 #include "WDCLib.h"
 
 #pragma warning( disable : 4996 )		// silence windows warning
