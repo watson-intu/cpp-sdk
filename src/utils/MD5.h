@@ -18,40 +18,9 @@
 #ifndef WDC_MD5_H
 #define WDC_MD5_H
 
-#include <openssl/md5.h>
-#include <stdio.h>						// sprintf
 #include <string>
-
 #include "WDCLib.h"
 
-#pragma warning( disable : 4996 )		// silence windows warning
-
-template<class type>
-void MD5(const type& input, type& hash)
-{
-	MD5_CTX context;
-	MD5_Init(&context);
-	MD5_Update(&context, &input[0], input.size());
-
-	unsigned char digest[16];
-	MD5_Final(digest, &context);
-
-	hash.resize(32);
-	for (size_t i = 0; i < 16; ++i)
-		sprintf(&hash[i * 2], "%02x", (unsigned int)digest[i]);
-}
-
-template<class type>
-type MD5(const type& input)
-{
-	type hash;
-	MD5(input, hash);
-	return hash;
-}
-
-inline WDC_API std::string MakeMD5( const std::string & a_Data )
-{
-	return MD5( a_Data );
-}
+WDC_API std::string MakeMD5( const std::string & a_Data );
 
 #endif

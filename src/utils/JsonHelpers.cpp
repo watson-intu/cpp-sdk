@@ -207,5 +207,5 @@ void JsonHelpers::Merge(Json::Value & a_MergeInto, const Json::Value & a_Merge, 
 
 std::string JsonHelpers::Hash(const Json::Value & a_Json)
 {
-	return MD5<std::string>(Json::FastWriter().write( a_Json ) );
+	return MakeMD5(Json::FastWriter().write( a_Json ) );
 }

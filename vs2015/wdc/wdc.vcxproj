@@ -142,6 +142,7 @@
     <ClCompile Include="..\..\src\utils\JpegHelpers.cpp" />
     <ClCompile Include="..\..\src\utils\JsonHelpers.cpp" />
     <ClCompile Include="..\..\src\utils\Logic.cpp" />
+    <ClCompile Include="..\..\src\utils\MD5.cpp" />
     <ClCompile Include="..\..\src\utils\Time.cpp" />
     <ClCompile Include="..\..\src\utils\UniqueID.cpp" />
     <ClCompile Include="..\..\src\utils\ISerializable.cpp" />
