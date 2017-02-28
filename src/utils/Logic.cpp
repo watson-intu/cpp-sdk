@@ -17,6 +17,43 @@
 
 #include "Logic.h"
 #include "Log.h"
+#include "StringUtil.h"
+
+//! DB style matching, % is a wildcard character..
+static bool LikeMatch( const char * pat, const char * str )
+{
+	while (*str)
+	{
+		switch (*pat)
+		{
+		case '%':
+			do {
+				++pat;
+			} while (*pat == '%'); /* enddo */
+
+			if (!*pat)
+				return true;
+
+			while (*str)
+			{
+				if (LikeMatch(pat, str++))
+					return true;
+			}
+			return false;
+		default:
+			if (*str != *pat)
+				return false;
+			break;
+		} /* endswitch */
+		++pat, ++str;
+	} /* endwhile */
+
+	while (*pat == '%')
+		++pat;
+
+	return !(*pat);
+}
+
 
 const char * Logic::EqualityOpText(EqualityOp a_Op)
 {
@@ -27,7 +64,8 @@ const char * Logic::EqualityOpText(EqualityOp a_Op)
 		"GR",		// >
 		"GE",		// >=
 		"LS",		// <
-		"LE"		// <=
+		"LE",		// <=
+		"LIKE"
 	};
 	int index = (int)a_Op;
 	if (index < 0 || index >= sizeof(TEXT) / sizeof(TEXT[0]))
@@ -78,6 +116,8 @@ bool Logic::TestEqualityOp(EqualityOp a_Op, const Json::Value & a_LHS, const Jso
 		return a_LHS.compare(a_RHS) > 0;
 	case GE:
 		return a_LHS.compare(a_RHS) >= 0;
+	case LIKE:
+		return LikeMatch( a_LHS.asCString(), a_RHS.asCString() );
 	default:
 		break;
 	}

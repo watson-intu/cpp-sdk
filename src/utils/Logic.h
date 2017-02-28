@@ -37,6 +37,8 @@ public:
 		LS,		// <
 		LE,		// <=
 
+		LIKE,
+
 		LAST_EO
 	};
 
