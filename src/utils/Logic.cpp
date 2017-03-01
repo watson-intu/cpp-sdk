@@ -132,7 +132,6 @@ const char * Logic::LogicalOpText(LogicalOp a_Op)
 	{
 		"AND",		// all conditions must be true
 		"OR",		// any condition may be true
-		"XOR",		// exclusive OR
 		"NOT"
 	};
 
@@ -168,14 +167,6 @@ bool Logic::TestLogicalOp(LogicalOp a_Op, const std::vector<bool> & a_Values)
 		bool bResult = false;
 		for (size_t i = 0; i < a_Values.size() && !bResult; ++i)
 			bResult |= a_Values[i];
-		return bResult;
-	}
-	break;
-	case XOR:
-	{
-		bool bResult = false;
-		for (size_t i = 0; i < a_Values.size(); ++i)
-			bResult ^= a_Values[i];
 		return bResult;
 	}
 	break;
