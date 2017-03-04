@@ -314,7 +314,8 @@ public:
 
 	void Invoke( ARG a_Arg )
 	{
-		for( typename List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+		List copy( m_Delegates );		// make a copy so if they remove themselves while invoking we don't crash
+		for( typename List::iterator iDelegate = copy.begin(); iDelegate != copy.end(); ++iDelegate )
 			(*iDelegate)( a_Arg );
 	}
 
@@ -361,7 +362,8 @@ public:
 
 	void Invoke()
 	{
-		for( List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+		List copy( m_Delegates );		// make a copy so if they remove themselves while invoking we don't crash
+		for( typename List::iterator iDelegate = copy.begin(); iDelegate != copy.end(); ++iDelegate )
 			(*iDelegate)();
 	}
 
