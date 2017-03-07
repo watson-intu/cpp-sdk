@@ -363,7 +363,7 @@ public:
 	void Invoke()
 	{
 		List copy( m_Delegates );		// make a copy so if they remove themselves while invoking we don't crash
-		for( typename List::iterator iDelegate = copy.begin(); iDelegate != copy.end(); ++iDelegate )
+		for( List::iterator iDelegate = copy.begin(); iDelegate != copy.end(); ++iDelegate )
 			(*iDelegate)();
 	}
 
