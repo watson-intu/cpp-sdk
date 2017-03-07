@@ -58,9 +58,6 @@
     <Filter Include="libs\minizip">
       <UniqueIdentifier>{57e421d3-0397-4e13-82ef-75834ae9e355}</UniqueIdentifier>
     </Filter>
-    <Filter Include="libs\zlib">
-      <UniqueIdentifier>{6dcb82e8-71fd-4942-95e2-0af58e3d3b50}</UniqueIdentifier>
-    </Filter>
     <Filter Include="services\LanguageTranslator">
       <UniqueIdentifier>{94dc1953-6304-4a3e-bcef-e4e3b619c1b9}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,12 @@
     </Filter>
     <Filter Include="services\PersonalityInsights">
       <UniqueIdentifier>{c6bd5e82-c450-44b9-86aa-2ea06fd8dd13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\Graph">
+      <UniqueIdentifier>{1144c336-3fa8-4f6d-b951-0b865d276b7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\Kafka">
+      <UniqueIdentifier>{0934eb3f-ee08-4178-8ca3-aad631da99f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -201,51 +204,6 @@
     <ClCompile Include="..\..\lib\minizip\zip.c">
       <Filter>libs\minizip</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\adler32.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\compress.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\crc32.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\deflate.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\gzclose.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\gzlib.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\gzread.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\gzwrite.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\infback.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\inffast.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\inflate.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\inftrees.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\trees.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\uncompr.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\zutil.c">
-      <Filter>libs\zlib</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\utils\JpegHelpers.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -263,6 +221,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\utils\MD5.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Graph\DataModels.cpp">
+      <Filter>services\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Graph\Graph.cpp">
+      <Filter>services\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Kafka\Kafka.cpp">
+      <Filter>services\Kafka</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -468,39 +435,6 @@
     <ClInclude Include="..\..\lib\minizip\zip.h">
       <Filter>libs\minizip</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\crc32.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\deflate.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\gzguts.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\inffast.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\inffixed.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\inflate.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\inftrees.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\trees.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\zconf.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\zlib.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\zutil.h">
-      <Filter>libs\zlib</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\JpegHelpers.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -521,6 +455,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\utils\WebClientService.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\Graph\DataModels.h">
+      <Filter>services\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\Graph\Graph.h">
+      <Filter>services\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\Kafka\Kafka.h">
+      <Filter>services\Kafka</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
