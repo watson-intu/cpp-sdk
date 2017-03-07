@@ -228,7 +228,7 @@
     <ClCompile Include="..\..\src\services\Graph\Graph.cpp">
       <Filter>services\Graph</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\services\Kafka\Kafka.cpp">
+    <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp">
       <Filter>services\Kafka</Filter>
     </ClCompile>
   </ItemGroup>
@@ -462,7 +462,7 @@
     <ClInclude Include="..\..\src\services\Graph\Graph.h">
       <Filter>services\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\services\Kafka\Kafka.h">
+    <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h">
       <Filter>services\Kafka</Filter>
     </ClInclude>
   </ItemGroup>

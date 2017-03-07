@@ -74,9 +74,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\lib\librdkafka\src\rdaddr.c" />
     <ClCompile Include="..\..\lib\librdkafka\src\rdavl.c" />
     <ClCompile Include="..\..\lib\librdkafka\src\rdcrc32.c" />

@@ -108,7 +108,7 @@
     <ClCompile Include="..\..\src\services\Graph\DataModels.cpp" />
     <ClCompile Include="..\..\src\services\Graph\Graph.cpp" />
     <ClCompile Include="..\..\src\services\IService.cpp" />
-    <ClCompile Include="..\..\src\services\Kafka\Kafka.cpp" />
+    <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp" />
     <ClCompile Include="..\..\src\services\LanguageTranslator\LanguageTranslator.cpp" />
     <ClCompile Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp" />
     <ClCompile Include="..\..\src\services\PersonalityInsights\PersonalityInsights.cpp" />
@@ -173,7 +173,7 @@
     <ClInclude Include="..\..\src\services\Graph\DataModels.h" />
     <ClInclude Include="..\..\src\services\Graph\Graph.h" />
     <ClInclude Include="..\..\src\services\IService.h" />
-    <ClInclude Include="..\..\src\services\Kafka\Kafka.h" />
+    <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h" />
     <ClInclude Include="..\..\src\services\LanguageTranslator\DataModels.h" />
     <ClInclude Include="..\..\src\services\LanguageTranslator\LanguageTranslator.h" />
     <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\DataModels.h" />

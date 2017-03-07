@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{44A53853-2D97-4F4B-860C-52EDD74DFB39}</ProjectGuid>
+    <ProjectGuid>{D033C5CA-1A07-4F9B-8DF3-292C559942D5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>zlib</RootNamespace>
+    <RootNamespace>librdkafkacpp</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -49,7 +49,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIBRDKAFKA_STATICLIB;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -63,7 +63,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIBRDKAFKA_STATICLIB;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -72,34 +72,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\lib\zlib-1.2.8\adler32.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\compress.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\crc32.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\deflate.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\gzclose.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\gzlib.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\gzread.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\gzwrite.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\infback.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\inffast.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\inflate.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\inftrees.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\trees.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\uncompr.c" />
-    <ClCompile Include="..\..\lib\zlib-1.2.8\zutil.c" />
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\lib\zlib-1.2.8\crc32.h" />
-    <ClInclude Include="..\..\lib\zlib-1.2.8\deflate.h" />
-    <ClInclude Include="..\..\lib\zlib-1.2.8\gzguts.h" />
-    <ClInclude Include="..\..\lib\zlib-1.2.8\inffast.h" />
-    <ClInclude Include="..\..\lib\zlib-1.2.8\inffixed.h" />
-    <ClInclude Include="..\..\lib\zlib-1.2.8\inflate.h" />
-    <ClInclude Include="..\..\lib\zlib-1.2.8\inftrees.h" />
-    <ClInclude Include="..\..\lib\zlib-1.2.8\trees.h" />
-    <ClInclude Include="..\..\lib\zlib-1.2.8\zconf.h" />
-    <ClInclude Include="..\..\lib\zlib-1.2.8\zlib.h" />
-    <ClInclude Include="..\..\lib\zlib-1.2.8\zutil.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src-cpp\rdkafkacpp.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src-cpp\rdkafkacpp_int.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\ConfImpl.cpp" />
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\ConsumerImpl.cpp" />
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\HandleImpl.cpp" />
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\KafkaConsumerImpl.cpp" />
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\MessageImpl.cpp" />
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\MetadataImpl.cpp" />
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\ProducerImpl.cpp" />
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\QueueImpl.cpp" />
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\RdKafka.cpp" />
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\TopicImpl.cpp" />
+    <ClCompile Include="..\..\lib\librdkafka\src-cpp\TopicPartitionImpl.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
