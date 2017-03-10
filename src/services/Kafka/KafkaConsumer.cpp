@@ -52,7 +52,7 @@ bool KafkaConsumer::Stop()
 	return IService::Stop();
 }
 
-bool KafkaConsumer::Subscribe( const std::string & a_Topic, 
+bool KafkaConsumer::Subscribe( const std::string & a_Topic, int a_Partition,
 	Delegate<std::string *> a_MessageCallback )
 {
 	Subscription * pSub = &m_SubscriptionMap[ a_Topic ];
@@ -62,6 +62,8 @@ bool KafkaConsumer::Subscribe( const std::string & a_Topic,
 	pSub->m_bActive = true;
 	pSub->m_bStopped = false;
 	pSub->m_Topic = a_Topic;
+	pSub->m_Partition = a_Partition;
+	pSub->m_Callback = a_MessageCallback;
 
 	ThreadPool::Instance()->InvokeOnThread<Subscription *>( DELEGATE( KafkaConsumer, ConsumeThread, Subscription *, this ), pSub );
 	return true;
@@ -91,7 +93,11 @@ void KafkaConsumer::ConsumeThread( Subscription * a_pSub )
 {
 	try {
 		if (! Consume( a_pSub ) )
+		{
 			Log::Error( "KafkaConsumer", "Failed to run consumer." );
+			// invoke the callback with a NULL, so they know the subscribe has failed.
+			a_pSub->m_Callback( NULL );
+		}
 	}
 	catch( const std::exception & ex )
 	{
@@ -122,12 +128,12 @@ bool KafkaConsumer::Consume( Subscription * a_pSub )
 	rd_kafka_topic_conf_t * pTopicConf = rd_kafka_topic_conf_new();
 	rd_kafka_topic_t * pTopic = rd_kafka_topic_new(pConsumer, a_pSub->m_Topic.c_str(), pTopicConf );
 
-	int partition = RD_KAFKA_PARTITION_UA;
 	int64_t start_offset = RD_KAFKA_OFFSET_END;
-
-	if ( rd_kafka_consume_start( pTopic, partition, start_offset ) != 0 )
+	if ( rd_kafka_consume_start( pTopic, a_pSub->m_Partition, start_offset ) != 0 )
 	{
-		Log::Error( "KafkaConsumer", "Failed to start consuming." );
+		rd_kafka_resp_err_t e = rd_kafka_last_error();
+		Log::Error( "KafkaConsumer", "Failed to start consuming topic %s: %s", 
+			a_pSub->m_Topic.c_str(), rd_kafka_err2str(e) );
 		return false;
 	}
 
@@ -135,7 +141,7 @@ bool KafkaConsumer::Consume( Subscription * a_pSub )
 	{
 		rd_kafka_poll( pConsumer, 250 );
 
-		rd_kafka_message_t * pMsg = rd_kafka_consume( pTopic, partition, 250 );
+		rd_kafka_message_t * pMsg = rd_kafka_consume( pTopic, a_pSub->m_Partition, 250 );
 		if (! pMsg )
 			continue;
 
@@ -144,7 +150,7 @@ bool KafkaConsumer::Consume( Subscription * a_pSub )
 			std::string * pPayload = new std::string( (const char *)pMsg->payload, pMsg->len );
 			ThreadPool::Instance()->InvokeOnMain<std::string *>( a_pSub->m_Callback, pPayload );
 		}
-		else
+		else if ( pMsg->err != RD_KAFKA_RESP_ERR__PARTITION_EOF )
 		{
 			Log::Error( "KafkaConsumer", "Consume error %s for topic %s", 
 				rd_kafka_message_errstr( pMsg ), rd_kafka_topic_name( pMsg->rkt ) );
@@ -153,13 +159,12 @@ bool KafkaConsumer::Consume( Subscription * a_pSub )
 		rd_kafka_message_destroy( pMsg );
 	}
 
-	rd_kafka_consume_stop( pTopic, partition );
+	rd_kafka_consume_stop( pTopic, a_pSub->m_Partition );
 	while (rd_kafka_outq_len(pConsumer) > 0)
 		rd_kafka_poll(pConsumer, 10);
 
 	rd_kafka_topic_destroy( pTopic );
 	rd_kafka_destroy( pConsumer );
-	rd_kafka_conf_destroy( pConfig );
 
 	a_pSub->m_bStopped = true;
 	return true;

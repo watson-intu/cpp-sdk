@@ -43,11 +43,11 @@ public:
 		ThreadPool pool(1);
 
 		KafkaConsumer consumer;
-		if ( config.IsConfigured( consumer.GetServiceId(), true ) )
+		if ( config.FindServiceConfig( consumer.GetServiceId() ) != NULL )
 		{
 			Test( consumer.Start() );
 
-			consumer.Subscribe( "graphChanges", 
+			consumer.Subscribe( "graphChange", 0,
 				DELEGATE(TestKafka, OnGraphChanges, std::string *, this));
 			Spin(m_bConsumeTested, 300.0f);
 			Test(m_bConsumeTested);

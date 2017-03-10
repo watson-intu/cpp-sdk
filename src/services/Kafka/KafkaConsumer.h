@@ -39,7 +39,7 @@ public:
 	virtual bool Stop();
 
 	//! Mutators
-	bool				Subscribe( const std::string & a_Topic, 
+	bool				Subscribe( const std::string & a_Topic, int a_Partition,
 							Delegate<std::string *> a_MessageCallback );
 	bool				Unsubscribe( const std::string & a_Topic, bool a_bBlocking = false );
 
@@ -49,12 +49,13 @@ protected:
 
 	struct Subscription
 	{
-		Subscription() : m_bActive( false ), m_bStopped(false)
+		Subscription() : m_bActive( false ), m_bStopped(false), m_Partition( 0 )
 		{}
 
 		volatile bool		m_bActive;
 		volatile bool		m_bStopped;
 		std::string			m_Topic;
+		int					m_Partition;
 		Delegate<std::string *>
 							m_Callback;
 	};
