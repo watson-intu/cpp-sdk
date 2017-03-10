@@ -16,8 +16,53 @@
 #include "utils/Log.h"
 #include "tinyxml/tinyxml.h"
 
+#include <fstream>
+
 //! What character is used a seperator for paths
 #define PARAMS_PATH_SEPERATOR		'/'
+
+bool JsonHelpers::Load(const std::string & a_File, Json::Value & a_Json )
+{
+	try {
+		std::ifstream input( a_File.c_str() );
+		if (!input.is_open())
+		{
+			Log::Error("JsonHelpers::Load", "Failed to open %s", a_File.c_str() );
+			return false;
+		}
+
+		Json::Reader reader(Json::Features::strictMode());
+		if (!reader.parse(input, a_Json))
+		{
+			Log::Error("JsonHelpers::Load", "Failed to parse %s: %s", 
+				a_File.c_str(), reader.getFormattedErrorMessages().c_str() );
+			return false;
+		}
+		input.close();
+		return true;
+	}
+	catch( const std::exception & ex )
+	{
+		Log::Error("JsonHelpers::Load", "Caught exception loading %s: %s", a_File.c_str(), ex.what() );
+	}
+	return false;
+}
+
+//! Save JSON into the given file
+bool JsonHelpers::Save(const std::string & a_File, const Json::Value & a_Json )
+{
+	try {
+		std::string json_string( Json::StyledWriter().write(a_Json) );
+		std::ofstream output( a_File.c_str() );
+		output << json_string;
+		return true;
+	}
+	catch( const std::exception & ex )
+	{
+		Log::Error("JsonHelpers::Save", "Caught exception saving %s: %s", a_File.c_str(), ex.what() );
+	}
+	return false;
+}
 
 //! Validate a given path, returns false if any member of the path doesn't exist.
 bool JsonHelpers::ValidPath(const Json::Value & a_Json, const std::string & a_Path)
