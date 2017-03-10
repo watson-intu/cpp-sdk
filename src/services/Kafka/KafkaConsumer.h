@@ -17,13 +17,6 @@
 #include "services/IService.h"
 #include "WDCLib.h"
 
-struct rd_kafka_conf_s;
-typedef struct rd_kafka_conf_s rd_kafka_conf_t;
-struct rd_kafka_s;
-typedef struct rd_kafka_s rd_kafka_t;
-struct rd_kafka_topic_partition_list_s;
-typedef struct rd_kafka_topic_partition_list_s rd_kafka_topic_partition_list_t;
-
 //! low-level service interface for communicating with Kafka
 class WDC_API KafkaConsumer : public IService
 {
@@ -31,8 +24,8 @@ public:
 	RTTI_DECL();
 
 	//! Types
-	typedef boost::shared_ptr<Kafka>			SP;
-	typedef boost::weak_ptr<Kafka>				WP;
+	typedef boost::shared_ptr<KafkaConsumer>			SP;
+	typedef boost::weak_ptr<KafkaConsumer>				WP;
 
 	//! Construction
 	KafkaConsumer();
@@ -45,25 +38,33 @@ public:
 	virtual bool Start();
 	virtual bool Stop();
 
-	//! Accessors
-
 	//! Mutators
+	bool				Subscribe( const std::string & a_Topic, 
+							Delegate<std::string *> a_MessageCallback );
+	bool				Unsubscribe( const std::string & a_Topic, bool a_bBlocking = false );
 
 protected:
 	//! Types
 	typedef std::vector<std::string>		StringList;
 
+	struct Subscription
+	{
+		Subscription() : m_bActive( false ), m_bStopped(false)
+		{}
+
+		volatile bool		m_bActive;
+		volatile bool		m_bStopped;
+		std::string			m_Topic;
+		Delegate<std::string *>
+							m_Callback;
+	};
+	typedef std::map<std::string,Subscription>	SubscriptionMap;
+
 	//! Data
-	volatile bool		m_bActive;
-	volatile bool		m_bThreadStopped;
-	std::string			m_HostName;
+	SubscriptionMap		m_SubscriptionMap;
 
-	rd_kafka_conf_t *	m_pKafkaConfig;
-	rd_kafka_t *		m_pKafkaConsumer;
-	rd_kafka_topic_partition_list_t *
-						m_pTopics;
-
-	void ConsumeThread();
+	void ConsumeThread( Subscription * a_pSub );
+	bool Consume( Subscription * a_pSub );
 };
 
 #endif

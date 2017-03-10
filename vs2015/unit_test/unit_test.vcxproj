@@ -110,6 +110,7 @@
     <ClCompile Include="..\..\tests\TestFactory.cpp" />
     <ClCompile Include="..\..\tests\TestGetMac.cpp" />
     <ClCompile Include="..\..\tests\TestISerializable.cpp" />
+    <ClCompile Include="..\..\tests\TestKafka.cpp" />
     <ClCompile Include="..\..\tests\TestLanguageTranslation.cpp" />
     <ClCompile Include="..\..\tests\TestMain.cpp" />
     <ClCompile Include="..\..\tests\TestNaturalLanguageClassifier.cpp" />

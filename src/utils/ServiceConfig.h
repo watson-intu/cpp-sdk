@@ -61,10 +61,14 @@ struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared
 
 	virtual void Deserialize(const Json::Value & json)
 	{
-		m_ServiceId = json["m_ServiceId"].asString();
-		m_URL = json["m_URL"].asString();
-		m_User = json["m_User"].asString();
-		m_Password = json["m_Password"].asString();
+		if ( json["m_ServiceId"].isString() )
+			m_ServiceId = json["m_ServiceId"].asString();
+		if ( json["m_URL"].isString() )
+			m_URL = json["m_URL"].asString();
+		if ( json["m_User"].isString() )
+			m_User = json["m_User"].asString();
+		if ( json["m_Password"].isString() )
+			m_Password = json["m_Password"].asString();
 
 		DeserializeMap("m_CustomMap", json, m_CustomMap);
 	}

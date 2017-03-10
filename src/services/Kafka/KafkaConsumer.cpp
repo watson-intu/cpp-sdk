@@ -12,103 +12,156 @@
 /* ***************************************************************** */
 
 #include "KafkaConsumer.h"
+
+#define LIBRDKAFKA_STATICLIB
 #include "librdkafka/src/rdkafka.h"
 
-KafkaConsumer::KafkaConsumer() : IService("KafkaConsumerV1"), 
-	m_bActive(false),
-	m_bThreadStopped(false),
-	m_pKafkaConfig(NULL),
-	m_pKafkaConsumer(NULL)
+RTTI_IMPL( KafkaConsumer, IService );
+REG_SERIALIZABLE( KafkaConsumer );
+
+KafkaConsumer::KafkaConsumer() : IService("KafkaConsumerV1")
 {}
 
 void KafkaConsumer::Serialize(Json::Value & json)
 {
 	IService::Serialize(json);
-	json["m_HostName"] = m_HostName;
 }
 
 void KafkaConsumer::Deserialize(const Json::Value & json)
 {
 	IService::Deserialize(json);
-	if (json["m_HostName"].isString())
-		m_HostName = json["m_HostName"].asString();
 }
 
 bool KafkaConsumer::Start()
 {
-	char error[512];
-
 	if (!IService::Start())
 		return false;
-	if (m_bActive)
-		return false;
-	m_bActive = true;
-
-	m_pKafkaConfig = rd_kafka_conf_new();
-	if ( m_pConfig->m_CustomMap.find( "client.id" ) != m_pConfig->m_CustomMap.end() )
-	{
-		if (rd_kafka_conf_set(m_pKafkaConfig, "client.id", m_pConfig->m_CustomMap["client.id"].c_str(),
-			error, sizeof(error)) != RD_KAFKA_CONF_OK)
-		{
-			Log::Error("Kafka", "Failed to set client.id: %s", error);
-			return false;
-		}
-	}
-	if ( m_pConfig->m_CustomMap.find( "group.id" ) != m_pConfig->m_CustomMap.end() )
-	{
-		if (rd_kafka_conf_set(m_pKafkaConfig, "group.id", m_pConfig->m_CustomMap["group.id"].c_str(),
-			error, sizeof(error)) != RD_KAFKA_CONF_OK)
-		{
-			Log::Error("Kafka", "Failed to set group.id: %s", error);
-			return false;
-		}
-	}
-	if ( m_pConfig->m_CustomMap.find( "bootstrap.servers" ) != m_pConfig->m_CustomMap.end() )
-	{
-		if (rd_kafka_conf_set(m_pKafkaConfig, "bootstrap.servers", m_pConfig->m_URL.c_str(),
-			error, sizeof(error)) != RD_KAFKA_CONF_OK)
-		{
-			Log::Error("Kafka", "Failed to set client.id: %s", error);
-			return false;
-		}
-	}
-
-	m_pKafkaConsumer = rd_kafka_new(RD_KAFKA_CONSUMER,m_pKafkaConfig,error,sizeof(error));
-	if ( m_pKafkaConsumer == NULL )
-	{
-		Log::Error( "KafkaConsumer", "Failed to create consumer: %s", error) );
-		return false;
-	}
-			
 
 	return true;
 }
 
 bool KafkaConsumer::Stop()
 {
-	if (!m_bActive)
-		return false;
-
-	m_bActive = false;
-	while(! m_bThreadStopped )
-		boost::this_thread::sleep( boost::posix_time::milliseconds(5) );
-
-	if ( m_pKafkaConsumer != NULL )
+	for( SubscriptionMap::iterator iSub = m_SubscriptionMap.begin(); 
+		iSub != m_SubscriptionMap.end(); ++iSub )
 	{
-		rd_kafka_destroy( m_pKafkaConsumer );
-		m_pKafkaConsumer = NULL;
+		Unsubscribe( iSub->first, true );
 	}
-	if ( m_pKafkaConfig != NULL )
-	{
-		rd_kafka_conf_destroy( m_pKafkaConfig );
-		m_pKafkaConfig = NULL;
-	}
+	m_SubscriptionMap.clear();
 
 	return IService::Stop();
 }
 
-void KafkaConsumer::ConsumeThread()
+bool KafkaConsumer::Subscribe( const std::string & a_Topic, 
+	Delegate<std::string *> a_MessageCallback )
 {
+	Subscription * pSub = &m_SubscriptionMap[ a_Topic ];
+	if ( pSub->m_bActive )
+		return false;		// already active
 
+	pSub->m_bActive = true;
+	pSub->m_bStopped = false;
+	pSub->m_Topic = a_Topic;
+
+	ThreadPool::Instance()->InvokeOnThread<Subscription *>( DELEGATE( KafkaConsumer, ConsumeThread, Subscription *, this ), pSub );
+	return true;
+}
+
+bool KafkaConsumer::Unsubscribe( const std::string & a_Topic, bool a_bBlocking /*= false*/ )
+{
+	Subscription * pSub = &m_SubscriptionMap[ a_Topic ];
+	if (! pSub->m_bActive )
+		return false;		// already active
+
+	pSub->m_bActive = false;
+	if ( a_bBlocking )
+	{
+		while(! pSub->m_bStopped )
+		{
+			ThreadPool::Instance()->ProcessMainThread();
+			boost::this_thread::sleep( boost::posix_time::milliseconds(5) );
+		}
+	}
+
+	return true;
+}
+
+
+void KafkaConsumer::ConsumeThread( Subscription * a_pSub )
+{
+	try {
+		if (! Consume( a_pSub ) )
+			Log::Error( "KafkaConsumer", "Failed to run consumer." );
+	}
+	catch( const std::exception & ex )
+	{
+		Log::Error( "KafkaConsumer", "Caught Exception: %s", ex.what() );
+	}
+}
+
+bool KafkaConsumer::Consume( Subscription * a_pSub )
+{
+	char error[500];
+
+	rd_kafka_conf_t * pConfig = rd_kafka_conf_new();
+
+	for( ServiceConfig::CustomMap::const_iterator iConfig = m_pConfig->m_CustomMap.begin(); 
+		iConfig != m_pConfig->m_CustomMap.end(); ++iConfig )
+	{
+		if (rd_kafka_conf_set(pConfig, iConfig->first.c_str(), iConfig->second.c_str(),	error, sizeof(error)) != RD_KAFKA_CONF_OK)
+			Log::Warning("Kafka", "Failed to set %s to %s: %s", iConfig->first.c_str(), iConfig->second.c_str(), error);
+	}
+
+	rd_kafka_t * pConsumer = rd_kafka_new(RD_KAFKA_CONSUMER,pConfig,error,sizeof(error));
+	if ( pConsumer == NULL )
+	{
+		Log::Error( "KafkaConsumer", "Failed to create consumer: %s", error );
+		return false;
+	}
+
+	rd_kafka_topic_conf_t * pTopicConf = rd_kafka_topic_conf_new();
+	rd_kafka_topic_t * pTopic = rd_kafka_topic_new(pConsumer, a_pSub->m_Topic.c_str(), pTopicConf );
+
+	int partition = RD_KAFKA_PARTITION_UA;
+	int64_t start_offset = RD_KAFKA_OFFSET_END;
+
+	if ( rd_kafka_consume_start( pTopic, partition, start_offset ) != 0 )
+	{
+		Log::Error( "KafkaConsumer", "Failed to start consuming." );
+		return false;
+	}
+
+	while( a_pSub->m_bActive )
+	{
+		rd_kafka_poll( pConsumer, 250 );
+
+		rd_kafka_message_t * pMsg = rd_kafka_consume( pTopic, partition, 250 );
+		if (! pMsg )
+			continue;
+
+		if ( pMsg->err == 0 )
+		{
+			std::string * pPayload = new std::string( (const char *)pMsg->payload, pMsg->len );
+			ThreadPool::Instance()->InvokeOnMain<std::string *>( a_pSub->m_Callback, pPayload );
+		}
+		else
+		{
+			Log::Error( "KafkaConsumer", "Consume error %s for topic %s", 
+				rd_kafka_message_errstr( pMsg ), rd_kafka_topic_name( pMsg->rkt ) );
+		}
+
+		rd_kafka_message_destroy( pMsg );
+	}
+
+	rd_kafka_consume_stop( pTopic, partition );
+	while (rd_kafka_outq_len(pConsumer) > 0)
+		rd_kafka_poll(pConsumer, 10);
+
+	rd_kafka_topic_destroy( pTopic );
+	rd_kafka_destroy( pConsumer );
+	rd_kafka_conf_destroy( pConfig );
+
+	a_pSub->m_bStopped = true;
+	return true;
 }
 
