@@ -34,6 +34,10 @@ qi_create_lib(minizip STATIC
 qi_use_lib(minizip zlib)
 qi_stage_lib(minizip)
 
+file(GLOB_RECURSE KAFKA_C RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "librdkafka/src/*.c")
+qi_create_lib(kafka STATIC ${KAFKA_C})
+qi_stage_lib(kafka)
+
 qi_create_lib(jsoncpp STATIC
 		jsoncpp/jsoncpp.cpp
 		jsoncpp/json/json-forwards.h

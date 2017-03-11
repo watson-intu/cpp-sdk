@@ -5,9 +5,9 @@ file(GLOB_RECURSE WDC_CPP RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cpp")
 qi_create_lib(wdc SHARED ${WDC_CPP} )
 
 if (CMAKE_HOST_APPLE)
-	qi_use_lib(wdc dl zlib minizip jsoncpp tinythread++ crossguid base64 boost boost_filesystem boost_thread boost_system openssl tinyxml_static)
+	qi_use_lib(wdc dl zlib minizip jsoncpp tinythread++ crossguid base64 boost boost_filesystem boost_thread boost_system openssl tinyxml_static kafka)
 else()
-	qi_use_lib(wdc dl zlib minizip jsoncpp tinythread++ crossguid base64 boost boost_filesystem boost_thread boost_system openssl rt tinyxml_static)
+	qi_use_lib(wdc dl zlib minizip jsoncpp tinythread++ crossguid base64 boost boost_filesystem boost_thread boost_system openssl rt tinyxml_static kafka)
 endif()
 qi_stage_lib(wdc)
 
