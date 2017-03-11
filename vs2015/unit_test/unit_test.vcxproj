@@ -105,6 +105,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\tests\TestAlchemy.cpp" />
     <ClCompile Include="..\..\tests\TestConversation.cpp" />
+    <ClCompile Include="..\..\tests\TestConversationRequestIntents.cpp" />
     <ClCompile Include="..\..\tests\TestDataCache.cpp" />
     <ClCompile Include="..\..\tests\TestDelegate.cpp" />
     <ClCompile Include="..\..\tests\TestFactory.cpp" />
