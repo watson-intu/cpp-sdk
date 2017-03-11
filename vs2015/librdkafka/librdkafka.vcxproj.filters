@@ -3,6 +3,11 @@
   <ItemGroup>
     <Filter Include="src">
       <UniqueIdentifier>{2a6b22dc-548d-40e9-b362-d3c719e81171}</UniqueIdentifier>
+      <Extensions>*.c</Extensions>
+    </Filter>
+    <Filter Include="headers">
+      <UniqueIdentifier>{762febed-a490-45ad-9770-1b7951392eb4}</UniqueIdentifier>
+      <Extensions>*.h</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -75,15 +80,6 @@
     <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_roundrobin_assignor.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_sasl.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_sasl_cyrus.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_sasl_win32.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_subscription.c">
       <Filter>src</Filter>
     </ClCompile>
@@ -129,160 +125,160 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\librdkafka\src\queue.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rd.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdaddr.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdatomic.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdavg.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdavl.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdcrc32.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdendian.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdgz.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdinterval.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_assignor.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_broker.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_buf.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_cgrp.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_conf.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_event.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_feature.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_int.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_metadata.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_msg.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_offset.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_op.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_partition.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_pattern.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_proto.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_queue.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_request.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_sasl.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_sasl_int.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_subscription.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_timer.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_topic.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_transport.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_transport_int.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdlist.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdlog.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdports.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdposix.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdrand.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdregex.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdsignal.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdsysqueue.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdtime.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdtypes.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\rdwin32.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\regexp.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\snappy.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\snappy_compat.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\tinycthread.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\win32_config.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\librdkafka\src\xxhash.h">
-      <Filter>src</Filter>
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

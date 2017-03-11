@@ -97,18 +97,6 @@
     <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_range_assignor.c" />
     <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_request.c" />
     <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_roundrobin_assignor.c" />
-    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_sasl.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_sasl_cyrus.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_sasl_win32.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_subscription.c" />
     <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_timer.c" />
     <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_topic.c" />
