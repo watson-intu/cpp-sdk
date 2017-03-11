@@ -36,6 +36,7 @@ qi_stage_lib(minizip)
 
 file(GLOB_RECURSE KAFKA_C RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "librdkafka/src/*.c")
 qi_create_lib(kafka STATIC ${KAFKA_C})
+qi_use_lib(kafka openssl zlib)
 qi_stage_lib(kafka)
 
 qi_create_lib(jsoncpp STATIC
