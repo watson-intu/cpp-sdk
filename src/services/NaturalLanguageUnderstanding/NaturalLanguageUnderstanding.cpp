@@ -20,13 +20,17 @@
 REG_SERIALIZABLE( NaturalLanguageUnderstanding );
 RTTI_IMPL( NaturalLanguageUnderstanding, IService );
 
-NaturalLanguageUnderstanding::NaturalLanguageUnderstanding() : IService("NaturalLanguageUnderstandingV1")
+NaturalLanguageUnderstanding::NaturalLanguageUnderstanding() : IService("NaturalLanguageUnderstandingV1"),
+                                                               m_APIVersion( "2017-02-27" ),
+                                                               m_Language( "en" )
 {}
 
 //! ISerializable
 void NaturalLanguageUnderstanding::Serialize(Json::Value & json)
 {
     IService::Serialize(json);
+    json["m_Version"] = m_APIVersion;
+    json["m_Language"] = m_Language;
     SerializeVector("m_ReturnParameters", m_ReturnParameters, json);
 }
 
@@ -34,6 +38,11 @@ void NaturalLanguageUnderstanding::Deserialize(const Json::Value & json)
 {
     IService::Deserialize(json);
     DeserializeVector("m_ReturnParameters", json, m_ReturnParameters);
+
+    if ( json.isMember("m_Version") )
+        m_APIVersion = json["m_Version"].asString();
+    if ( json.isMember("m_Language") )
+        m_Language = json["m_Language"].asString();
 
     if (m_ReturnParameters.size() == 0)
     {
@@ -66,9 +75,9 @@ bool NaturalLanguageUnderstanding::Start()
 void NaturalLanguageUnderstanding::GetEntities(const std::string & a_Text, Delegate<const Json::Value &> a_Callback)
 {
     std::string parameters = "/v1/analyze";
-    parameters += "?version=2017-02-27";
+    parameters += "?version=" + m_APIVersion;
     parameters += "&features=entities";
-    parameters += "&language=en";
+    parameters += "&language=" + m_Language;
     parameters += "&text=" + StringUtil::UrlEscape( a_Text );
 
     Headers headers;

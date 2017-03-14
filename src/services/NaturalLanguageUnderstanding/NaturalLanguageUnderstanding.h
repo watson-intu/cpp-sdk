@@ -51,6 +51,8 @@ private:
 
 //!Data
 std::vector<std::string>	m_ReturnParameters;
+std::string		m_APIVersion;
+std::string		m_Language;
 
 
 };
