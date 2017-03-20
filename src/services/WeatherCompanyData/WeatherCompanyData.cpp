@@ -124,7 +124,6 @@ void WeatherCompanyData::GetLocation(const std::string & a_Location, Delegate<co
     std::string parameters = "/v3";
     parameters += "/location/search";
     parameters += "?query=" + StringUtil::UrlEscape(a_Location);
-    parameters += "&locationType=city";
     parameters += "&language=" + m_Language;
 
     new RequestJson(this, parameters, "GET", m_Headers, EMPTY_STRING, a_Callback);
