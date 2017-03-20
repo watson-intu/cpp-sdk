@@ -111,6 +111,7 @@
     <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp" />
     <ClCompile Include="..\..\src\services\LanguageTranslator\LanguageTranslator.cpp" />
     <ClCompile Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp" />
+    <ClCompile Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.cpp" />
     <ClCompile Include="..\..\src\services\PersonalityInsights\PersonalityInsights.cpp" />
     <ClCompile Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.cpp" />
     <ClCompile Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="..\..\src\services\LanguageTranslator\LanguageTranslator.h" />
     <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\DataModels.h" />
     <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h" />
+    <ClInclude Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.h" />
     <ClInclude Include="..\..\src\services\PersonalityInsights\DataModels.h" />
     <ClInclude Include="..\..\src\services\PersonalityInsights\PersonalityInsights.h" />
     <ClInclude Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.h" />

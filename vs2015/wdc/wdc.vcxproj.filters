@@ -73,6 +73,9 @@
     <Filter Include="services\Kafka">
       <UniqueIdentifier>{0934eb3f-ee08-4178-8ca3-aad631da99f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="services\NaturalLanguageUnderstanding">
+      <UniqueIdentifier>{fa8f1ef4-6d42-4b2b-b21a-dec411df92b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\ISerializable.cpp">
@@ -230,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp">
       <Filter>services\Kafka</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.cpp">
+      <Filter>services\NaturalLanguageUnderstanding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -464,6 +470,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h">
       <Filter>services\Kafka</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.h">
+      <Filter>services\NaturalLanguageUnderstanding</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
