@@ -105,7 +105,6 @@ private:
 	void OnResponse( const std::string & a_Data )
 	{
 		Sound * pSound = new Sound();
-		Log::Debug("TextToSpeech", "a_Data is: %s", a_Data.c_str());
 		if (! pSound->Load( a_Data ) )
 		{
 			Log::Error( "RequestSound", "Failed to parse sound." );
