@@ -18,22 +18,6 @@
 #define WITH_GXX 1
 // PIC
 #define HAVE_PIC 1
-// osxlib
-#define WITH_OSXLD 1
-// __atomic_32
-#define HAVE_ATOMICS_32 1
-// __atomic_32
-#define HAVE_ATOMICS_32_ATOMIC 1
-// atomic_32
-#define ATOMIC_OP32(OP1,OP2,PTR,VAL) __atomic_ ## OP1 ## _ ## OP2(PTR, VAL, __ATOMIC_SEQ_CST)
-// __atomic_64
-#define HAVE_ATOMICS_64 1
-// __atomic_64
-#define HAVE_ATOMICS_64_ATOMIC 1
-// atomic_64
-#define ATOMIC_OP64(OP1,OP2,PTR,VAL) __atomic_ ## OP1 ## _ ## OP2(PTR, VAL, __ATOMIC_SEQ_CST)
-// atomic_64
-#define ATOMIC_OP(OP1,OP2,PTR,VAL) __atomic_ ## OP1 ## _ ## OP2(PTR, VAL, __ATOMIC_SEQ_CST)
 // parseversion
 #define RDKAFKA_VERSION_STR "0.9.4"
 // parseversion
