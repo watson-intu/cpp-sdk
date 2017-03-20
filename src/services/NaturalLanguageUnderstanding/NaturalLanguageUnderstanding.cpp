@@ -86,3 +86,40 @@ void NaturalLanguageUnderstanding::GetEntities(const std::string & a_Text, Deleg
     new RequestJson(this, parameters, "GET", headers, EMPTY_STRING, a_Callback,
                     new CacheRequest( "TextGetRankedNamedEntities", StringHash::DJB(a_Text.c_str()) ) );
 }
+
+void NaturalLanguageUnderstanding::FindCity(const Json::Value & a_Parse, std::string & a_City)
+{
+    if( a_Parse.isMember("entities") )
+    {
+        std::string location;
+        for(size_t i=0;i<a_Parse["entities"].size();++i)
+        {
+            if (!a_City.empty())
+                break;
+
+            // Only continue if the entity is a Location
+            if (a_Parse["entities"][i]["type"].asString() != "Location")
+                continue;
+
+            location = a_Parse["entities"][i]["text"].asString();
+            if (a_Parse["entities"][i].isMember("disambiguation") &&
+                    a_Parse["entities"][i]["disambiguation"].isMember("subtype"))
+            {
+                Json::Value subtypeList = a_Parse["entities"][i]["disambiguation"]["subtype"];
+                for(size_t j=0;j<subtypeList.size();++j)
+                {
+                    // NLU's subtype list contains City
+                    if (subtypeList[j].asString() == "City")
+                    {
+                        a_City = a_Parse["entities"][i]["text"].asString();
+                        break;
+                    }
+                }
+            }
+        }
+
+        // If City entity was not detected but Location entity was
+        if (!location.empty() && a_City.empty())
+            a_City = location;
+    }
+}
