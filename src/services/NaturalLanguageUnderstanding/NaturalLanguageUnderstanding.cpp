@@ -87,7 +87,7 @@ void NaturalLanguageUnderstanding::GetEntities(const std::string & a_Text, Deleg
                     new CacheRequest( "TextGetRankedNamedEntities", StringHash::DJB(a_Text.c_str()) ) );
 }
 
-void NaturalLanguageUnderstanding::FindCity(const Json::Value & a_Parse, std::string & a_City)
+bool NaturalLanguageUnderstanding::FindCity(const Json::Value & a_Parse, std::string & a_City)
 {
     if( a_Parse.isMember("entities") )
     {
@@ -122,4 +122,9 @@ void NaturalLanguageUnderstanding::FindCity(const Json::Value & a_Parse, std::st
         if (!location.empty() && a_City.empty())
             a_City = location;
     }
+
+    if (a_City.empty())
+        return false;
+    else
+        return true;
 }
