@@ -157,7 +157,10 @@ void TextToSpeech::ToSound( const std::string & a_Text,
 {
 	Connection::SP spConnection(new Connection(this, a_Text, a_StreamCallback, a_WordsCallback));
 	if (!spConnection->Start())
+	{
 		Log::Error("TextToSpeech", "Failed to start streaming Text To Speech service. Can't continue..");
+		a_StreamCallback(NULL);
+	}
 	else
 		m_Connections.push_back(spConnection);
 }
