@@ -45,6 +45,7 @@ virtual bool Start();
 //! Parse the provided text and returns the tags for the parts of the sentence.
 void GetEntities(const std::string & a_Text,
                  Delegate<const Json::Value &> a_Callback);
+bool FindCity(const Json::Value & json, std::string & a_City);
 
 
 private:
