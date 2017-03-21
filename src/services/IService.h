@@ -452,6 +452,12 @@ public:
 			throw WatsonException( "Service config is NULL, make sure you invoke Start()." );
 		return m_pConfig;
 	}
+	bool IsConfigured( AuthType a_AuthType = AUTH_BASIC )
+	{
+		if ( m_pConfig != NULL )
+			return m_pConfig->IsConfigured( a_AuthType );
+		return false;
+	}
 	bool IsCacheEnabled() const
 	{
 		return m_bCacheEnabled;
