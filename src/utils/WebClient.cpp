@@ -321,9 +321,9 @@ public:
 	virtual void SendBinary(const std::string & a_BinaryData)
 	{
 		if (m_eState != CONNECTED && m_eState != CONNECTING)
-			Log::Error( "WebClientT", "SendBinary() called with WebClientT in wrong state." );
+			Log::Error( "WebClientT", "SendBinary() called with WebClientT in wrong state, URL: %s", m_URL.GetURL().c_str() );
 		else if (! m_WebSocket )
-			Log::Error( "WebClientT", "SendBinary() invoked for non-WebSocket." );
+			Log::Error( "WebClientT", "SendBinary() invoked for non-WebSocket, URL: %s", m_URL.GetURL().c_str() );
 		else
 			WS_Send(BINARY_FRAME, a_BinaryData );
 	}
@@ -331,11 +331,11 @@ public:
 	virtual void SendText(const std::string & a_TextData)
 	{
 		if ( utf8::find_invalid( a_TextData.begin(), a_TextData.end()) != a_TextData.end() )
-			Log::Error( "WebClientT", "Invalid characters string passed to SendText()." );
+			Log::Error( "WebClientT", "Invalid characters string passed to SendText(), URL: %s", m_URL.GetURL().c_str() );
 		else if ( m_eState != CONNECTED && m_eState != CONNECTING )
-			Log::Error( "WebClientT", "SendText() called with WebClientT in wrong state." );
+			Log::Error( "WebClientT", "SendText() called with WebClientT in wrong state, URL: %s", m_URL.GetURL().c_str() );
 		else if (! m_WebSocket )
-			Log::Error( "WebClientT", "SendText() invoked for non-WebSocket." );
+			Log::Error( "WebClientT", "SendText() invoked for non-WebSocket, URL: %s", m_URL.GetURL().c_str() );
 		else
 			WS_Send(TEXT_FRAME, a_TextData );
 	}
@@ -343,9 +343,9 @@ public:
 	virtual void SendPing(const std::string & a_PingData)
 	{
 		if (m_eState != CONNECTED && m_eState != CONNECTING)
-			Log::Error( "WebClientT", "SendBinary() called with WebClientT in wrong state." );
+			Log::Error( "WebClientT", "SendBinary() called with WebClientT in wrong state, URL: %s", m_URL.GetURL().c_str() );
 		else if (! m_WebSocket )
-			Log::Error( "WebClientT", "SendBinary() invoked for non-WebSocket." );
+			Log::Error( "WebClientT", "SendBinary() invoked for non-WebSocket, URL: %s", m_URL.GetURL().c_str() );
 		else
 			WS_Send(PING, a_PingData );
 	}
@@ -353,9 +353,9 @@ public:
 	virtual void SendPong(const std::string & a_PingData)
 	{
 		if (m_eState != CONNECTED && m_eState != CONNECTING)
-			Log::Error( "WebClientT", "SendBinary() called with WebClientT in wrong state." );
+			Log::Error( "WebClientT", "SendBinary() called with WebClientT in wrong state, URL: %s", m_URL.GetURL().c_str() );
 		else if (! m_WebSocket )
-			Log::Error( "WebClientT", "SendBinary() invoked for non-WebSocket." );
+			Log::Error( "WebClientT", "SendBinary() invoked for non-WebSocket, URL: %s", m_URL.GetURL().c_str() );
 		else
 			WS_Send(PONG, a_PingData );
 	}
@@ -363,9 +363,9 @@ public:
 	virtual void SendClose(const std::string & a_Reason)
 	{
 		if (m_eState != CONNECTED && m_eState != CONNECTING)
-			Log::Error( "WebClientT", "SendBinary() called with WebClientT in wrong state." );
+			Log::Error( "WebClientT", "SendBinary() called with WebClientT in wrong state, URL: %s", m_URL.GetURL().c_str() );
 		else if (! m_WebSocket )
-			Log::Error( "WebClientT", "SendBinary() invoked for non-WebSocket." );
+			Log::Error( "WebClientT", "SendBinary() invoked for non-WebSocket, URL: %s", m_URL.GetURL().c_str() );
 		else
 			WS_Send(CLOSE, a_Reason );
 	}
@@ -397,7 +397,7 @@ protected:
 		}
 		catch (const std::exception & ex)
 		{
-			Log::Error("WebClientT", "Caught exception: %s", ex.what());
+			Log::Error("WebClientT", "Caught exception: %s, URL: %s", ex.what(), m_URL.GetURL().c_str() );
 			i = boost::asio::ip::tcp::resolver::iterator();
 		}
 
@@ -476,7 +476,7 @@ protected:
 	//! Invoked on main thread.
 	void OnConnected()
 	{
-		Log::DebugLow( "WebClientT", "OnConnected" );
+		Log::DebugLow( "WebClientT", "OnConnected, URL: %s", m_URL.GetURL().c_str() );
 		if ( m_eState == CONNECTING )
 		{
 			SetState( CONNECTED );
@@ -484,7 +484,7 @@ protected:
 		}
 		else
 		{
-			Log::Debug( "WebClientT", "State is not CONNECTING");
+			Log::Debug( "WebClientT", "State is not CONNECTING, URL: %s", m_URL.GetURL().c_str());
 			if ( m_eState == CLOSING )
 				ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnClose, shared_from_this()));
 			else
@@ -552,7 +552,7 @@ protected:
 			delete m_pResponse;
 			m_pResponse = NULL;
 
-			Log::Error( "WebClientT", "Request is empty, closing connection." );
+			Log::Error( "WebClientT", "Request is empty, closing connection, URL: %s", m_URL.GetURL().c_str() );
 			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnClose, shared_from_this() ));
 		}
 		else 
@@ -584,7 +584,7 @@ protected:
 			delete m_pResponse;
 			m_pResponse = NULL;
 
-			Log::DebugLow( "WebClientT", "Error on RequestSent(): %s", error.message().c_str() );
+			Log::DebugLow( "WebClientT", "Error on RequestSent(): %s, URL: %s", error.message().c_str(), m_URL.GetURL().c_str() );
 			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()));
 		}
 	}
@@ -688,7 +688,7 @@ protected:
 		}
 		else 
 		{
-			Log::DebugLow( "WebClientT", "HTTP_ReadHeaders: %s", error.message().c_str() );
+			Log::DebugLow( "WebClientT", "HTTP_ReadHeaders: %s, URL: %s", error.message().c_str(), m_URL.GetURL().c_str() );
 			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()));
 
 			delete m_pResponse;
@@ -854,7 +854,7 @@ protected:
 		}
 		else
 		{
-			Log::DebugLow( "WebClientT", "Error on HTTP_ReadContent(): %s", error.message().c_str() );
+			Log::DebugLow( "WebClientT", "Error on HTTP_ReadContent(): %s, URL: %s", error.message().c_str(), m_URL.GetURL().c_str() );
 			ThreadPool::Instance()->InvokeOnMain(VOID_DELEGATE(WebClientT, OnDisconnected, shared_from_this()));
 			delete m_pResponse;
 			m_pResponse = NULL;
@@ -914,7 +914,7 @@ protected:
 				}
 				else
 				{
-					Log::DebugLow("WebClientT", "Error on WS_Read(): %s (%p)", error.message().c_str(), this );
+					Log::DebugLow("WebClientT", "Error on WS_Read(): %s (%p), URL: %s", error.message().c_str(), this, m_URL.GetURL().c_str() );
 
 					m_SendError = true;
 					if ( m_SendCount == 0 && ThreadPool::Instance() != NULL )
@@ -1073,7 +1073,7 @@ protected:
 			m_eState == CONNECTING || 
 			m_eState == CLOSING )
 		{
-			Log::DebugLow( "WebClientT", "OnClose() closing socket. (%p)", this );
+			Log::DebugLow( "WebClientT", "OnClose() closing socket. (%p), URL: %s", this, m_URL.GetURL().c_str() );
 			SetState( CLOSED );
 		}
 	}
@@ -1094,7 +1094,7 @@ protected:
 			{
 				if ( m_RetryAttempts++ < MAX_ATTEMPTS )
 				{
-					Log::DebugMed( "WebClientT", "Resending (Sent: %d, Retry %d of %d): %s", 
+					Log::DebugMed( "WebClientT", "Resending (Sent: %d, Retry %d of %d), URL: %s", 
 						m_RequestsSent, m_RetryAttempts, MAX_ATTEMPTS, m_URL.GetURL().c_str() );
 
 					SetState( RETRY );
@@ -1103,7 +1103,7 @@ protected:
 				}
 				else
 				{
-					Log::Error( "WebClientT", "Failed send: %s", m_URL.GetURL().c_str() );
+					Log::Error( "WebClientT", "Failed send, URL: %s", m_URL.GetURL().c_str() );
 					SetState(DISCONNECTED);
 				}
 			}
@@ -1245,8 +1245,8 @@ protected:
 		}
 		else
 		{
-			Log::DebugLow( "WebClientT", "Handshake Failed with %s:%d: %s", 
-				m_URL.GetHost().c_str(), m_URL.GetPort(), error.message().c_str() );
+			Log::DebugLow( "WebClientT", "Handshake Failed with %s %s", 
+				m_URL.GetURL().c_str(), error.message().c_str() );
 			ThreadPool::Instance()->InvokeOnMain( VOID_DELEGATE( WebClientT<SocketType>, OnDisconnected, shared_from_this() ) );
 		}
 	}
