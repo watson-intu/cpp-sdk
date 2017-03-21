@@ -57,7 +57,7 @@ bool LanguageTranslator::Start()
 
 void LanguageTranslator::GetServiceStatus( ServiceStatusCallback a_Callback )
 {
-    if (m_pConfig != NULL)
+    if ( IsConfigured() )
         new ServiceStatusChecker(this, a_Callback);
     else
         a_Callback(ServiceStatus(m_ServiceId, false));
