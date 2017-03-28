@@ -57,7 +57,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;_DEBUG;_WINDOWS;_USRDLL;WDC_SERVICES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;..\..\lib\zlib-1.2.8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -78,7 +78,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;NDEBUG;_WINDOWS;_USRDLL;WDC_SERVICES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;..\..\lib\zlib-1.2.8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -95,13 +95,24 @@
     <ClCompile Include="..\..\lib\base64\cdecode.c" />
     <ClCompile Include="..\..\lib\base64\cencode.c" />
     <ClCompile Include="..\..\lib\crossguid\crossguid.cpp" />
+    <ClCompile Include="..\..\lib\minizip\ioapi.c" />
+    <ClCompile Include="..\..\lib\minizip\ioapi_buf.c" />
+    <ClCompile Include="..\..\lib\minizip\ioapi_mem.c" />
+    <ClCompile Include="..\..\lib\minizip\iowin32.c" />
+    <ClCompile Include="..\..\lib\minizip\unzip.c" />
+    <ClCompile Include="..\..\lib\minizip\zip.c" />
     <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
     <ClCompile Include="..\..\src\services\Alchemy\Alchemy.cpp" />
     <ClCompile Include="..\..\src\services\Conversation\Conversation.cpp" />
     <ClCompile Include="..\..\src\services\Dialog\Dialog.cpp" />
+    <ClCompile Include="..\..\src\services\Graph\DataModels.cpp" />
+    <ClCompile Include="..\..\src\services\Graph\Graph.cpp" />
     <ClCompile Include="..\..\src\services\IService.cpp" />
-    <ClCompile Include="..\..\src\services\LanguageTranslation\LanguageTranslation.cpp" />
+    <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp" />
+    <ClCompile Include="..\..\src\services\LanguageTranslator\LanguageTranslator.cpp" />
     <ClCompile Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp" />
+    <ClCompile Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.cpp" />
+    <ClCompile Include="..\..\src\services\PersonalityInsights\PersonalityInsights.cpp" />
     <ClCompile Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.cpp" />
     <ClCompile Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.cpp" />
     <ClCompile Include="..\..\src\services\SpeechToText\SpeechToText.cpp">
@@ -111,13 +122,16 @@
     <ClCompile Include="..\..\src\services\TextToSpeech\TextToSpeech.cpp" />
     <ClCompile Include="..\..\src\services\ToneAnalyzer\ToneAnalyzer.cpp" />
     <ClCompile Include="..\..\src\services\VisualRecognition\VisualRecognition.cpp" />
+    <ClCompile Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.cpp" />
     <ClCompile Include="..\..\src\utils\Config.cpp" />
     <ClCompile Include="..\..\src\utils\DataCache.cpp" />
     <ClCompile Include="..\..\src\utils\Form.cpp" />
     <ClCompile Include="..\..\src\utils\GetMac.cpp" />
     <ClCompile Include="..\..\src\utils\IConditional.cpp" />
+    <ClCompile Include="..\..\src\utils\JpegHelpers.cpp" />
     <ClCompile Include="..\..\src\utils\JsonHelpers.cpp" />
     <ClCompile Include="..\..\src\utils\Logic.cpp" />
+    <ClCompile Include="..\..\src\utils\MD5.cpp" />
     <ClCompile Include="..\..\src\utils\Time.cpp" />
     <ClCompile Include="..\..\src\utils\UniqueID.cpp" />
     <ClCompile Include="..\..\src\utils\ISerializable.cpp" />
@@ -128,9 +142,11 @@
     <ClCompile Include="..\..\src\utils\ThreadPool.cpp" />
     <ClCompile Include="..\..\src\utils\TimerPool.cpp" />
     <ClCompile Include="..\..\src\utils\UnitTest.cpp" />
-    <ClCompile Include="..\..\src\utils\URL.cpp" />
+    <ClCompile Include="..\..\src\utils\WebClientService.cpp" />
     <ClCompile Include="..\..\src\utils\WebServer.cpp" />
     <ClCompile Include="..\..\src\utils\WebSocketFramer.cpp" />
+    <ClCompile Include="..\..\src\utils\URL_.cpp" />
+    <ClCompile Include="..\..\src\utils\ZipFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\base64\cdecode.h" />
@@ -138,6 +154,13 @@
     <ClInclude Include="..\..\lib\base64\decode.h" />
     <ClInclude Include="..\..\lib\base64\encode.h" />
     <ClInclude Include="..\..\lib\crossguid\crossguid.h" />
+    <ClInclude Include="..\..\lib\minizip\crypt.h" />
+    <ClInclude Include="..\..\lib\minizip\ioapi.h" />
+    <ClInclude Include="..\..\lib\minizip\ioapi_buf.h" />
+    <ClInclude Include="..\..\lib\minizip\ioapi_mem.h" />
+    <ClInclude Include="..\..\lib\minizip\iowin32.h" />
+    <ClInclude Include="..\..\lib\minizip\unzip.h" />
+    <ClInclude Include="..\..\lib\minizip\zip.h" />
     <ClInclude Include="..\..\lib\tinythread++\tinythread.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h" />
@@ -148,11 +171,17 @@
     <ClInclude Include="..\..\src\services\Conversation\DataModels.h" />
     <ClInclude Include="..\..\src\services\Dialog\DataModels.h" />
     <ClInclude Include="..\..\src\services\Dialog\Dialog.h" />
+    <ClInclude Include="..\..\src\services\Graph\DataModels.h" />
+    <ClInclude Include="..\..\src\services\Graph\Graph.h" />
     <ClInclude Include="..\..\src\services\IService.h" />
-    <ClInclude Include="..\..\src\services\LanguageTranslation\DataModels.h" />
-    <ClInclude Include="..\..\src\services\LanguageTranslation\LanguageTranslation.h" />
+    <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h" />
+    <ClInclude Include="..\..\src\services\LanguageTranslator\DataModels.h" />
+    <ClInclude Include="..\..\src\services\LanguageTranslator\LanguageTranslator.h" />
     <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\DataModels.h" />
     <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h" />
+    <ClInclude Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.h" />
+    <ClInclude Include="..\..\src\services\PersonalityInsights\DataModels.h" />
+    <ClInclude Include="..\..\src\services\PersonalityInsights\PersonalityInsights.h" />
     <ClInclude Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.h" />
     <ClInclude Include="..\..\src\services\RetrieveAndRank\DataModels.h" />
     <ClInclude Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.h" />
@@ -163,6 +192,7 @@
     <ClInclude Include="..\..\src\services\ToneAnalyzer\DataModels.h" />
     <ClInclude Include="..\..\src\services\ToneAnalyzer\ToneAnalyzer.h" />
     <ClInclude Include="..\..\src\services\VisualRecognition\VisualRecognition.h" />
+    <ClInclude Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.h" />
     <ClInclude Include="..\..\src\utils\Config.h" />
     <ClInclude Include="..\..\src\utils\DataCache.h" />
     <ClInclude Include="..\..\src\utils\Form.h" />
@@ -171,6 +201,7 @@
     <ClInclude Include="..\..\src\utils\IWebClient.h" />
     <ClInclude Include="..\..\src\utils\IWebServer.h" />
     <ClInclude Include="..\..\src\utils\IWebSocket.h" />
+    <ClInclude Include="..\..\src\utils\JpegHelpers.h" />
     <ClInclude Include="..\..\src\utils\JsonHelpers.h" />
     <ClInclude Include="..\..\src\utils\Logic.h" />
     <ClInclude Include="..\..\src\utils\MD5.h" />
@@ -178,7 +209,6 @@
     <ClInclude Include="..\..\src\utils\SHA1.h" />
     <ClInclude Include="..\..\src\utils\UniqueID.h" />
     <ClInclude Include="..\..\src\utils\UnitTest.h" />
-    <ClInclude Include="..\..\src\utils\WebClient.h" />
     <ClInclude Include="..\..\src\utils\ServiceConfig.h" />
     <ClInclude Include="..\..\src\utils\Delegate.h" />
     <ClInclude Include="..\..\src\utils\Factory.h" />
@@ -194,9 +224,10 @@
     <ClInclude Include="..\..\src\utils\TimerPool.h" />
     <ClInclude Include="..\..\src\utils\URL.h" />
     <ClInclude Include="..\..\src\utils\WatsonException.h" />
+    <ClInclude Include="..\..\src\utils\WebClientService.h" />
     <ClInclude Include="..\..\src\utils\WebSocketFramer.h" />
+    <ClInclude Include="..\..\src\utils\ZipFile.h" />
     <ClInclude Include="..\..\src\WDCLib.h" />
-    <ClInclude Include="Base36.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\CMakeLists.txt" />
@@ -208,11 +239,16 @@
     <ProjectReference Include="..\jsoncpp\jsoncpp.vcxproj">
       <Project>{28ba4301-4c55-41d2-b122-01dbde375452}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\librdkafka\librdkafka.vcxproj">
+      <Project>{235811ed-0ab6-4309-b52c-54ab38590f68}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\tinyxml\tinyxml.vcxproj">
       <Project>{7e45de27-419e-469c-affa-f669750d6338}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{44a53853-2d97-4f4b-860c-52edd74dfb39}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

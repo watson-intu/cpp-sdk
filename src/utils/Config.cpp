@@ -112,21 +112,22 @@ bool Config::StartServices()
 {
 	if ( m_bServicesActive )
 		return false;
+
 	m_bServicesActive = true;
-	for (ServiceList::const_iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService)
+	for (ServiceList::iterator iService = m_Services.begin(); iService != m_Services.end(); )
 	{
 		IService * pService = (*iService).get();
 		if (pService == NULL)
 		{
 			Log::Warning("Config", "NULL service in body definition.");
+			m_Services.erase( iService++ );
 			continue;
 		}
 
 		if (!pService->Start())
-		{
 			Log::Error("Config", "Failed to start service %s.", pService->GetRTTI().GetName().c_str());
-			return false;
-		}
+
+		++iService;
 	}
 	return true;
 }

@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{235811ED-0AB6-4309-B52C-54AB38590F68}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>librdkafka</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;LIBRDKAFKA_STATICLIB;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\lib\openssl-1.0.1q-vs2015\include;..\..\lib\zlib-1.2.8\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;LIBRDKAFKA_STATICLIB;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\lib\openssl-1.0.1q-vs2015\include;..\..\lib\zlib-1.2.8\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\librdkafka\src\rdaddr.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdavl.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdcrc32.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdgz.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_assignor.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_broker.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_buf.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_cgrp.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_conf.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_event.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_feature.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_metadata.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_metadata_cache.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_msg.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_offset.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_op.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_partition.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_pattern.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_queue.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_range_assignor.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_request.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_roundrobin_assignor.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_subscription.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_timer.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_topic.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdkafka_transport.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdlist.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdlog.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdports.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdrand.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdregex.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\rdstring.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\regexp.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\snappy.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\tinycthread.c" />
+    <ClCompile Include="..\..\lib\librdkafka\src\xxhash.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\librdkafka\src\queue.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rd.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdaddr.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdatomic.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdavg.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdavl.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdcrc32.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdendian.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdgz.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdinterval.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_assignor.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_broker.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_buf.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_cgrp.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_conf.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_event.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_feature.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_int.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_metadata.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_msg.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_offset.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_op.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_partition.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_pattern.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_proto.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_queue.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_request.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_sasl.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_sasl_int.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_subscription.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_timer.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_topic.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_transport.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdkafka_transport_int.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdlist.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdlog.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdports.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdposix.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdrand.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdregex.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdsignal.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdsysqueue.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdtime.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdtypes.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\rdwin32.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\regexp.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\snappy.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\snappy_compat.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\tinycthread.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\win32_config.h" />
+    <ClInclude Include="..\..\lib\librdkafka\src\xxhash.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

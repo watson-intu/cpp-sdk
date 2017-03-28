@@ -16,8 +16,53 @@
 #include "utils/Log.h"
 #include "tinyxml/tinyxml.h"
 
+#include <fstream>
+
 //! What character is used a seperator for paths
 #define PARAMS_PATH_SEPERATOR		'/'
+
+bool JsonHelpers::Load(const std::string & a_File, Json::Value & a_Json )
+{
+	try {
+		std::ifstream input( a_File.c_str() );
+		if (!input.is_open())
+		{
+			Log::Error("JsonHelpers::Load", "Failed to open %s", a_File.c_str() );
+			return false;
+		}
+
+		Json::Reader reader(Json::Features::strictMode());
+		if (!reader.parse(input, a_Json))
+		{
+			Log::Error("JsonHelpers::Load", "Failed to parse %s: %s", 
+				a_File.c_str(), reader.getFormattedErrorMessages().c_str() );
+			return false;
+		}
+		input.close();
+		return true;
+	}
+	catch( const std::exception & ex )
+	{
+		Log::Error("JsonHelpers::Load", "Caught exception loading %s: %s", a_File.c_str(), ex.what() );
+	}
+	return false;
+}
+
+//! Save JSON into the given file
+bool JsonHelpers::Save(const std::string & a_File, const Json::Value & a_Json )
+{
+	try {
+		std::string json_string( Json::StyledWriter().write(a_Json) );
+		std::ofstream output( a_File.c_str() );
+		output << json_string;
+		return true;
+	}
+	catch( const std::exception & ex )
+	{
+		Log::Error("JsonHelpers::Save", "Caught exception saving %s: %s", a_File.c_str(), ex.what() );
+	}
+	return false;
+}
 
 //! Validate a given path, returns false if any member of the path doesn't exist.
 bool JsonHelpers::ValidPath(const Json::Value & a_Json, const std::string & a_Path)
@@ -192,16 +237,14 @@ void JsonHelpers::Merge(Json::Value & a_MergeInto, const Json::Value & a_Merge, 
 	}
 	else if (a_Merge.isArray())
 	{
-		for (size_t i = 0; i < a_Merge.size(); ++i)
+		if ( a_MergeInto.isArray() )
 		{
-			if (!a_bReplace && a_MergeInto.size() >= i)
-				continue;
-			Merge(a_MergeInto[i], a_Merge[i], a_bReplace);
+			// append our array onto the existing array
+			for(size_t i=0;i<a_Merge.size();++i)
+				Merge( a_MergeInto[ a_MergeInto.size() ], a_Merge[i], a_bReplace );
 		}
-
-		// if a_bReplace is true, then remove array elements if needed..
-		if (a_bReplace && a_MergeInto.size() > a_Merge.size())
-			a_MergeInto.resize(a_Merge.size());
+		else
+			a_MergeInto = a_Merge;
 	}
 	else if(! a_Merge.isNull() )
 		a_MergeInto = a_Merge;
@@ -209,5 +252,5 @@ void JsonHelpers::Merge(Json::Value & a_MergeInto, const Json::Value & a_Merge, 
 
 std::string JsonHelpers::Hash(const Json::Value & a_Json)
 {
-	return MD5<std::string>(Json::FastWriter().write( a_Json ) );
+	return MakeMD5(Json::FastWriter().write( a_Json ) );
 }

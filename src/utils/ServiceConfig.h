@@ -24,6 +24,13 @@
 #include "ISerializable.h"
 #include "WDCLib.h"
 
+enum AuthType {
+	AUTH_BASIC,			// URL, User, and Password fields required
+	AUTH_USER,			// URL & User field required
+	AUTH_URL,			// URL field required
+	AUTH_NONE			// no fields required
+};
+
 //! Data class for holding credentials for a given service. This object
 //! is contained by the Config class usually.
 struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared_from_this<ServiceConfig>
@@ -43,9 +50,21 @@ struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared
 	std::string							m_Password;
 	CustomMap							m_CustomMap;
 
-	bool IsConfigured() const
+	bool IsConfigured( AuthType a_AuthType = AUTH_BASIC ) const
 	{
-		return m_ServiceId.size() > 0 && m_URL.size() > 0 && (m_User.size() > 0 || m_Password.size() > 0);
+		switch( a_AuthType )
+		{
+		case AUTH_BASIC:
+			return m_ServiceId.size() > 0 && m_URL.size() > 0 && m_User.size() > 0 && m_Password.size() > 0;
+		case AUTH_USER:
+			return m_ServiceId.size() > 0 && m_URL.size() > 0 && m_User.size() > 0;
+		case AUTH_URL:
+			return m_ServiceId.size() > 0 && m_URL.size() > 0;
+		case AUTH_NONE:
+			return m_ServiceId.size() > 0;
+		}
+
+		return true;
 	}
 
 	//! ISerializable interface
@@ -61,10 +80,14 @@ struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared
 
 	virtual void Deserialize(const Json::Value & json)
 	{
-		m_ServiceId = json["m_ServiceId"].asString();
-		m_URL = json["m_URL"].asString();
-		m_User = json["m_User"].asString();
-		m_Password = json["m_Password"].asString();
+		if ( json["m_ServiceId"].isString() )
+			m_ServiceId = json["m_ServiceId"].asString();
+		if ( json["m_URL"].isString() )
+			m_URL = json["m_URL"].asString();
+		if ( json["m_User"].isString() )
+			m_User = json["m_User"].asString();
+		if ( json["m_Password"].isString() )
+			m_Password = json["m_Password"].asString();
 
 		DeserializeMap("m_CustomMap", json, m_CustomMap);
 	}

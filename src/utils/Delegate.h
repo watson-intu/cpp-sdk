@@ -255,8 +255,12 @@ private:
 	template <class T, void (T::*TMethod)()>
 	static bool method_stub(void* object_ptr, const boost::any & weak_ptr )
 	{
+		boost::shared_ptr<T> sp;
 		if (! weak_ptr.empty() )
-			object_ptr = boost::any_cast< boost::weak_ptr<T> >( weak_ptr ).lock().get();
+		{
+			sp = boost::any_cast< boost::weak_ptr<T> >( weak_ptr ).lock();
+			object_ptr = sp.get();
+		}
 		if ( object_ptr == 0 )
 			return false;
 
@@ -310,7 +314,8 @@ public:
 
 	void Invoke( ARG a_Arg )
 	{
-		for( typename List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+		List copy( m_Delegates );		// make a copy so if they remove themselves while invoking we don't crash
+		for( typename List::iterator iDelegate = copy.begin(); iDelegate != copy.end(); ++iDelegate )
 			(*iDelegate)( a_Arg );
 	}
 
@@ -357,7 +362,8 @@ public:
 
 	void Invoke()
 	{
-		for( List::iterator iDelegate = m_Delegates.begin(); iDelegate != m_Delegates.end(); ++iDelegate )
+		List copy( m_Delegates );		// make a copy so if they remove themselves while invoking we don't crash
+		for( List::iterator iDelegate = copy.begin(); iDelegate != copy.end(); ++iDelegate )
 			(*iDelegate)();
 	}
 

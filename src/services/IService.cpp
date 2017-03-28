@@ -20,6 +20,7 @@
 #include "utils/Config.h"
 #include "utils/StringUtil.h"
 #include "utils/Time.h"
+#include "utils/WebClientService.h"
 
 #undef MAX
 #define MAX(a,b)		((a) > (b) ? (a) : (b))
@@ -35,7 +36,7 @@ IService::Request::Request(const std::string & a_URL,
 	ResponseCallback a_Callback,
 	float a_fTimeout /*= 30.0f*/ ) :
 	m_pService(NULL),
-	m_spClient( IWebClient::Create() ),
+	m_spClient( IWebClient::Create( a_URL ) ),
 	m_Body(a_Body),
 	m_Complete(false),
 	m_Error(false),
@@ -101,14 +102,17 @@ IService::Request::Request( IService * a_pService,
 		return;
 	}
 
-	m_spClient = IWebClient::Create();
-	m_spClient->SetURL( a_pService->GetConfig()->m_URL + a_EndPoint );
+	m_spClient = IWebClient::Create( a_pService->GetConfig()->m_URL + a_EndPoint );
 	m_spClient->SetRequestType( a_RequestType );
 	m_spClient->SetStateReceiver( DELEGATE( Request, OnState, IWebClient *, this ) );
 	m_spClient->SetDataReceiver( DELEGATE( Request, OnResponseData, IWebClient::RequestData *, this ) );
 	m_spClient->SetHeaders( a_pService->GetHeaders() );
 	m_spClient->SetHeaders( a_Headers, true );
 	m_spClient->SetBody( a_Body );
+
+	// if our connection is already connected, then go ahead and set the start time to now..
+	if ( m_spClient->GetState() == IWebClient::CONNECTED )
+		m_StartTime = Time().GetEpochTime();
 
 	//Log::Debug( "Request", "Sending request '%s'", a_pService->GetConfig()->m_URL + a_EndPoint.c_str() );
 	if (! m_spClient->Send() )
@@ -131,14 +135,8 @@ IService::Request::Request( IService * a_pService,
 
 void IService::Request::OnState( IWebClient * a_pClient )
 {
-	if ( a_pClient->GetState() == IWebClient::CLOSED )
+	if ( a_pClient->GetState() == IWebClient::CONNECTING )
 	{
-		//Log::Debug( "Request", "Request closed, delete this." );
-		m_bDelete = true;
-	}
-	else if ( a_pClient->GetState() == IWebClient::CONNECTING )
-	{
-		//Log::Debug( "Request", "Request connecting." );
 		m_StartTime = Time().GetEpochTime();
 	}
 	else if ( a_pClient->GetState() == IWebClient::DISCONNECTED )
@@ -167,6 +165,8 @@ void IService::Request::OnResponseData( IWebClient::RequestData * a_pResponse )
 	{
 		m_Complete = true;
 		m_Error = a_pResponse->m_StatusCode < 200 || a_pResponse->m_StatusCode >= 300;
+		m_SetCookies = a_pResponse->m_SetCookies;
+		m_RespHeaders = a_pResponse->m_Headers;
 
 		double end = Time().GetEpochTime();
 		Log::DebugMed( "Request", "REST request %s completed in %g seconds. Queued for %g seconds. Status: %d.", 
@@ -184,16 +184,35 @@ void IService::Request::OnResponseData( IWebClient::RequestData * a_pResponse )
 		}
 
 		if ( m_Error )
-			Log::Error( "Request", "Request Error %u: %s", a_pResponse->m_StatusCode, m_Response.c_str() );
+		{
+			Log::Error( "Request", "Request Error %u: %s, URL: %s", 
+				a_pResponse->m_StatusCode, m_Response.c_str(), m_spClient->GetURL().GetURL().c_str() );
+		}
 
 		if ( m_Callback.IsValid() )
 		{
-			m_Callback( this );
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+			double startTime = Time().GetEpochTime();
+#endif
+			m_Callback(this);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+			double elapsed = Time().GetEpochTime() - startTime;
+			if(elapsed > WARNING_DELEGATE_TIME)
+			{
+				if ( elapsed > ERROR_DELEGATE_TIME )
+					Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+						m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+				else
+					Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+						m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+			}
+#endif
 			m_Callback.Reset();
 			if ( m_pService != NULL )
 				m_pService->m_RequestsPending -= 1;
 		}
-		// note the OnState() change will take care of deleting this object.
+
+		delete this;
 	}
 }
 
@@ -202,7 +221,22 @@ void IService::Request::OnLocalResponse()
 	m_Complete = true;
 	if (m_Callback.IsValid())
 	{
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+		double startTime = Time().GetEpochTime();
+#endif
 		m_Callback(this);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+		double elapsed = Time().GetEpochTime() - startTime;
+		if(elapsed > WARNING_DELEGATE_TIME)
+		{
+			if ( elapsed > ERROR_DELEGATE_TIME )
+				Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+					m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+			else
+				Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+					m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+		}
+#endif
 		m_Callback.Reset();
 
 		if ( m_pService != NULL )
@@ -260,13 +294,7 @@ bool IService::Start()
 		return false;
 	}
 
-	if ( m_pConfig->m_User.size() > 0 && m_pConfig->m_Password.size() > 0 )
-	{
-		// add the Authorization header..
-		m_Headers["Authorization"] = StringUtil::Format( "Basic %s", 
-			StringUtil::EncodeBase64( m_pConfig->m_User + ":" + m_pConfig->m_Password).c_str() );
-	}
-
+	AddAuthenticationHeader();
 	return true;
 }
 
@@ -322,14 +350,21 @@ void IService::OnConfigModified()
 	if ( pConfig != NULL )
 	{
 		m_pConfig = pConfig;
+		AddAuthenticationHeader();
+	}
+}
 
-		if ( m_pConfig->m_User.size() > 0 && 
-			m_pConfig->m_Password.size() > 0 )
-		{
-			// add the Authorization header..
-			m_Headers["Authorization"] = StringUtil::Format( "Basic %s", 
-				StringUtil::EncodeBase64( m_pConfig->m_User + ":" + m_pConfig->m_Password).c_str() );
-		}
+void IService::AddAuthenticationHeader()
+{
+	if ( m_pConfig != NULL &&
+		m_pConfig->m_User.size() > 0 && 
+		m_pConfig->m_Password.size() > 0 )
+	{
+		// add the Authorization header..
+		std::string encoded( StringUtil::EncodeBase64( m_pConfig->m_User + ":" + m_pConfig->m_Password) );
+		StringUtil::Replace( encoded, "\n", "" );		// remove any newlines otherwise they will mess up the headers
+
+		m_Headers["Authorization"] = StringUtil::Format( "Basic %s", encoded.c_str() );
 	}
 }
 

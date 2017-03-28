@@ -70,6 +70,41 @@ struct Voices : public ISerializable
 	}
 };
 
+struct Words : public boost::enable_shared_from_this<Words>
+{
+	//! Types
+	typedef boost::shared_ptr<Words>		SP;
+	typedef boost::weak_ptr<Words>			WP;
+
+	Words(const std::string & a_Word, double a_StartTime, double a_EndTime) :
+		m_Word(a_Word),
+		m_StartTime(a_StartTime),
+		m_EndTime(a_EndTime)
+	{}
+
+	~Words()
+	{}
+
+	std::string	m_Word;
+	double		m_StartTime;
+	double		m_EndTime;
+
+	const std::string & GetWord() const
+	{
+		return m_Word;
+	}
+
+	double GetStartTime() 
+	{
+		return m_StartTime;
+	}
+
+	double GetEndTime()
+	{
+		return m_EndTime;
+	}
+};
+
 
 #endif // WDC_TEXT_TO_SPEECH_MODELS_H
 

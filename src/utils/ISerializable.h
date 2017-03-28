@@ -339,7 +339,7 @@ public:
 //! This macro should be declared in the source file for any class that can be serialized by ISerializable
 //! DO NOT place this macro in a header as it will create a compile error because of conflicting variable names.
 #define REG_SERIALIZABLE( CLASS )						RegisterWithFactory<CLASS> serializable_##CLASS( #CLASS, ISerializable::GetSerializableFactory() );
-#define REG_SERIALIZABLE_NESTED( PARENT, CLASS )		RegisterWithFactory<PARENT::CLASS> serializable_##PARENT_##CLASS( #CLASS, ISerializable::GetSerializableFactory() );
+#define REG_SERIALIZABLE_NESTED( PARENT, CLASS )		RegisterWithFactory<PARENT::CLASS> serializable_##PARENT_##CLASS( #PARENT "::" #CLASS, ISerializable::GetSerializableFactory() );
 #define REG_SERIALIZABLE_VAR( VAR, CLASS)				RegisterWithFactory<CLASS> VAR( #CLASS, ISerializable::GetSerializableFactory() );
 #define REG_OVERRIDE_SERIALIZABLE( OVERRIDE, CLASS )	RegisterWithFactory<CLASS> serializable_override_##CLASS( #OVERRIDE, ISerializable::GetSerializableFactory(), true );
 

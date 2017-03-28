@@ -157,7 +157,12 @@ bool SpeechToText::StartListening(OnRecognize callback)
 	m_ListenCallback = callback;
 
 	for( ModelList::iterator iModels = m_Models.begin(); iModels != m_Models.end(); ++iModels )
-		m_Connections.push_back( new Connection( this, *iModels ) );
+	{
+		Connection::SP spConnection( new Connection( this, *iModels ) );
+		spConnection->Start();
+
+		m_Connections.push_back( spConnection );
+	}
 
 	return true;
 }
@@ -177,8 +182,6 @@ bool SpeechToText::StopListening()
 		return false;
 
 	m_IsListening = false;
-	for( Connectionlist::iterator iConn = m_Connections.begin(); iConn != m_Connections.end(); ++iConn )
-		delete *iConn;
 	m_Connections.clear();
 	m_ListenCallback.Reset();
 
@@ -216,16 +219,17 @@ SpeechToText::Connection::Connection( SpeechToText * a_pSTT, const std::string &
 	m_Connected( false ),
 	m_RecordingHZ( -1 ),
 	m_bReconnecting( false )
-{
-	assert( a_pSTT != NULL );
-
-	if (! CreateListenConnector() )
-		OnReconnect();
-}
+{}
 
 SpeechToText::Connection::~Connection()
 {
 	CloseListenConnector();
+}
+
+void SpeechToText::Connection::Start()
+{
+	if (! CreateListenConnector() )
+		OnReconnect();
 }
 
 void SpeechToText::Connection::Refresh()
@@ -306,12 +310,11 @@ bool SpeechToText::Connection::CreateListenConnector()
 		StringUtil::Replace(url, "https://", "wss://", true );
 		StringUtil::Replace(url, "http://", "ws://", true );
 
-		m_spListenSocket = IWebClient::Create();
-		m_spListenSocket->SetURL( url );
+		m_spListenSocket = IWebClient::Create( url );
 		m_spListenSocket->SetHeaders(m_pSTT->m_Headers);
-		m_spListenSocket->SetFrameReceiver( DELEGATE( Connection, OnListenMessage, IWebSocket::FrameSP, this ) );
-		m_spListenSocket->SetStateReceiver( DELEGATE( Connection, OnListenState, IWebClient *, this ) );
-		m_spListenSocket->SetDataReceiver( DELEGATE( Connection, OnListenData, IWebClient::RequestData *, this ) );
+		m_spListenSocket->SetFrameReceiver( DELEGATE( Connection, OnListenMessage, IWebSocket::FrameSP, shared_from_this() ) );
+		m_spListenSocket->SetStateReceiver( DELEGATE( Connection, OnListenState, IWebClient *, shared_from_this() ) );
+		m_spListenSocket->SetDataReceiver( DELEGATE( Connection, OnListenData, IWebClient::RequestData *, shared_from_this() ) );
 
 		if (! m_spListenSocket->Send() )
 		{

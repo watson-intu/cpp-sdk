@@ -16,12 +16,13 @@
 */
 
 //! Define to 1 to protect thread calls against a crash..
-#define ENABLE_THREAD_TRY_CATCH					0
-//! Define to 1 to enable main delegate timing for finding and fixing callbacks that block the main thread
-#define MEASURE_MAIN_DELEGATE_TIMES				1
+#define ENABLE_THREAD_TRY_CATCH					1
+
 //! maximum amount of time to spend in a single delegate before we throw an error
-const double WARNING_DELEGATE_TIME	= 0.1;
-const double ERROR_DELEGATE_TIME	= 0.5;
+#if ENABLE_DELEGATE_DEBUG
+#define WARNING_DELEGATE_TIME		(0.1)
+#define ERROR_DELEGATE_TIME			(0.5)
+#endif
 
 #include "ThreadPool.h"
 #include "WatsonException.h"
@@ -31,7 +32,13 @@ const double ERROR_DELEGATE_TIME	= 0.5;
 ThreadPool * ThreadPool::sm_pInstance = NULL;
 
 //! Construction
-ThreadPool::ThreadPool( int a_Threads /*= 10*/ ) : m_ExitCode(0), m_StopMain( false ), m_ThreadCount( a_Threads ), m_ActiveThreads( 0 ), m_BusyThreads( 0 ), m_Shutdown( false )
+ThreadPool::ThreadPool( int a_Threads /*= 10*/ ) : 
+	m_ExitCode(0), 
+	m_StopMain( false ),
+	m_ThreadCount( a_Threads ), 
+	m_ActiveThreads( 0 ), 
+	m_BusyThreads( 0 ), 
+	m_Shutdown( false )
 {
 	if ( sm_pInstance != NULL )
 		throw WatsonException( "ThreadPool already exists." );
@@ -66,12 +73,12 @@ void ThreadPool::ProcessMainThread()
 
 	for( DelegateList::iterator iDelegate = invoke.begin(); iDelegate != invoke.end(); ++iDelegate )
 	{
-#if MEASURE_MAIN_DELEGATE_TIMES && ENABLE_DELEGATE_DEBUG
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
         double startTime = Time().GetEpochTime();
 #endif
 		(*iDelegate)->Invoke();
 
-#if MEASURE_MAIN_DELEGATE_TIMES && ENABLE_DELEGATE_DEBUG
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
         double elapsed = Time().GetEpochTime() - startTime;
 		if(elapsed > WARNING_DELEGATE_TIME)
 		{
@@ -147,11 +154,6 @@ void ThreadPool::ThreadMain( void * arg )
 			catch( WatsonException ex )
 			{
 				Log::Error( "ThreadPool", "Caught Exception: %s", ex.Message() );
-			}
-			catch( ... )
-			{
-				Log::Error( "ThreadPool", "Unhanded Exception on thread %u", 
-					(unsigned int)tthread::this_thread::get_id().GetId() );
 			}
 #endif
 			pCallback->Destroy();

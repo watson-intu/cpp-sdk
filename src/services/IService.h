@@ -21,6 +21,7 @@
 #include "boost/enable_shared_from_this.hpp"
 #include "boost/shared_ptr.hpp"
 #include "boost/atomic.hpp"
+#include "tinyxml/tinyxml.h"
 
 #include "utils/DataCache.h"
 #include "utils/ISerializable.h"
@@ -31,6 +32,11 @@
 #include "utils/WatsonException.h"
 #include "utils/IWebClient.h"
 #include "WDCLib.h"			// include last always
+
+#if ENABLE_DELEGATE_DEBUG
+#define WARNING_DELEGATE_TIME (0.1)
+#define ERROR_DELEGATE_TIME	(0.5)
+#endif
 
 //! This is the base class for a remote service.
 class WDC_API IService : public ISerializable, public boost::enable_shared_from_this<IService>
@@ -50,8 +56,10 @@ public:
 	typedef boost::weak_ptr<IService>		WP;
 
 	typedef IWebClient::Headers				Headers;
+	typedef IWebClient::Cookies				Cookies;
 	typedef Delegate<Request *>				ResponseCallback;
 	typedef Delegate<const Json::Value &>	JsonResponseCallback;
+	typedef Delegate<const TiXmlDocument &>	XmlResponseCallback;
 	typedef Delegate<const std::string &>	DataResponseCallback;
 
 	//! Callback function type invoked after service status check
@@ -98,6 +106,7 @@ public:
 
 		virtual ~Request()
 		{
+			IWebClient::Free( m_spClient );
 			delete m_pCachedReq;
 		}
 
@@ -112,6 +121,14 @@ public:
 		bool IsError() const
 		{
 			return m_Error;
+		}
+		const Cookies & GetCookies() const
+		{
+			return m_SetCookies;
+		}
+		const Headers & GetResponseHeaders() const
+		{
+			return m_RespHeaders;
 		}
 		const std::string & GetResponse() const
 		{
@@ -129,6 +146,8 @@ public:
 		IService *			m_pService;
 		IWebClient::SP		m_spClient;
 		std::string			m_Body;
+		Cookies				m_SetCookies;
+		Headers				m_RespHeaders;
 		std::string			m_Response;
 		bool				m_Complete;
 		bool				m_Error;
@@ -186,11 +205,90 @@ public:
 
 			if (m_Callback.IsValid())
 			{
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double startTime = Time().GetEpochTime();
+#endif
 				m_Callback(root);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double elapsed = Time().GetEpochTime() - startTime;
+				if(elapsed > WARNING_DELEGATE_TIME)
+				{
+					if ( elapsed > ERROR_DELEGATE_TIME )
+						Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+					else
+						Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+				}
+#endif
 				m_Callback.Reset();
 			}
 		}
 		JsonResponseCallback	m_Callback;
+	};
+
+	//! This class can be used when the expected response will be XML..
+	class RequestXml : public Request
+	{
+	public:
+		RequestXml(const std::string & a_URL,
+			const std::string & a_RequestType,		// type of request GET, POST, DELETE
+			const Headers & a_Headers,				// additional headers to add to the request
+			const std::string & a_Body,				// the body to send if any
+			XmlResponseCallback a_Callback,
+			float a_fTimeout = 30.0f ) :
+			m_Callback( a_Callback ),
+			Request( a_URL, a_RequestType, a_Headers, a_Body, 
+				DELEGATE(RequestXml, OnResponse, Request *, this ), a_fTimeout)
+		{}
+
+		RequestXml(IService * a_pService,
+			const std::string & a_Parameters,		// additional data to append onto the endpoint
+			const std::string & a_RequestType,		// type of request GET, POST, DELETE
+			const Headers & a_Headers,				// additional headers to add to the request
+			const std::string & a_Body,				// the body to send if any
+			XmlResponseCallback a_Callback,
+			CacheRequest * a_CacheReq = NULL,
+			float a_fTimeout = 30.0f ) :
+			m_Callback(a_Callback),
+			Request(a_pService, a_Parameters, a_RequestType, a_Headers, a_Body,
+				DELEGATE(RequestXml, OnResponse, Request *, this), a_CacheReq, a_fTimeout )
+		{}
+
+	private:
+		void OnResponse(IService::Request * a_pRequest)
+		{
+			TiXmlDocument xml;
+			if (! a_pRequest->IsError() && m_Response.size() > 0 )
+			{
+				xml.Parse( m_Response.c_str() );
+
+				if ( xml.Error() )
+					Log::Error("RequestXml", "Failed to parse XML response: %s", m_Response.c_str());
+			}
+
+			if (m_Callback.IsValid())
+			{
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double startTime = Time().GetEpochTime();
+#endif
+				m_Callback(xml);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double elapsed = Time().GetEpochTime() - startTime;
+				if(elapsed > WARNING_DELEGATE_TIME)
+				{
+					if ( elapsed > ERROR_DELEGATE_TIME )
+						Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+					else
+						Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+				}
+#endif
+				m_Callback.Reset();
+			}
+		}
+		XmlResponseCallback	m_Callback;
 	};
 
 	//! This request is used to retrieve raw byte data from the server.
@@ -224,21 +322,28 @@ public:
 	private:
 		void OnResponse(IService::Request * a_pRequest)
 		{
-			if (! a_pRequest->IsError() )
+			if ( a_pRequest->IsError() )
+				m_Response.clear();
+
+			if (m_Callback.IsValid())
 			{
-				if (m_Callback.IsValid())
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double startTime = Time().GetEpochTime();
+#endif
+				m_Callback(m_Response);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double elapsed = Time().GetEpochTime() - startTime;
+				if(elapsed > WARNING_DELEGATE_TIME)
 				{
-					m_Callback(m_Response);
-					m_Callback.Reset();
+					if ( elapsed > ERROR_DELEGATE_TIME )
+						Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+					else
+						Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
 				}
-			}
-			else
-			{
-				if (m_Callback.IsValid())
-				{
-					m_Callback("");
-					m_Callback.Reset();
-				}
+#endif
+				m_Callback.Reset();
 			}
 		}
 		DataResponseCallback	m_Callback;
@@ -291,7 +396,22 @@ public:
 
 			if (m_Callback.IsValid())
 			{
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double startTime = Time().GetEpochTime();
+#endif
 				m_Callback(pObject);
+#if defined(WARNING_DELEGATE_TIME) && defined(ERROR_DELEGATE_TIME)
+				double elapsed = Time().GetEpochTime() - startTime;
+				if(elapsed > WARNING_DELEGATE_TIME)
+				{
+					if ( elapsed > ERROR_DELEGATE_TIME )
+						Log::Error("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+					else
+						Log::Warning("ThreadPool", "Delegate %s:%d took %f seconds to invoke on main thread.", 
+							m_Callback.GetFile(), m_Callback.GetLine(), elapsed );
+				}
+#endif
 				m_Callback.Reset();
 			}
 		}
@@ -332,6 +452,12 @@ public:
 			throw WatsonException( "Service config is NULL, make sure you invoke Start()." );
 		return m_pConfig;
 	}
+	bool IsConfigured( AuthType a_AuthType = AUTH_BASIC )
+	{
+		if ( m_pConfig != NULL )
+			return m_pConfig->IsConfigured( a_AuthType );
+		return false;
+	}
 	bool IsCacheEnabled() const
 	{
 		return m_bCacheEnabled;
@@ -359,6 +485,8 @@ public:
 	virtual void GetServiceStatus(ServiceStatusCallback a_Callback);
 	//! This is invoked when the ServiceConfig object has been modified for this service
 	virtual void OnConfigModified();
+	//! This adds the basic authentication header to this services headers
+	void AddAuthenticationHeader();
 
 protected:
 	//! Types

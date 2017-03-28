@@ -25,6 +25,20 @@ qi_create_lib(crossguid STATIC
 		crossguid/crossguid.cpp)
 qi_stage_lib(crossguid)
 
+qi_create_lib(minizip STATIC
+		minizip/ioapi.c
+		minizip/ioapi_buf.c
+		minizip/ioapi_mem.c
+		minizip/unzip.c
+		minizip/zip.c)
+qi_use_lib(minizip zlib)
+qi_stage_lib(minizip)
+
+file(GLOB_RECURSE KAFKA_C RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "librdkafka/src/*.c")
+qi_create_lib(kafka STATIC ${KAFKA_C})
+qi_use_lib(kafka openssl zlib)
+qi_stage_lib(kafka)
+
 qi_create_lib(jsoncpp STATIC
 		jsoncpp/jsoncpp.cpp
 		jsoncpp/json/json-forwards.h

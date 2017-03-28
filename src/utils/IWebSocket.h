@@ -57,6 +57,7 @@ public:
 	};
 	typedef boost::shared_ptr<Frame>			FrameSP;
 
+	virtual void ClearDelegates() = 0;
 	virtual void SetFrameReceiver( Delegate<FrameSP> a_Receiver ) = 0;
 	virtual void SetErrorHandler( Delegate<IWebSocket *> a_Handler ) = 0;
 	virtual void SendBinary(const std::string & a_Binary) = 0;

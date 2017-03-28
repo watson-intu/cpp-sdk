@@ -16,11 +16,13 @@ public:
 		: UnitTest( "TestTextToSpeech" )
 		, m_GetVoicesTested(false)
 		, m_ToSpeechTested( false )
+		, m_ToStreamSpeechTested( false )
 		, m_ServiceStatusTested(false)
 	{}
 
 	bool m_GetVoicesTested;
 	bool m_ToSpeechTested;
+	bool m_ToStreamSpeechTested;
 	bool m_ServiceStatusTested;
 
 	virtual void RunTest()
@@ -49,6 +51,10 @@ public:
 			Spin(m_ToSpeechTested);
 			Test(m_ToSpeechTested);
 
+			tts.ToSound("I have a pet bird", DELEGATE(TestTextToSpeech, OnToStreamSpeech, std::string *, this) );
+			Spin(m_ToStreamSpeechTested);
+			Test(m_ToStreamSpeechTested);
+
 			Test( tts.Stop() );
 		}
 		else
@@ -73,6 +79,13 @@ public:
 	{
 		Test( a_pSound != NULL );
 		m_ToSpeechTested = true;
+		delete a_pSound;
+	}
+
+	void OnToStreamSpeech(std::string * a_pSound)
+	{
+		Test( m_ToStreamSpeechTested || a_pSound != NULL );		// require the first callback to be non-null, the last callback will be null
+		m_ToStreamSpeechTested = true;
 		delete a_pSound;
 	}
 };

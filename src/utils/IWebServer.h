@@ -49,6 +49,9 @@ public:
 		typedef boost::shared_ptr<IConnection>		SP;
 		typedef Delegate< SP >						FrameCallback;
 
+		virtual ~IConnection()
+		{}
+
 		//! Interface
 		virtual bool IsClosed() const = 0;
 		virtual bool IsWebSocket() const = 0;

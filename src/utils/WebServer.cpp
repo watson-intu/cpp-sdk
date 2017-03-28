@@ -61,7 +61,7 @@ public:
 			m_pSocket(a_pSocket),
 			m_ReadBuffer(new StreamBuffer())
 		{}
-		~Connection()
+		virtual ~Connection()
 		{
 			Close();
 
@@ -92,6 +92,11 @@ public:
 		}
 
 		//! IWebSocket interface
+		virtual void ClearDelegates()
+		{
+			m_OnFrame.Reset();
+			m_OnError.Reset();
+		}
 		virtual void SetFrameReceiver(Delegate<FrameSP> a_Receiver)
 		{
 			m_OnFrame = a_Receiver;
@@ -708,7 +713,6 @@ public:
 	{
 		delete m_pSSL;
 	}
-
 
 protected:
 	//! WebServerT interface

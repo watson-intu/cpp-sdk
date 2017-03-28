@@ -45,6 +45,7 @@ public:
 		bool			m_bLoaded;		// true if loaded
 		std::string		m_Data;			// data of item
 	};
+	typedef std::map< std::string, CacheItem >		CacheItemMap;
 	typedef boost::shared_ptr<DataCache>			SP;
 
 	//! Construction
@@ -55,17 +56,26 @@ public:
 	{
 		return m_bInitialized;
 	}
+	const CacheItemMap & GetCacheMap() const
+	{
+		return m_Cache;
+	}
+	const std::string & GetCachePath() const
+	{
+		return m_CachePath;
+	}
 
 	//! Initialize this cache
 	bool Initialize( const std::string & a_CachePath, 
 		unsigned int a_MaxCacheSize = 1024 * 1024 * 50,
-		double a_MaxCacheAge = 24 * 7 );
+		double a_MaxCacheAge = 24 * 7,
+		const std::string & a_sExtension = ".bytes" );
 	void Uninitialize();
 
 	//! Find data in this cache by ID, returns a NULL if object is not found in this cache.
-	CacheItem * Find( const std::string & a_ID );
+	CacheItem * Find( const std::string & a_ID, bool a_bLoadIntoMemory = true );
 	//! Save data into this cache.
-	bool Save( const std::string & a_ID, const std::string & a_Data );
+	bool Save( const std::string & a_ID, const std::string & a_Data, bool a_bKeepInMemory = true );
 	//! Flush an item from this cache.
 	bool Flush( const std::string & a_ID );
 	//! Flush out aged data from this cache.
@@ -86,11 +96,9 @@ public:
 	}
 
 private:
-	//! Types
-	typedef std::map< std::string, CacheItem >		CacheItemMap;
-
 	//! Data
 	bool				m_bInitialized;
+	std::string			m_Extension;
 	std::string			m_CachePath;
 	unsigned int		m_MaxCacheSize;
 	double				m_MaxCacheAge;

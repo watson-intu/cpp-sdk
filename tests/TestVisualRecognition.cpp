@@ -61,15 +61,13 @@ public:
 			Spin( m_bDetectFacesTested );
 			Test( m_bDetectFacesTested );
 
-			vr.ClassifyImage(imageData, "default",
+			std::vector<std::string> classifiers;
+			classifiers.push_back( "default" );
+
+			vr.ClassifyImage(imageData, classifiers,
 				DELEGATE(TestVisualRecognition, OnClassifyImage, const Json::Value &, this) );
 			Spin( m_bClassifyImageTested );
 			Test( m_bClassifyImageTested );
-
-			vr.IdentifyText(imageData,
-				DELEGATE(TestVisualRecognition, OnIdentifyText, const Json::Value &, this) );
-			Spin( m_bIdentifyTextTested );
-			Test( m_bIdentifyTextTested );
 
 			Test( vr.Stop() );
 		}

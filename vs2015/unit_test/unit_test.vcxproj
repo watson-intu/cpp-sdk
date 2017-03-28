@@ -105,11 +105,13 @@
   <ItemGroup>
     <ClCompile Include="..\..\tests\TestAlchemy.cpp" />
     <ClCompile Include="..\..\tests\TestConversation.cpp" />
+    <ClCompile Include="..\..\tests\TestConversationRequestIntents.cpp" />
     <ClCompile Include="..\..\tests\TestDataCache.cpp" />
     <ClCompile Include="..\..\tests\TestDelegate.cpp" />
     <ClCompile Include="..\..\tests\TestFactory.cpp" />
     <ClCompile Include="..\..\tests\TestGetMac.cpp" />
     <ClCompile Include="..\..\tests\TestISerializable.cpp" />
+    <ClCompile Include="..\..\tests\TestKafka.cpp" />
     <ClCompile Include="..\..\tests\TestLanguageTranslation.cpp" />
     <ClCompile Include="..\..\tests\TestMain.cpp" />
     <ClCompile Include="..\..\tests\TestNaturalLanguageClassifier.cpp" />
@@ -124,6 +126,7 @@
     <ClCompile Include="..\..\tests\TestThreadPool.cpp" />
     <ClCompile Include="..\..\tests\TestTimerPool.cpp" />
     <ClCompile Include="..\..\tests\TestToneAnalyzer.cpp" />
+    <ClCompile Include="..\..\tests\TestUniqueID.cpp" />
     <ClCompile Include="..\..\tests\TestURL.cpp" />
     <ClCompile Include="..\..\tests\TestVisualRecognition.cpp" />
     <ClCompile Include="..\..\tests\TestWebClient.cpp" />

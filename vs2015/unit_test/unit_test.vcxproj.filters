@@ -13,6 +13,9 @@
     <ClCompile Include="..\..\tests\TestConversation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\tests\TestConversationRequestIntents.cpp">
+          <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\tests\TestDataCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -80,6 +83,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\tests\TestWebServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestUniqueID.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tests\TestKafka.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -49,11 +49,37 @@ public:
 		const Json::Value & a_Context,
 		const std::string & a_Text,
 		const std::string & a_IntentOverrideTag,
-		OnMessage a_Callback );
+		OnMessage a_Callback,
+		bool a_bUseCache = true );
 
 private:
+	//! Types
+	class MessageReq
+	{
+	public:
+		MessageReq(Conversation * a_pConversation, 
+			const std::string & a_WorkspaceId,
+			const Json::Value & a_Context,
+			const std::string & a_Text,
+			const std::string & a_IntentOverrideTag,
+			OnMessage a_Callback,
+			bool a_bUseCache );
+
+	private:
+		//! Callback
+		void OnResponse( ConversationResponse * a_pResponse );
+
+		//! Data
+		Conversation *	m_pConversation;
+		std::string		m_WorkspaceId;
+		OnMessage		m_Callback;
+		bool			m_bUseCache;
+		std::string		m_InputHash;
+	};
+
 	//! Data
 	std::string		m_APIVersion;
+	std::string		m_CacheTag;
 };
 
 #endif

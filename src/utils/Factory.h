@@ -117,7 +117,6 @@ public:
 
 	void CreateAllObjects( std::list<BASE *> & a_Objects )
 	{
-		int i = 0;
 		for (CreatorMap::iterator iObject = m_CreatorMapping.begin(); iObject != m_CreatorMapping.end(); ++iObject)
 			a_Objects.push_back( reinterpret_cast<BASE *>( iObject->second->Create() ) );
 	}

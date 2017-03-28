@@ -21,9 +21,6 @@ REG_SERIALIZABLE( RetrieveAndRank );
 RTTI_IMPL( RetrieveAndRankResponse, ISerializable );
 RTTI_IMPL( RetrieveAndRank, IService );
 
-RetrieveAndRank::RetrieveAndRank() : IService("RetrieveAndRankV1")
-{}
-
 void RetrieveAndRank::Serialize(Json::Value & json)
 {
     IService::Serialize(json);
@@ -68,5 +65,13 @@ void RetrieveAndRank::Select( const std::string & a_Text, OnMessage a_Callback )
 {
     std::string params = "/v1/solr_clusters/" + m_SolrId + "/solr/" + m_WorkspaceId + "/select?q=" + a_Text + "&wt=json";
     new RequestObj<RetrieveAndRankResponse>( this, params, "GET", m_Headers, EMPTY_STRING,  a_Callback );
+}
+
+void RetrieveAndRank::Ask(const std::string & a_SolrId, const std::string & a_WorkspaceId, const std::string & a_Text,
+	const std::string & a_Source, OnMessage a_Callback)
+{
+	std::string params = "/v1/solr_clusters/" + a_SolrId + "/solr/" + a_WorkspaceId + "/fcselect?&q=" +
+		StringUtil::UrlEscape(a_Text) + "&source=" + a_Source + "&wt=json";
+	new RequestObj<RetrieveAndRankResponse>(this, params, "GET", m_Headers, EMPTY_STRING, a_Callback);
 }
 

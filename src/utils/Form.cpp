@@ -51,7 +51,10 @@ void Form::AddFormField(const std::string & name, const std::string & value,
     std::stringstream part;
     part << "--" << m_boundary << m_lineFeed;
     part << "Content-Disposition: form-data; name=\"" << name << "\"" << m_lineFeed;
-    part << m_lineFeed << value << m_lineFeed;
+	part << "Content-Type: text/plain; charset=" << a_CharSet << m_lineFeed;
+	part << "Content-Transfer-Encoding: quoted-printable" << m_lineFeed;
+
+	part << m_lineFeed << value << m_lineFeed;
 	m_Parts.push_back( part.str() );
 }
 
@@ -59,7 +62,7 @@ bool Form::AddFilePartFromPath(const std::string & a_FieldName,const  std::strin
 	const std::string & a_ContentType /*= "application/octet-stream"*/ ) 
 {
 	// get just the filename part..
-	std::string filename( Path( a_FullFilePath ).GetFile() );
+	std::string filename( Path( a_FullFilePath ).GetFileName() );
 
 	// read in all the file data..
     std::ifstream input(a_FullFilePath.c_str(), std::ios::in | std::ios::binary);
@@ -100,7 +103,6 @@ void Form::Finish()
 		body << m_Parts[i];
 	// write out footer..
 	body << m_lineFeed << "--" << m_boundary << "--" << m_lineFeed;
-
 	m_Body = body.str();
 }
 

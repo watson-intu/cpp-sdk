@@ -37,6 +37,8 @@ public:
 		LS,		// <
 		LE,		// <=
 
+		LIKE,
+
 		LAST_EO
 	};
 
@@ -44,7 +46,6 @@ public:
 	{
 		AND,		// all conditions must be true
 		OR,			// any condition may be true
-		XOR,		// exclusive OR
 		NOT			// all conditions must be false
 	};	
 

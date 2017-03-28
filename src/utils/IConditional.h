@@ -108,7 +108,7 @@ struct WDC_API EqualityCondition : public IConditional
 	}
 };
 
-//! Compares the collection of conditions, then applies the logical operation (AND,OR,XOR)
+//! Compares the collection of conditions, then applies the logical operation (AND,OR)
 struct WDC_API LogicalCondition : public IConditional
 {
 	RTTI_DECL();
@@ -116,7 +116,7 @@ struct WDC_API LogicalCondition : public IConditional
 	//! Types
 	typedef boost::shared_ptr<LogicalCondition>		SP;
 	typedef boost::weak_ptr<LogicalCondition>		WP;
-	typedef std::list<IConditional::SP>				Conditions;
+	typedef std::vector<IConditional::SP>			Conditions;
 
 	LogicalCondition()
 	{}
@@ -176,12 +176,12 @@ struct WDC_API LogicalCondition : public IConditional
 	virtual void Serialize(Json::Value & json)
 	{
 		json["m_LogicOp"] = Logic::LogicalOpText(m_LogicOp);
-		SerializeList("m_Conditions", m_Conditions, json);
+		SerializeVector("m_Conditions", m_Conditions, json);
 	}
 	virtual void Deserialize(const Json::Value & json)
 	{
 		m_LogicOp = Logic::GetLogicalOp(json["m_LogicOp"].asString());
-		DeserializeList("m_Conditions", json, m_Conditions);
+		DeserializeVector("m_Conditions", json, m_Conditions);
 	}
 
 	//! IConditional interface
@@ -192,8 +192,8 @@ struct WDC_API LogicalCondition : public IConditional
 	virtual bool Test(const Json::Value & a_Test)
 	{
 		std::vector<bool> conds;
-		for (Conditions::const_iterator iCondition = m_Conditions.begin(); iCondition != m_Conditions.end(); ++iCondition)
-			conds.push_back((*iCondition)->Test(a_Test));
+		for (size_t i=0;i<m_Conditions.size();++i)
+			conds.push_back( m_Conditions[i]->Test(a_Test) );
 
 		return Logic::TestLogicalOp(m_LogicOp, conds);
 	}

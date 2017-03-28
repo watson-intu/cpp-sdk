@@ -40,9 +40,6 @@
     <Filter Include="libs\crossguid">
       <UniqueIdentifier>{b3f2b786-508f-4278-99a7-81087b379f68}</UniqueIdentifier>
     </Filter>
-    <Filter Include="services\LanguageTranslation">
-      <UniqueIdentifier>{9432a364-65fd-4ddc-993e-b1b8ed4c9c7c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="services\Conversation">
       <UniqueIdentifier>{7a68bb60-dc82-4c3f-996f-687ba16a0252}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,27 @@
     </Filter>
     <Filter Include="services\ToneAnalyzer">
       <UniqueIdentifier>{4cf044ce-bce8-4e59-8335-85c158919fb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\minizip">
+      <UniqueIdentifier>{57e421d3-0397-4e13-82ef-75834ae9e355}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\LanguageTranslator">
+      <UniqueIdentifier>{94dc1953-6304-4a3e-bcef-e4e3b619c1b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\WeatherCompanyData">
+      <UniqueIdentifier>{67a1d550-9b8a-425c-a0a9-8c9320285756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\PersonalityInsights">
+      <UniqueIdentifier>{c6bd5e82-c450-44b9-86aa-2ea06fd8dd13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\Graph">
+      <UniqueIdentifier>{1144c336-3fa8-4f6d-b951-0b865d276b7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\Kafka">
+      <UniqueIdentifier>{0934eb3f-ee08-4178-8ca3-aad631da99f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\NaturalLanguageUnderstanding">
+      <UniqueIdentifier>{fa8f1ef4-6d42-4b2b-b21a-dec411df92b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -92,9 +110,6 @@
     </ClCompile>
     <ClCompile Include="..\..\lib\base64\cencode.c">
       <Filter>libs\base64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\utils\URL.cpp">
-      <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\WebClient.cpp">
       <Filter>utils</Filter>
@@ -144,9 +159,6 @@
     <ClCompile Include="..\..\src\services\IService.cpp">
       <Filter>services</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\services\LanguageTranslation\LanguageTranslation.cpp">
-      <Filter>services\LanguageTranslation</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp">
       <Filter>services\NaturalLanguageClassifier</Filter>
     </ClCompile>
@@ -170,6 +182,60 @@
     </ClCompile>
     <ClCompile Include="..\..\src\utils\UnitTest.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\URL_.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\ZipFile.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\ioapi.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\ioapi_buf.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\ioapi_mem.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\iowin32.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\unzip.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\zip.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\JpegHelpers.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\LanguageTranslator\LanguageTranslator.cpp">
+      <Filter>services\LanguageTranslator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.cpp">
+      <Filter>services\WeatherCompanyData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\PersonalityInsights\PersonalityInsights.cpp">
+      <Filter>services\PersonalityInsights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\WebClientService.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\MD5.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Graph\DataModels.cpp">
+      <Filter>services\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Graph\Graph.cpp">
+      <Filter>services\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp">
+      <Filter>services\Kafka</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.cpp">
+      <Filter>services\NaturalLanguageUnderstanding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -245,9 +311,6 @@
     <ClInclude Include="..\..\src\utils\URL.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utils\WebClient.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\UniqueID.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -314,17 +377,8 @@
     <ClInclude Include="..\..\src\utils\Path.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="Base36.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\lib\crossguid\crossguid.h">
       <Filter>libs\crossguid</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\LanguageTranslation\DataModels.h">
-      <Filter>services\LanguageTranslation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\LanguageTranslation\LanguageTranslation.h">
-      <Filter>services\LanguageTranslation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\utils\IConditional.h">
       <Filter>utils</Filter>
@@ -363,6 +417,63 @@
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\WDCLib.h" />
+    <ClInclude Include="..\..\src\utils\ZipFile.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\crypt.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\ioapi.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\ioapi_buf.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\ioapi_mem.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\iowin32.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\unzip.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\zip.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\JpegHelpers.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\LanguageTranslator\DataModels.h">
+      <Filter>services\LanguageTranslator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\LanguageTranslator\LanguageTranslator.h">
+      <Filter>services\LanguageTranslator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.h">
+      <Filter>services\WeatherCompanyData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\PersonalityInsights\DataModels.h">
+      <Filter>services\PersonalityInsights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\PersonalityInsights\PersonalityInsights.h">
+      <Filter>services\PersonalityInsights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\WebClientService.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\Graph\DataModels.h">
+      <Filter>services\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\Graph\Graph.h">
+      <Filter>services\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h">
+      <Filter>services\Kafka</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.h">
+      <Filter>services\NaturalLanguageUnderstanding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\CMakeLists.txt" />

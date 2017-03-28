@@ -81,11 +81,11 @@ public:
 		return NULL;
 	}
 
-	bool IsConfigured( const std::string & a_ServiceId ) const
+	bool IsConfigured( const std::string & a_ServiceId, AuthType a_AuthType = AUTH_BASIC ) const
 	{
 		ServiceConfig * pConfig = FindServiceConfig( a_ServiceId );
 		if ( pConfig != NULL )
-			return pConfig->IsConfigured();
+			return pConfig->IsConfigured( a_AuthType );
 		return false;
 	}
 
@@ -139,6 +139,26 @@ public:
 		}
 
 		return pService;
+	}
+	bool AddService( IService * a_pService )
+	{
+		return AddServiceInternal( a_pService );
+	}
+	bool RemoveService( IService * a_pService )
+	{
+		for(ServiceList::iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService )
+		{
+			if ( (*iService).get() == a_pService )
+			{
+				if (! a_pService->Stop() )
+					return false;
+
+				m_Services.erase( iService );
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	//! Mutators

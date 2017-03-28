@@ -29,10 +29,15 @@ public:
 	RTTI_DECL();
 
 	//! Types
+	typedef Delegate<const Json::Value &>	OnGetClassifier;
+	typedef Delegate<const Json::Value &>	OnCreateClassifier;
 	typedef Delegate<const Json::Value &>	OnClassifyImage;
+	typedef Delegate<IService::Request *>	OnDeleteClassifier;
 	typedef Delegate<const Json::Value &>	OnDetectFaces;
 	typedef Delegate<const Json::Value &>   OnIdentifyText;
 	typedef Delegate<const Json::Value &>   OnClassifierTrained;
+
+	typedef std::map< std::string, std::string >	ZipMap;
 
 	//! Construction 
 	VisualRecognition();
@@ -45,31 +50,35 @@ public:
 	virtual bool Start();
 	virtual void GetServiceStatus(ServiceStatusCallback a_Callback);
 
+	//! Get a list of classifiers
+	void GetClassifiers( OnGetClassifier a_Callback );
+	//! Check for a clasifier
+	void GetClassifier( const std::string & a_ClassifierId,
+		OnGetClassifier a_Callback );
 	//! Classify the given image and returns image tags for the image data.
 	void ClassifyImage(const std::string & a_ImageData,
-		const std::string & classifierId,
+		const std::vector<std::string> & a_Classifiers,
 		OnClassifyImage a_Callback,
 		bool a_bKnowledgeGraph = false );
 	//! Detect faces in the provided image 
 	void DetectFaces(const std::string & a_ImageData,
-		OnDetectFaces a_Callback, 
-		bool a_bKnowledgeGraph = false );
-	//! Identify the Text within a provided image
-	void IdentifyText(const std::string & a_ImageData,
-		OnIdentifyText a_Callback,
-		bool a_bKnowledgeGraph = false );
+		OnDetectFaces a_Callback );
+
+	//! Create a new custom classifier with the provided negative/positive examples
+	void CreateClassifier( const std::string & a_ClassiferName,
+		const std::vector<std::string> & a_PositiveExamples,
+		const std::string & a_NegativeExamples,
+		OnCreateClassifier a_Callback );
 	//! Retrains the Image Classifier with positive examples
-	void TrainClassifierPositives(const std::string & a_ImageData,
-		std::string & classifierId,
-		std::string & classifierName,
-		const std::string & imageClass,
+	void UpdateClassifier(
+		const std::string & a_ClassifierId,
+		const std::string & a_ClassifierName,
+		const std::vector< std::string > & a_PositiveExamples,
+		const std::string & a_NegativeExamples,
 		OnClassifierTrained a_Callback);
-	//! Retrains the Image Classifier with negative examples
-	void TrainClassifierNegatives(const std::string & a_ImageData,
-		std::string & classifierId,
-		std::string & classifierName,
-		const std::string & imageClass,
-		OnClassifierTrained a_Callback);
+	//! Delete the specified classifier
+	void DeleteClassifier( const std::string & a_ClassifierId,
+		OnDeleteClassifier a_Callback );
 
 private:
 	//! Types
@@ -86,6 +95,9 @@ private:
 		void OnCheckService(const Json::Value &);
 	};
 
+	//! Data
+	std::string				m_APIVersion;
+	float					m_ClassifyThreshold;
 };
 
 #endif
