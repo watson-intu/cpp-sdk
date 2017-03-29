@@ -31,7 +31,7 @@ public:
     //! Construction
     TestConversationRequestIntents() : UnitTest("TestConversationRequestIntents"),
         m_bConversationTested(false),
-        m_WorkspaceId("f47fd8b3-e6d6-46d3-b921-8cc257660147"),
+        m_WorkspaceId("a410e51b-6ef8-4740-b8c3-ab6f06a37662"),
         m_ConversationId(""),
         m_IntentOverrideTag("m_IntentOverride"),
         m_ConversationInput("./etc/shared/self_conversation_v1.csv"),

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wdc", "wdc\wdc.vcxproj", "{DF26E299-62E3-438A-8403-3D427BB81DB1}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "tinyxml\tinyxml.vcxproj", "{7E45DE27-419E-469C-AFFA-F669750D6338}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "librdkafka", "librdkafka\librdkafka.vcxproj", "{235811ED-0AB6-4309-B52C-54AB38590F68}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcxproj", "{44A53853-2D97-4F4B-860C-52EDD74DFB39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{235811ED-0AB6-4309-B52C-54AB38590F68}.Debug|x86.Build.0 = Debug|Win32
 		{235811ED-0AB6-4309-B52C-54AB38590F68}.Release|x86.ActiveCfg = Release|Win32
 		{235811ED-0AB6-4309-B52C-54AB38590F68}.Release|x86.Build.0 = Release|Win32
+		{44A53853-2D97-4F4B-860C-52EDD74DFB39}.Debug|x86.ActiveCfg = Debug|Win32
+		{44A53853-2D97-4F4B-860C-52EDD74DFB39}.Debug|x86.Build.0 = Debug|Win32
+		{44A53853-2D97-4F4B-860C-52EDD74DFB39}.Release|x86.ActiveCfg = Release|Win32
+		{44A53853-2D97-4F4B-860C-52EDD74DFB39}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,5 +49,6 @@ Global
 		{28BA4301-4C55-41D2-B122-01DBDE375452} = {4870F05D-A82C-4D3F-AE8C-FF9946CD6F87}
 		{7E45DE27-419E-469C-AFFA-F669750D6338} = {4870F05D-A82C-4D3F-AE8C-FF9946CD6F87}
 		{235811ED-0AB6-4309-B52C-54AB38590F68} = {4870F05D-A82C-4D3F-AE8C-FF9946CD6F87}
+		{44A53853-2D97-4F4B-860C-52EDD74DFB39} = {4870F05D-A82C-4D3F-AE8C-FF9946CD6F87}
 	EndGlobalSection
 EndGlobal

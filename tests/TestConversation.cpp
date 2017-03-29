@@ -27,10 +27,10 @@ public:
     //! Construction
     TestConversation() : UnitTest("TestConversation"),
         m_bConversationTested(false),
-        m_WorkspaceId("0229768a-35af-4cfa-a989-d39376ce88d6"),
+        m_WorkspaceId("a410e51b-6ef8-4740-b8c3-ab6f06a37662"),
         m_ConversationId(""),
         m_IntentOverrideTag("m_IntentOverride"),
-        m_TestText("please raise your right hand")
+        m_TestText("how are you")
     {}
 
     bool m_bConversationTested;
@@ -53,7 +53,8 @@ public:
 			Log::Debug("TestConversation","Conversation Started");
 
 			Log::Debug("TestConversation","Testing Conversation Response for input: %s", m_TestText.c_str());
-        conversation.Message(m_WorkspaceId, m_Context, m_TestText, m_IntentOverrideTag, DELEGATE(TestConversation, OnMessage, ConversationResponse *, this));
+			conversation.Message(m_WorkspaceId, m_Context, m_TestText, m_IntentOverrideTag,
+				DELEGATE(TestConversation, OnMessage, ConversationResponse *, this));
 
 			Spin(m_bConversationTested);
 			Test(m_bConversationTested);

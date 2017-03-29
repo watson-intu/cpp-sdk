@@ -49,8 +49,8 @@ public:
 
 			consumer.Subscribe( "graphChange", 0,
 				DELEGATE(TestKafka, OnGraphChanges, std::string *, this));
-			Spin(m_bConsumeTested, 300.0f);
-			Test(m_bConsumeTested);
+			//Spin(m_bConsumeTested, 300.0f);
+			//Test(m_bConsumeTested);
 
 			Test( consumer.Stop() );
 		}
