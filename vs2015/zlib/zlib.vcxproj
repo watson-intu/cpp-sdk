@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{44A53853-2D97-4F4B-860C-52EDD74DFB39}</ProjectGuid>
+    <ProjectGuid>{65448FD4-DD60-43D3-8DFA-DFDC79F3F899}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>zlib</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>

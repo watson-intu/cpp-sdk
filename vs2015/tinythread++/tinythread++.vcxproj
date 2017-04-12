@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{710E7386-C16F-4F84-8AEB-1C79428DC30B}</ProjectGuid>
+    <ProjectGuid>{996FA927-87A6-47A7-830B-5635A548EC66}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>tinythread</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>

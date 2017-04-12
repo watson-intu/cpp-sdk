@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{235811ED-0AB6-4309-B52C-54AB38590F68}</ProjectGuid>
+    <ProjectGuid>{A380215C-E7F5-40D3-845B-1D9F40F58915}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>librdkafka</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>

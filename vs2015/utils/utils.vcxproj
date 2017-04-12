@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DF26E299-62E3-438A-8403-3D427BB81DB1}</ProjectGuid>
+    <ProjectGuid>{8F98FE49-270C-4DCD-AEE8-48F3D8F8FD9B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>utils</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
