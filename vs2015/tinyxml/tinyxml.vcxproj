@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7E45DE27-419E-469C-AFFA-F669750D6338}</ProjectGuid>
+    <ProjectGuid>{21170F01-34EE-4BCE-8A69-B75BBE8DBBC1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>tinyxml</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
