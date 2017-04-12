@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7340F605-67BC-4E3F-B087-9BDE6F855166}</ProjectGuid>
+    <ProjectGuid>{28BA4301-4C55-41D2-B122-01DBDE375452}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>jsoncpp</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
