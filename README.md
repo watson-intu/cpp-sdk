@@ -1,1 +1,1 @@
-Low-Level C++ library for Watsons Innovation Lab projects.
+Low-Level C++ utility classes for lab projects.
