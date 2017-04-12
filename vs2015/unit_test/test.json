@@ -1,0 +1,1 @@
+{"Type_":"TestA","m_ObjectList":[{"Type_":"SubObject","m_integer":42},{"Type_":"SubObject","m_integer":42},{"Type_":"SubObject","m_integer":42}],"m_integer":55,"m_pSubObject":{"Type_":"SubObject","m_integer":843},"m_string":"Hello World"}

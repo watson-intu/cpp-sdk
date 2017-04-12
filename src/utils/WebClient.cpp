@@ -274,12 +274,12 @@ public:
 	virtual bool Close()
 	{
 		if ( m_pSocket == NULL )
-			return false;
+			return true;
 
 		if ( m_eState == IWebClient::CLOSING
 			|| m_eState == IWebClient::CLOSED
 			|| m_eState == IWebClient::DISCONNECTED )
-			return false;
+			return true;
 
 		// just set the state and close the socket, the routines in the other thread
 		// will invoke OnDisconnected() which will ignore the state change.
