@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DF26E299-62E3-438A-8403-3D427BB81DB1}</ProjectGuid>
+    <ProjectGuid>{9B6C58B8-9A51-4634-AB23-F23F6A458BAD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>utils</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
@@ -102,6 +102,9 @@
     <ClCompile Include="..\..\lib\minizip\unzip.c" />
     <ClCompile Include="..\..\lib\minizip\zip.c" />
     <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
+    <ClCompile Include="..\..\src\services\Graph\DataModels.cpp" />
+    <ClCompile Include="..\..\src\services\Graph\Graph.cpp" />
+    <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp" />
     <ClCompile Include="..\..\src\utils\Config.cpp" />
     <ClCompile Include="..\..\src\utils\DataCache.cpp" />
     <ClCompile Include="..\..\src\utils\Form.cpp" />
@@ -146,6 +149,9 @@
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h" />
+    <ClInclude Include="..\..\src\services\Graph\DataModels.h" />
+    <ClInclude Include="..\..\src\services\Graph\Graph.h" />
+    <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h" />
     <ClInclude Include="..\..\src\utils\Config.h" />
     <ClInclude Include="..\..\src\utils\DataCache.h" />
     <ClInclude Include="..\..\src\utils\Form.h" />

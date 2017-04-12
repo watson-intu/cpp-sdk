@@ -25,6 +25,15 @@
     <Filter Include="libs\minizip">
       <UniqueIdentifier>{57e421d3-0397-4e13-82ef-75834ae9e355}</UniqueIdentifier>
     </Filter>
+    <Filter Include="services">
+      <UniqueIdentifier>{87c1b3ca-c373-4af1-9dc9-dc60fe99350c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\Graph">
+      <UniqueIdentifier>{a45371dd-5297-4b05-a079-a555da6067bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\Kafka">
+      <UniqueIdentifier>{f1dc271f-8f45-4230-8865-f967a48f1ed2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\ISerializable.cpp">
@@ -134,6 +143,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\utils\IService.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Graph\DataModels.cpp">
+      <Filter>services\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Graph\Graph.cpp">
+      <Filter>services\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp">
+      <Filter>services\Kafka</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -294,6 +312,15 @@
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\UtilsLib.h" />
+    <ClInclude Include="..\..\src\services\Graph\DataModels.h">
+      <Filter>services\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\Graph\Graph.h">
+      <Filter>services\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h">
+      <Filter>services\Kafka</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\CMakeLists.txt" />
