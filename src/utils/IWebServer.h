@@ -27,10 +27,10 @@
 #include "Log.h"
 #include "RTTI.h"
 #include "IWebSocket.h"
-#include "WDCLib.h"	
+#include "UtilsLib.h"	
 
 //! Server class for handling incoming REST requests and WebSocket connections. 
-class WDC_API IWebServer : public boost::enable_shared_from_this<IWebServer>
+class UTILS_API IWebServer : public boost::enable_shared_from_this<IWebServer>
 {
 public:
 	RTTI_DECL();
@@ -72,7 +72,7 @@ public:
 	typedef boost::shared_ptr<IConnection>		ConnectionSP;
 
 	//! This object is created when a request is received from a connected client.
-	struct WDC_API Request
+	struct UTILS_API Request
 	{
 	public:
 		//! Types

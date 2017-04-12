@@ -18,12 +18,12 @@
 #ifndef WDC_ZIP_FILE_H
 #define WDC_ZIP_FILE_H
 
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 #include <string>
 #include <map>
 
-class WDC_API ZipFile
+class UTILS_API ZipFile
 {
 public:
 	//! Types

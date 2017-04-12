@@ -20,9 +20,9 @@
 
 #include <string>
 #include <list>
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
-class WDC_API GetMac
+class UTILS_API GetMac
 {
 public:
 	static std::string GetMyAddress();

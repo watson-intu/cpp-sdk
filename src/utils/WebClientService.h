@@ -45,10 +45,10 @@ namespace boost {
 #include "boost/atomic.hpp"
 
 #include "TimerPool.h"
-#include "WDCLib.h"		
+#include "UtilsLib.h"		
 
 //! This singleton class manages the boost::asio::io_service object and a pool of already established connections.
-class WDC_API WebClientService
+class UTILS_API WebClientService
 {
 public:
 	static WebClientService * Instance();

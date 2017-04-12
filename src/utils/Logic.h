@@ -22,10 +22,10 @@
 #include <vector>
 
 #include "jsoncpp/json/json.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! Logical and equality operators
-class WDC_API Logic
+class UTILS_API Logic
 {
 public:
 	enum EqualityOp

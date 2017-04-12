@@ -20,7 +20,7 @@
 
 #include <string>
 #include "IWebSocket.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 // http://tools.ietf.org/html/rfc6455#section-5.2  Base Framing Protocol
 //
@@ -43,7 +43,7 @@
 // |                     Payload Data continued ...                |
 // +---------------------------------------------------------------+
 
-class WDC_API WebSocketFramer
+class UTILS_API WebSocketFramer
 {
 public:
 	//! Parse a packet from raw data, will return NULL if no packet can be parsed currently.

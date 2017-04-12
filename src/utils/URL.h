@@ -27,10 +27,10 @@
 #include <string>		// std::string
 
 #include "StringUtil.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! Helper class for parsing a URL and extracting the different parts.
-class WDC_API URL
+class UTILS_API URL
 {
 public:
 	static const std::string PROTOCOL_END;

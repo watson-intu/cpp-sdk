@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="services">
-      <UniqueIdentifier>{d4ea00f1-d7a7-47bc-99e0-f66bb27b4ffa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="utils">
       <UniqueIdentifier>{f1641002-94df-4a63-8e5a-9527d2f3783e}</UniqueIdentifier>
     </Filter>
@@ -12,15 +9,6 @@
     </Filter>
     <Filter Include="libs\tinythread++">
       <UniqueIdentifier>{0dde3d4a-3764-477c-a42e-cf209fec84bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\SpeechToText">
-      <UniqueIdentifier>{35a51563-4027-4661-87e0-08da4470e334}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\TextToSpeech">
-      <UniqueIdentifier>{22cdcc59-f98d-4b08-a446-c58b3f573698}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\Dialog">
-      <UniqueIdentifier>{bbf49952-4595-438b-afbe-47a55885e99d}</UniqueIdentifier>
     </Filter>
     <Filter Include="libs\base64">
       <UniqueIdentifier>{a9e7a5a3-e208-4737-a6ef-c1f51cb0905e}</UniqueIdentifier>
@@ -31,50 +19,11 @@
     <Filter Include="libs\utf8_v2_3_4\utf8">
       <UniqueIdentifier>{27db0a95-5739-4d6b-a05c-eaa259ee940d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="services\NaturalLanguageClassifier">
-      <UniqueIdentifier>{a22f1de0-eafa-499e-afa7-d9136b263b7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\RelationshipExtraction">
-      <UniqueIdentifier>{eab98038-b7c6-4cf4-abc2-39591e590cc5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="libs\crossguid">
       <UniqueIdentifier>{b3f2b786-508f-4278-99a7-81087b379f68}</UniqueIdentifier>
     </Filter>
-    <Filter Include="services\Conversation">
-      <UniqueIdentifier>{7a68bb60-dc82-4c3f-996f-687ba16a0252}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\VisualRecognition">
-      <UniqueIdentifier>{2d958eba-2ca3-4990-8564-7658faee1f2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\Alchemy">
-      <UniqueIdentifier>{59f15da7-1ce5-46b7-8f44-218477da0881}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\RetreiveAndRank">
-      <UniqueIdentifier>{4bd1ae6c-1355-4ddb-8e88-9fdc39f3a069}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\ToneAnalyzer">
-      <UniqueIdentifier>{4cf044ce-bce8-4e59-8335-85c158919fb6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="libs\minizip">
       <UniqueIdentifier>{57e421d3-0397-4e13-82ef-75834ae9e355}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\LanguageTranslator">
-      <UniqueIdentifier>{94dc1953-6304-4a3e-bcef-e4e3b619c1b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\WeatherCompanyData">
-      <UniqueIdentifier>{67a1d550-9b8a-425c-a0a9-8c9320285756}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\PersonalityInsights">
-      <UniqueIdentifier>{c6bd5e82-c450-44b9-86aa-2ea06fd8dd13}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\Graph">
-      <UniqueIdentifier>{1144c336-3fa8-4f6d-b951-0b865d276b7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\Kafka">
-      <UniqueIdentifier>{0934eb3f-ee08-4178-8ca3-aad631da99f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="services\NaturalLanguageUnderstanding">
-      <UniqueIdentifier>{fa8f1ef4-6d42-4b2b-b21a-dec411df92b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,39 +96,6 @@
     <ClCompile Include="..\..\src\utils\JsonHelpers.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\services\Alchemy\Alchemy.cpp">
-      <Filter>services\Alchemy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\Conversation\Conversation.cpp">
-      <Filter>services\Conversation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\Dialog\Dialog.cpp">
-      <Filter>services\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\IService.cpp">
-      <Filter>services</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp">
-      <Filter>services\NaturalLanguageClassifier</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.cpp">
-      <Filter>services\RelationshipExtraction</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.cpp">
-      <Filter>services\RetreiveAndRank</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\SpeechToText\SpeechToText.cpp">
-      <Filter>services\SpeechToText</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\TextToSpeech\TextToSpeech.cpp">
-      <Filter>services\TextToSpeech</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\ToneAnalyzer\ToneAnalyzer.cpp">
-      <Filter>services\ToneAnalyzer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\VisualRecognition\VisualRecognition.cpp">
-      <Filter>services\VisualRecognition</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\utils\UnitTest.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -210,38 +126,17 @@
     <ClCompile Include="..\..\src\utils\JpegHelpers.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\services\LanguageTranslator\LanguageTranslator.cpp">
-      <Filter>services\LanguageTranslator</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.cpp">
-      <Filter>services\WeatherCompanyData</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\PersonalityInsights\PersonalityInsights.cpp">
-      <Filter>services\PersonalityInsights</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\utils\WebClientService.cpp">
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\MD5.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\services\Graph\DataModels.cpp">
-      <Filter>services\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\Graph\Graph.cpp">
-      <Filter>services\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp">
-      <Filter>services\Kafka</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.cpp">
-      <Filter>services\NaturalLanguageUnderstanding</Filter>
+    <ClCompile Include="..\..\src\utils\IService.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\services\IService.h">
-      <Filter>services</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\Delegate.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -287,12 +182,6 @@
     <ClInclude Include="..\..\src\utils\Sound.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\services\SpeechToText\SpeechToText.h">
-      <Filter>services\SpeechToText</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\SpeechToText\DataModels.h">
-      <Filter>services\SpeechToText</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\ServiceConfig.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -329,32 +218,11 @@
     <ClInclude Include="..\..\src\utils\IWebClient.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\services\TextToSpeech\TextToSpeech.h">
-      <Filter>services\TextToSpeech</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\TextToSpeech\DataModels.h">
-      <Filter>services\TextToSpeech</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\DataCache.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\services\Dialog\DataModels.h">
-      <Filter>services\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\Dialog\Dialog.h">
-      <Filter>services\Dialog</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\Form.h">
       <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h">
-      <Filter>services\NaturalLanguageClassifier</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\DataModels.h">
-      <Filter>services\NaturalLanguageClassifier</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.h">
-      <Filter>services\RelationshipExtraction</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\utils\GetMac.h">
       <Filter>utils</Filter>
@@ -386,37 +254,12 @@
     <ClInclude Include="..\..\src\utils\JsonHelpers.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\services\Conversation\Conversation.h">
-      <Filter>services\Conversation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\Conversation\DataModels.h">
-      <Filter>services\Conversation</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\MD5.h">
       <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\VisualRecognition\VisualRecognition.h">
-      <Filter>services\VisualRecognition</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\Alchemy\Alchemy.h">
-      <Filter>services\Alchemy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\RetrieveAndRank\DataModels.h">
-      <Filter>services\RetreiveAndRank</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.h">
-      <Filter>services\RetreiveAndRank</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\ToneAnalyzer\DataModels.h">
-      <Filter>services\ToneAnalyzer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\ToneAnalyzer\ToneAnalyzer.h">
-      <Filter>services\ToneAnalyzer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\utils\UnitTest.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\WDCLib.h" />
     <ClInclude Include="..\..\src\utils\ZipFile.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -444,36 +287,13 @@
     <ClInclude Include="..\..\src\utils\JpegHelpers.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\services\LanguageTranslator\DataModels.h">
-      <Filter>services\LanguageTranslator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\LanguageTranslator\LanguageTranslator.h">
-      <Filter>services\LanguageTranslator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.h">
-      <Filter>services\WeatherCompanyData</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\PersonalityInsights\DataModels.h">
-      <Filter>services\PersonalityInsights</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\PersonalityInsights\PersonalityInsights.h">
-      <Filter>services\PersonalityInsights</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utils\WebClientService.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\services\Graph\DataModels.h">
-      <Filter>services\Graph</Filter>
+    <ClInclude Include="..\..\src\utils\IService.h">
+      <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\services\Graph\Graph.h">
-      <Filter>services\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h">
-      <Filter>services\Kafka</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.h">
-      <Filter>services\NaturalLanguageUnderstanding</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\src\UtilsLib.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\CMakeLists.txt" />

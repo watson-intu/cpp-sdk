@@ -13,9 +13,9 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DF26E299-62E3-438A-8403-3D427BB81DB1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>wdc</RootNamespace>
+    <RootNamespace>utils</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>wdc</ProjectName>
+    <ProjectName>utils</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -56,7 +56,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;_DEBUG;_WINDOWS;_USRDLL;WDC_SERVICES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UTILS_EXPORTS;WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;..\..\lib\zlib-1.2.8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -77,7 +77,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;NDEBUG;_WINDOWS;_USRDLL;WDC_SERVICES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UTILS_EXPORTS;WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;..\..\lib\zlib-1.2.8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -102,32 +102,12 @@
     <ClCompile Include="..\..\lib\minizip\unzip.c" />
     <ClCompile Include="..\..\lib\minizip\zip.c" />
     <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
-    <ClCompile Include="..\..\src\services\Alchemy\Alchemy.cpp" />
-    <ClCompile Include="..\..\src\services\Conversation\Conversation.cpp" />
-    <ClCompile Include="..\..\src\services\Dialog\Dialog.cpp" />
-    <ClCompile Include="..\..\src\services\Graph\DataModels.cpp" />
-    <ClCompile Include="..\..\src\services\Graph\Graph.cpp" />
-    <ClCompile Include="..\..\src\services\IService.cpp" />
-    <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp" />
-    <ClCompile Include="..\..\src\services\LanguageTranslator\LanguageTranslator.cpp" />
-    <ClCompile Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.cpp" />
-    <ClCompile Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.cpp" />
-    <ClCompile Include="..\..\src\services\PersonalityInsights\PersonalityInsights.cpp" />
-    <ClCompile Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.cpp" />
-    <ClCompile Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.cpp" />
-    <ClCompile Include="..\..\src\services\SpeechToText\SpeechToText.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\src\services\TextToSpeech\TextToSpeech.cpp" />
-    <ClCompile Include="..\..\src\services\ToneAnalyzer\ToneAnalyzer.cpp" />
-    <ClCompile Include="..\..\src\services\VisualRecognition\VisualRecognition.cpp" />
-    <ClCompile Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.cpp" />
     <ClCompile Include="..\..\src\utils\Config.cpp" />
     <ClCompile Include="..\..\src\utils\DataCache.cpp" />
     <ClCompile Include="..\..\src\utils\Form.cpp" />
     <ClCompile Include="..\..\src\utils\GetMac.cpp" />
     <ClCompile Include="..\..\src\utils\IConditional.cpp" />
+    <ClCompile Include="..\..\src\utils\IService.cpp" />
     <ClCompile Include="..\..\src\utils\JpegHelpers.cpp" />
     <ClCompile Include="..\..\src\utils\JsonHelpers.cpp" />
     <ClCompile Include="..\..\src\utils\Logic.cpp" />
@@ -166,38 +146,12 @@
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h" />
     <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h" />
-    <ClInclude Include="..\..\src\services\Alchemy\Alchemy.h" />
-    <ClInclude Include="..\..\src\services\Conversation\Conversation.h" />
-    <ClInclude Include="..\..\src\services\Conversation\DataModels.h" />
-    <ClInclude Include="..\..\src\services\Dialog\DataModels.h" />
-    <ClInclude Include="..\..\src\services\Dialog\Dialog.h" />
-    <ClInclude Include="..\..\src\services\Graph\DataModels.h" />
-    <ClInclude Include="..\..\src\services\Graph\Graph.h" />
-    <ClInclude Include="..\..\src\services\IService.h" />
-    <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h" />
-    <ClInclude Include="..\..\src\services\LanguageTranslator\DataModels.h" />
-    <ClInclude Include="..\..\src\services\LanguageTranslator\LanguageTranslator.h" />
-    <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\DataModels.h" />
-    <ClInclude Include="..\..\src\services\NaturalLanguageClassifier\NaturalLanguageClassifier.h" />
-    <ClInclude Include="..\..\src\services\NaturalLanguageUnderstanding\NaturalLanguageUnderstanding.h" />
-    <ClInclude Include="..\..\src\services\PersonalityInsights\DataModels.h" />
-    <ClInclude Include="..\..\src\services\PersonalityInsights\PersonalityInsights.h" />
-    <ClInclude Include="..\..\src\services\RelationshipExtraction\RelationshipExtraction.h" />
-    <ClInclude Include="..\..\src\services\RetrieveAndRank\DataModels.h" />
-    <ClInclude Include="..\..\src\services\RetrieveAndRank\RetrieveAndRank.h" />
-    <ClInclude Include="..\..\src\services\SpeechToText\DataModels.h" />
-    <ClInclude Include="..\..\src\services\SpeechToText\SpeechToText.h" />
-    <ClInclude Include="..\..\src\services\TextToSpeech\DataModels.h" />
-    <ClInclude Include="..\..\src\services\TextToSpeech\TextToSpeech.h" />
-    <ClInclude Include="..\..\src\services\ToneAnalyzer\DataModels.h" />
-    <ClInclude Include="..\..\src\services\ToneAnalyzer\ToneAnalyzer.h" />
-    <ClInclude Include="..\..\src\services\VisualRecognition\VisualRecognition.h" />
-    <ClInclude Include="..\..\src\services\WeatherCompanyData\WeatherCompanyData.h" />
     <ClInclude Include="..\..\src\utils\Config.h" />
     <ClInclude Include="..\..\src\utils\DataCache.h" />
     <ClInclude Include="..\..\src\utils\Form.h" />
     <ClInclude Include="..\..\src\utils\GetMac.h" />
     <ClInclude Include="..\..\src\utils\IConditional.h" />
+    <ClInclude Include="..\..\src\utils\IService.h" />
     <ClInclude Include="..\..\src\utils\IWebClient.h" />
     <ClInclude Include="..\..\src\utils\IWebServer.h" />
     <ClInclude Include="..\..\src\utils\IWebSocket.h" />
@@ -227,7 +181,7 @@
     <ClInclude Include="..\..\src\utils\WebClientService.h" />
     <ClInclude Include="..\..\src\utils\WebSocketFramer.h" />
     <ClInclude Include="..\..\src\utils\ZipFile.h" />
-    <ClInclude Include="..\..\src\WDCLib.h" />
+    <ClInclude Include="..\..\src\UtilsLib.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\CMakeLists.txt" />

@@ -29,10 +29,10 @@
 #include "utils/Time.h"
 #include "utils/ThreadPool.h"
 
-#include "WDCLib.h"		// include last always
+#include "UtilsLib.h"		// include last always
 
 //! Unit test base class for writing tests of the SELF library.
-class WDC_API UnitTest 
+class UTILS_API UnitTest 
 {
 public:
 	//! Construction

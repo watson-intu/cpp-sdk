@@ -23,11 +23,11 @@
 #include <string>
 #include <vector>
 
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! This class is used to generate multi-part form data to be sent through REST
 //! requests
-class WDC_API Form
+class UTILS_API Form
 {
 public:
 	//! Construction

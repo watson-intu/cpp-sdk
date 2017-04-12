@@ -18,13 +18,13 @@
 #ifndef WDC_CONFIG_H
 #define WDC_CONFIG_H
 
-#include "services/IService.h"
+#include "IService.h"
 #include "ISerializable.h"
 #include "Library.h"
 #include "ServiceConfig.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
-class WDC_API Config : public ISerializable
+class UTILS_API Config : public ISerializable
 {
 public:
 	RTTI_DECL();

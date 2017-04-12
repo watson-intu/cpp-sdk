@@ -22,7 +22,7 @@
 #include "boost/enable_shared_from_this.hpp"
 
 #include "ISerializable.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 enum AuthType {
 	AUTH_BASIC,			// URL, User, and Password fields required
@@ -33,7 +33,7 @@ enum AuthType {
 
 //! Data class for holding credentials for a given service. This object
 //! is contained by the Config class usually.
-struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared_from_this<ServiceConfig>
+struct UTILS_API ServiceConfig : public ISerializable, public boost::enable_shared_from_this<ServiceConfig>
 {
 	RTTI_DECL();
 

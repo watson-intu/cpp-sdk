@@ -19,8 +19,8 @@
 #define WDC_MD5_H
 
 #include <string>
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
-WDC_API std::string MakeMD5( const std::string & a_Data );
+UTILS_API std::string MakeMD5( const std::string & a_Data );
 
 #endif

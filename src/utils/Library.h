@@ -19,9 +19,9 @@
 #define WDC_LIBRARY_H
 
 #include <string>
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
-class WDC_API Library
+class UTILS_API Library
 {
 public:
 	Library();

@@ -16,12 +16,12 @@
 
 #include <string>
 #include "jsoncpp/json/json.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 class TiXmlElement;
 
 //! This is a container for skill/gesture arguments.
-class WDC_API JsonHelpers
+class UTILS_API JsonHelpers
 {
 public:
 	//! Load JSON from the given file

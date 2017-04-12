@@ -25,7 +25,7 @@
 #include <stdarg.h>
 
 #include <boost/thread.hpp>
-#include "WDCLib.h"		// include last
+#include "UtilsLib.h"		// include last
 
 enum LogLevel
 {
@@ -49,7 +49,7 @@ struct LogRecord
 };
 
 //! Abstract interface for any object that wants to hook into the LogSystem.
-class WDC_API ILogReactor
+class UTILS_API ILogReactor
 {
 public:
 	virtual ~ILogReactor()
@@ -58,7 +58,7 @@ public:
 	virtual void Process(const LogRecord & a_Record) = 0;
 };
 
-class WDC_API ConsoleReactor : public ILogReactor
+class UTILS_API ConsoleReactor : public ILogReactor
 {
 public:
 	ConsoleReactor(LogLevel a_MinLevel = LL_STATUS) : m_MinLevel(a_MinLevel)
@@ -70,7 +70,7 @@ private:
 	LogLevel			m_MinLevel;
 };
 
-class WDC_API FileReactor : public ILogReactor
+class UTILS_API FileReactor : public ILogReactor
 {
 public:
 	FileReactor(const char * a_pLogFile, LogLevel a_MinLevel = LL_STATUS, int a_LogHistory = 5 );
@@ -96,7 +96,7 @@ private:
 	void WriteThread();
 };
 
-class WDC_API Log
+class UTILS_API Log
 {
 public:
 	static void RegisterReactor(ILogReactor * a_pReactor);

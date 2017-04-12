@@ -127,7 +127,7 @@ void IWebClient::Free( const SP & a_spClient )
 //----------------------------------------------
 
 template<typename socket_type>
-class WDC_API WebClientT : public IWebClient
+class UTILS_API WebClientT : public IWebClient
 {
 public:
 	//! Types

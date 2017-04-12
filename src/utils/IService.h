@@ -31,7 +31,7 @@
 #include "utils/ServiceConfig.h"
 #include "utils/WatsonException.h"
 #include "utils/IWebClient.h"
-#include "WDCLib.h"			// include last always
+#include "UtilsLib.h"			// include last always
 
 #if ENABLE_DELEGATE_DEBUG
 #define WARNING_DELEGATE_TIME (0.1)
@@ -39,7 +39,7 @@
 #endif
 
 //! This is the base class for a remote service.
-class WDC_API IService : public ISerializable, public boost::enable_shared_from_this<IService>
+class UTILS_API IService : public ISerializable, public boost::enable_shared_from_this<IService>
 {
 public:
 	RTTI_DECL();
@@ -82,7 +82,7 @@ public:
 	};
 
 	//! REST request object for this service.
-	class WDC_API Request
+	class UTILS_API Request
 	{
 	public:
 		//! Types

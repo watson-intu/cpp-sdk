@@ -20,17 +20,17 @@
 //! Disable this warning as it incorrectly warns over template classes like std::list<>
 #pragma warning( disable:4251) // warning C4251: ... needs to have dll-interface to be used by clients of class ...
 
-#undef WDC_API
+#undef UTILS_API
 
-#ifdef WDC_SERVICES_EXPORTS
-#define WDC_API __declspec(dllexport)
+#ifdef UTILS_EXPORTS
+#define UTILS_API __declspec(dllexport)
 #else
-#define WDC_API __declspec(dllimport)
+#define UTILS_API __declspec(dllimport)
 #endif
 
 #else
 
 // Linux, Android and other platforms don't need to export from a .SO
-#define WDC_API
+#define UTILS_API
 
 #endif
