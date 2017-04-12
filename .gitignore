@@ -6,3 +6,4 @@ Debug
 *.user
 *.log
 *.suo
+*.log.*
