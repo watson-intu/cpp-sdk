@@ -14,11 +14,11 @@
 #ifndef WDC_KAFKA_SERVICE_H
 #define WDC_KAFKA_SERVICE_H
 
-#include "services/IService.h"
-#include "WDCLib.h"
+#include "utils/IService.h"
+#include "UtilsLib.h"
 
 //! low-level service interface for communicating with Kafka
-class WDC_API KafkaConsumer : public IService
+class UTILS_API KafkaConsumer : public IService
 {
 public:
 	RTTI_DECL();

@@ -19,10 +19,10 @@
 #include "utils/RTTI.h"
 #include "utils/ISerializable.h"
 
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! Base class for an object for testing conditions.
-struct WDC_API IConditional : public ISerializable
+struct UTILS_API IConditional : public ISerializable
 {
 	RTTI_DECL();
 
@@ -38,7 +38,7 @@ struct WDC_API IConditional : public ISerializable
 };
 
 //! A null condition object, when no condition testing is needed but you still need to pass an object by reference.
-struct WDC_API NullCondition : public IConditional
+struct UTILS_API NullCondition : public IConditional
 {
 	RTTI_DECL();
 
@@ -63,7 +63,7 @@ struct WDC_API NullCondition : public IConditional
 
 //! Compare the value at m_Path to m_Value with the provided
 //! equality operator. 
-struct WDC_API EqualityCondition : public IConditional
+struct UTILS_API EqualityCondition : public IConditional
 {
 	RTTI_DECL();
 
@@ -109,7 +109,7 @@ struct WDC_API EqualityCondition : public IConditional
 };
 
 //! Compares the collection of conditions, then applies the logical operation (AND,OR)
-struct WDC_API LogicalCondition : public IConditional
+struct UTILS_API LogicalCondition : public IConditional
 {
 	RTTI_DECL();
 

@@ -24,7 +24,7 @@
 #include "boost/shared_ptr.hpp"
 
 #include "StringHash.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 /*
 	RTTI (Run Time Time information) class allows us to determine the type
@@ -32,7 +32,7 @@
 	in the class definition.
 */
 
-class WDC_API RTTI
+class UTILS_API RTTI
 {
 public:
 	//! Types

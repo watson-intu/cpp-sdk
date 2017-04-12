@@ -31,11 +31,11 @@
 #include "Log.h"
 #include "SHA1.h"
 #include "IWebServer.h"
-#include "WDCLib.h"		// include last always
+#include "UtilsLib.h"		// include last always
 
 //! Server class for handling incoming REST requests and WebSocket connections. 
 template<typename socket_type>
-class WDC_API WebServerT : public IWebServer
+class UTILS_API WebServerT : public IWebServer
 {
 public:
 	//! Types

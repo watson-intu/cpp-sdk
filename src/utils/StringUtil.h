@@ -21,10 +21,10 @@
 #include <string>
 #include <vector>
 
-#include "../WDCLib.h"		// include last always
+#include "UtilsLib.h"	
 
 //! string utility functions.
-class WDC_API StringUtil
+class UTILS_API StringUtil
 {
 public:
 	static void ToLower( std::string & a_String );

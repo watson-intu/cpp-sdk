@@ -15,7 +15,7 @@
 #define WDC_GRAPH_DATAMODELS_H
 
 #include "utils/ISerializable.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 namespace GraphDataModels {
 
@@ -24,7 +24,7 @@ namespace GraphDataModels {
 	typedef std::string					VertexId;
 	typedef std::string					EdgeId;
 
-	struct WDC_API EdgeLabel : public ISerializable
+	struct UTILS_API EdgeLabel : public ISerializable
 	{
 		std::string		m_Multiplicity;
 		std::string		m_Name;
@@ -41,7 +41,7 @@ namespace GraphDataModels {
 		}
 	};
 
-	struct WDC_API VertexLabel : public ISerializable
+	struct UTILS_API VertexLabel : public ISerializable
 	{
 		std::string		m_Name;
 
@@ -55,7 +55,7 @@ namespace GraphDataModels {
 		}
 	};
 
-	struct WDC_API IndexOnly : public ISerializable
+	struct UTILS_API IndexOnly : public ISerializable
 	{
 		IndexOnly() 
 		{}
@@ -74,7 +74,7 @@ namespace GraphDataModels {
 		}
 	};
 
-	struct WDC_API Index : public ISerializable
+	struct UTILS_API Index : public ISerializable
 	{
 		Index() : m_Composite(false), m_Unique(false)
 		{}
@@ -103,7 +103,7 @@ namespace GraphDataModels {
 		}
 	};
 
-	struct WDC_API PropertyKey : public ISerializable
+	struct UTILS_API PropertyKey : public ISerializable
 	{
 		std::string		m_Cardinality;
 		std::string		m_DataType;
@@ -125,7 +125,7 @@ namespace GraphDataModels {
 
 	typedef std::map<std::string, size_t>		IndexMap;
 
-	struct WDC_API Schema : public ISerializable
+	struct UTILS_API Schema : public ISerializable
 	{
 		Schema() : m_nVersion(0), m_bSaving( false ), m_bDropped(false), m_nSavedVersion(-1)
 		{}

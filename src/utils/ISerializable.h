@@ -23,7 +23,7 @@
 #include "Log.h"
 
 #include "jsoncpp/json/json.h"
-#include "WDCLib.h"		// include last
+#include "UtilsLib.h"		// include last
 
 //! Base abstract interface for any class that can be serialized from and into json data.
 //!
@@ -45,7 +45,7 @@
 //!
 //! REG_SERIALIZABLE( SerializedObject );
 
-class WDC_API ISerializable
+class UTILS_API ISerializable
 {
 public:
 	RTTI_DECL();

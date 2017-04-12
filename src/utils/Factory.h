@@ -21,7 +21,7 @@
 #include <map>
 #include <string>
 #include "Log.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 class ICreator
 {
@@ -40,7 +40,7 @@ private:
 };
 typedef std::map<std::string, ICreator *>		CreatorMap;
 
-class WDC_API IFactory
+class UTILS_API IFactory
 {
 public:
 	//! Register a specific class type with this factory, it should inherit from the BASE class.

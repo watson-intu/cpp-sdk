@@ -17,8 +17,8 @@
 #include "DataModels.h"
 #include "utils/IConditional.h"
 #include "utils/TimerPool.h"
-#include "services/IService.h"
-#include "WDCLib.h"
+#include "utils/IService.h"
+#include "UtilsLib.h"
 
 //! low-level service interface for communicating with IBM graph (Titan, Tinker-Pop and Gremlin stack)
 
@@ -26,7 +26,7 @@
 //! of the vertexes and edges created through this interface. indexes are automatically created for all 
 //! properties.
 
-class WDC_API Graph : public IService
+class UTILS_API Graph : public IService
 {
 public:
 	RTTI_DECL();

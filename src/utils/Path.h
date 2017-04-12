@@ -21,10 +21,10 @@
 #include <string>		// std::string
 
 #include "StringUtil.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! Helper class for parsing a file path and extracting the different parts.
-class WDC_API Path
+class UTILS_API Path
 {
 public:
 	//! Construction

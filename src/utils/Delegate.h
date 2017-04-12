@@ -22,7 +22,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
 
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 #ifndef ENABLE_DELEGATE_DEBUG
 #if defined(_DEBUG) || !defined(__OPTIMIZE__)

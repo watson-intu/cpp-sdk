@@ -27,11 +27,11 @@
 #include "StringUtil.h"
 #include "URL.h"
 #include "IWebSocket.h"
-#include "WDCLib.h"		
+#include "UtilsLib.h"		
 #include "Factory.h"
 
 //! Abstract interface for a web client class
-class WDC_API IWebClient : public IWebSocket
+class UTILS_API IWebClient : public IWebSocket
 {
 public:
 	RTTI_DECL();

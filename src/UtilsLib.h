@@ -15,12 +15,22 @@
 *
 */
 
-#ifndef WDC_MD5_H
-#define WDC_MD5_H
+#ifdef _WIN32
 
-#include <string>
-#include "UtilsLib.h"
+//! Disable this warning as it incorrectly warns over template classes like std::list<>
+#pragma warning( disable:4251) // warning C4251: ... needs to have dll-interface to be used by clients of class ...
 
-UTILS_API std::string MakeMD5( const std::string & a_Data );
+#undef UTILS_API
+
+#ifdef UTILS_EXPORTS
+#define UTILS_API __declspec(dllexport)
+#else
+#define UTILS_API __declspec(dllimport)
+#endif
+
+#else
+
+// Linux, Android and other platforms don't need to export from a .SO
+#define UTILS_API
 
 #endif

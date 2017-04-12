@@ -24,10 +24,10 @@
 
 #include "RTTI.h"
 #include "Delegate.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! Common interface for sending and receiving data on a web socket.
-class WDC_API IWebSocket : public boost::enable_shared_from_this<IWebSocket>
+class UTILS_API IWebSocket : public boost::enable_shared_from_this<IWebSocket>
 {
 public:
 	RTTI_DECL();

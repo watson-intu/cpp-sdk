@@ -19,9 +19,9 @@
 #define WDC_GUID_H
 
 #include <string>
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
-class WDC_API UniqueID 
+class UTILS_API UniqueID 
 {
 public:
 	//! Types

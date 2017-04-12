@@ -1,0 +1,328 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="utils">
+      <UniqueIdentifier>{f1641002-94df-4a63-8e5a-9527d2f3783e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs">
+      <UniqueIdentifier>{8c8189b4-ca5c-4da7-8ad1-e78b33a82442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\tinythread++">
+      <UniqueIdentifier>{0dde3d4a-3764-477c-a42e-cf209fec84bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\base64">
+      <UniqueIdentifier>{a9e7a5a3-e208-4737-a6ef-c1f51cb0905e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\utf8_v2_3_4">
+      <UniqueIdentifier>{08e50365-f51a-4c57-8324-91f7ef7caca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\utf8_v2_3_4\utf8">
+      <UniqueIdentifier>{27db0a95-5739-4d6b-a05c-eaa259ee940d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\crossguid">
+      <UniqueIdentifier>{b3f2b786-508f-4278-99a7-81087b379f68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\minizip">
+      <UniqueIdentifier>{57e421d3-0397-4e13-82ef-75834ae9e355}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services">
+      <UniqueIdentifier>{87c1b3ca-c373-4af1-9dc9-dc60fe99350c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\Graph">
+      <UniqueIdentifier>{a45371dd-5297-4b05-a079-a555da6067bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="services\Kafka">
+      <UniqueIdentifier>{f1dc271f-8f45-4230-8865-f967a48f1ed2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\utils\ISerializable.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\Log.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\StringUtil.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\ThreadPool.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\TimerPool.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\Config.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp">
+      <Filter>libs\tinythread++</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\Library.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\Sound.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\base64\cdecode.c">
+      <Filter>libs\base64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\base64\cencode.c">
+      <Filter>libs\base64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\WebClient.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\UniqueID.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\DataCache.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\Form.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\GetMac.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\WebSocketFramer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\Time.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\Logic.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\crossguid\crossguid.cpp">
+      <Filter>libs\crossguid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\WebServer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\IConditional.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\JsonHelpers.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\UnitTest.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\URL_.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\ZipFile.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\ioapi.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\ioapi_buf.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\ioapi_mem.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\iowin32.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\unzip.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\minizip\zip.c">
+      <Filter>libs\minizip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\JpegHelpers.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\WebClientService.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\MD5.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\IService.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Graph\DataModels.cpp">
+      <Filter>services\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Graph\Graph.cpp">
+      <Filter>services\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp">
+      <Filter>services\Kafka</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\utils\Delegate.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\Factory.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\ISerializable.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\Log.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\RTTI.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\StringHash.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\StringUtil.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\ThreadPool.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\TimerPool.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\WatsonException.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\Time.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\Config.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\tinythread++\tinythread.h">
+      <Filter>libs\tinythread++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\Library.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\Sound.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\ServiceConfig.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\base64\cdecode.h">
+      <Filter>libs\base64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\base64\cencode.h">
+      <Filter>libs\base64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\base64\decode.h">
+      <Filter>libs\base64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\base64\encode.h">
+      <Filter>libs\base64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\URL.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\UniqueID.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8.h">
+      <Filter>libs\utf8_v2_3_4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h">
+      <Filter>libs\utf8_v2_3_4\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h">
+      <Filter>libs\utf8_v2_3_4\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h">
+      <Filter>libs\utf8_v2_3_4\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\IWebClient.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\DataCache.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\Form.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\GetMac.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\WebSocketFramer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\IWebServer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\SHA1.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\IWebSocket.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\Logic.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\Path.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\crossguid\crossguid.h">
+      <Filter>libs\crossguid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\IConditional.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\JsonHelpers.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\MD5.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\UnitTest.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\ZipFile.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\crypt.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\ioapi.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\ioapi_buf.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\ioapi_mem.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\iowin32.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\unzip.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\minizip\zip.h">
+      <Filter>libs\minizip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\JpegHelpers.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\WebClientService.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\IService.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\UtilsLib.h" />
+    <ClInclude Include="..\..\src\services\Graph\DataModels.h">
+      <Filter>services\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\Graph\Graph.h">
+      <Filter>services\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h">
+      <Filter>services\Kafka</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\CMakeLists.txt" />
+  </ItemGroup>
+</Project>

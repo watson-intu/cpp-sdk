@@ -19,9 +19,9 @@
 #define WDC_SOUND_H
 
 #include "ISerializable.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
-class WDC_API Sound : public ISerializable
+class UTILS_API Sound : public ISerializable
 {
 public:
 	RTTI_DECL();

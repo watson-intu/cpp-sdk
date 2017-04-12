@@ -27,9 +27,9 @@
 #include <stdlib.h>
 #include <string>
 
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
-class WDC_API Time
+class UTILS_API Time
 {
 public:
 	//! Construction

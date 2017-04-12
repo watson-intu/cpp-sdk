@@ -26,10 +26,10 @@
 #include "Log.h"
 #include "StringUtil.h"
 
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! Simply binary cache for use by the services. The caches data into the local file system
-class WDC_API DataCache : public boost::enable_shared_from_this<DataCache>
+class UTILS_API DataCache : public boost::enable_shared_from_this<DataCache>
 {
 public:
 	//! Types

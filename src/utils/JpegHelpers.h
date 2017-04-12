@@ -17,10 +17,10 @@
 #include <string>
 #include <vector>
 
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! This is a container for skill/gesture arguments.
-class WDC_API JpegHelpers
+class UTILS_API JpegHelpers
 {
 public:
 	//! encode the given raw RGB data into a JPEG encoded image.

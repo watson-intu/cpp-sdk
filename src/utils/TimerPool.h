@@ -26,10 +26,10 @@
 
 #include "Time.h"
 #include "ThreadPool.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! This class manages one or more timers, invoking functions using the provided ThreadPool object.
-class WDC_API TimerPool
+class UTILS_API TimerPool
 {
 public:
 	//! Singleton instance

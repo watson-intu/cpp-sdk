@@ -22,10 +22,10 @@
 
 #include "Delegate.h"
 #include "tinythread++/tinythread.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! This class manages a pool of threads, and allows those threads to invoke functions back on the main thread.
-class WDC_API ThreadPool 
+class UTILS_API ThreadPool 
 {
 public:
 	//! Singleton instance
