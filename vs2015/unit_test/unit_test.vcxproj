@@ -95,9 +95,6 @@
     <ProjectReference Include="..\jsoncpp\jsoncpp.vcxproj">
       <Project>{28ba4301-4c55-41d2-b122-01dbde375452}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\utils\utils.vcxproj">
-      <Project>{df26e299-62e3-438a-8403-3d427bb81db1}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\tests\TestDataCache.cpp" />
