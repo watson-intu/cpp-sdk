@@ -431,7 +431,7 @@ public:
 	};
 
 	//! Constructions
-	IService(const std::string & a_ServiceId);
+	IService( const std::string & a_ServiceId, AuthType a_AuthType = AUTH_BASIC );
 
 	//! ISerializable interface
 	virtual void Serialize(Json::Value & json);
@@ -452,10 +452,10 @@ public:
 			throw WatsonException( "Service config is NULL, make sure you invoke Start()." );
 		return m_pConfig;
 	}
-	bool IsConfigured( AuthType a_AuthType = AUTH_BASIC )
+	bool IsConfigured() const
 	{
 		if ( m_pConfig != NULL )
-			return m_pConfig->IsConfigured( a_AuthType );
+			return m_pConfig->IsConfigured( m_AuthType );
 		return false;
 	}
 	bool IsCacheEnabled() const
@@ -493,6 +493,7 @@ protected:
 	typedef std::map<std::string, DataCache::SP>		DataCacheMap;
 
 	//! Data
+	AuthType		m_AuthType;
 	std::string		m_ServiceId;
 	const ServiceConfig *	
 					m_pConfig;

@@ -268,7 +268,8 @@ void IService::Request::OnTimeout()
 	}
 }
 
-IService::IService(const std::string & a_ServiceId) : 
+IService::IService(const std::string & a_ServiceId, AuthType a_AuthType /*= AUTH_BASIC*/ ) : 
+	m_AuthType(a_AuthType),
 	m_ServiceId(a_ServiceId), 
 	m_pConfig(NULL),
 	m_bCacheEnabled(true),
