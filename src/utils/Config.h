@@ -46,6 +46,9 @@ public:
 	}
 	~Config()
 	{
+		m_Services.clear();
+		m_LoadedLibs.clear();
+
 		if ( sm_pInstance == this )
 			sm_pInstance = NULL;
 	}
