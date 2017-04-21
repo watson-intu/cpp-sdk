@@ -288,14 +288,17 @@ bool IService::Start()
 		return false;
 	}
 
-	m_pConfig = pConfig->FindServiceConfig( m_ServiceId );
-	if ( m_pConfig == NULL )
+	if ( m_AuthType != AUTH_NONE )
 	{
-		Log::Error( "IService", "No credentials found for service %s.", m_ServiceId.c_str() );
-		return false;
-	}
+		m_pConfig = pConfig->FindServiceConfig( m_ServiceId );
+		if ( m_pConfig == NULL )
+		{
+			Log::Error( "IService", "No credentials found for service %s.", m_ServiceId.c_str() );
+			return false;
+		}
 
-	AddAuthenticationHeader();
+		AddAuthenticationHeader();
+	}
 	return true;
 }
 

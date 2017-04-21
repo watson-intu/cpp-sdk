@@ -454,6 +454,8 @@ public:
 	}
 	bool IsConfigured() const
 	{
+		if ( m_AuthType == AUTH_NONE )
+			return true;
 		if ( m_pConfig != NULL )
 			return m_pConfig->IsConfigured( m_AuthType );
 		return false;
