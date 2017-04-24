@@ -20,7 +20,7 @@
 
 namespace TestFactoryClasses {
 
-	class Base
+	class Base : public IWidget
 	{
 	public:
 		Base() 

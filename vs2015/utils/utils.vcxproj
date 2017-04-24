@@ -107,6 +107,7 @@
     <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp" />
     <ClCompile Include="..\..\src\utils\Config.cpp" />
     <ClCompile Include="..\..\src\utils\DataCache.cpp" />
+    <ClCompile Include="..\..\src\utils\Factory.cpp" />
     <ClCompile Include="..\..\src\utils\Form.cpp" />
     <ClCompile Include="..\..\src\utils\GetMac.cpp" />
     <ClCompile Include="..\..\src\utils\IConditional.cpp" />

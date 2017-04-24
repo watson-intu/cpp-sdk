@@ -17,6 +17,7 @@
 
 #include "Library.h"
 #include "Log.h"
+#include "Factory.h"
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -26,13 +27,7 @@
 #include <errno.h>
 #endif
 
-Library::Library() : m_pLibrary( NULL )
-{}
-
-Library::Library( const Library & a_Copy ) : m_pLibrary( NULL )
-{
-	Load( a_Copy.m_Lib );
-}
+Library * Library::sm_pLoadingLibrary = NULL;
 
 Library::Library( const std::string & a_Lib ) : m_pLibrary( NULL )
 {
@@ -41,11 +36,16 @@ Library::Library( const std::string & a_Lib ) : m_pLibrary( NULL )
 
 Library::~Library()
 {
-	Unload();
+	if (! Unload() )
+		Log::Error( "Library", "Failed to unload %s", m_Lib.c_str() );
 }
 
 void Library::Load( const std::string & a_Lib )
 {
+	static boost::mutex lock;
+	boost::mutex::scoped_lock l(lock);
+
+	sm_pLoadingLibrary = this;
 	m_Lib = a_Lib;
 
 #if defined(_WIN32)
@@ -69,10 +69,33 @@ void Library::Load( const std::string & a_Lib )
 
 	if ( m_pLibrary == NULL )
 		Log::Warning( "Library", "Failed to load dynamic library %s.", m_Lib.c_str() );
+	else
+		Log::Status( "Library", "Dynamic library %s loaded.", m_Lib.c_str() );
+	sm_pLoadingLibrary = NULL;
 }
 
-void Library::Unload()
+bool Library::Unload()
 {
+	// make sure there are no objects created from this library before we try to unload the code.
+	size_t nObjectCount = 0;
+	for( CreatorSet::const_iterator iCreator = m_Creators.begin(); 
+		iCreator != m_Creators.end(); ++iCreator )
+	{
+		const ICreator::ObjectSet & objects = (*iCreator)->GetObjects();
+		for( ICreator::ObjectSet::const_iterator iObject = objects.begin(); iObject != objects.end(); ++iObject )
+		{
+			const IWidget * pWidget = *iObject;
+			Log::Warning( "Library", "Found instance %p (%s)", pWidget, pWidget->GetRTTI().GetName().c_str() );
+			nObjectCount += 1;
+		}
+	}
+
+	if ( nObjectCount > 0 )
+	{
+		Log::Error( "Library", "Unable to unload %s, found %u object instances.", m_Lib.c_str(), nObjectCount );
+		return false;
+	}
+
 	if ( m_pLibrary != NULL )
 	{
 #if defined(_WIN32)
@@ -83,6 +106,17 @@ void Library::Unload()
 		m_pLibrary = NULL;
 	}
 
+	Log::Status( "Library", "Dynamic library %s unloaded.", m_Lib.c_str() );
 	m_Lib.clear();
+	return true;
 }
 
+void Library::AddCreator( ICreator * a_pCreator )
+{
+	m_Creators.insert( a_pCreator );
+}
+
+void Library::RemoveCreator( ICreator * a_pCreator )
+{
+	m_Creators.erase( a_pCreator );
+}

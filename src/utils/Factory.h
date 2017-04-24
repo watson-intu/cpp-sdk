@@ -20,25 +20,94 @@
 
 #include <map>
 #include <string>
+
+#include "RTTI.h"
 #include "Log.h"
+#include "Library.h"
 #include "UtilsLib.h"
 
+class IWidget;
+
+//! Base class for an object that can create a class object.
 class ICreator
 {
 public:
-	ICreator( bool a_bOverride ) : m_bOverride( a_bOverride )
-	{}
-	virtual void * Create() = 0;
-	virtual ~ICreator() {}
+	//! Types
+	typedef std::set<IWidget *>		ObjectSet;
+
+	//! COnstruction
+	ICreator( Library * a_pLibrary, bool a_bOverride ) : m_pLibrary( a_pLibrary ), m_bOverride( a_bOverride )
+	{
+		if ( m_pLibrary != NULL )
+			m_pLibrary->AddCreator( this );
+	}
+	virtual ~ICreator()
+	{
+		if ( m_pLibrary != NULL )
+			m_pLibrary->RemoveCreator( this );
+	}
+
+	virtual IWidget * Create() = 0;
 
 	bool IsOverride() const
 	{
 		return m_bOverride;
 	}
+	Library * GetLibrary() const
+	{
+		return m_pLibrary;
+	}
+
+	const ObjectSet & GetObjects() const
+	{
+		return m_Objects;
+	}
+	void AddObject( IWidget * a_pObject )
+	{
+		m_Objects.insert( a_pObject );
+	}
+	void RemoveObject( IWidget * a_pObject )
+	{
+		m_Objects.erase( a_pObject );
+	}
+
 private:
-	bool m_bOverride;
+
+	//! Data
+	bool		m_bOverride;
+	Library *	m_pLibrary;
+	ObjectSet	m_Objects;
 };
 typedef std::map<std::string, ICreator *>		CreatorMap;
+
+//! Base class for all objects made by this Factory system.
+class UTILS_API IWidget
+{
+public:
+	RTTI_DECL();
+
+	IWidget() : m_pCreator( NULL )
+	{}
+
+	virtual ~IWidget()
+	{
+		if ( m_pCreator != NULL )
+			m_pCreator->RemoveObject( this );
+	}
+
+	void SetCreator( ICreator * a_pCreator )
+	{
+		if ( m_pCreator != NULL )
+			m_pCreator->RemoveObject( this );
+		m_pCreator = a_pCreator;
+		if ( m_pCreator != NULL )
+			m_pCreator->AddObject( this );
+	}
+
+protected:
+	//! Data
+	ICreator *		m_pCreator;
+};
 
 class UTILS_API IFactory
 {
@@ -110,7 +179,7 @@ public:
 	{
 		CreatorMap::iterator iMapping = m_CreatorMapping.find(a_ID);
 		if (iMapping != m_CreatorMapping.end())
-			return reinterpret_cast<BASE *>( iMapping->second->Create() );
+			return static_cast<BASE *>( iMapping->second->Create() );
 
 		return NULL;
 	}
@@ -142,19 +211,22 @@ public:
 	class Creator : public ICreator
 	{
 	public:
-		Creator( bool a_bOverride ) : ICreator( a_bOverride )
+		Creator( Library * a_pLibrary, bool a_bOverride ) : ICreator( a_pLibrary, a_bOverride )
 		{}
 
-		virtual void * Create()
+		virtual IWidget * Create()
 		{
-			// must static case to BASE * before returning void *, so pointer math works correctly, do not change this..
-			return static_cast<BASE *>( new K() );
+			// if this throws an compile error, then your class is not inheriting from IWidget
+			K * pObject = new K();
+			pObject->SetCreator( this );
+
+			return pObject;
 		}
 	};
 
 	template< typename BASE >
 	RegisterWithFactory( const std::string & a_ID, Factory< BASE > & a_Factory, bool a_bOverride = false ) 
-		: m_ID( a_ID ), m_pFactory( &a_Factory ), m_pCreator( new Creator<BASE, T>( a_bOverride ) )
+		: m_ID( a_ID ), m_pFactory( &a_Factory ), m_pCreator( new Creator<BASE, T>( Library::LoadingLibrary(), a_bOverride ) )
 	{
 		a_Factory.Register(m_ID, m_pCreator );
 	}

@@ -45,7 +45,7 @@
 //!
 //! REG_SERIALIZABLE( SerializedObject );
 
-class UTILS_API ISerializable
+class UTILS_API ISerializable : public IWidget
 {
 public:
 	RTTI_DECL();

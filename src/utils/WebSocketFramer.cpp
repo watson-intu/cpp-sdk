@@ -22,7 +22,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-RTTI_IMPL_BASE( IWebSocket );
+RTTI_IMPL( IWebSocket, IWidget );
 
 #pragma pack( push, 1 )
 struct WEB_SOCKET_HEADER

@@ -29,7 +29,7 @@ int main( int argc, char ** argv )
 	Log::RegisterReactor( new FileReactor( "UnitTest.log", LL_DEBUG_LOW ) );
 
 	std::vector<std::string> tests;
-	std::list<Library> libs;
+	std::list<Library *> libs;
 	for (int i = 1; i < argc; ++i)
 	{
 		if (argv[i][0] == '-')
@@ -48,7 +48,7 @@ int main( int argc, char ** argv )
 			case 'L':
 				if ((i + 1) < argc)
 				{
-					libs.push_back(Library(argv[i + 1]));
+					libs.push_back(new Library(argv[i + 1]));
 					i++;
 					break;
 				}

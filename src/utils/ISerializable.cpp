@@ -21,7 +21,7 @@
 #include <streambuf>
 #include <string>
 
-RTTI_IMPL_BASE( ISerializable );
+RTTI_IMPL( ISerializable, IWidget );
 
 
 Factory<ISerializable> & ISerializable::GetSerializableFactory()

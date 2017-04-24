@@ -47,7 +47,7 @@ public:
 	~Config()
 	{
 		m_Services.clear();
-		m_LoadedLibs.clear();
+		UnloadLibs();
 
 		if ( sm_pInstance == this )
 			sm_pInstance = NULL;
@@ -178,8 +178,8 @@ public:
 
 protected:
 	//! Types
-	typedef std::list<Library>	LoadedLibraryList;
-	typedef std::vector<ServiceConfig::SP> ServiceConfigs;
+	typedef std::list<Library *>			LoadedLibraryList;
+	typedef std::vector<ServiceConfig::SP>	ServiceConfigs;
 
 	bool AddServiceInternal(IService * a_pService);
 

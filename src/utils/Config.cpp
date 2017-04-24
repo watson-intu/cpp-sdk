@@ -100,11 +100,13 @@ void Config::LoadLibs()
 	UnloadLibs();
 
 	for( LibraryList::iterator iLib = m_Libs.begin(); iLib != m_Libs.end(); ++iLib )
-		m_LoadedLibs.push_back( Library( *iLib ) );
+		m_LoadedLibs.push_back( new Library( *iLib ) );
 }
 
 void Config::UnloadLibs()
 {
+	for( LoadedLibraryList::iterator iLib = m_LoadedLibs.begin(); iLib != m_LoadedLibs.end(); ++iLib )
+		delete *iLib;
 	m_LoadedLibs.clear();
 }
 

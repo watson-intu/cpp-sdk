@@ -22,12 +22,13 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <string>
 
+#include "Factory.h"
 #include "RTTI.h"
 #include "Delegate.h"
 #include "UtilsLib.h"
 
 //! Common interface for sending and receiving data on a web socket.
-class UTILS_API IWebSocket : public boost::enable_shared_from_this<IWebSocket>
+class UTILS_API IWebSocket : public IWidget, public boost::enable_shared_from_this<IWebSocket>
 {
 public:
 	RTTI_DECL();
