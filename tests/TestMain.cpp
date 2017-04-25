@@ -40,14 +40,13 @@ int main( int argc, char ** argv )
 				if ((i + 1) < argc)
 				{
 					std::string test = argv[i + 1];
-					++i;
+					i += 2;
 
 					UnitTest::Args args;
-					while( argv[i][0] != '-' && argv[i][0] != 0 )
+					while( argv[i] != NULL && argv[i][0] != '-' )
 						args.push_back( argv[i++] );
 
 					tests[test] = args;
-					i++;
 					break;
 				}
 				printf("ERROR: -T is missing argument.\r\n");
