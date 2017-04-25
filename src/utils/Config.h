@@ -169,12 +169,17 @@ public:
 	bool RemoveServiceConfig( const std::string & a_ServiceId );
 
 	//! load all dynamic libs
-	void LoadLibs();
+	virtual void LoadLibs();
 	//! unload all dynamic libs
-	void UnloadLibs();
-
-	bool StartServices();
-	bool StopServices();
+	virtual void UnloadLibs();
+	//! Disable the specific library
+	virtual bool DisableLib( const std::string & a_Lib );
+	//! Enable the specific library
+	virtual bool EnableLib( const std::string & a_Lib );
+	//! Start all configured services
+	virtual bool StartServices();
+	//! Stop all configured services
+	virtual bool StopServices();
 
 protected:
 	//! Types
@@ -187,6 +192,7 @@ protected:
 	std::string		m_StaticDataPath;
 	std::string		m_InstanceDataPath;
 	LibraryList		m_Libs;				// list of libraries to load dynamically
+	LibraryList		m_DisabledLibs;		// libraries that we should not load
 	ServiceList		m_Services;			// list of available services
 	bool			m_bServicesActive;
 	ServiceConfigs	m_ServiceConfigs;

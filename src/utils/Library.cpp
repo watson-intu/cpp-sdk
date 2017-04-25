@@ -76,28 +76,28 @@ void Library::Load( const std::string & a_Lib )
 
 bool Library::Unload()
 {
-	// make sure there are no objects created from this library before we try to unload the code.
-	size_t nObjectCount = 0;
-	for( CreatorSet::const_iterator iCreator = m_Creators.begin(); 
-		iCreator != m_Creators.end(); ++iCreator )
-	{
-		const ICreator::ObjectSet & objects = (*iCreator)->GetObjects();
-		for( ICreator::ObjectSet::const_iterator iObject = objects.begin(); iObject != objects.end(); ++iObject )
-		{
-			const IWidget * pWidget = *iObject;
-			Log::Warning( "Library", "Found instance %p (%s)", pWidget, pWidget->GetRTTI().GetName().c_str() );
-			nObjectCount += 1;
-		}
-	}
-
-	if ( nObjectCount > 0 )
-	{
-		Log::Error( "Library", "Unable to unload %s, found %u object instances.", m_Lib.c_str(), nObjectCount );
-		return false;
-	}
-
 	if ( m_pLibrary != NULL )
 	{
+		// make sure there are no objects created from this library before we try to unload the code.
+		size_t nObjectCount = 0;
+		for( CreatorSet::const_iterator iCreator = m_Creators.begin(); 
+			iCreator != m_Creators.end(); ++iCreator )
+		{
+			const ICreator::ObjectSet & objects = (*iCreator)->GetObjects();
+			for( ICreator::ObjectSet::const_iterator iObject = objects.begin(); iObject != objects.end(); ++iObject )
+			{
+				const IWidget * pWidget = *iObject;
+				Log::Warning( "Library", "Found instance %p (%s)", pWidget, pWidget->GetRTTI().GetName().c_str() );
+				nObjectCount += 1;
+			}
+		}
+
+		if ( nObjectCount > 0 )
+		{
+			Log::Error( "Library", "Unable to unload %s, found %u object instances.", m_Lib.c_str(), nObjectCount );
+			return false;
+		}
+
 #if defined(_WIN32)
 		FreeLibrary( (HINSTANCE)m_pLibrary );
 #else
@@ -107,7 +107,6 @@ bool Library::Unload()
 	}
 
 	Log::Status( "Library", "Dynamic library %s unloaded.", m_Lib.c_str() );
-	m_Lib.clear();
 	return true;
 }
 
