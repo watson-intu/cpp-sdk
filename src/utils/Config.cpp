@@ -29,10 +29,10 @@ Config * Config::Instance()
 
 void Config::Serialize(Json::Value & json)
 {
-	int index = 0;
 	for( LibraryList::iterator iLib = m_Libs.begin(); iLib != m_Libs.end(); ++iLib )
-		json["m_Libs"][index++] = *iLib;
-
+		json["m_Libs"].append( *iLib );
+	for( LibraryList::iterator iLib = m_DisabledLibs.begin(); iLib != m_DisabledLibs.end(); ++iLib )
+		json["m_DisabledLibs"].append( *iLib );
 
 	SerializeVector( "m_ServiceConfigs", m_ServiceConfigs, json, false );
 	SerializeList("m_Services", m_Services, json);
@@ -43,6 +43,10 @@ void Config::Deserialize(const Json::Value & json)
 	m_Libs.clear();
 	for( Json::ValueConstIterator iObject = json["m_Libs"].begin(); iObject != json["m_Libs"].end(); ++iObject )
 		m_Libs.push_back( iObject->asString() );
+
+	m_DisabledLibs.clear();
+	for( Json::ValueConstIterator iObject = json["m_DisabledLibs"].begin(); iObject != json["m_DisabledLibs"].end(); ++iObject )
+		m_DisabledLibs.push_back( iObject->asString() );
 
 	LoadLibs();
 
@@ -100,7 +104,11 @@ void Config::LoadLibs()
 	UnloadLibs();
 
 	for( LibraryList::iterator iLib = m_Libs.begin(); iLib != m_Libs.end(); ++iLib )
+	{
+		if ( std::find( m_DisabledLibs.begin(), m_DisabledLibs.end(), *iLib) != m_DisabledLibs.end() )
+			continue;		// library is disabled
 		m_LoadedLibs.push_back( new Library( *iLib ) );
+	}
 }
 
 void Config::UnloadLibs()
@@ -108,6 +116,47 @@ void Config::UnloadLibs()
 	for( LoadedLibraryList::iterator iLib = m_LoadedLibs.begin(); iLib != m_LoadedLibs.end(); ++iLib )
 		delete *iLib;
 	m_LoadedLibs.clear();
+}
+
+bool Config::DisableLib( const std::string & a_Lib )
+{
+	if ( std::find( m_DisabledLibs.begin(), m_DisabledLibs.end(), a_Lib ) != m_DisabledLibs.end() )
+		return true;		// already disabled
+
+	for( LoadedLibraryList::iterator iLib = m_LoadedLibs.begin(); iLib != m_LoadedLibs.end(); ++iLib )
+	{
+		Library * pLib = *iLib;
+		if ( pLib->GetLibraryName() == a_Lib )
+		{
+			// try to unload this lib, this will fail if any objects are still created..
+			if (! pLib->Unload() )
+			{
+				Log::Status( "Config", "Cannot disable library %s, cannot be unloaded.", a_Lib.c_str() );
+				return false;
+			}
+
+			m_DisabledLibs.push_back( a_Lib );
+
+			delete pLib;
+			m_LoadedLibs.erase( iLib );
+			return true;
+		}
+	}
+
+	Log::Warning( "Config", "Failed to find library %s to disable.", a_Lib.c_str() );
+	return false;
+}
+
+bool Config::EnableLib( const std::string & a_Lib )
+{
+	LibraryList::iterator iDisabled = std::find( m_DisabledLibs.begin(), m_DisabledLibs.end(), a_Lib );
+	if ( iDisabled == m_DisabledLibs.end() )
+		return false;	// library is not disabled
+
+	m_DisabledLibs.erase( iDisabled );
+	m_LoadedLibs.push_back( new Library( a_Lib ) );
+
+	return true;
 }
 
 bool Config::StartServices()
