@@ -250,7 +250,32 @@ void JsonHelpers::Merge(Json::Value & a_MergeInto, const Json::Value & a_Merge, 
 		a_MergeInto = a_Merge;
 }
 
-std::string JsonHelpers::Hash(const Json::Value & a_Json)
+std::string JsonHelpers::Hash(const Json::Value & a_Json, const char * a_pFilter /*= NULL*/ )
 {
+	if ( a_pFilter != NULL )
+	{
+		Json::Value filtered( a_Json );
+		Filter( filtered, a_pFilter );
+
+		return MakeMD5(Json::FastWriter().write( filtered ) );
+	}
+
 	return MakeMD5(Json::FastWriter().write( a_Json ) );
 }
+
+void JsonHelpers::Filter( Json::Value & a_Json, const char * a_pFilter )
+{
+	if ( a_Json.isObject() )
+	{
+		a_Json.removeMember( a_pFilter );
+
+		for (Json::ValueIterator iElement = a_Json.begin(); iElement != a_Json.end(); ++iElement)
+			Filter( *iElement, a_pFilter );
+	}
+	else if (a_Json.isArray())
+	{
+		for(size_t i=0;i<a_Json.size();++i)
+			Filter( a_Json[ i ], a_pFilter );
+	}
+}
+

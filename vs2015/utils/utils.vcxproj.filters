@@ -153,6 +153,9 @@
     <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp">
       <Filter>services\Kafka</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\utils\Factory.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utils\Delegate.h">

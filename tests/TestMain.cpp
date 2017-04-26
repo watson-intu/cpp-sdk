@@ -28,8 +28,8 @@ int main( int argc, char ** argv )
 	Log::RegisterReactor( new ConsoleReactor( LL_DEBUG_LOW ) );
 	Log::RegisterReactor( new FileReactor( "UnitTest.log", LL_DEBUG_LOW ) );
 
-	std::vector<std::string> tests;
-	std::list<Library> libs;
+	UnitTest::TestMap tests;
+	std::list<Library *> libs;
 	for (int i = 1; i < argc; ++i)
 	{
 		if (argv[i][0] == '-')
@@ -39,8 +39,14 @@ int main( int argc, char ** argv )
 			case 'T':
 				if ((i + 1) < argc)
 				{
-					tests.push_back(argv[i + 1]);
-					i++;
+					std::string test = argv[i + 1];
+					i += 2;
+
+					UnitTest::Args args;
+					while( argv[i] != NULL && argv[i][0] != '-' )
+						args.push_back( argv[i++] );
+
+					tests[test] = args;
 					break;
 				}
 				printf("ERROR: -T is missing argument.\r\n");
@@ -48,7 +54,7 @@ int main( int argc, char ** argv )
 			case 'L':
 				if ((i + 1) < argc)
 				{
-					libs.push_back(Library(argv[i + 1]));
+					libs.push_back(new Library(argv[i + 1]));
 					i++;
 					break;
 				}
@@ -57,7 +63,7 @@ int main( int argc, char ** argv )
 			default:
 				std::cout << "Usage: unit_test [options] [test]\r\n"
 					"-L <library> .. Load dynamic library\r\n"
-					"-T <test> .. Run test\r\n";
+					"-T <test> [args] .. Run test\r\n";
 				return 1;
 			}
 		}

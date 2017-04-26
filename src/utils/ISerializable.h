@@ -45,7 +45,7 @@
 //!
 //! REG_SERIALIZABLE( SerializedObject );
 
-class UTILS_API ISerializable
+class UTILS_API ISerializable : public IWidget
 {
 public:
 	RTTI_DECL();
@@ -76,7 +76,8 @@ public:
 	//! deserialize object from json object
 	static ISerializable * DeserializeObject( const Json::Value & a_json,
 		ISerializable * a_pObject = NULL );
-	//! serialize a object into json object, if a_bWriteType is true we store the object type into the JSON for deserialization uses.
+	//! serialize a object into json object
+	//! if a_bWriteType is true we store the object type into the JSON.
 	static Json::Value SerializeObject( ISerializable * a_pObject, 
 		bool a_bWriteType = true );
 	//! deserialize a object from a file containing json data.
@@ -85,7 +86,6 @@ public:
 	//! serialize a object into a file 
 	static bool SerializeToFile( const std::string & a_File, ISerializable * a_pObject, 
 		 bool a_bWriteType = true, bool a_bFormatJson = false );
-
 
 	//! Load object from file as template type.
 	template<typename T>

@@ -21,6 +21,7 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <map>
 #include <stdio.h>
 
 #include <boost/thread.hpp>
@@ -35,6 +36,10 @@
 class UTILS_API UnitTest 
 {
 public:
+	//! Types
+	typedef std::vector<std::string>	Args;
+	typedef std::map<std::string,Args>	TestMap;
+
 	//! Construction
 	UnitTest( const char * a_pTestName ) :
 		m_TestName( a_pTestName )
@@ -49,6 +54,10 @@ public:
 	const std::string & GetName() const
 	{
 		return m_TestName;
+	}
+	const Args & GetArgs() const
+	{
+		return m_Args;
 	}
 
 	static void Test( bool condition )
@@ -77,17 +86,23 @@ public:
 		}
 	}
 
+	void SetArgs( const Args & a_Args )
+	{
+		m_Args = a_Args;
+	}
+
 	virtual void RunTest() = 0;
 
 	//! Run one or more tests, optionally provide a name to filter tests. Returns 0 on success, otherwise it returns the number of tests that failed.
-	static int RunTests( const std::vector<std::string> & a_Tests );
+	static int RunTests( const TestMap & a_Tests );
 
 private:
 	//! Types
-	typedef std::list<UnitTest *> TestList;
+	typedef std::list<UnitTest *>		TestList;
 
 	//! Data
 	const std::string 	m_TestName;
+	Args				m_Args;
 
 	static TestList & GetTestList()
 	{

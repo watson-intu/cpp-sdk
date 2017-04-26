@@ -277,7 +277,9 @@ IService::IService(const std::string & a_ServiceId, AuthType a_AuthType /*= AUTH
 	m_MaxCacheAge( 7 * 24 ),
 	m_RequestTimeout( 30.0f ),
 	m_RequestsPending( 0 )
-{}
+{
+	NewGUID();
+}
 
 bool IService::Start()
 {
