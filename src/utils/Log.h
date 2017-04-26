@@ -24,6 +24,7 @@
 #include <list>
 #include <stdarg.h>
 
+#include "RTTI.h"
 #include <boost/thread.hpp>
 #include "UtilsLib.h"		// include last
 
@@ -52,19 +53,25 @@ struct LogRecord
 class UTILS_API ILogReactor
 {
 public:
+	RTTI_DECL();
+
 	virtual ~ILogReactor()
 	{}
 
 	virtual void Process(const LogRecord & a_Record) = 0;
+	virtual void SetLogLevel( LogLevel a_Level ) = 0;
 };
 
 class UTILS_API ConsoleReactor : public ILogReactor
 {
 public:
+	RTTI_DECL();
+
 	ConsoleReactor(LogLevel a_MinLevel = LL_STATUS) : m_MinLevel(a_MinLevel)
 	{}
 
 	virtual void Process(const LogRecord & a_Record);
+	virtual void SetLogLevel( LogLevel a_Level );
 
 private:
 	LogLevel			m_MinLevel;
@@ -73,10 +80,13 @@ private:
 class UTILS_API FileReactor : public ILogReactor
 {
 public:
+	RTTI_DECL();
+
 	FileReactor(const char * a_pLogFile, LogLevel a_MinLevel = LL_STATUS, int a_LogHistory = 5 );
 	~FileReactor();
 
 	virtual void Process(const LogRecord & a_Record);
+	virtual void SetLogLevel( LogLevel a_Level );
 
 private:
 	//! Types
@@ -99,6 +109,10 @@ private:
 class UTILS_API Log
 {
 public:
+	//! Types
+	typedef std::list<ILogReactor *>		ReactorList;
+
+	//! Interface
 	static void RegisterReactor(ILogReactor * a_pReactor);
 	static void RemoveReactor(ILogReactor * a_pReactor, bool a_bDelete = true );
 	static void RemoveAllReactors( bool a_bDelete = true );
@@ -117,9 +131,6 @@ public:
 
 	static const char * LevelText( LogLevel a_Level );
 
-private:
-	//! Types
-	typedef std::list<ILogReactor *>		ReactorList;
 	//! Data
 	static ReactorList & GetReactorList();
 	static boost::recursive_mutex & GetReactorLock();

@@ -24,6 +24,7 @@
 #include "RTTI.h"
 #include "Log.h"
 #include "Library.h"
+#include "UniqueID.h"
 #include "UtilsLib.h"
 
 class IWidget;
@@ -84,15 +85,41 @@ typedef std::map<std::string, ICreator *>		CreatorMap;
 class UTILS_API IWidget
 {
 public:
+	//! Types
+	typedef std::map<std::string,IWidget *>		WidgetMap;
+
 	RTTI_DECL();
 
+	//! Construction
 	IWidget() : m_pCreator( NULL )
 	{}
 
 	virtual ~IWidget()
 	{
+		if (! m_GUID.empty() )
+			GetWidgetMap().erase( m_GUID );
 		if ( m_pCreator != NULL )
 			m_pCreator->RemoveObject( this );
+	}
+
+	const std::string & GetGUID() const
+	{
+		return m_GUID;
+	}
+
+	const std::string & NewGUID()
+	{
+		SetGUID( UniqueID().Get() );
+		return m_GUID;
+	}
+
+	virtual void SetGUID( const std::string & a_GUID )
+	{
+		if (! m_GUID.empty() )
+			GetWidgetMap().erase( m_GUID );
+		m_GUID = a_GUID;
+		if (! m_GUID.empty() )
+			GetWidgetMap()[ m_GUID ] = this;
 	}
 
 	void SetCreator( ICreator * a_pCreator )
@@ -104,9 +131,25 @@ public:
 			m_pCreator->AddObject( this );
 	}
 
+	static WidgetMap & GetWidgetMap()
+	{
+		static WidgetMap * pMAP = new WidgetMap();
+		return *pMAP;
+	}
+	static IWidget * FindWidget( const std::string & a_GUID )
+	{
+		WidgetMap::const_iterator iWidget = GetWidgetMap().find( a_GUID );
+		if ( iWidget != GetWidgetMap().end() )
+			return iWidget->second;
+		return NULL;
+	}
+
 protected:
 	//! Data
 	ICreator *		m_pCreator;
+
+private:
+	std::string		m_GUID;				// globally unique ID for this object
 };
 
 class UTILS_API IFactory
@@ -115,7 +158,7 @@ public:
 	//! Register a specific class type with this factory, it should inherit from the BASE class.
 	//! If a_bOverride is true, then we will replace any previously registered class by the same
 	//! name. If false, then we will return false if any class is already registered with the same ID.
-	bool Register(const std::string & a_ID, ICreator * a_pCreator)
+	virtual bool Register(const std::string & a_ID, ICreator * a_pCreator)
 	{
 		if (m_CreatorMapping.find(a_ID) != m_CreatorMapping.end())
 		{

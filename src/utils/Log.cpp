@@ -33,6 +33,10 @@
 #include "ThreadPool.h"
 #include "WatsonException.h"
 
+RTTI_IMPL_BASE( ILogReactor );
+RTTI_IMPL( FileReactor, ILogReactor );
+RTTI_IMPL( ConsoleReactor, ILogReactor );
+
 void ConsoleReactor::Process(const LogRecord & a_Record)
 {
 	if (a_Record.m_Level >= m_MinLevel)
@@ -61,6 +65,11 @@ void ConsoleReactor::Process(const LogRecord & a_Record)
 			SetConsoleTextAttribute(h, csbi.wAttributes );
 #endif
 	}
+}
+
+void ConsoleReactor::SetLogLevel( LogLevel a_Level )
+{
+	m_MinLevel = a_Level;
 }
 
 FileReactor::FileReactor(const char * a_pLogFile, LogLevel a_MinLevel /*= DEBUG*/, int a_LogHistory /*= 5*/) :
@@ -117,6 +126,11 @@ void FileReactor::Process(const LogRecord & a_Record)
 		m_Output.push_back( log );
 		m_OutputLock.unlock();
 	}
+}
+
+void FileReactor::SetLogLevel( LogLevel a_Level )
+{
+	m_MinLevel = a_Level;
 }
 
 void FileReactor::WriteThread()

@@ -42,7 +42,9 @@ public:
 	//! we will skip elements if they already exist
 	static void Merge(Json::Value & a_MergeInto, const Json::Value & a_Merge, bool a_bReplace = true);
 	//! Generate a hash of the provided Json.
-	static std::string Hash(const Json::Value & a_Json);
+	static std::string Hash(const Json::Value & a_Json, const char * a_pFilter = NULL );
+	//! Filter the given json, removing any fields that match the given name.
+	static void Filter( Json::Value & a_Json, const char * a_pFilter );
 };
 
 #endif
