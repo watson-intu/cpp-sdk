@@ -136,13 +136,30 @@ private:
 	}
 };
 
+//! Helper class used to invoke GetStaticRTTI() when a dynamic library is loaded.
+template<typename T>
+struct GetStaticRTTI 
+{
+public:
+	GetStaticRTTI() 
+	{
+		T::GetStaticRTTI();
+	}
+};
+
 //! Use this macro for a class that derives from anther class.
 #define RTTI_DECL()										\
 	static RTTI & GetStaticRTTI();									\
 	virtual RTTI & GetRTTI() const { return GetStaticRTTI(); }
 
-#define RTTI_IMPL_BASE(CLASS) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS); return rtti; }	
-#define RTTI_IMPL(CLASS,BASE) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS,BASE::GetStaticRTTI()); return rtti; }	
+#define RTTI_IMPL_BASE(CLASS) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS); return rtti; }	\
+	GetStaticRTTI<CLASS> rtti_##CLASS;
+#define RTTI_IMPL_BASE_EMBEDDED( PARENT, CLASS) RTTI & PARENT::CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS); return rtti; }	\
+	GetStaticRTTI<PARENT::CLASS> rtti_##PARENT_##CLASS;
+#define RTTI_IMPL(CLASS,BASE) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS,BASE::GetStaticRTTI()); return rtti; } \
+	GetStaticRTTI<CLASS> rtti_##CLASS;
+#define RTTI_IMPL_EMBEDDED(PARENT,CLASS,BASE) RTTI & PARENT::CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS,BASE::GetStaticRTTI()); return rtti; } \
+	GetStaticRTTI<PARENT::CLASS> rtti_##PARENT_##CLASS;
 
 //! This function can be used to cast one pointer type to another, it will return NULL if the type is not correct.
 template<typename T, typename K>
