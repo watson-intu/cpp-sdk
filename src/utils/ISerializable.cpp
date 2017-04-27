@@ -91,6 +91,9 @@ Json::Value ISerializable::SerializeObject(ISerializable * a_pObject, bool a_bWr
 			const RTTI * pBaseType = pType;
 			while( pBaseType != NULL )
 			{
+				// if we have more than one class derived, then do not continue to enumerate down to the base class.
+				if ( pBaseType->GetChildClasses().size() > 1 )
+					break;	
 				if ( GetSerializableFactory().IsOverride( pBaseType->GetName() ) )
 				{
 					pType = pBaseType;
