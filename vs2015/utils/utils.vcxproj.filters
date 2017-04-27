@@ -156,6 +156,9 @@
     <ClCompile Include="..\..\src\utils\Factory.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\utils\Crypt.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utils\Delegate.h">
@@ -323,6 +326,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h">
       <Filter>services\Kafka</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utils\Crypt.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

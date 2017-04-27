@@ -100,6 +100,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\tests\TestCrypt.cpp" />
     <ClCompile Include="..\..\tests\TestDataCache.cpp" />
     <ClCompile Include="..\..\tests\TestDelegate.cpp" />
     <ClCompile Include="..\..\tests\TestFactory.cpp" />
