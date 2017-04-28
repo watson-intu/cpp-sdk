@@ -1,3 +1,4 @@
+﻿extensions: .cpp .h
 /**
 * Copyright 2017 IBM Corp. All Rights Reserved.
 *
@@ -15,34 +16,3 @@
 *
 */
 
-
-#ifndef WATSON_EXCEPTION_H
-#define WATSON_EXCEPTION_H
-
-#include <exception>
-
-//! Class for exceptions throw by the WDC 
-class WatsonException : public std::exception
-{
-public:
-	WatsonException( const char * a_pMessage ) : m_Message( a_pMessage )
-	{}
-
-	~WatsonException() throw()
-	{}
-
-	const char * Message() const		// DEPRECATED, use what() instead..
-	{
-		return m_Message.c_str();
-	}
-	virtual const char * what() const throw()
-	{
-		return m_Message.c_str();
-	}
-
-private:
-	//! Data
-	std::string m_Message;
-};
-
-#endif

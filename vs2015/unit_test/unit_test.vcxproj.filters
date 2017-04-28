@@ -67,4 +67,7 @@
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="unit_test.licenseheader" />
+  </ItemGroup>
 </Project>
