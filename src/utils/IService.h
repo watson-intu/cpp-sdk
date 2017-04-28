@@ -438,6 +438,10 @@ public:
 	virtual void Deserialize(const Json::Value & json);
 
 	//! Accessors
+	bool IsEnabled() const
+	{
+		return m_bEnabled;
+	}
 	const Headers & GetHeaders() const
 	{
 		return m_Headers;
@@ -495,6 +499,7 @@ protected:
 	typedef std::map<std::string, DataCache::SP>		DataCacheMap;
 
 	//! Data
+	bool			m_bEnabled;
 	AuthType		m_AuthType;
 	std::string		m_ServiceId;
 	const ServiceConfig *	

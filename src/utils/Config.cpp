@@ -175,8 +175,8 @@ bool Config::StartServices()
 			continue;
 		}
 
-		if (!pService->Start())
-			Log::Error("Config", "Failed to start service %s.", pService->GetRTTI().GetName().c_str());
+		if ( pService->IsEnabled() && !pService->Start())
+			Log::Warning("Config", "Failed to start service %s.", pService->GetRTTI().GetName().c_str());
 
 		++iService;
 	}
@@ -203,21 +203,18 @@ bool Config::StopServices()
 }
 
 
-bool Config::AddServiceInternal(IService * a_pService)
+bool Config::AddServiceInternal( const IServiceSP & a_spService)
 {
-	if (a_pService == NULL)
+	if (! a_spService )
 		return false;
 
 	if (m_bServicesActive)
 	{
-		if (!a_pService->Start())
-		{
-			Log::Error("SelfBody", "Failed to start service %s.", a_pService->GetRTTI().GetName().c_str());
-			return false;
-		}
+		if ( a_spService->IsEnabled() && !a_spService->Start())
+			Log::Warning("Config", "Failed to start service %s.", a_spService->GetRTTI().GetName().c_str());
 	}
 
-	m_Services.push_back(IService::SP(a_pService));
+	m_Services.push_back(a_spService);
 	return true;
 }
 
