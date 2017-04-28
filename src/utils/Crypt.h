@@ -21,9 +21,16 @@
 #include <string>
 #include "UtilsLib.h"
 
-//! perform a symmetric encryption on the provided unencrypted data
-UTILS_API std::string Encrypt( const std::string & a_Data );
-//! perform a symmetric decryption on the provided encrypted data
-UTILS_API std::string Decrypt( const std::string & a_Data );
+class UTILS_API Crypt
+{
+public:
+	//! perform a symmetric encryption on the provided unencrypted data
+	static std::string Encode( const std::string & a_Data );
+	//! perform a symmetric decryption on the provided encrypted data
+	static std::string Decode( const std::string & a_Data );
+private:
+	//! Data
+	static bool Initialize();
+};
 
 #endif

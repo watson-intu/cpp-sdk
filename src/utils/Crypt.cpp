@@ -15,65 +15,91 @@
 *
 */
 
-#include <openssl/aes.h>
+#include <openssl/evp.h>
 #include <stdio.h>						// sprintf
 
 #include "Crypt.h"
+#include "Log.h"
+#include "StringUtil.h"
 
 #pragma warning( disable : 4996 )		// silence windows warning
 
-static const unsigned char key[] = {
-	0x87, 0x34, 0x92, 0x23, 0xf4, 0xc5, 0xb6, 0xa7,
-	0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0x9f,
-	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-	0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
-};
+static EVP_CIPHER_CTX g_EncodeContext;
+static EVP_CIPHER_CTX g_DecodeContext;
+
+static const unsigned int AES_BLOCK_SIZE = 16;
 
 //! perform a symmetric encryption on the provided unencrypted data
-std::string Encrypt( const std::string & a_Data )
+std::string Crypt::Encode( const std::string & a_Data )
 {
-	std::string encrypted("AES:");
+	Initialize();
 
-	AES_KEY enc_key;
-	AES_set_encrypt_key( key, 128, &enc_key );
+	int c_len = a_Data.size() + AES_BLOCK_SIZE;
+	int f_len = 0;
 
-	size_t i=0;
-	while( i < a_Data.size() )
-	{
-		std::string block( a_Data.substr( i, AES_BLOCK_SIZE ) );
-		i += AES_BLOCK_SIZE;
+	std::string encrypted;
+	encrypted.resize( c_len );
 
-		unsigned char encoded[ AES_BLOCK_SIZE ];
-		AES_encrypt( (unsigned char *)&block[0], encoded, &enc_key );
+	EVP_EncryptInit_ex( &g_EncodeContext, NULL, NULL, NULL, NULL );
+	EVP_EncryptUpdate( &g_EncodeContext, (unsigned char *)&encrypted[0], &c_len, (const unsigned char *)&a_Data[0], a_Data.size() );
+	EVP_EncryptFinal_ex( &g_EncodeContext, (unsigned char *)&encrypted[c_len], &f_len );
+	encrypted.resize( c_len + f_len );
 
-		encrypted += std::string( (const char *)encoded, block.size() );
-	}
-
-	return encrypted;
+	return "ENC:" + StringUtil::EncodeBase64( encrypted );
 }
 
 //! perform a symmetric decryption on the provided encrypted data
-std::string Decrypt( const std::string & a_Data )
+std::string Crypt::Decode( const std::string & a_Data )
 {
-	if ( a_Data.size() < 4 || a_Data.substr( 0, 4 ) != "AES:" )
-		return a_Data;
+	if ( a_Data.size() < 4 || a_Data.substr( 0, 4 ) != "ENC:" )
+		return a_Data;		// data not encoded, just return the data passed in..
 
-	AES_KEY dec_key;
-	AES_set_decrypt_key( key, 128, &dec_key );
+	std::string encoded( StringUtil::DecodeBase64( a_Data.substr( 4 ) ) );
+
+	Initialize();
+
+	int len = encoded.size();
+	int p_len = len;
+	int f_len = 0;
 
 	std::string decrypted;
-	size_t i=4;
-	while( i < a_Data.size() )
-	{
-		std::string block( a_Data.substr( i, AES_BLOCK_SIZE ) );
-		i += AES_BLOCK_SIZE;
+	decrypted.resize( p_len );
 
-		unsigned char decoded[ AES_BLOCK_SIZE ];
-		AES_decrypt( (unsigned char *)&block[0], decoded, &dec_key );
-
-		decrypted += std::string( (const char *)decoded, block.size() );
-	}
-
+	EVP_DecryptInit_ex( &g_DecodeContext, NULL, NULL, NULL, NULL );
+	EVP_DecryptUpdate( &g_DecodeContext, (unsigned char *)&decrypted[0], &p_len, (unsigned char *)&encoded[0], len );
+	EVP_DecryptFinal_ex( &g_DecodeContext, (unsigned char *)&decrypted[p_len], &f_len );
+	
+	decrypted.resize( p_len + f_len );
 	return decrypted;
 }
+
+bool Crypt::Initialize()
+{
+	static bool bInitialized = false;
+	if (! bInitialized )
+	{
+		unsigned char key[32], iv[32];
+
+		unsigned int salt[] = {12345, 54321};
+		const unsigned char * key_data = (const unsigned char *)"sdJDOSDh98HsdsHDKJSHDhjsdgUSDSJK";
+		size_t key_data_len = strlen( (const char *)key_data );
+
+		int bytes =  EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), (unsigned char *)&salt, key_data, key_data_len, 5, key, iv);
+		if ( bytes != 32 )
+		{
+			Log::Error( "Crypt", "Key size is %d bits, should be 256 bits.", bytes );
+			return false;
+		}
+
+		EVP_CIPHER_CTX_init(&g_EncodeContext);
+		EVP_EncryptInit_ex(&g_EncodeContext, EVP_aes_256_cbc(), NULL, key, iv);
+		EVP_CIPHER_CTX_init(&g_DecodeContext);
+		EVP_DecryptInit_ex(&g_DecodeContext, EVP_aes_256_cbc(), NULL, key, iv);
+
+		bInitialized = true;
+	}
+
+	return true;
+}
+
 

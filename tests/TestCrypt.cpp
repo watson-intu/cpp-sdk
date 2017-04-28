@@ -27,8 +27,8 @@ public:
 
 	virtual void RunTest()
 	{
-		std::string encoded = Encrypt( "Hello World" );
-		std::string decoded = Decrypt( encoded );
+		std::string encoded = Crypt::Encode( "Hello World" );
+		std::string decoded = Crypt::Decode( encoded );
 		Test( decoded == "Hello World" );
 		Test( encoded != decoded );
 	}

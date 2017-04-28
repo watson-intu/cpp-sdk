@@ -154,11 +154,11 @@ public:
 
 #define RTTI_IMPL_BASE(CLASS) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS); return rtti; }	\
 	GetStaticRTTI<CLASS> rtti_##CLASS;
-#define RTTI_IMPL_BASE_EMBEDDED( PARENT, CLASS) RTTI & PARENT::CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS); return rtti; }	\
+#define RTTI_IMPL_BASE_EMBEDDED( PARENT, CLASS) RTTI & PARENT::CLASS::GetStaticRTTI() { static RTTI rtti(#PARENT "::" #CLASS); return rtti; }	\
 	GetStaticRTTI<PARENT::CLASS> rtti_##PARENT_##CLASS;
 #define RTTI_IMPL(CLASS,BASE) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS,BASE::GetStaticRTTI()); return rtti; } \
 	GetStaticRTTI<CLASS> rtti_##CLASS;
-#define RTTI_IMPL_EMBEDDED(PARENT,CLASS,BASE) RTTI & PARENT::CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS,BASE::GetStaticRTTI()); return rtti; } \
+#define RTTI_IMPL_EMBEDDED(PARENT,CLASS,BASE) RTTI & PARENT::CLASS::GetStaticRTTI() { static RTTI rtti(#PARENT "::" #CLASS,BASE::GetStaticRTTI()); return rtti; } \
 	GetStaticRTTI<PARENT::CLASS> rtti_##PARENT_##CLASS;
 
 //! This function can be used to cast one pointer type to another, it will return NULL if the type is not correct.

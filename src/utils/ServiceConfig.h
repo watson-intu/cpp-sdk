@@ -23,6 +23,7 @@
 
 #include "ISerializable.h"
 #include "UtilsLib.h"
+#include "Crypt.h"
 
 enum AuthType {
 	AUTH_BASIC,			// URL, User, and Password fields required
@@ -73,7 +74,7 @@ struct UTILS_API ServiceConfig : public ISerializable, public boost::enable_shar
 		json["m_ServiceId"] = m_ServiceId;
 		json["m_URL"] = m_URL;
 		json["m_User"] = m_User;
-		json["m_Password"] = m_Password;
+		json["m_Password"] = Crypt::Encode( m_Password );
 
 		SerializeMap("m_CustomMap", m_CustomMap, json);
 	}
@@ -87,7 +88,7 @@ struct UTILS_API ServiceConfig : public ISerializable, public boost::enable_shar
 		if ( json["m_User"].isString() )
 			m_User = json["m_User"].asString();
 		if ( json["m_Password"].isString() )
-			m_Password = json["m_Password"].asString();
+			m_Password = Crypt::Decode( json["m_Password"].asString() );
 
 		DeserializeMap("m_CustomMap", json, m_CustomMap);
 	}
