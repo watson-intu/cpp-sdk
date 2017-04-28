@@ -16,7 +16,6 @@
 */
 
 #include <openssl/evp.h>
-#include <stdio.h>						// sprintf
 
 #include "Crypt.h"
 #include "Log.h"
