@@ -269,6 +269,7 @@ void IService::Request::OnTimeout()
 }
 
 IService::IService(const std::string & a_ServiceId, AuthType a_AuthType /*= AUTH_BASIC*/ ) : 
+	m_bEnabled( true ),
 	m_AuthType(a_AuthType),
 	m_ServiceId(a_ServiceId), 
 	m_pConfig(NULL),
@@ -283,6 +284,9 @@ IService::IService(const std::string & a_ServiceId, AuthType a_AuthType /*= AUTH
 
 bool IService::Start()
 {
+	if (! m_bEnabled )
+		return false;
+
 	Config * pConfig = Config::Instance();
 	if ( pConfig == NULL )
 	{
@@ -320,6 +324,7 @@ bool IService::Stop()
 
 void IService::Serialize(Json::Value & json)
 {
+	json["m_bEnabled"] = m_bEnabled;
 	json["m_ServiceId"] = m_ServiceId;
 	json["m_bCacheEnabled"] = m_bCacheEnabled;
 	json["m_MaxCacheSize"] = m_MaxCacheSize;
@@ -329,15 +334,17 @@ void IService::Serialize(Json::Value & json)
 
 void IService::Deserialize(const Json::Value & json)
 {
-	if (json.isMember("m_ServiceId"))
+	if (json["m_bEnabled"].isBool() )
+		m_bEnabled = json["m_bEnabled"].asBool();
+	if (json["m_ServiceId"].isString())
 		m_ServiceId = json["m_ServiceId"].asString();
-	if (json.isMember("m_bCacheEnabled"))
+	if (json["m_bCacheEnabled"].isBool() )
 		m_bCacheEnabled = json["m_bCacheEnabled"].asBool();
-	if (json.isMember("m_MaxCacheSize"))
+	if (json["m_MaxCacheSize"].isNumeric() )
 		m_MaxCacheSize = json["m_MaxCacheSize"].asUInt();
-	if (json.isMember("m_MaxCacheAge"))
+	if (json["m_MaxCacheAge"].isNumeric() )
 		m_MaxCacheAge = json["m_MaxCacheAge"].asDouble();
-	if (json.isMember("m_RequestTimeout"))
+	if (json["m_RequestTimeout"].isNumeric() )
 		m_RequestTimeout = json["m_RequestTimeout"].asFloat();
 }
 

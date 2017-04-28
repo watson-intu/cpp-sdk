@@ -31,7 +31,8 @@ public:
 
 	//! Types
 	typedef std::list<std::string>						LibraryList;
-	typedef std::list<boost::shared_ptr<IService> >		ServiceList;
+	typedef boost::shared_ptr<IService>					IServiceSP;
+	typedef std::list<IServiceSP>						ServiceList;
 
 	//! Singleton
 	static Config * Instance();
@@ -98,15 +99,12 @@ public:
 	{
 		for (ServiceList::const_iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService)
 		{
-			IService * pService = (*iService).get();
+			T * pService = DynamicCast<T>((*iService).get());
 			if ( pService == NULL )
 				continue;
-			if ( a_ServiceId[0] != 0 && a_ServiceId != pService->GetServiceId() )
+			if ( !a_ServiceId.empty() && a_ServiceId != pService->GetServiceId() )
 				continue;		// service ID doesn't match
-
-			T * pServiceT = DynamicCast<T>(pService);
-			if (pServiceT != NULL)
-				return pServiceT;
+			return pService;
 		}
 
 		return NULL;
@@ -133,27 +131,24 @@ public:
 		T * pService = FindService<T>();
 		if (pService == NULL)
 		{
-			pService = new T();
-			if (!AddServiceInternal(pService))
-			{
-				delete pService;
-				pService = NULL;
-			}
+			IService::SP spService( new T() );
+			if (AddServiceInternal(spService))
+				pService = (T *)spService.get();
 		}
 
 		return pService;
 	}
-	bool AddService( IService * a_pService )
+	bool AddService( const IServiceSP & a_spService )
 	{
-		return AddServiceInternal( a_pService );
+		return AddServiceInternal( a_spService );
 	}
-	bool RemoveService( IService * a_pService )
+	bool RemoveService( const IServiceSP & a_spService )
 	{
 		for(ServiceList::iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService )
 		{
-			if ( (*iService).get() == a_pService )
+			if ( (*iService) == a_spService )
 			{
-				if (! a_pService->Stop() )
+				if (! a_spService->Stop() )
 					return false;
 
 				m_Services.erase( iService );
@@ -186,7 +181,7 @@ protected:
 	typedef std::list<Library *>			LoadedLibraryList;
 	typedef std::vector<ServiceConfig::SP>	ServiceConfigs;
 
-	bool AddServiceInternal(IService * a_pService);
+	bool AddServiceInternal( const IServiceSP & a_pService);
 
 	//! Data
 	std::string		m_StaticDataPath;

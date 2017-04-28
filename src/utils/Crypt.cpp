@@ -44,13 +44,13 @@ std::string Crypt::Encode( const std::string & a_Data )
 	EVP_EncryptFinal_ex( &g_EncodeContext, (unsigned char *)&encrypted[c_len], &f_len );
 	encrypted.resize( c_len + f_len );
 
-	return "ENC:" + StringUtil::EncodeBase64( encrypted );
+	return "EVP:" + StringUtil::EncodeBase64( encrypted );
 }
 
 //! perform a symmetric decryption on the provided encrypted data
 std::string Crypt::Decode( const std::string & a_Data )
 {
-	if ( a_Data.size() < 4 || a_Data.substr( 0, 4 ) != "ENC:" )
+	if ( a_Data.size() < 4 || a_Data.substr( 0, 4 ) != "EVP:" )
 		return a_Data;		// data not encoded, just return the data passed in..
 
 	std::string encoded( StringUtil::DecodeBase64( a_Data.substr( 4 ) ) );
