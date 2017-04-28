@@ -334,4 +334,7 @@
   <ItemGroup>
     <Text Include="..\..\CMakeLists.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="utils.licenseheader" />
+  </ItemGroup>
 </Project>

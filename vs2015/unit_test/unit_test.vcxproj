@@ -122,6 +122,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\tests\UnitTest.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="unit_test.licenseheader" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
