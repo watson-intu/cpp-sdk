@@ -160,10 +160,10 @@ public:
 		return false;
 	}
 
-	//! Mutators
+	//! Add a service credential
 	bool AddServiceConfig( const ServiceConfig & a_Credential, bool a_bUpdateOnly = false );
+	//! Remove a service credential by it's ID
 	bool RemoveServiceConfig( const std::string & a_ServiceId );
-
 	//! load all dynamic libs
 	virtual void LoadLibs();
 	//! unload all dynamic libs
