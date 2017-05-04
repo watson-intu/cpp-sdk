@@ -68,6 +68,7 @@ private:
 	std::string m_Lib;
 	void * m_pLibrary;
 	CreatorSet m_Creators;
+	bool m_bDestroyed;
 
 	static Library * sm_pLoadingLibrary;
 

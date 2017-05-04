@@ -41,11 +41,12 @@ void Config::Serialize(Json::Value & json)
 
 void Config::Deserialize(const Json::Value & json)
 {
+	m_Services.clear();
 	m_Libs.clear();
+	m_DisabledLibs.clear();
+
 	for( Json::ValueConstIterator iObject = json["m_Libs"].begin(); iObject != json["m_Libs"].end(); ++iObject )
 		m_Libs.push_back( iObject->asString() );
-
-	m_DisabledLibs.clear();
 	for( Json::ValueConstIterator iObject = json["m_DisabledLibs"].begin(); iObject != json["m_DisabledLibs"].end(); ++iObject )
 		m_DisabledLibs.push_back( iObject->asString() );
 
