@@ -88,6 +88,8 @@ class UTILS_API IWidget
 public:
 	//! Types
 	typedef std::map<std::string,IWidget *>		WidgetMap;
+	typedef boost::shared_ptr<IWidget>			SP;
+	typedef boost::weak_ptr<IWidget>			WP;
 
 	RTTI_DECL();
 

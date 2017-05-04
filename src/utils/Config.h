@@ -132,9 +132,14 @@ public:
 		T * pService = FindService<T>();
 		if (pService == NULL)
 		{
-			IService::SP spService( new T() );
-			if (AddServiceInternal(spService))
-				pService = (T *)spService.get();
+			// create the object using a factory, so it will be tracked..
+			IWidget::SP spWidget( ISerializable::GetSerializableFactory().CreateObject( T::GetStaticRTTI().GetName() ) );
+			if ( spWidget )
+			{
+				IService::SP spService = DynamicCast<IService>( spWidget );
+				if (AddServiceInternal(spService))
+					pService = (T *)spService.get();
+			}
 		}
 
 		return pService;

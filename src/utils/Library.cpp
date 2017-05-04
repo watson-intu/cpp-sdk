@@ -30,13 +30,14 @@
 
 Library * Library::sm_pLoadingLibrary = NULL;
 
-Library::Library( const std::string & a_Lib ) : m_pLibrary( NULL )
+Library::Library( const std::string & a_Lib ) : m_pLibrary( NULL ), m_bDestroyed( false )
 {
 	Load( a_Lib );
 }
 
 Library::~Library()
 {
+	m_bDestroyed = true;
 	if (! Unload() )
 		Log::Error( "Library", "Failed to unload %s", m_Lib.c_str() );
 }
@@ -113,10 +114,12 @@ bool Library::Unload()
 
 void Library::AddCreator( ICreator * a_pCreator )
 {
-	m_Creators.insert( a_pCreator );
+	if (! m_bDestroyed )
+		m_Creators.insert( a_pCreator );
 }
 
 void Library::RemoveCreator( ICreator * a_pCreator )
 {
-	m_Creators.erase( a_pCreator );
+	if (! m_bDestroyed )
+		m_Creators.erase( a_pCreator );
 }
