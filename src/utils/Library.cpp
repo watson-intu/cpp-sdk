@@ -19,6 +19,7 @@
 #include "Library.h"
 #include "Log.h"
 #include "Factory.h"
+#include "StringUtil.h"
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -50,29 +51,36 @@ void Library::Load( const std::string & a_Lib )
 	sm_pLoadingLibrary = this;
 	m_Lib = a_Lib;
 
+	std::string libFile( m_Lib );
+	StringUtil::Replace( libFile, "\\", "/" );		// normalize any slashes
+
 #if defined(_WIN32)
 	const std::string POSTFIX(".dll");
-	m_pLibrary = LoadLibrary( (m_Lib + POSTFIX).c_str() );
+	if ( libFile.find( '/' ) == std::string::npos )
+		libFile += POSTFIX;
+	m_pLibrary = LoadLibrary( libFile.c_str() );
 #elif defined(__APPLE__)
     const std::string POSTFIX(".dylib");
 	const std::string PREFIX("lib");
-	std::string  libFile = PREFIX + m_Lib + POSTFIX;
+	if ( libFile.find( '/' ) == std::string::npos )
+		libFile = PREFIX + libFile + POSTFIX;
 	m_pLibrary = dlopen( libFile.c_str(), RTLD_LAZY );
 	if ( m_pLibrary == NULL )
 		Log::Error( "Library", "dlerror: %s", dlerror() );
 #else
 	const std::string PREFIX("lib");
 	const std::string POSTFIX(".so");
-	std::string  libFile = PREFIX + m_Lib + POSTFIX;
+	if ( libFile.find( '/' ) == std::string::npos )
+		libFile = PREFIX + libFile + POSTFIX;
 	m_pLibrary = dlopen( libFile.c_str(), RTLD_LAZY );
 	if ( m_pLibrary == NULL )
 		Log::Error( "Library", "dlerror: %s", dlerror() );
 #endif
 
 	if ( m_pLibrary == NULL )
-		Log::Warning( "Library", "Failed to load dynamic library %s.", m_Lib.c_str() );
+		Log::Warning( "Library", "Failed to load dynamic library %s.", libFile.c_str() );
 	else
-		Log::Status( "Library", "Dynamic library %s loaded.", m_Lib.c_str() );
+		Log::Status( "Library", "Dynamic library %s loaded.", libFile.c_str() );
 	sm_pLoadingLibrary = NULL;
 }
 
@@ -106,9 +114,10 @@ bool Library::Unload()
 		dlclose( m_pLibrary );
 #endif
 		m_pLibrary = NULL;
+
+		Log::Status( "Library", "Dynamic library %s unloaded.", m_Lib.c_str() );
 	}
 
-	Log::Status( "Library", "Dynamic library %s unloaded.", m_Lib.c_str() );
 	return true;
 }
 

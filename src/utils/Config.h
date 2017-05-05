@@ -173,10 +173,15 @@ public:
 	virtual void LoadLibs();
 	//! unload all dynamic libs
 	virtual void UnloadLibs();
-	//! Disable the specific library
+
+	//! Add/Remove a library
+	virtual bool AddLib( const std::string & a_Lib, bool a_bEnabled );
+	virtual bool RemoveLib( const std::string & a_Lib );
+
+	//! Disable/Enable the specific library
 	virtual bool DisableLib( const std::string & a_Lib );
-	//! Enable the specific library
 	virtual bool EnableLib( const std::string & a_Lib );
+
 	//! Start all configured services
 	virtual bool StartServices();
 	//! Stop all configured services

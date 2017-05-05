@@ -120,8 +120,33 @@ void Config::UnloadLibs()
 	m_LoadedLibs.clear();
 }
 
+bool Config::AddLib( const std::string & a_Lib, bool a_bEnabled )
+{
+	if ( std::find( m_Libs.begin(), m_Libs.end(), a_Lib ) != m_Libs.end() )
+		return false;		// already added
+
+	m_Libs.push_back( a_Lib );
+	if ( a_bEnabled )
+		m_LoadedLibs.push_back( new Library( a_Lib ) );
+	else
+		m_DisabledLibs.push_back( a_Lib );
+	return true;
+}
+
+bool Config::RemoveLib( const std::string & a_Lib )
+{
+	if (! DisableLib( a_Lib ) )
+		return false;		// failed to disable the library
+
+	m_Libs.remove( a_Lib );
+	m_DisabledLibs.remove( a_Lib );
+	return true;
+}
+
 bool Config::DisableLib( const std::string & a_Lib )
 {
+	if ( std::find( m_Libs.begin(), m_Libs.end(), a_Lib ) == m_Libs.end() )
+		return false;		// lib not found..
 	if ( std::find( m_DisabledLibs.begin(), m_DisabledLibs.end(), a_Lib ) != m_DisabledLibs.end() )
 		return true;		// already disabled
 
@@ -151,6 +176,8 @@ bool Config::DisableLib( const std::string & a_Lib )
 
 bool Config::EnableLib( const std::string & a_Lib )
 {
+	if ( std::find( m_Libs.begin(), m_Libs.end(), a_Lib ) == m_Libs.end() )
+		return false;
 	LibraryList::iterator iDisabled = std::find( m_DisabledLibs.begin(), m_DisabledLibs.end(), a_Lib );
 	if ( iDisabled == m_DisabledLibs.end() )
 		return false;	// library is not disabled
