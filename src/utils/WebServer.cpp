@@ -622,7 +622,7 @@ protected:
 							{
 								std::string key( param.substr( 0, nSeperator ) );
 								std::string value( param.substr( nSeperator + 1 ) );
-								spRequest->m_Headers[key] = value;
+								spRequest->m_Headers[key] = StringUtil::UrlUnEscape( value );
 							}
 							else
 								spRequest->m_Headers[param] = "";

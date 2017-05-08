@@ -60,6 +60,7 @@ public:
 	static bool IsEscaped( const std::string & a_Input );
 	//! Escape special characters in the given string for passing as a parameter in a URL.
 	static std::string UrlEscape( const std::string & a_Input, bool a_bEscapeWithPlus = true );
+	static std::string UrlUnEscape( const std::string & a_Input );
 	//! Helper for appending parameters onto a URL string, will separate parameters with &
 	static void AppendParameter( const std::string & a_Param, 
 		std::string & a_Output );
