@@ -100,7 +100,11 @@ public:
 	virtual ~IWidget()
 	{
 		if (! m_GUID.empty() )
-			GetWidgetMap().erase( m_GUID );
+		{
+			WidgetMap::iterator iWidget = GetWidgetMap().find( m_GUID );
+			if ( iWidget->second == this )
+				GetWidgetMap().erase( iWidget );
+		}
 		if ( m_pCreator != NULL )
 			m_pCreator->RemoveObject( this );
 	}
