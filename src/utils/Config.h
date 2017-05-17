@@ -150,14 +150,24 @@ public:
 	}
 	bool RemoveService( const IServiceSP & a_spService )
 	{
-		for(ServiceList::iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService )
+		for(ServiceList::iterator iService = m_Services.begin();
+			iService != m_Services.end(); ++iService )
 		{
 			if ( (*iService) == a_spService )
 			{
-				if (! a_spService->Stop() )
-					return false;
+				IServiceSP spService( a_spService );
 
-				m_Services.erase( iService );
+				m_Services.remove( a_spService );
+				if ( m_bServicesActive )
+				{
+					if (! spService->Stop() )
+					{
+						Log::Error( "Config", "Failed to stop service." );
+						m_Services.push_back( spService );
+						return false;
+					}
+				}
+
 				return true;
 			}
 		}
