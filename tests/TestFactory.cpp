@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
 *
 */
 
+
 #include "UnitTest.h"
 #include "utils/Factory.h"
 
 namespace TestFactoryClasses {
 
-	class Base
+	class Base : public IWidget
 	{
 	public:
 		Base() 

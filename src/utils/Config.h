@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,23 +15,25 @@
 *
 */
 
+
 #ifndef WDC_CONFIG_H
 #define WDC_CONFIG_H
 
-#include "services/IService.h"
+#include "IService.h"
 #include "ISerializable.h"
 #include "Library.h"
 #include "ServiceConfig.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
-class WDC_API Config : public ISerializable
+class UTILS_API Config : public ISerializable
 {
 public:
 	RTTI_DECL();
 
 	//! Types
 	typedef std::list<std::string>						LibraryList;
-	typedef std::list<boost::shared_ptr<IService> >		ServiceList;
+	typedef boost::shared_ptr<IService>					IServiceSP;
+	typedef std::list<IServiceSP>						ServiceList;
 
 	//! Singleton
 	static Config * Instance();
@@ -46,6 +48,9 @@ public:
 	}
 	~Config()
 	{
+		m_Services.clear();
+		UnloadLibs();
+
 		if ( sm_pInstance == this )
 			sm_pInstance = NULL;
 	}
@@ -95,15 +100,12 @@ public:
 	{
 		for (ServiceList::const_iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService)
 		{
-			IService * pService = (*iService).get();
+			T * pService = DynamicCast<T>((*iService).get());
 			if ( pService == NULL )
 				continue;
-			if ( a_ServiceId[0] != 0 && a_ServiceId != pService->GetServiceId() )
+			if ( !a_ServiceId.empty() && a_ServiceId != pService->GetServiceId() )
 				continue;		// service ID doesn't match
-
-			T * pServiceT = DynamicCast<T>(pService);
-			if (pServiceT != NULL)
-				return pServiceT;
+			return pService;
 		}
 
 		return NULL;
@@ -130,30 +132,42 @@ public:
 		T * pService = FindService<T>();
 		if (pService == NULL)
 		{
-			pService = new T();
-			if (!AddServiceInternal(pService))
+			// create the object using a factory, so it will be tracked..
+			IWidget::SP spWidget( ISerializable::GetSerializableFactory().CreateObject( T::GetStaticRTTI().GetName() ) );
+			if ( spWidget )
 			{
-				delete pService;
-				pService = NULL;
+				IService::SP spService = DynamicCast<IService>( spWidget );
+				if (AddServiceInternal(spService))
+					pService = (T *)spService.get();
 			}
 		}
 
 		return pService;
 	}
-	bool AddService( IService * a_pService )
+	bool AddService( const IServiceSP & a_spService )
 	{
-		return AddServiceInternal( a_pService );
+		return AddServiceInternal( a_spService );
 	}
-	bool RemoveService( IService * a_pService )
+	bool RemoveService( const IServiceSP & a_spService )
 	{
-		for(ServiceList::iterator iService = m_Services.begin(); iService != m_Services.end(); ++iService )
+		for(ServiceList::iterator iService = m_Services.begin();
+			iService != m_Services.end(); ++iService )
 		{
-			if ( (*iService).get() == a_pService )
+			if ( (*iService) == a_spService )
 			{
-				if (! a_pService->Stop() )
-					return false;
+				IServiceSP spService( a_spService );
 
-				m_Services.erase( iService );
+				m_Services.remove( a_spService );
+				if ( m_bServicesActive )
+				{
+					if (! spService->Stop() )
+					{
+						Log::Error( "Config", "Failed to stop service." );
+						m_Services.push_back( spService );
+						return false;
+					}
+				}
+
 				return true;
 			}
 		}
@@ -161,29 +175,40 @@ public:
 		return false;
 	}
 
-	//! Mutators
+	//! Add a service credential
 	bool AddServiceConfig( const ServiceConfig & a_Credential, bool a_bUpdateOnly = false );
+	//! Remove a service credential by it's ID
 	bool RemoveServiceConfig( const std::string & a_ServiceId );
-
 	//! load all dynamic libs
-	void LoadLibs();
+	virtual void LoadLibs();
 	//! unload all dynamic libs
-	void UnloadLibs();
+	virtual void UnloadLibs();
 
-	bool StartServices();
-	bool StopServices();
+	//! Add/Remove a library
+	virtual bool AddLib( const std::string & a_Lib, bool a_bEnabled );
+	virtual bool RemoveLib( const std::string & a_Lib );
+
+	//! Disable/Enable the specific library
+	virtual bool DisableLib( const std::string & a_Lib );
+	virtual bool EnableLib( const std::string & a_Lib );
+
+	//! Start all configured services
+	virtual bool StartServices();
+	//! Stop all configured services
+	virtual bool StopServices();
 
 protected:
 	//! Types
-	typedef std::list<Library>	LoadedLibraryList;
-	typedef std::vector<ServiceConfig::SP> ServiceConfigs;
+	typedef std::list<Library *>			LoadedLibraryList;
+	typedef std::vector<ServiceConfig::SP>	ServiceConfigs;
 
-	bool AddServiceInternal(IService * a_pService);
+	bool AddServiceInternal( const IServiceSP & a_pService);
 
 	//! Data
 	std::string		m_StaticDataPath;
 	std::string		m_InstanceDataPath;
 	LibraryList		m_Libs;				// list of libraries to load dynamically
+	LibraryList		m_DisabledLibs;		// libraries that we should not load
 	ServiceList		m_Services;			// list of available services
 	bool			m_bServicesActive;
 	ServiceConfigs	m_ServiceConfigs;

@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,16 +15,18 @@
 *
 */
 
+
 #ifndef WDC_RTTI_H
 #define WDC_RTTI_H
 
 #include <string>
 #include <list>
+#include <map>
 
 #include "boost/shared_ptr.hpp"
 
 #include "StringHash.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 /*
 	RTTI (Run Time Time information) class allows us to determine the type
@@ -32,7 +34,7 @@
 	in the class definition.
 */
 
-class WDC_API RTTI
+class UTILS_API RTTI
 {
 public:
 	//! Types
@@ -43,18 +45,23 @@ public:
 		m_ClassName(a_ClassName),
 		m_ClassID(StringHash::DJB(a_ClassName.c_str())),
 		m_pBaseClass(NULL)
-	{}
+	{
+		GetTypeMap()[a_ClassName] = this;
+	}
 
 	RTTI(const std::string & a_ClassName, RTTI & a_BaseClass) :
 		m_ClassName(a_ClassName),
 		m_ClassID(StringHash::DJB(a_ClassName.c_str())),
 		m_pBaseClass(&a_BaseClass)
 	{
+		GetTypeMap()[a_ClassName] = this;
 		a_BaseClass.m_ChildClasses.push_back(this);
 	}
 
 	~RTTI()
 	{
+		GetTypeMap().erase( m_ClassName );
+
 		if (m_pBaseClass != NULL)
 			m_pBaseClass->m_ChildClasses.remove(this);
 
@@ -102,12 +109,43 @@ public:
 		return false;
 	}
 
+	static RTTI * FindType( const std::string & a_ClassName )
+	{
+		TypeMap & types = GetTypeMap();
+
+		TypeMap::iterator iType = types.find( a_ClassName );
+		if ( iType == types.end() )
+			return NULL;
+
+		return iType->second;
+	}
+
 private:
+	//! Types
+	typedef std::map<std::string,RTTI *>	TypeMap;
+
 	//! Data
 	std::string			m_ClassName;		// the name of this class
 	unsigned int		m_ClassID;			// hash of our class name
 	RTTI *				m_pBaseClass;		// our base class
 	ClassList			m_ChildClasses;		// classes derived from this class
+
+	static TypeMap &	GetTypeMap()
+	{
+		static TypeMap * MAP = new TypeMap();
+		return *MAP;
+	}
+};
+
+//! Helper class used to invoke GetStaticRTTI() when a dynamic library is loaded.
+template<typename T>
+struct GetStaticRTTI 
+{
+public:
+	GetStaticRTTI() 
+	{
+		T::GetStaticRTTI();
+	}
 };
 
 //! Use this macro for a class that derives from anther class.
@@ -115,8 +153,14 @@ private:
 	static RTTI & GetStaticRTTI();									\
 	virtual RTTI & GetRTTI() const { return GetStaticRTTI(); }
 
-#define RTTI_IMPL_BASE(CLASS) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS); return rtti; }	
-#define RTTI_IMPL(CLASS,BASE) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS,BASE::GetStaticRTTI()); return rtti; }	
+#define RTTI_IMPL_BASE(CLASS) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS); return rtti; }	\
+	GetStaticRTTI<CLASS> rtti_##CLASS;
+#define RTTI_IMPL_BASE_EMBEDDED( PARENT, CLASS) RTTI & PARENT::CLASS::GetStaticRTTI() { static RTTI rtti(#PARENT "::" #CLASS); return rtti; }	\
+	GetStaticRTTI<PARENT::CLASS> rtti_##PARENT_##CLASS;
+#define RTTI_IMPL(CLASS,BASE) RTTI & CLASS::GetStaticRTTI() { static RTTI rtti(#CLASS,BASE::GetStaticRTTI()); return rtti; } \
+	GetStaticRTTI<CLASS> rtti_##CLASS;
+#define RTTI_IMPL_EMBEDDED(PARENT,CLASS,BASE) RTTI & PARENT::CLASS::GetStaticRTTI() { static RTTI rtti(#PARENT "::" #CLASS,BASE::GetStaticRTTI()); return rtti; } \
+	GetStaticRTTI<PARENT::CLASS> rtti_##PARENT_##CLASS;
 
 //! This function can be used to cast one pointer type to another, it will return NULL if the type is not correct.
 template<typename T, typename K>

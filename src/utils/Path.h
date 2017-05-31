@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,16 +15,17 @@
 *
 */
 
+
 #ifndef WDC_PATH_H
 #define WDC_PATH_H
 
 #include <string>		// std::string
 
 #include "StringUtil.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! Helper class for parsing a file path and extracting the different parts.
-class WDC_API Path
+class UTILS_API Path
 {
 public:
 	//! Construction

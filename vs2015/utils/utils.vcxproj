@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9B6C58B8-9A51-4634-AB23-F23F6A458BAD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>utils</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>utils</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>UTILS_EXPORTS;WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;..\..\lib\zlib-1.2.8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>false</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../lib/boost_1_60_0/stage/lib;../../lib/openssl-1.0.1q-vs2015/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>UTILS_EXPORTS;WIN32;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;BOOST_ASIO_DISABLE_STD_CHRONO;BOOST_FILESYSTEM_VERSION=3;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src\;..\..\lib\;..\..\lib\boost_1_60_0\;..\..\lib\openssl-1.0.1q-vs2015\include;..\..\lib\zlib-1.2.8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>false</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../lib/boost_1_60_0/stage/lib;../../lib/openssl-1.0.1q-vs2015/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\base64\cdecode.c" />
+    <ClCompile Include="..\..\lib\base64\cencode.c" />
+    <ClCompile Include="..\..\lib\crossguid\crossguid.cpp" />
+    <ClCompile Include="..\..\lib\minizip\ioapi.c" />
+    <ClCompile Include="..\..\lib\minizip\ioapi_buf.c" />
+    <ClCompile Include="..\..\lib\minizip\ioapi_mem.c" />
+    <ClCompile Include="..\..\lib\minizip\iowin32.c" />
+    <ClCompile Include="..\..\lib\minizip\unzip.c" />
+    <ClCompile Include="..\..\lib\minizip\zip.c" />
+    <ClCompile Include="..\..\lib\tinythread++\tinythread.cpp" />
+    <ClCompile Include="..\..\src\services\Graph\DataModels.cpp" />
+    <ClCompile Include="..\..\src\services\Graph\Graph.cpp" />
+    <ClCompile Include="..\..\src\services\Kafka\KafkaConsumer.cpp" />
+    <ClCompile Include="..\..\src\utils\Config.cpp" />
+    <ClCompile Include="..\..\src\utils\Crypt.cpp" />
+    <ClCompile Include="..\..\src\utils\DataCache.cpp" />
+    <ClCompile Include="..\..\src\utils\Factory.cpp" />
+    <ClCompile Include="..\..\src\utils\Form.cpp" />
+    <ClCompile Include="..\..\src\utils\GetMac.cpp" />
+    <ClCompile Include="..\..\src\utils\IConditional.cpp" />
+    <ClCompile Include="..\..\src\utils\IService.cpp" />
+    <ClCompile Include="..\..\src\utils\JpegHelpers.cpp" />
+    <ClCompile Include="..\..\src\utils\JsonHelpers.cpp" />
+    <ClCompile Include="..\..\src\utils\Logic.cpp" />
+    <ClCompile Include="..\..\src\utils\MD5.cpp" />
+    <ClCompile Include="..\..\src\utils\Time.cpp" />
+    <ClCompile Include="..\..\src\utils\UniqueID.cpp" />
+    <ClCompile Include="..\..\src\utils\ISerializable.cpp" />
+    <ClCompile Include="..\..\src\utils\Library.cpp" />
+    <ClCompile Include="..\..\src\utils\Log.cpp" />
+    <ClCompile Include="..\..\src\utils\Sound.cpp" />
+    <ClCompile Include="..\..\src\utils\StringUtil.cpp" />
+    <ClCompile Include="..\..\src\utils\ThreadPool.cpp" />
+    <ClCompile Include="..\..\src\utils\TimerPool.cpp" />
+    <ClCompile Include="..\..\src\utils\UnitTest.cpp" />
+    <ClCompile Include="..\..\src\utils\WebClientService.cpp" />
+    <ClCompile Include="..\..\src\utils\WebServer.cpp" />
+    <ClCompile Include="..\..\src\utils\WebSocketFramer.cpp" />
+    <ClCompile Include="..\..\src\utils\URL_.cpp" />
+    <ClCompile Include="..\..\src\utils\ZipFile.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\base64\cdecode.h" />
+    <ClInclude Include="..\..\lib\base64\cencode.h" />
+    <ClInclude Include="..\..\lib\base64\decode.h" />
+    <ClInclude Include="..\..\lib\base64\encode.h" />
+    <ClInclude Include="..\..\lib\crossguid\crossguid.h" />
+    <ClInclude Include="..\..\lib\minizip\crypt.h" />
+    <ClInclude Include="..\..\lib\minizip\ioapi.h" />
+    <ClInclude Include="..\..\lib\minizip\ioapi_buf.h" />
+    <ClInclude Include="..\..\lib\minizip\ioapi_mem.h" />
+    <ClInclude Include="..\..\lib\minizip\iowin32.h" />
+    <ClInclude Include="..\..\lib\minizip\unzip.h" />
+    <ClInclude Include="..\..\lib\minizip\zip.h" />
+    <ClInclude Include="..\..\lib\tinythread++\tinythread.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\checked.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\core.h" />
+    <ClInclude Include="..\..\lib\utf8_v2_3_4\source\utf8\unchecked.h" />
+    <ClInclude Include="..\..\src\services\Graph\DataModels.h" />
+    <ClInclude Include="..\..\src\services\Graph\Graph.h" />
+    <ClInclude Include="..\..\src\services\Kafka\KafkaConsumer.h" />
+    <ClInclude Include="..\..\src\utils\Config.h" />
+    <ClInclude Include="..\..\src\utils\Crypt.h" />
+    <ClInclude Include="..\..\src\utils\DataCache.h" />
+    <ClInclude Include="..\..\src\utils\Form.h" />
+    <ClInclude Include="..\..\src\utils\GetMac.h" />
+    <ClInclude Include="..\..\src\utils\IConditional.h" />
+    <ClInclude Include="..\..\src\utils\IService.h" />
+    <ClInclude Include="..\..\src\utils\IWebClient.h" />
+    <ClInclude Include="..\..\src\utils\IWebServer.h" />
+    <ClInclude Include="..\..\src\utils\IWebSocket.h" />
+    <ClInclude Include="..\..\src\utils\JpegHelpers.h" />
+    <ClInclude Include="..\..\src\utils\JsonHelpers.h" />
+    <ClInclude Include="..\..\src\utils\Logic.h" />
+    <ClInclude Include="..\..\src\utils\MD5.h" />
+    <ClInclude Include="..\..\src\utils\Path.h" />
+    <ClInclude Include="..\..\src\utils\SHA1.h" />
+    <ClInclude Include="..\..\src\utils\UniqueID.h" />
+    <ClInclude Include="..\..\src\utils\UnitTest.h" />
+    <ClInclude Include="..\..\src\utils\ServiceConfig.h" />
+    <ClInclude Include="..\..\src\utils\Delegate.h" />
+    <ClInclude Include="..\..\src\utils\Factory.h" />
+    <ClInclude Include="..\..\src\utils\ISerializable.h" />
+    <ClInclude Include="..\..\src\utils\Library.h" />
+    <ClInclude Include="..\..\src\utils\Log.h" />
+    <ClInclude Include="..\..\src\utils\RTTI.h" />
+    <ClInclude Include="..\..\src\utils\Sound.h" />
+    <ClInclude Include="..\..\src\utils\StringHash.h" />
+    <ClInclude Include="..\..\src\utils\StringUtil.h" />
+    <ClInclude Include="..\..\src\utils\ThreadPool.h" />
+    <ClInclude Include="..\..\src\utils\Time.h" />
+    <ClInclude Include="..\..\src\utils\TimerPool.h" />
+    <ClInclude Include="..\..\src\utils\URL.h" />
+    <ClInclude Include="..\..\src\utils\WatsonException.h" />
+    <ClInclude Include="..\..\src\utils\WebClientService.h" />
+    <ClInclude Include="..\..\src\utils\WebSocketFramer.h" />
+    <ClInclude Include="..\..\src\utils\ZipFile.h" />
+    <ClInclude Include="..\..\src\UtilsLib.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\utils\WebClient.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\jsoncpp\jsoncpp.vcxproj">
+      <Project>{28ba4301-4c55-41d2-b122-01dbde375452}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\librdkafka\librdkafka.vcxproj">
+      <Project>{235811ed-0ab6-4309-b52c-54ab38590f68}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\tinyxml\tinyxml.vcxproj">
+      <Project>{7e45de27-419e-469c-affa-f669750d6338}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{44a53853-2d97-4f4b-860c-52edd74dfb39}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="utils.licenseheader" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

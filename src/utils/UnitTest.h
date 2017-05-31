@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
 *
 */
 
+
 #ifndef UNIT_TEST_H
 #define UNIT_TEST_H
 
 #include <list>
 #include <vector>
 #include <string>
+#include <map>
 #include <stdio.h>
 
 #include <boost/thread.hpp>
@@ -29,12 +31,16 @@
 #include "utils/Time.h"
 #include "utils/ThreadPool.h"
 
-#include "WDCLib.h"		// include last always
+#include "UtilsLib.h"		// include last always
 
 //! Unit test base class for writing tests of the SELF library.
-class WDC_API UnitTest 
+class UTILS_API UnitTest 
 {
 public:
+	//! Types
+	typedef std::vector<std::string>	Args;
+	typedef std::map<std::string,Args>	TestMap;
+
 	//! Construction
 	UnitTest( const char * a_pTestName ) :
 		m_TestName( a_pTestName )
@@ -49,6 +55,10 @@ public:
 	const std::string & GetName() const
 	{
 		return m_TestName;
+	}
+	const Args & GetArgs() const
+	{
+		return m_Args;
 	}
 
 	static void Test( bool condition )
@@ -77,17 +87,23 @@ public:
 		}
 	}
 
+	void SetArgs( const Args & a_Args )
+	{
+		m_Args = a_Args;
+	}
+
 	virtual void RunTest() = 0;
 
 	//! Run one or more tests, optionally provide a name to filter tests. Returns 0 on success, otherwise it returns the number of tests that failed.
-	static int RunTests( const std::vector<std::string> & a_Tests );
+	static int RunTests( const TestMap & a_Tests );
 
 private:
 	//! Types
-	typedef std::list<UnitTest *> TestList;
+	typedef std::list<UnitTest *>		TestList;
 
 	//! Data
 	const std::string 	m_TestName;
+	Args				m_Args;
 
 	static TestList & GetTestList()
 	{

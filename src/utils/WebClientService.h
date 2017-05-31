@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 * limitations under the License.
 *
 */
+
 
 #ifndef WDC_WEB_CLIENT_SERVICE_H
 #define WDC_WEB_CLIENT_SERVICE_H
@@ -45,10 +46,10 @@ namespace boost {
 #include "boost/atomic.hpp"
 
 #include "TimerPool.h"
-#include "WDCLib.h"		
+#include "UtilsLib.h"		
 
 //! This singleton class manages the boost::asio::io_service object and a pool of already established connections.
-class WDC_API WebClientService
+class UTILS_API WebClientService
 {
 public:
 	static WebClientService * Instance();

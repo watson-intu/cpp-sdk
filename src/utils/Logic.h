@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+
 #ifndef WDC_LOGIC_H
 #define WDC_LOGIC_H
 
@@ -22,10 +23,10 @@
 #include <vector>
 
 #include "jsoncpp/json/json.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! Logical and equality operators
-class WDC_API Logic
+class UTILS_API Logic
 {
 public:
 	enum EqualityOp

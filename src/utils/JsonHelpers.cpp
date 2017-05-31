@@ -1,15 +1,20 @@
-/* ***************************************************************** */
-/*                                                                   */
-/* IBM Confidential                                                  */
-/* OCO Source Materials                                              */
-/*                                                                   */
-/* (C) Copyright IBM Corp. 2001, 2014                                */
-/*                                                                   */
-/* The source code for this program is not published or otherwise    */
-/* divested of its trade secrets, irrespective of what has been      */
-/* deposited with the U.S. Copyright Office.                         */
-/*                                                                   */
-/* ***************************************************************** */
+/**
+* Copyright 2017 IBM Corp. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
+
 
 #include "JsonHelpers.h"
 #include "utils/MD5.h"
@@ -250,7 +255,32 @@ void JsonHelpers::Merge(Json::Value & a_MergeInto, const Json::Value & a_Merge, 
 		a_MergeInto = a_Merge;
 }
 
-std::string JsonHelpers::Hash(const Json::Value & a_Json)
+std::string JsonHelpers::Hash(const Json::Value & a_Json, const char * a_pFilter /*= NULL*/ )
 {
+	if ( a_pFilter != NULL )
+	{
+		Json::Value filtered( a_Json );
+		Filter( filtered, a_pFilter );
+
+		return MakeMD5(Json::FastWriter().write( filtered ) );
+	}
+
 	return MakeMD5(Json::FastWriter().write( a_Json ) );
 }
+
+void JsonHelpers::Filter( Json::Value & a_Json, const char * a_pFilter )
+{
+	if ( a_Json.isObject() )
+	{
+		a_Json.removeMember( a_pFilter );
+
+		for (Json::ValueIterator iElement = a_Json.begin(); iElement != a_Json.end(); ++iElement)
+			Filter( *iElement, a_pFilter );
+	}
+	else if (a_Json.isArray())
+	{
+		for(size_t i=0;i<a_Json.size();++i)
+			Filter( a_Json[ i ], a_pFilter );
+	}
+}
+

@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+
 #ifndef WDC_CREDENTIAL_H
 #define WDC_CREDENTIAL_H
 
@@ -22,7 +23,8 @@
 #include "boost/enable_shared_from_this.hpp"
 
 #include "ISerializable.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
+#include "Crypt.h"
 
 enum AuthType {
 	AUTH_BASIC,			// URL, User, and Password fields required
@@ -33,7 +35,7 @@ enum AuthType {
 
 //! Data class for holding credentials for a given service. This object
 //! is contained by the Config class usually.
-struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared_from_this<ServiceConfig>
+struct UTILS_API ServiceConfig : public ISerializable, public boost::enable_shared_from_this<ServiceConfig>
 {
 	RTTI_DECL();
 
@@ -73,7 +75,7 @@ struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared
 		json["m_ServiceId"] = m_ServiceId;
 		json["m_URL"] = m_URL;
 		json["m_User"] = m_User;
-		json["m_Password"] = m_Password;
+		json["m_Password"] = Crypt::Encode( m_Password );
 
 		SerializeMap("m_CustomMap", m_CustomMap, json);
 	}
@@ -87,7 +89,7 @@ struct WDC_API ServiceConfig : public ISerializable, public boost::enable_shared
 		if ( json["m_User"].isString() )
 			m_User = json["m_User"].asString();
 		if ( json["m_Password"].isString() )
-			m_Password = json["m_Password"].asString();
+			m_Password = Crypt::Decode( json["m_Password"].asString() );
 
 		DeserializeMap("m_CustomMap", json, m_CustomMap);
 	}

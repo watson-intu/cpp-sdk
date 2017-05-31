@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+
 #include "WebSocketFramer.h"
 #include "Log.h"
 
@@ -22,7 +23,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-RTTI_IMPL_BASE( IWebSocket );
+RTTI_IMPL( IWebSocket, IWidget );
 
 #pragma pack( push, 1 )
 struct WEB_SOCKET_HEADER

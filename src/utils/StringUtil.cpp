@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 * limitations under the License.
 *
 */
+
 
 #include "StringUtil.h"
 #include "base64/encode.h"
@@ -155,6 +156,35 @@ std::string StringUtil::UrlEscape( const std::string & a_Input, bool a_bEscapeWi
 
 	return output;
 }
+
+std::string StringUtil::UrlUnEscape( const std::string & a_Input )
+{
+	std::string output;
+	for(size_t i=0;i<a_Input.size();++i)
+	{
+		unsigned char c = a_Input[i];
+		if ( c == '+' )
+		{
+			output += ' ';
+		}
+		else if ( c == '%' )
+		{
+			if ( (i + 1 ) < a_Input.size() )
+			{
+				unsigned int ascii;
+				sscanf( &a_Input[i+1], "%2X", &ascii );
+
+				output += (char)ascii;
+				i += 2;
+			}
+		}
+		else
+			output += c;
+	}
+
+	return output;
+}
+
 
 void StringUtil::AppendParameter( const std::string & a_Param, std::string & a_Output )
 {

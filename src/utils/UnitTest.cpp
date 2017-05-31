@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,31 +15,34 @@
 *
 */
 
+
 #include "UnitTest.h"
 #include "utils/Log.h"
 
-int UnitTest::RunTests( const std::vector<std::string> & a_Tests )
+int UnitTest::RunTests( const TestMap & a_Tests )
 {
-	std::vector<std::string> tests( a_Tests );
+	TestMap tests( a_Tests );
 	if ( tests.size() == 0 )
 	{
 		for( TestList::iterator iTest = GetTestList().begin(); iTest != GetTestList().end(); ++iTest )
-			tests.push_back( (*iTest)->GetName() );
+			tests[ (*iTest)->GetName() ] = Args();
 	}
 
 	int executed = 0;
 	std::vector<std::string> failed;
-	for(size_t i=0;i<tests.size();++i)
+
+	for( TestMap::const_iterator iTest = tests.begin(); iTest != tests.end(); ++iTest )
 	{
 		UnitTest * pRunTest = NULL;
 
 #ifndef _DEBUG
 		try {
 #endif
-			for( TestList::iterator iTest = GetTestList().begin(); pRunTest == NULL && iTest != GetTestList().end(); ++iTest )
+			for( TestList::iterator iFind = GetTestList().begin();
+				pRunTest == NULL && iFind != GetTestList().end(); ++iFind )
 			{
-				if ( (*iTest)->GetName() == tests[i] )
-					pRunTest = *iTest;
+				if ( (*iFind)->GetName() == iTest->first )
+					pRunTest = *iFind;
 			}
 
 			if ( pRunTest != NULL )
@@ -48,14 +51,16 @@ int UnitTest::RunTests( const std::vector<std::string> & a_Tests )
 				executed += 1;
 
 				Log::Status( "UnitTest", "Running Test %s...", pRunTest->GetName().c_str() );
+
+				pRunTest->SetArgs( iTest->second );
 				pRunTest->RunTest();
 
 				Log::Status( "UnitTest", "...Test %s COMPLETED.", pRunTest->GetName().c_str() );
 			}
 			else
 			{
-				Log::Error( "UnitTest", "Failed to find test %s...", a_Tests[i].c_str() );
-				failed.push_back( a_Tests[i] );
+				Log::Error( "UnitTest", "Failed to find test %s...", iTest->first.c_str() );
+				failed.push_back( iTest->first );
 			}
 #ifndef _DEBUG
 		}

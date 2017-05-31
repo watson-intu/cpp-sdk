@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 * limitations under the License.
 *
 */
+
 
 #define ENABLE_OPENSSL_INCLUDES
 
@@ -127,7 +128,7 @@ void IWebClient::Free( const SP & a_spClient )
 //----------------------------------------------
 
 template<typename socket_type>
-class WDC_API WebClientT : public IWebClient
+class UTILS_API WebClientT : public IWebClient
 {
 public:
 	//! Types
@@ -274,12 +275,12 @@ public:
 	virtual bool Close()
 	{
 		if ( m_pSocket == NULL )
-			return false;
+			return true;
 
 		if ( m_eState == IWebClient::CLOSING
 			|| m_eState == IWebClient::CLOSED
 			|| m_eState == IWebClient::DISCONNECTED )
-			return false;
+			return true;
 
 		// just set the state and close the socket, the routines in the other thread
 		// will invoke OnDisconnected() which will ignore the state change.

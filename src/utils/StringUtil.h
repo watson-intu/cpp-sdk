@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,16 +15,17 @@
 *
 */
 
+
 #ifndef WDC_STRINGUTIL_H
 #define WDC_STRINGUTIL_H
 
 #include <string>
 #include <vector>
 
-#include "../WDCLib.h"		// include last always
+#include "UtilsLib.h"	
 
 //! string utility functions.
-class WDC_API StringUtil
+class UTILS_API StringUtil
 {
 public:
 	static void ToLower( std::string & a_String );
@@ -59,6 +60,7 @@ public:
 	static bool IsEscaped( const std::string & a_Input );
 	//! Escape special characters in the given string for passing as a parameter in a URL.
 	static std::string UrlEscape( const std::string & a_Input, bool a_bEscapeWithPlus = true );
+	static std::string UrlUnEscape( const std::string & a_Input );
 	//! Helper for appending parameters onto a URL string, will separate parameters with &
 	static void AppendParameter( const std::string & a_Param, 
 		std::string & a_Output );

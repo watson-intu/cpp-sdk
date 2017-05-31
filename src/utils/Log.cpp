@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 * limitations under the License.
 *
 */
+
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -32,6 +33,10 @@
 #include "StringUtil.h"
 #include "ThreadPool.h"
 #include "WatsonException.h"
+
+RTTI_IMPL_BASE( ILogReactor );
+RTTI_IMPL( FileReactor, ILogReactor );
+RTTI_IMPL( ConsoleReactor, ILogReactor );
 
 void ConsoleReactor::Process(const LogRecord & a_Record)
 {
@@ -61,6 +66,11 @@ void ConsoleReactor::Process(const LogRecord & a_Record)
 			SetConsoleTextAttribute(h, csbi.wAttributes );
 #endif
 	}
+}
+
+void ConsoleReactor::SetLogLevel( LogLevel a_Level )
+{
+	m_MinLevel = a_Level;
 }
 
 FileReactor::FileReactor(const char * a_pLogFile, LogLevel a_MinLevel /*= DEBUG*/, int a_LogHistory /*= 5*/) :
@@ -117,6 +127,11 @@ void FileReactor::Process(const LogRecord & a_Record)
 		m_Output.push_back( log );
 		m_OutputLock.unlock();
 	}
+}
+
+void FileReactor::SetLogLevel( LogLevel a_Level )
+{
+	m_MinLevel = a_Level;
 }
 
 void FileReactor::WriteThread()

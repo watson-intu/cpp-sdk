@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,15 +15,16 @@
 *
 */
 
+
 #ifndef WDC_ZIP_FILE_H
 #define WDC_ZIP_FILE_H
 
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 #include <string>
 #include <map>
 
-class WDC_API ZipFile
+class UTILS_API ZipFile
 {
 public:
 	//! Types

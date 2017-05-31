@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+
 #ifndef WDC_IWEBCLIENT_H
 #define WDC_IWEBCLIENT_H
 
@@ -27,11 +28,11 @@
 #include "StringUtil.h"
 #include "URL.h"
 #include "IWebSocket.h"
-#include "WDCLib.h"		
+#include "UtilsLib.h"		
 #include "Factory.h"
 
 //! Abstract interface for a web client class
-class WDC_API IWebClient : public IWebSocket
+class UTILS_API IWebClient : public IWebSocket
 {
 public:
 	RTTI_DECL();

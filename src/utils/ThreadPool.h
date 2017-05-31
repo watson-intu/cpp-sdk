@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+
 #ifndef WDC_THREAD_POOL_H
 #define WDC_THREAD_POOL_H
 
@@ -22,10 +23,10 @@
 
 #include "Delegate.h"
 #include "tinythread++/tinythread.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! This class manages a pool of threads, and allows those threads to invoke functions back on the main thread.
-class WDC_API ThreadPool 
+class UTILS_API ThreadPool 
 {
 public:
 	//! Singleton instance

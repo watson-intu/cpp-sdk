@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+
 #ifndef WDC_IWEB_SOCKET_H
 #define WDC_IWEB_SOCKET_H
 
@@ -22,12 +23,13 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <string>
 
+#include "Factory.h"
 #include "RTTI.h"
 #include "Delegate.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 //! Common interface for sending and receiving data on a web socket.
-class WDC_API IWebSocket : public boost::enable_shared_from_this<IWebSocket>
+class UTILS_API IWebSocket : public IWidget, public boost::enable_shared_from_this<IWebSocket>
 {
 public:
 	RTTI_DECL();

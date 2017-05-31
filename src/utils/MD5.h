@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
 *
 */
 
+
 #ifndef WDC_MD5_H
 #define WDC_MD5_H
 
 #include <string>
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
-WDC_API std::string MakeMD5( const std::string & a_Data );
+UTILS_API std::string MakeMD5( const std::string & a_Data );
 
 #endif

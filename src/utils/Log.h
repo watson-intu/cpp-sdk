@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+
 #ifndef WDC_LOG_H
 #define WDC_LOG_H
 
@@ -24,8 +25,9 @@
 #include <list>
 #include <stdarg.h>
 
+#include "RTTI.h"
 #include <boost/thread.hpp>
-#include "WDCLib.h"		// include last
+#include "UtilsLib.h"		// include last
 
 enum LogLevel
 {
@@ -49,34 +51,43 @@ struct LogRecord
 };
 
 //! Abstract interface for any object that wants to hook into the LogSystem.
-class WDC_API ILogReactor
+class UTILS_API ILogReactor
 {
 public:
+	RTTI_DECL();
+
 	virtual ~ILogReactor()
 	{}
 
 	virtual void Process(const LogRecord & a_Record) = 0;
+	virtual void SetLogLevel( LogLevel a_Level ) = 0;
 };
 
-class WDC_API ConsoleReactor : public ILogReactor
+class UTILS_API ConsoleReactor : public ILogReactor
 {
 public:
+	RTTI_DECL();
+
 	ConsoleReactor(LogLevel a_MinLevel = LL_STATUS) : m_MinLevel(a_MinLevel)
 	{}
 
 	virtual void Process(const LogRecord & a_Record);
+	virtual void SetLogLevel( LogLevel a_Level );
 
 private:
 	LogLevel			m_MinLevel;
 };
 
-class WDC_API FileReactor : public ILogReactor
+class UTILS_API FileReactor : public ILogReactor
 {
 public:
+	RTTI_DECL();
+
 	FileReactor(const char * a_pLogFile, LogLevel a_MinLevel = LL_STATUS, int a_LogHistory = 5 );
 	~FileReactor();
 
 	virtual void Process(const LogRecord & a_Record);
+	virtual void SetLogLevel( LogLevel a_Level );
 
 private:
 	//! Types
@@ -96,9 +107,13 @@ private:
 	void WriteThread();
 };
 
-class WDC_API Log
+class UTILS_API Log
 {
 public:
+	//! Types
+	typedef std::list<ILogReactor *>		ReactorList;
+
+	//! Interface
 	static void RegisterReactor(ILogReactor * a_pReactor);
 	static void RemoveReactor(ILogReactor * a_pReactor, bool a_bDelete = true );
 	static void RemoveAllReactors( bool a_bDelete = true );
@@ -117,9 +132,6 @@ public:
 
 	static const char * LevelText( LogLevel a_Level );
 
-private:
-	//! Types
-	typedef std::list<ILogReactor *>		ReactorList;
 	//! Data
 	static ReactorList & GetReactorList();
 	static boost::recursive_mutex & GetReactorLock();

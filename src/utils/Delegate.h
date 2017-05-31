@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+
 #ifndef WDC_DELEGATE_H
 #define WDC_DELEGATE_H
 
@@ -22,7 +23,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
 
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 #ifndef ENABLE_DELEGATE_DEBUG
 #if defined(_DEBUG) || !defined(__OPTIMIZE__)

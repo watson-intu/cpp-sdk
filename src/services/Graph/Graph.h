@@ -1,15 +1,20 @@
-/* ***************************************************************** */
-/*                                                                   */
-/* IBM Confidential                                                  */
-/* OCO Source Materials                                              */
-/*                                                                   */
-/* (C) Copyright IBM Corp. 2001, 2014                                */
-/*                                                                   */
-/* The source code for this program is not published or otherwise    */
-/* divested of its trade secrets, irrespective of what has been      */
-/* deposited with the U.S. Copyright Office.                         */
-/*                                                                   */
-/* ***************************************************************** */
+/**
+* Copyright 2017 IBM Corp. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
+
 
 #ifndef WDC_GRAPH_SERVICE_H
 #define WDC_GRAPH_SERVICE_H
@@ -17,8 +22,8 @@
 #include "DataModels.h"
 #include "utils/IConditional.h"
 #include "utils/TimerPool.h"
-#include "services/IService.h"
-#include "WDCLib.h"
+#include "utils/IService.h"
+#include "UtilsLib.h"
 
 //! low-level service interface for communicating with IBM graph (Titan, Tinker-Pop and Gremlin stack)
 
@@ -26,7 +31,7 @@
 //! of the vertexes and edges created through this interface. indexes are automatically created for all 
 //! properties.
 
-class WDC_API Graph : public IService
+class UTILS_API Graph : public IService
 {
 public:
 	RTTI_DECL();

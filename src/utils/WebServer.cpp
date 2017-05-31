@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 * limitations under the License.
 *
 */
+
 
 #include <map>
 
@@ -31,11 +32,11 @@
 #include "Log.h"
 #include "SHA1.h"
 #include "IWebServer.h"
-#include "WDCLib.h"		// include last always
+#include "UtilsLib.h"		// include last always
 
 //! Server class for handling incoming REST requests and WebSocket connections. 
 template<typename socket_type>
-class WDC_API WebServerT : public IWebServer
+class UTILS_API WebServerT : public IWebServer
 {
 public:
 	//! Types
@@ -621,7 +622,7 @@ protected:
 							{
 								std::string key( param.substr( 0, nSeperator ) );
 								std::string value( param.substr( nSeperator + 1 ) );
-								spRequest->m_Headers[key] = value;
+								spRequest->m_Headers[key] = StringUtil::UrlUnEscape( value );
 							}
 							else
 								spRequest->m_Headers[param] = "";

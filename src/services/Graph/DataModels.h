@@ -1,21 +1,26 @@
-/* ***************************************************************** */
-/*                                                                   */
-/* IBM Confidential                                                  */
-/* OCO Source Materials                                              */
-/*                                                                   */
-/* (C) Copyright IBM Corp. 2001, 2014                                */
-/*                                                                   */
-/* The source code for this program is not published or otherwise    */
-/* divested of its trade secrets, irrespective of what has been      */
-/* deposited with the U.S. Copyright Office.                         */
-/*                                                                   */
-/* ***************************************************************** */
+/**
+* Copyright 2017 IBM Corp. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
+
 
 #ifndef WDC_GRAPH_DATAMODELS_H
 #define WDC_GRAPH_DATAMODELS_H
 
 #include "utils/ISerializable.h"
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
 namespace GraphDataModels {
 
@@ -24,7 +29,7 @@ namespace GraphDataModels {
 	typedef std::string					VertexId;
 	typedef std::string					EdgeId;
 
-	struct WDC_API EdgeLabel : public ISerializable
+	struct UTILS_API EdgeLabel : public ISerializable
 	{
 		std::string		m_Multiplicity;
 		std::string		m_Name;
@@ -41,7 +46,7 @@ namespace GraphDataModels {
 		}
 	};
 
-	struct WDC_API VertexLabel : public ISerializable
+	struct UTILS_API VertexLabel : public ISerializable
 	{
 		std::string		m_Name;
 
@@ -55,7 +60,7 @@ namespace GraphDataModels {
 		}
 	};
 
-	struct WDC_API IndexOnly : public ISerializable
+	struct UTILS_API IndexOnly : public ISerializable
 	{
 		IndexOnly() 
 		{}
@@ -74,7 +79,7 @@ namespace GraphDataModels {
 		}
 	};
 
-	struct WDC_API Index : public ISerializable
+	struct UTILS_API Index : public ISerializable
 	{
 		Index() : m_Composite(false), m_Unique(false)
 		{}
@@ -103,7 +108,7 @@ namespace GraphDataModels {
 		}
 	};
 
-	struct WDC_API PropertyKey : public ISerializable
+	struct UTILS_API PropertyKey : public ISerializable
 	{
 		std::string		m_Cardinality;
 		std::string		m_DataType;
@@ -125,7 +130,7 @@ namespace GraphDataModels {
 
 	typedef std::map<std::string, size_t>		IndexMap;
 
-	struct WDC_API Schema : public ISerializable
+	struct UTILS_API Schema : public ISerializable
 	{
 		Schema() : m_nVersion(0), m_bSaving( false ), m_bDropped(false), m_nSavedVersion(-1)
 		{}

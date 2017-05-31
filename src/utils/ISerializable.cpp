@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
 *
 */
 
+
 #include "ISerializable.h"
 
 #include <fstream>
 #include <streambuf>
 #include <string>
 
-RTTI_IMPL_BASE( ISerializable );
-
+RTTI_IMPL( ISerializable, IWidget );
 
 Factory<ISerializable> & ISerializable::GetSerializableFactory()
 {
@@ -51,18 +51,27 @@ ISerializable * ISerializable::DeserializeObject(const Json::Value & a_json,
 	{
 		std::string sClassName( a_json["Type_"].asString() );
 		a_pObject = GetSerializableFactory().CreateObject(sClassName);
-		if ( a_pObject == NULL )
-			Log::Error( "ISerializable", "Failed to find factory for {%s}", sClassName.c_str() );
-		else
-			bCreated = true;
-	}
-	else if ( a_json["Type_"].isString() )
-	{
-		if ( a_pObject->GetRTTI().GetName() != a_json["Type_"].asString() )
+		if ( a_pObject != NULL )
 		{
-			Log::Warning( "ISerializable", "Type mis-match for deserialize. %s != %s", 
-				a_pObject->GetRTTI().GetName().c_str(), a_json["Type_"].asCString() );
+			if ( a_json["GUID_"].isString() )
+				a_pObject->SetGUID( a_json["GUID_"].asString() );
+			bCreated = true;
 		}
+		else
+			Log::Error( "ISerializable", "Failed to find factory for {%s}", sClassName.c_str() );
+	}
+	else 
+	{
+		if ( a_json["Type_"].isString() )
+		{
+			if ( a_pObject->GetRTTI().GetName() != a_json["Type_"].asString() )
+			{
+				Log::Warning( "ISerializable", "Type mis-match for deserialize. %s != %s", 
+					a_pObject->GetRTTI().GetName().c_str(), a_json["Type_"].asCString() );
+			}
+		}
+		if ( a_json["GUID_"].isString() )
+			a_pObject->SetGUID( a_json["GUID_"].asString() );
 	}
 
 	if ( a_pObject != NULL )
@@ -83,6 +92,9 @@ Json::Value ISerializable::SerializeObject(ISerializable * a_pObject, bool a_bWr
 			const RTTI * pBaseType = pType;
 			while( pBaseType != NULL )
 			{
+				// if we have more than one class derived, then do not continue to enumerate down to the base class.
+				if ( pBaseType->GetChildClasses().size() > 1 )
+					break;	
 				if ( GetSerializableFactory().IsOverride( pBaseType->GetName() ) )
 				{
 					pType = pBaseType;
@@ -94,6 +106,9 @@ Json::Value ISerializable::SerializeObject(ISerializable * a_pObject, bool a_bWr
 			if ( pType != NULL )
 				json["Type_"] = pType->GetName();
 		}
+
+		if ( !a_pObject->GetGUID().empty() )
+			json["GUID_"] = a_pObject->GetGUID();
 
 		a_pObject->Serialize(json);
 	}

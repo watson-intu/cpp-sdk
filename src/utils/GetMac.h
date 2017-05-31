@@ -1,5 +1,5 @@
 /**
-* Copyright 2016 IBM Corp. All Rights Reserved.
+* Copyright 2017 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,14 +15,15 @@
 *
 */
 
+
 #ifndef WDC_GET_MAC_H
 #define WDC_GET_MAC_H
 
 #include <string>
 #include <list>
-#include "WDCLib.h"
+#include "UtilsLib.h"
 
-class WDC_API GetMac
+class UTILS_API GetMac
 {
 public:
 	static std::string GetMyAddress();
