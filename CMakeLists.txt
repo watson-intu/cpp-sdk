@@ -10,4 +10,3 @@ file(GLOB_RECURSE TESTS_CPP RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "tests/*.cpp")
 qi_create_bin(unit_test ${TESTS_CPP})
 qi_use_lib(unit_test utils)
 
-
