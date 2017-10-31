@@ -24,8 +24,13 @@
 
 #pragma warning( disable : 4996 )		// silence windows warning
 
+#if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
+static EVP_CIPHER_CTX *g_EncodeContext;
+static EVP_CIPHER_CTX *g_DecodeContext;
+#else // (OPENSSL_VERSION_NUMBER >= 0x10100000L)
 static EVP_CIPHER_CTX g_EncodeContext;
 static EVP_CIPHER_CTX g_DecodeContext;
+#endif // (OPENSSL_VERSION_NUMBER >= 0x10100000L)
 
 static const unsigned int AES_BLOCK_SIZE = 16;
 
@@ -40,9 +45,15 @@ std::string Crypt::Encode( const std::string & a_Data )
 	std::string encrypted;
 	encrypted.resize( c_len );
 
+#if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
+	EVP_EncryptInit_ex( g_EncodeContext, NULL, NULL, NULL, NULL );
+	EVP_EncryptUpdate( g_EncodeContext, (unsigned char *)&encrypted[0], &c_len, (const unsigned char *)&a_Data[0], a_Data.size() );
+	EVP_EncryptFinal_ex( g_EncodeContext, (unsigned char *)&encrypted[c_len], &f_len );
+#else // (OPENSSL_VERSION_NUMBER >= 0x10100000L)
 	EVP_EncryptInit_ex( &g_EncodeContext, NULL, NULL, NULL, NULL );
 	EVP_EncryptUpdate( &g_EncodeContext, (unsigned char *)&encrypted[0], &c_len, (const unsigned char *)&a_Data[0], a_Data.size() );
 	EVP_EncryptFinal_ex( &g_EncodeContext, (unsigned char *)&encrypted[c_len], &f_len );
+#endif // (OPENSSL_VERSION_NUMBER >= 0x10100000L)
 	encrypted.resize( c_len + f_len );
 
 	return "EVP:" + StringUtil::EncodeBase64( encrypted );
@@ -65,9 +76,15 @@ std::string Crypt::Decode( const std::string & a_Data )
 	std::string decrypted;
 	decrypted.resize( p_len );
 
+#if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
+	EVP_DecryptInit_ex( g_DecodeContext, NULL, NULL, NULL, NULL );
+	EVP_DecryptUpdate( g_DecodeContext, (unsigned char *)&decrypted[0], &p_len, (unsigned char *)&encoded[0], len );
+	EVP_DecryptFinal_ex( g_DecodeContext, (unsigned char *)&decrypted[p_len], &f_len );
+#else // (OPENSSL_VERSION_NUMBER >= 0x10100000L)
 	EVP_DecryptInit_ex( &g_DecodeContext, NULL, NULL, NULL, NULL );
 	EVP_DecryptUpdate( &g_DecodeContext, (unsigned char *)&decrypted[0], &p_len, (unsigned char *)&encoded[0], len );
 	EVP_DecryptFinal_ex( &g_DecodeContext, (unsigned char *)&decrypted[p_len], &f_len );
+#endif // (OPENSSL_VERSION_NUMBER >= 0x10100000L)
 	
 	decrypted.resize( p_len + f_len );
 	return decrypted;
@@ -91,10 +108,20 @@ bool Crypt::Initialize()
 			return false;
 		}
 
+#if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
+		g_EncodeContext = EVP_CIPHER_CTX_new();
+		g_DecodeContext = EVP_CIPHER_CTX_new();
+
+		EVP_CIPHER_CTX_init(g_EncodeContext);
+		EVP_EncryptInit_ex(g_EncodeContext, EVP_aes_256_cbc(), NULL, key, iv);
+		EVP_CIPHER_CTX_init(g_DecodeContext);
+		EVP_DecryptInit_ex(g_DecodeContext, EVP_aes_256_cbc(), NULL, key, iv);
+#else // (OPENSSL_VERSION_NUMBER >= 0x10100000L)
 		EVP_CIPHER_CTX_init(&g_EncodeContext);
 		EVP_EncryptInit_ex(&g_EncodeContext, EVP_aes_256_cbc(), NULL, key, iv);
 		EVP_CIPHER_CTX_init(&g_DecodeContext);
 		EVP_DecryptInit_ex(&g_DecodeContext, EVP_aes_256_cbc(), NULL, key, iv);
+#endif // (OPENSSL_VERSION_NUMBER >= 0x10100000L)
 
 		bInitialized = true;
 	}
