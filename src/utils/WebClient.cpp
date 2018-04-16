@@ -768,20 +768,21 @@ protected:
 			std::istream input(&m_RecvBuffer);
 			std::string chunk_length;
 			std::getline(input,chunk_length);
+			size_t chunk_len = strtoul( chunk_length.c_str(), NULL, 16 );
 
 			//Log::Status( "WebClient", "Read Chunk Len: %s", chunk_length.c_str() );
 			if ( chunk_length == "\r" )
 			{
 				HTTP_ReadChunkLength();
 			}
-			else if ( chunk_length == "0\r" )
+			else if ( chunk_len == 0 )
 			{
 				// end of chunked content
 				HTTP_ReadChunkFooter();
 			}
 			else
 			{
-				m_ContentLen = strtoul( chunk_length.c_str(), NULL, 16 );
+				m_ContentLen = chunk_len;
 				assert( m_ContentLen > 0 );
 
 				HTTP_ReadContent( error, 0 );
